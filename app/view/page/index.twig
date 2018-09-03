@@ -1,0 +1,22 @@
+{% extends "layout.twig" %}
+{% set nav_active = 'index' %}
+{% set nav_active = 'inicio' %}
+
+{% block content -%}
+
+  <section class="" >
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Olá!</h2>
+          <p>Faça login para acessar a administração do sistema. </p>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{%- endblock %}
+{% block javascripts %} {{ parent()}}
+{% endblock %}
