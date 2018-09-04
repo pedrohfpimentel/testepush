@@ -1,0 +1,57 @@
+[2018-08-28 00:07:55] app.INFO: 404 Not Found {"status":404,"method":"GET","route":"/admin/products/history/1","params":[]} {"uid":"82a1ff8"}
+[2018-08-28 01:45:34] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"e505683"}
+[2018-08-28 01:45:36] app.INFO: 404 Not Found {"status":404,"method":"GET","route":"/admin/products/history/1","params":[]} {"uid":"9958bb7"}
+[2018-08-28 01:45:42] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"310f391"}
+[2018-08-28 01:46:31] app.INFO: 404 Not Found {"status":404,"method":"GET","route":"/admin/products/history/1","params":[]} {"uid":"fd6c94e"}
+[2018-08-28 01:46:41] app.INFO: 404 Not Found {"status":404,"method":"GET","route":"/admin/products/history/1","params":[]} {"uid":"aa257a0"}
+[2018-08-28 01:46:45] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"e3dc37c"}
+[2018-08-28 12:13:16] app.INFO: 200 OK {"status":200,"method":"GET","route":"/","params":[]} {"uid":"9b457de"}
+[2018-08-28 14:13:21] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin","params":[]} {"uid":"1b9a1ab"}
+[2018-08-28 14:13:24] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"e3e9823"}
+[2018-08-28 14:21:10] app.INFO: 404 Not Found {"status":404,"method":"GET","route":"/admin/products/history/1","params":[]} {"uid":"513c77d"}
+[2018-08-28 14:21:18] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"669783f"}
+[2018-08-28 14:50:32] app.INFO: 404 Not Found {"status":404,"method":"GET","route":"/admin/products/history/1","params":[]} {"uid":"6ae3375"}
+[2018-08-28 14:56:43] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals","params":[]} {"uid":"7f76bd7"}
+[2018-08-28 14:56:46] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals/add","params":[]} {"uid":"d819cb3"}
+[2018-08-28 14:56:49] app.INFO: 200 OK {"status":200,"method":"POST","route":"/admin/professionals/verifyUserByEmail","params":[]} {"uid":"3610939"}
+[2018-08-28 14:56:51] app.INFO: 302 Found {"status":302,"method":"POST","route":"/admin/professionals/add","params":[]} {"uid":"a1fd912"}
+[2018-08-28 14:56:52] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals","params":[]} {"uid":"8bea111"}
+[2018-08-28 14:56:55] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals/history/1","params":[]} {"uid":"7a91149"}
+[2018-08-28 14:56:58] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals","params":[]} {"uid":"e3341d8"}
+[2018-08-28 15:03:16] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals","params":[]} {"uid":"9f86701"}
+[2018-08-28 15:10:53] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"1151861"}
+[2018-08-28 15:36:27] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"bb20abc"}
+[2018-08-28 15:44:02] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"86fd4fe"}
+[2018-08-28 15:44:19] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"d695e13"}
+[2018-08-28 15:44:22] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/patients","params":[]} {"uid":"c081d4d"}
+[2018-08-28 15:44:24] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/patients/add","params":[]} {"uid":"64a6c75"}
+[2018-08-28 15:44:26] app.INFO: 200 OK {"status":200,"method":"POST","route":"/admin/patients/verifyUserByEmail","params":[]} {"uid":"e89281a"}
+[2018-08-28 15:44:28] app.INFO: 302 Found {"status":302,"method":"POST","route":"/admin/patients/add","params":[]} {"uid":"f799c9c"}
+[2018-08-28 15:44:28] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/patients/add","params":[]} {"uid":"c355c92"}
+[2018-08-28 15:44:36] app.INFO: 200 OK {"status":200,"method":"POST","route":"/admin/patients/verifyUserByEmail","params":[]} {"uid":"d9e095b"}
+[2018-08-28 15:44:38] app.INFO: 302 Found {"status":302,"method":"POST","route":"/admin/patients/add","params":[]} {"uid":"d0c8fb8"}
+[2018-08-28 15:44:38] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/patients","params":[]} {"uid":"9c70276"}
+[2018-08-28 15:44:40] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/patients/history/1","params":[]} {"uid":"5a8c956"}
+[2018-08-28 15:51:09] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"04abdca"}
+[2018-08-28 15:51:12] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"cd4b9d7"}
+[2018-08-28 15:51:45] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"ccf3a45"}
+[2018-08-28 16:17:48] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"2b79b82"}
+[2018-08-28 16:19:38] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"5f8fe41"}
+[2018-08-28 16:22:29] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"6dba39d"}
+[2018-08-28 16:22:35] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products/add","params":[]} {"uid":"08c6975"}
+[2018-08-28 16:22:54] app.INFO: 302 Found {"status":302,"method":"POST","route":"/admin/products/add","params":[]} {"uid":"33c3352"}
+[2018-08-28 16:22:55] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"29546e4"}
+[2018-08-28 16:50:08] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"9194ef6"}
+[2018-08-28 16:50:10] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products/history/2","params":[]} {"uid":"1ef1b1c"}
+[2018-08-28 16:50:34] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"eac4239"}
+[2018-08-28 16:50:36] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products/history/2","params":[]} {"uid":"434526d"}
+[2018-08-28 16:50:56] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products/history/2","params":[]} {"uid":"eebe95f"}
+[2018-08-28 18:26:10] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products/history/2","params":[]} {"uid":"df4122f"}
+[2018-08-28 18:29:08] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products/history/2","params":[]} {"uid":"4427dfe"}
+[2018-08-28 19:50:38] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"269be3c"}
+[2018-08-28 21:25:35] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"156c2a6"}
+[2018-08-28 21:25:37] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals","params":[]} {"uid":"75fdfc3"}
+[2018-08-28 21:25:48] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professional_types","params":[]} {"uid":"9bffa51"}
+[2018-08-28 21:25:50] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/professionals","params":[]} {"uid":"cfd7356"}
+[2018-08-28 21:47:05] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/patients","params":[]} {"uid":"0876f4f"}
+[2018-08-28 21:47:08] app.INFO: 200 OK {"status":200,"method":"GET","route":"/admin/products","params":[]} {"uid":"55f5209"}

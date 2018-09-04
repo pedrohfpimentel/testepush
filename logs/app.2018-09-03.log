@@ -1,0 +1,5 @@
+[2018-09-03 18:22:21] app.INFO: 200 OK {"status":200,"method":"GET","route":"/","params":[]} {"uid":"0e83002"}
+[2018-09-03 18:22:31] app.INFO: 200 OK {"status":200,"method":"GET","route":"/users/signup","params":[]} {"uid":"8bceda0"}
+[2018-09-03 18:22:33] app.INFO: 200 OK {"status":200,"method":"GET","route":"/users/signin","params":[]} {"uid":"d0a75f2"}
+[2018-09-03 18:22:39] app.INFO: 302 Found {"status":302,"method":"POST","route":"/users/signin","params":[]} {"uid":"0ee2ad1"}
+[2018-09-03 18:22:40] app.INFO: 200 OK {"status":200,"method":"GET","route":"/users/profile","params":[]} {"uid":"3ccb1c0"}
