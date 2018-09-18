@@ -1,7 +1,5 @@
- <?php
-declare(strict_types=1);
-
-namespace Farol360\Ancora\Model;
+<?php
+ namespace Farol360\Ancora\Model;
 
 class EventLog
 {

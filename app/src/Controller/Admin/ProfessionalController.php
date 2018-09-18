@@ -118,8 +118,7 @@ class ProfessionalController extends Controller
         }
 
         $professional_types = $this->professionalTypeModel->getAll();
-
-        return $this->view->render($response, 'admin/professional/edit.twig', ['professional' => $professional, 'professional_types' => $professional_types]);
+            return $this->view->render($response, 'admin/professional/edit.twig', ['professional' => $professional, 'professional_types' => $professional_types]);
     }
 
     public function history(Request $request, Response $response, array $args): Response {
@@ -128,8 +127,7 @@ class ProfessionalController extends Controller
 
         $event_logs = $this->eventLogModel->getByProfessional($id);
 
-        return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,
-            'event_logs' => $event_logs]);
+        return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,'event_logs' => $event_logs]);
     }
 
     public function update(Request $request, Response $response): Response

@@ -22,7 +22,7 @@ class ProductsModel extends Model
         $parameters = [
             ':name'          => $products->name,
             ':description'   => $products->description,
-            ':category'      => $products->category,
+            ':category'      => $products->category
 
         ];
         if ($query->execute($parameters)) {

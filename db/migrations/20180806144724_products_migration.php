@@ -30,7 +30,7 @@ class ProductsMigration extends AbstractMigration
         $products = $this->table('products');
         $products->addColumn('name', 'string');
         $products->addColumn('description', 'string',['null' => true]);
-        $products->addColumn('category', 'string',['null' => true]);
+        $products->addColumn('category', 'integer',['null' => true]);
         $products->create();
     }
 }

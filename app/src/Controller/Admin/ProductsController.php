@@ -13,7 +13,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-
 class ProductsController extends Controller
 {
 
@@ -45,12 +44,14 @@ class ProductsController extends Controller
     public function index(Request $request, Response $response): Response
     {
         $products = $this->productsModel->getAll();
+
         return $this->view->render($response, 'admin/products/index.twig', ['products' => $products]);
     }
+    
     public function add(Request $request, Response $response): Response
     {
-         if (empty($request->getParsedBody())) {
-             $products_type = $this->productsTypeModel->getAll(); 
+        if (empty($request->getParsedBody())) {
+            $products_type = $this->productsTypeModel->getAll(); 
             return $this->view->render($response, 'admin/products/add.twig', ['products_type' => $products_type]);    
         }
 
@@ -79,7 +80,7 @@ class ProductsController extends Controller
             return $this->httpRedirect($request, $response, '/admin/products');
 }
          $products_type = $this->productsTypeModel->getAll();
-            return $this->view->render($response, 'admin/products/edit.twig', ['products_type' => $products_type]);
+            return $this->view->render($response, 'admin/products/edit.twig', ['products' => $products, 'products_type' => $products_type]);
 
     }
 
