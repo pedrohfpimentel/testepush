@@ -56,8 +56,24 @@ class ProductsController extends Controller
         }
 
         $products = $request->getParsedBody();
-        $products = $this->entityFactory->createProducts($request->getParsedBody());
-        $this->productsModel->add($products);
+
+        $products['category'] = (int) $products['id_products_type'];
+
+        $products = $this->entityFactory->createProducts($products);
+        
+        $idProduct = $this->productsModel->add($products);
+
+        // aqui trabalhar eventlog
+        if ( ($idProduct != null) || ($idProduct != false) ) {
+            $eventLog['id_products'] = $idProduct;
+            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
+            $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
+
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+
+        }
+        
 
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products'); 
@@ -99,8 +115,57 @@ class ProductsController extends Controller
 
     public function update(Request $request, Response $response): Response
     {
-       $products = $this->entityFactory->createProducts($request->getParsedBody());
+    /*
+        $products['id_event_log_type'] = 1;
+        $products['id_disease'] = $data['id_disease'];
+
+        $products = $this->entityFactory->createProducts($products);
+
+        $user = $data;
+        $user['id'] = $data['id_products'];
+
+        $user = $this->entityFactory->createUser($user);
+
+
+        $products_return = $this->productsModel->update($products);
+       
+
+        // if it's all ok with updates, create event log
+        if ( (($products_return != null) || ($products_return != false)) && ($user_return != null) || ($user_return != false)  ) {
+
+            $eventLog['id_products']         = $products->id;
+            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
+            $eventLog['description'] = 'Produto ' . $user->name .' atualizado';
+
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+
+            $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
+            return $this->httpRedirect($request, $response, '/admin/productss');
+        }*/
+
+        $data = $request->getParsedBody();
+
+        $products = $request->getParsedBody();
+        $products['id'] = (int) $data['id'];
+        $products['id_products'] = (int) $data['id_products'];
+        $products['category'] = (int) $products['id_products_type'];
+
+    
+        $products = $this->entityFactory->createProducts($products);
         $this->productsModel->update($products);
+         //$eventLog = $this->entityFactory->createEventLog($eventLog);
+           // $this->eventLogModel->add($eventLog);
+
+        // if it's all ok with updates, create event log
+
+
+            $eventLog['id_products']         = $products->id;
+            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
+            $eventLog['description'] = 'Produto ' . $user->name .' atualizado';
+
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
 
         $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products'); 

@@ -62,9 +62,11 @@ class ProductsModel extends Model
     {
         $sql = "
             SELECT
-               *
+               products.*,
+               products_type.name as products_type_name
             FROM
                 products
+                LEFT JOIN products_type ON products.category = products_type.id
             ORDER BY
                 id ASC
         ";

@@ -18,6 +18,7 @@ class AttendanceController extends Controller
 
     protected $attendanceModel;
     protected $patientModel;
+    protected $productModel;
     protected $professionalModel;
     protected $userModel;
     protected $eventLogModel;
@@ -29,6 +30,7 @@ class AttendanceController extends Controller
         FlashMessages $flash,
         Model $attendanceModel,
         Model $patientModel,
+        Model $productModel,
         Model $professionalModel,
         Model $userModel,
         Model $eventLogModel,
@@ -38,6 +40,7 @@ class AttendanceController extends Controller
         parent::__construct($view, $flash);
         $this->attendanceModel      = $attendanceModel;
         $this->patientModel         = $patientModel;
+        $this->productModel         = $productModel;
         $this->professionalModel    = $professionalModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
