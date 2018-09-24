@@ -11,9 +11,11 @@ use Farol360\Ancora\Controller\Admin\ProductsController as ProductsAdmin;
 use Farol360\Ancora\Controller\Admin\ProductsTypeController as ProductsTypeAdmin;
 use Farol360\Ancora\Controller\Admin\ProfessionalController as ProfessionalAdmin;
 use Farol360\Ancora\Controller\Admin\ProfessionalTypeController as ProfessionalTypeAdmin;
+use Farol360\Ancora\Controller\Admin\RemessaController as RemessaAdmin;
 use Farol360\Ancora\Controller\Admin\RoleController as RoleAdmin;
 use Farol360\Ancora\Controller\Admin\UserController as UserAdmin;
 use Farol360\Ancora\Controller\Admin\SupplierController as SupplierAdmin;
+
 
 
 use Farol360\Ancora\Controller\PageController as Page;
@@ -101,6 +103,15 @@ $app->group('/admin', function () {
         $this->get('/edit/{id:[0-9]+}', ProfessionalTypeAdmin::class . ':edit');
         $this->post('/update', ProfessionalTypeAdmin::class . ':update');
 
+    });
+
+    $this->group('/remessa', function () {
+        $this->get('[/]', RemessaAdmin::class . ':index');
+        //$this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
+        //$this->get('/remove/{id:[0-9]+}', RemessaAdmin::class . ':delete');
+        //$this->get('/edit/{id:[0-9]+}', RemessaAdmin::class . ':edit');
+        //$this->map(['GET', 'POST'], '/history/{id:[0-9]+}', ProductsAdmin::class . ':history');
+       // $this->post('/update', ProductsAdmin::class . ':update');
     });
 
     $this->group('/role', function () {

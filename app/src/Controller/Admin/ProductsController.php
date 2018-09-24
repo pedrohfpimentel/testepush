@@ -115,34 +115,7 @@ class ProductsController extends Controller
 
     public function update(Request $request, Response $response): Response
     {
-    /*
-        $products['id_event_log_type'] = 1;
-        $products['id_disease'] = $data['id_disease'];
-
-        $products = $this->entityFactory->createProducts($products);
-
-        $user = $data;
-        $user['id'] = $data['id_products'];
-
-        $user = $this->entityFactory->createUser($user);
-
-
-        $products_return = $this->productsModel->update($products);
-       
-
-        // if it's all ok with updates, create event log
-        if ( (($products_return != null) || ($products_return != false)) && ($user_return != null) || ($user_return != false)  ) {
-
-            $eventLog['id_products']         = $products->id;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
-            $eventLog['description'] = 'Produto ' . $user->name .' atualizado';
-
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            $this->eventLogModel->add($eventLog);
-
-            $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
-            return $this->httpRedirect($request, $response, '/admin/productss');
-        }*/
+   
 
         $data = $request->getParsedBody();
 

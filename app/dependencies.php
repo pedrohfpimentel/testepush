@@ -130,6 +130,7 @@ $container['Farol360\Ancora\Controller\Admin\AttendanceController'] = function (
         new Farol360\Ancora\Model\PatientModel($c['db']),
         new Farol360\Ancora\Model\ProductsModel($c['db']),
         new Farol360\Ancora\Model\ProfessionalModel($c['db']),
+        new Farol360\Ancora\Model\RemessaModel($c['db']),
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
@@ -221,6 +222,19 @@ $container['Farol360\Ancora\Controller\Admin\PermissionController'] = function (
         $c['flash'],
         new Farol360\Ancora\Model\PermissionModel($c['db']),
         new Farol360\Ancora\Model\RoleModel($c['db']),
+        new Farol360\Ancora\Model\EntityFactory()
+    );
+};
+
+$container['Farol360\Ancora\Controller\Admin\RemessaController'] = function ($c) {
+    return new Farol360\Ancora\Controller\Admin\RemessaController(
+        $c['view'],
+        $c['flash'],
+        new Farol360\Ancora\Model\RemessaModel($c['db']),
+       // new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+        new Farol360\Ancora\Model\UserModel($c['db']),
+        new Farol360\Ancora\Model\EventLogModel($c['db']),
+        new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
         new Farol360\Ancora\Model\EntityFactory()
     );
 };

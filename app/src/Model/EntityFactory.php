@@ -13,6 +13,7 @@ use Farol360\Ancora\Model\Products;
 use Farol360\Ancora\Model\ProductsType;
 use Farol360\Ancora\Model\Professional;
 use Farol360\Ancora\Model\ProfessionalType;
+use Farol360\Ancora\Model\Remessa;
 use Farol360\Ancora\Model\Supplier;
 
 
@@ -68,6 +69,11 @@ class EntityFactory
     public function createProfessionalType(array $data = []): ProfessionalType
     {
         return new ProfessionalType($data);
+    }
+
+    public function createRemessa(array $data = []): Remessa
+    {
+        return new Remessa($data);
     }
 
     public function createSupplier(array $data = []): Supplier
