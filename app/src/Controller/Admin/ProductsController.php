@@ -72,11 +72,16 @@ class ProductsController extends Controller
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
 
+           //   var_dump($products);
+       // exit;
+
         }
         
 
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products'); 
+
+
     
     }
     public function delete(Request $request, Response $response, array $args): Response

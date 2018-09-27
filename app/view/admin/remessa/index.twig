@@ -1,22 +1,128 @@
-{% extends "layout.twig" %}
-{% set nav_active = 'index' %}
-{% set nav_active = 'inicio' %}
+{% extends "admin/layout.twig" %}
+{% block html_title %}Produtos - Administração - {{ parent() }}{% endblock %}
+{% set nav_active = 'products' %}
+{% block breadcrumbs %}
 
-{% block content -%}
 
-  <section class="" >
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <h2>Hello World!</h2>
-          
 
-        </div>
+{#<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
 
+
+
+
+
+
+  $( function() {
+    var availableTags = ["{{ base_url() }}/admin/products/add"];
+    $( 'products.name' ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+</head>#}
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<script src="javascript/jquery-1.8.3.js"></script>
+<script src="javascript/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+         
+        // Captura o retorno do returnProducts.php
+        $.getJSON('returnProducts.php', function(data){
+            var products = [];
+             
+            // Armazena no array capturando somente o nome do produto
+            $(data).each(function(key, value) {
+                products.push(value.products);
+            });
+             
+            // Chama o Auto complete do JQuery ui setando o id do input, array com os dados e o mínimo de caracteres para disparar o AutoComplete
+            $('#id_products').autocomplete({ source: products, minLength: 3});
+        });
+    });
+</script>
+</head>
+<body>
+    <label>Produto:</label>
+   
+ 
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li><a href="{{ base_url() }}/admin">Início</a></li>
+ 
+  <li class="active">Adicionar</li>
+   <li>{{ products.name }}</li>
+</ol>
+{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header" data-background-color="blue">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Entrada de Estoque</h3>
       </div>
     </div>
-  </section>
+  </div>
+  <div class="card-content">
+    <div class="row">
+      <div class="col-md-6">
+        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/products/add" method="POST">
+        	
+			<input type="hidden" name="id" value="{{ products.id }}">
+          
 
-{%- endblock %}
-{% block javascripts %} {{ parent()}}
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="form-group">
+            <div class="form-group">
+            <label for="name">Nome:</label>
+
+            <div class="ui-widget">
+  			
+  			   <input class="form-control" id="name" type="text" name="name" placeholder="Nome" autofocus required>
+ 			
+			</div>
+
+
+      
+          </div>
+          </div>
+          </div>
+            <div class=" col-sm-2 form-group">
+              <label for="quantity">Quantidade</label>
+              <input type="number" class="form-control" id="inputQuantity" name="quantity" placeholder="">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success">Adicionar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+
 {% endblock %}
