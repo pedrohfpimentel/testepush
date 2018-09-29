@@ -64,7 +64,6 @@ $app->group('/admin', function () {
         $this->post('/update', PermissionAdmin::class . ':update');
     });
 
-
     $this->group('/products', function () {
         $this->get('[/]', ProductsAdmin::class . ':index');
         $this->map(['GET', 'POST'], '/add', ProductsAdmin::class . ':add');
@@ -74,7 +73,6 @@ $app->group('/admin', function () {
         $this->post('/update', ProductsAdmin::class . ':update');
     });
 
-
     $this->group('/products_type', function() {
         $this->get('[/]', ProductsTypeAdmin::class . ':index');
         $this->map(['GET', 'POST'], '/add', ProductsTypeAdmin::class . ':add');
@@ -83,8 +81,6 @@ $app->group('/admin', function () {
         $this->post('/update', ProductsTypeAdmin::class . ':update');
 
     });
-
-
 
     $this->group('/professionals', function() {
         $this->get('[/]', ProfessionalAdmin::class . ':index');
@@ -107,6 +103,8 @@ $app->group('/admin', function () {
 
     $this->group('/remessa', function () {
         $this->get('[/]', RemessaAdmin::class . ':index');
+        // $this->get('/products', RemessaAdmin::class . ':products');
+
         //$this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
         //$this->get('/remove/{id:[0-9]+}', RemessaAdmin::class . ':delete');
         //$this->get('/edit/{id:[0-9]+}', RemessaAdmin::class . ':edit');
