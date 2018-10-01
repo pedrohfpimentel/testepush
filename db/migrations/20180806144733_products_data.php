@@ -33,6 +33,7 @@ class ProductsData extends AbstractMigration
                 'name'        => 'Produto Padrão',
                 'description' => 'Descrição do Produto Padrão',
                 'category'    => 'Categoria Padrão',
+                'quantity'    => 'Quantidade,'
             ]
         ];
         $this->insert('products', $products);

@@ -11,6 +11,7 @@ class EventLog
     public $date;
     public $time;
     public $description;
+    public $quantity;
 
 
     public function __construct(array $data = [])
@@ -20,6 +21,7 @@ class EventLog
         $this->date                = $data['date'] ?? null;
         $this->time                = $data['time'] ?? null;
         $this->description         = $data['description'] ?? null;
+        $this->quantity            = $data['quantity'] ?? null;
         $this->id_patient          = $data['id_patient'] ?? null;
         $this->id_products         = $data['id_products'] ?? null;
         $this->id_professional     = $data['id_professional'] ?? null;
