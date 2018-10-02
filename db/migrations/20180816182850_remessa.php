@@ -27,8 +27,8 @@ class Remessa extends AbstractMigration
      */
     public function change()
     {
-        $diseases = $this->table('remessa');
-        $diseases->addColumn('quantidade', 'string');
-        $diseases->create();
+        $remessa = $this->table('remessa');
+        $remessa->addColumn('quantidade', 'integer');
+        $remessa->create();
     }
 }
