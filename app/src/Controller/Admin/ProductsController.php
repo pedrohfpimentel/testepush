@@ -130,8 +130,11 @@ class ProductsController extends Controller
         $products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
 
+        $old_product = $this->productsModel->get($products['id']);
+        $products['quantity'] = (int) $old_product->quantity;
     
         $products = $this->entityFactory->createProducts($products);
+
         $this->productsModel->update($products);
          //$eventLog = $this->entityFactory->createEventLog($eventLog);
            // $this->eventLogModel->add($eventLog);
