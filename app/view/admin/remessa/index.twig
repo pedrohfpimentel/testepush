@@ -37,7 +37,13 @@
   <div class="card-content">
     <div class="row">
       <div class="col-md-6">
-        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/products/add" method="POST">
+          <script> 
+            function soma() 
+              {
+                form.campo4.value = (form.quantity2.value*1) + (form.quantity.value*1)
+              }
+          </script>
+        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/products/update" method="POST">
 	         <input type="hidden" name="id" value="{{ products.id }}">
            <div class="row">
               <div class="col-sm-10">
@@ -48,12 +54,14 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class=" col-sm-2 form-group">
+               <div class=" col-sm-2 form-group">
               <label for="quantity">Quantidade</label>
-              <input type="number" class="form-control" id="inputQuantity" name="quantity" placeholder="">
+             <input type="number" class="form-control" id="inputQuantity2" name="quantity2" placeholder="">
             </div>
-          <button type="submit" class="btn btn-success">Adicionar</button>
+           
+            </div>
+
+          <button type="update" onclick="soma()" value="Soma os Valores" class="btn btn-primary">Adicionar</button>
         </form>
       </div>
     </div>

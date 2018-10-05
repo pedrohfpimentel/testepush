@@ -42,13 +42,24 @@
               </tr>
             </thead>
 
+
+              <script> 
+                function soma() 
+                {
+                  products.quantity.value = (form.quantity2.value*1) + (form.quantity.value*1)
+                }
+              </script>
+
+
             <tbody>
               {% for products in products %}
+
                 <tr>
                   <td>{{ products.name }}</td>
                   <td>{{ products.description }}</td>
                   <td>{{ products.products_type_name }}</td>
-                  <td>{{ products.quantity }}</td>
+                  <td>{{ products.quantity}}
+                  </td>
                   <td style="width:100px"><a class="btn btn-info" href="{{ base_url() }}/admin/products/history/{{ products.id }}">
                     Histórico
                   </a></td>
@@ -60,7 +71,7 @@
                   </a></td>
                 </tr>
               {% else %}
-                <div class="alert alert-danger" role="alert">Não existem CID cadastrados</div>
+                <div class="alert alert-danger" role="alert">Não existem Produtos cadastrados</div>
               {% endfor %}
             </tbody>
           </table>
