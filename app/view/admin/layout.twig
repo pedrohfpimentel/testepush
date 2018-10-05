@@ -84,9 +84,9 @@
             </li>
 
             <li {% if nav_active == "remessa" %} class="active" {% endif %}>
-              <a href="{{ base_url }}/admin/remessa">
+              <a href="{{ base_url }}/admin/remessa/add">
                 <i class="fa fa-bar-chart">
-                  
+
                 </i>
                 <p>Entrada de Estoque</p>
               </a>
@@ -115,7 +115,7 @@
                   </a>
                     <ul class="dropdown-menu">
                       {% if p_admin_suppliers %}<li><a href="{{ base_url() }}/admin/suppliers">Fornecedores</a></li>{% endif %}
-                    
+
                       {% if p_admin_products %}<li><a href="{{ base_url() }}/admin/products">Produtos</a></li>{% endif %}
 
                     </ul>

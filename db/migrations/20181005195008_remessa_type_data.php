@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Remessa extends AbstractMigration
+class RemessaTypeData extends AbstractMigration
 {
     /**
      * Change Method.
@@ -25,16 +25,22 @@ class Remessa extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
-    {
-        $remessa = $this->table('remessa');
-        $remessa->addColumn('id_product', 'integer', ['null' => true]);
-        $remessa->addColumn('id_remessa_type', 'integer', ['null' => true]);
-        $remessa->addColumn('quantity', 'integer', ['null' => true]);
-        $remessa->addColumn('cost', 'string', ['null' => true]);
-        $remessa->addColumn('date', 'timestamp', ['null' => true]);
-        $remessa->addColumn('time', 'time', ['null' => true]);
-        $remessa->addTimestamps();
-        $remessa->create();
-    }
+     public function up()
+     {
+         $remessaType = [
+           [
+               'id' => 1,
+               'slug' => 'entrada_doacao',
+               'name' => 'Recebimento de Doação',
+               'description' => 'Recebimento de doação de itens diversos.'
+           ],
+           [
+               'id' => 2,
+               'slug' => 'entrada_compra',
+               'name' => 'Compra de item',
+               'description' => 'Compra de itens diversos.'
+           ]
+         ];
+         $this->insert('remessa_type', $remessaType);
+     }
 }

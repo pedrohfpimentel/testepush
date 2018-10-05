@@ -26,45 +26,69 @@
 {% endblock %}
 
 {% block content %}
-<div class="card">
-  <div class="card-header" data-background-color="blue">
-    <div class="row">
-      <div class="col-xs-12">
-        <h3>Entrada de Estoque</h3>
+<div class="row">
+  <div class="col-sm-7">
+    <div class=" card">
+      <div class="card-header" data-background-color="blue">
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>Entrada de Estoque</h3>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="card-content">
-    <div class="row">
-      <div class="col-md-6">
-          <script> 
-            function soma() 
-              {
-                form.campo4.value = (form.quantity2.value*1) + (form.quantity.value*1)
-              }
-          </script>
-        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/products/update" method="POST">
-	         <input type="hidden" name="id" value="{{ products.id }}">
-           <div class="row">
-              <div class="col-sm-10">
-                <div class="form-group">
-                  <label for="name">Nome:</label>
-                  <div class="ui-widget">
-                    <input class="form-control" id="name" type="text" name="name" placeholder="Nome" autofocus required>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-12">
+            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
+              <p>Tela para cadastrar entradas no estoque.</p>
+              <input type="hidden" name="id" value="{{ products.id }}">
+              <div class="row">
+                 <div class="col-sm-12">
+                   <div class="form-group">
+                     <label for="name">Tipo de Entrada:</label>
+                     <div class="ui-widget">
+                       <select class="form-control">
+                         {% for remessaType in remessaTypes %}
+                            <option value="{{ remessatype.id }}">{{ remessaType.name }}</option>
+                         {% endfor %}
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                  <label for="name">Produto:</label>
+                    <div class="ui-widget">
+                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required>
+                    </div>
                   </div>
                 </div>
-              </div>
-               <div class=" col-sm-2 form-group">
-              <label for="quantity">Quantidade</label>
-             <input type="number" class="form-control" id="inputQuantity2" name="quantity2" placeholder="">
-            </div>
-           
-            </div>
+               </div>
+               <div class="row">
+                 <div class=" col-sm-2 form-group">
+                   <label for="quantity">Quantidade</label>
+                   <input type="number" class="form-control" id="input-quantity" name="quantity" placeholder="">
+                 </div>
 
-          <button type="update" onclick="soma()" value="Soma os Valores" class="btn btn-primary">Adicionar</button>
-        </form>
+                 <div class=" col-sm-2 form-group">
+                   <label for="quantity">Custo</label>
+                   <input type="number" class="form-control" id="input_cost" name="cost" placeholder="">
+                 </div>
+
+                 <div class=" col-sm-2 form-group">
+                   <label for="quantity">Data de Entrada</label>
+                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                 </div>
+               </div>
+               <button type="update" onclick="soma()" value="Soma os Valores" class="btn btn-primary">Adicionar</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -81,10 +105,10 @@
 
 
        {% for product in products %}
-        availableTags.push("{{ product.name }}");
+        availableTags.push("{{ product.id }} - {{ product.name }}");
        {% endfor %}
 
-       $( "#name" ).autocomplete({
+       $( "#input_id_product" ).autocomplete({
          source: availableTags
       });
     });

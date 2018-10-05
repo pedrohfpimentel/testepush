@@ -18,15 +18,15 @@ class ProductsController extends Controller
 
     protected $productsModel;
     protected $productsTypeModel;
+    protected $remessaModel;
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
 
-    public function __construct( 
-        View $view, 
-        FlashMessages $flash,
+    public function __construct( View $view, FlashMessages $flash,
         Model $productsModel,
         Model $productsTypeModel,
+        Model $remessaModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
@@ -35,6 +35,7 @@ class ProductsController extends Controller
         parent::__construct($view, $flash);
         $this->productsModel        = $productsModel;
         $this->productsTypeModel    = $productsTypeModel;
+        $this->remessaModel         = $remessaModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
@@ -43,16 +44,22 @@ class ProductsController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
+        // get products list
         $products = $this->productsModel->getAll();
+
+        // get quantity from remessas
+        foreach ($products as $product) {
+          // $remessaList = $this->remessaModel->getAll($product->id);
+        }
 
         return $this->view->render($response, 'admin/products/index.twig', ['products' => $products]);
     }
-    
+
     public function add(Request $request, Response $response): Response
     {
         if (empty($request->getParsedBody())) {
-            $products_type = $this->productsTypeModel->getAll(); 
-            return $this->view->render($response, 'admin/products/add.twig', ['products_type' => $products_type]);    
+            $products_type = $this->productsTypeModel->getAll();
+            return $this->view->render($response, 'admin/products/add.twig', ['products_type' => $products_type]);
         }
 
         $products = $request->getParsedBody();
@@ -60,7 +67,7 @@ class ProductsController extends Controller
         $products['category'] = (int) $products['id_products_type'];
 
         $products = $this->entityFactory->createProducts($products);
-        
+
         $idProduct = $this->productsModel->add($products);
 
         // aqui trabalhar eventlog
@@ -68,7 +75,7 @@ class ProductsController extends Controller
             $eventLog['id_products'] = $idProduct;
             $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
-            
+
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
@@ -77,20 +84,20 @@ class ProductsController extends Controller
        // exit;
 
         }
-        
+
 
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/products'); 
+        return $this->httpRedirect($request, $response, '/admin/products');
 
 
-    
+
     }
     public function delete(Request $request, Response $response, array $args): Response
     {
         $id = intval($args['id']);
         $this->productsModel->delete($id);
         $this->flash->addMessage('success', 'Produto removida com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/products'); 
+        return $this->httpRedirect($request, $response, '/admin/products');
     }
 
     public function edit(Request $request, Response $response, array $args): Response
@@ -116,12 +123,12 @@ class ProductsController extends Controller
 
         return $this->view->render($response, 'admin/products/history.twig', ['products' => $products,
             'event_logs' => $event_logs]);
-           
+
     }
 
     public function update(Request $request, Response $response): Response
     {
-   
+
 
         $data = $request->getParsedBody();
 
@@ -132,7 +139,7 @@ class ProductsController extends Controller
 
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;
-    
+
         $products = $this->entityFactory->createProducts($products);
 
         $this->productsModel->update($products);
@@ -150,7 +157,7 @@ class ProductsController extends Controller
             $this->eventLogModel->add($eventLog);
 
         $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/products'); 
+        return $this->httpRedirect($request, $response, '/admin/products');
 
     }
 }

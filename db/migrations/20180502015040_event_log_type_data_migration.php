@@ -94,7 +94,13 @@ class EventLogTypeDataMigration extends AbstractMigration
                 'name' => 'Edição de Produto',
                 'description' => 'Evento de Edição.'
             ],
-            
+            [
+                'id' => 12,
+                'slug' => 'remessa_entrada_doacao',
+                'name' => 'Reebimento de Doação',
+                'description' => 'Recebimento de doação de itens diversos.'
+            ],
+
         ];
         $this->insert('event_log_types', $event_log_types);
 

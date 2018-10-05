@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Remessa extends AbstractMigration
+class RemessaType extends AbstractMigration
 {
     /**
      * Change Method.
@@ -27,14 +27,10 @@ class Remessa extends AbstractMigration
      */
     public function change()
     {
-        $remessa = $this->table('remessa');
-        $remessa->addColumn('id_product', 'integer', ['null' => true]);
-        $remessa->addColumn('id_remessa_type', 'integer', ['null' => true]);
-        $remessa->addColumn('quantity', 'integer', ['null' => true]);
-        $remessa->addColumn('cost', 'string', ['null' => true]);
-        $remessa->addColumn('date', 'timestamp', ['null' => true]);
-        $remessa->addColumn('time', 'time', ['null' => true]);
-        $remessa->addTimestamps();
-        $remessa->create();
+      $remessa = $this->table('remessa_type');
+      $remessa->addColumn('slug', 'string');
+      $remessa->addColumn('name', 'string');
+      $remessa->addColumn('description', 'string');
+      $remessa->create();
     }
 }

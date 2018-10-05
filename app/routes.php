@@ -105,7 +105,7 @@ $app->group('/admin', function () {
         $this->get('[/]', RemessaAdmin::class . ':index');
         // $this->get('/products', RemessaAdmin::class . ':products');
 
-        //$this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
+        $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
         //$this->get('/remove/{id:[0-9]+}', RemessaAdmin::class . ':delete');
         //$this->get('/edit/{id:[0-9]+}', RemessaAdmin::class . ':edit');
         //$this->map(['GET', 'POST'], '/history/{id:[0-9]+}', ProductsAdmin::class . ':history');

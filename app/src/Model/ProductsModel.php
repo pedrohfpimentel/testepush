@@ -88,7 +88,7 @@ class ProductsModel extends Model
                 description  = :description,
                 category     = :category,
                 quantity     = :quantity
-               
+
             WHERE
                 id = :id
         ";

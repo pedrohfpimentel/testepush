@@ -12,15 +12,30 @@ class RemessaModel extends Model
     {
         $sql = "
             INSERT INTO remessa (
+                id_product,
+                id_remessa_type,
                 quantity,
-                type
+                cost,
+                date,
+                time
                 )
-            VALUES (:quantity, :type)
+            VALUES (
+                :id_product,
+                :id_remessa_type,
+                :quantity,
+                :cost,
+                :date,
+                :time
+                )
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
+            ':id_product'       => $remessa->id_product,
+            ':id_remessa_type'   => $remessa->id_remessa_type,
             ':quantity'          => $remessa->quantity,
-            ':type'              => $remessa->type,
+            ':cost'              => $remessa->cost,
+            ':date'              => $remessa->date,
+            ':time'              => $remessa->time,
 
         ];
         if ($query->execute($parameters)) {
@@ -78,17 +93,25 @@ class RemessaModel extends Model
             UPDATE
                 remessa
             SET
+                id_product       = :id_product,
+                id_remessa_type  = :id_remessa_type,
                 quantity         = :quantity,
-                type             = :type
-               
+                cost             = :cost,
+                date             = :date,
+                time             = :time
+
             WHERE
                 id = :id
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id'           => $remessa->id,
+            ':id'               => $remessa->id,
+            ':id_product'       => $remessa->id_product,
+            ':id_remessa_type'  => $remessa->id_remessa_type,
             ':quantity'     => $remessa->quantity,
-            ':type'         => $remessa->type
+            ':cost'         => $remessa->cost,
+            ':date'         => $remessa->date,
+            ':time'         => $remessa->time
             ];
         return $query->execute($parameters);
     }

@@ -26,6 +26,7 @@ class RemessaController extends Controller
         View $view,
         FlashMessages $flash,
         Model $remessaModel,
+        Model $remessaTypeModel,
         Model $productsModel,
         Model $productsTypeModel,
         Model $userModel,
@@ -35,6 +36,7 @@ class RemessaController extends Controller
     ) {
         parent::__construct($view, $flash);
         $this->remessaModel         = $remessaModel;
+        $this->remessaTypeModel     = $remessaTypeModel;
         $this->productsModel        = $productsModel;
         $this->productsTypeModel    = $productsTypeModel;
         $this->userModel            = $userModel;
@@ -45,13 +47,68 @@ class RemessaController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
+      // get products to autocomplete
+      $products = $this->productsModel->getAll();
 
-        $products = $this->productsModel->getAll();
-        return $this->view->render($response, 'admin/remessa/index.twig', ['products' => $products]);
+      // remessa types
+      $remessaTypes = $this->remessaTypeModel->getAll();
+
+      return $this->view->render($response, 'admin/remessa/index.twig',
+      [
+        'products' => $products,
+        'remessaTypes' => $remessaTypes
+      ]);
+
     }
 
     public function sobre(Request $request, Response $response): Response
     {
         return $this->view->render($response, 'admin/remessa/sobre.twig', ['version' => $this->version]);
+    }
+
+    public function add(Request $request, Response $response): Response
+    {
+      if (empty($request->getParsedBody())) {
+        // get products to autocomplete
+        $products = $this->productsModel->getAll();
+
+        // remessa types
+        $remessaTypes = $this->remessaTypeModel->getAll();
+
+        return $this->view->render($response, 'admin/remessa/index.twig',
+        [
+          'products' => $products,
+          'remessaTypes' => $remessaTypes
+        ]);
+      }
+
+      $remessa = $request->getParsedBody();
+
+      $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
+      $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+      $remessa['quantity'] = (int) $remessa['quantity'];
+
+      $remessa = $this->entityFactory->createRemessa($remessa);
+
+      $idRemessa = $this->remessaModel->add($remessa);
+
+      /*
+      // aqui trabalhar eventlog
+      if ( ($idRemessa != null) || ($idRemessa != false) ) {
+          $eventLog['id_products'] = $idRemessa->id_product;
+          $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+          $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
+
+
+          $eventLog = $this->entityFactory->createEventLog($eventLog);
+          $this->eventLogModel->add($eventLog);
+
+         //   var_dump($products);
+         // exit;
+
+      }
+      */
+      $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+      return $this->httpRedirect($request, $response, '/admin/remessa/add');
     }
 }
