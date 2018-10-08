@@ -60,7 +60,7 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                   <label for="name">Produto:</label>
-                    <div class="ui-widget">
+                    <div class="ui-widget" >
                       <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required>
                     </div>
                   </div>
@@ -72,18 +72,22 @@
                    <input type="number" class="form-control" id="input-quantity" name="quantity" placeholder="">
                  </div>
 
-                 <div class=" col-sm-2 form-group">
+                 <div class=" col-sm-4 form-group">
                    <label for="quantity">Custo</label>
-                   <input type="number" class="form-control" id="input_cost" name="cost" placeholder="">
+                   
+                   <input type="money" class="form-control" id="valor1" name="date" placeholder="R$ 00,00"/>
+                   
                  </div>
 
-                 <div class=" col-sm-2 form-group">
+                 <div class=" col-sm-4 form-group">
                    <label for="quantity">Data de Entrada</label>
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>
                </div>
-               <button type="update" onclick="soma()" value="Soma os Valores" class="btn btn-primary">Adicionar</button>
+               <button type="update" onclick="soma()" value="button" class="btn btn-primary">Adicionar</button>
             </form>
+            <p><a href="http://afarkas.github.io/webshim/demos/demos/cfgs/input-number.html" target="_blank"></a>
+</p>
           </div>
         </div>
       </div>
@@ -94,6 +98,34 @@
 
 {% endblock %}
 {% block javascripts %}
+
+
+
+
+
+
+
+<script type="text/javascript">
+                  $(function() {
+                    $('[type=money]').maskMoney({
+                      thousands: '.',
+                      decimal: ','
+                    });
+                  });
+                </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js" type="text/javascript"></script>
+
+
+
+
+
+
+
+
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
