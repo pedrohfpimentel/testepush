@@ -68,37 +68,40 @@ class RemessaController extends Controller
 
     public function add(Request $request, Response $response): Response
     {
-      if (empty($request->getParsedBody())) {
-
-
-        // get products to autocomplete
+        if (empty($request->getParsedBody())) {
+          // get products to autocomplete
         $products = $this->productsModel->getAll();
 
-        // remessa types
+            // remessa types
         $remessaTypes = $this->remessaTypeModel->getAll();
 
-        return $this->view->render($response, 'admin/remessa/index.twig',
+            return $this->view->render($response, 'admin/remessa/index.twig',
         [
           'products' => $products,
           'remessaTypes' => $remessaTypes
         ]);
-      }
+    }
+        
 
-      $remessa = $request->getParsedBody();
+        $remessa = $request->getParsedBody();
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
-       $remessa['cost'] = (bool) $remessa['cost'];
+      $remessa['cost'] = (bool) $remessa['cost'];
+
 
       $remessa = $this->entityFactory->createRemessa($remessa);
-
       $idRemessa = $this->remessaModel->add($remessa);
 
-      if  ($remessa['id_product'] != 0) { 
 
-      $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-      return $this->httpRedirect($request, $response, '/admin/remessa/add');
-    }
+        // aqui trabalhar eventlog
+        if ( ($idProduct != null) || ($idProduct != false) ) {
+            
+            $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/products');
+
+
+        }
     }
 }
