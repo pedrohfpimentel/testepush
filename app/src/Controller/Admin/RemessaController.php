@@ -83,25 +83,19 @@ class RemessaController extends Controller
     }
         
 
-        $remessa = $request->getParsedBody();
+      $remessa = $request->getParsedBody();
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
-      $remessa['cost'] = (bool) $remessa['cost'];
+      $remessa['cost'] = (boolean) $remessa['cost'];
 
 
       $remessa = $this->entityFactory->createRemessa($remessa);
       $idRemessa = $this->remessaModel->add($remessa);
 
-
-        // aqui trabalhar eventlog
-        if ( ($idProduct != null) || ($idProduct != false) ) {
             
-            $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/products');
-
-
-        }
+        $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/products');    
     }
 }

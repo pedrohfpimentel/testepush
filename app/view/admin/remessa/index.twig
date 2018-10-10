@@ -3,6 +3,8 @@
 {% set nav_active = 'products' %}
 {% block breadcrumbs %}
 
+
+
 {#<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -61,7 +63,8 @@
                   <div class="form-group">
                   <label for="name">Produto:</label>
                     <div class="ui-widget" >
-                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required>
+                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required onblur="validarDados('input_id_product', document.getElementById('input_id_product').value);">
+                      <div id="campo_login"> </div>
                     </div>
                   </div>
                 </div>
@@ -116,16 +119,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js" type="text/javascript"></script>
 
-
-
-
-
-
-
-
-
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
@@ -145,4 +138,75 @@
       });
     });
 </script>
+
+
+
+
+<script type="text/javascript" src="ajax/funcs.js"></script>
+
+<script >// Variável que receberá o objeto XMLHttpRequest
+var req;
+ 
+function validarDados(campo, valor) {
+ 
+// Verificar o Browser
+// Firefox, Google Chrome, Safari e outros
+if(window.XMLHttpRequest) {
+   req = new XMLHttpRequest();
+}
+// Internet Explorer
+else if(window.ActiveXObject) {
+   req = new ActiveXObject("Microsoft.XMLHTTP");
+}
+ 
+// Aqui vai o valor e o nome do campo que pediu a requisição.
+var url = "ajax/validacao.php?campo="+campo+"&valor="+valor;
+ 
+// Chamada do método open para processar a requisição
+req.open("Get", url, true);
+ 
+// Quando o objeto recebe o retorno, chamamos a seguinte função;
+req.onreadystatechange = function() {
+ 
+  // Exibe a mensagem "Verificando" enquanto carrega
+  if(req.readyState == 1) {
+    document.getElementById('campo_' + campo + '').innerHTML = '<font color="gray">Verificando...</font>';
+  }
+ 
+  // Verifica se o Ajax realizou todas as operações corretamente (essencial)
+  if(req.readyState == 4 && req.status == 200) {
+  // Resposta retornada pelo validacao.php
+  var resposta = req.responseText;
+ 
+  // Abaixo colocamos a resposta na div do campo que fez a requisição
+  document.getElementById('campo_'+ campo +'').innerHTML = resposta;
+  }
+ 
+}
+ 
+req.send(null);
+ 
+}
+</script>
+
+<script>
+// Campo que fez requisição
+$campo = $_GET['campo'];
+// Valor do campo que fez requisição
+$valor = $_GET['valor'];
+ 
+// Verificando o campo login
+if ($campo == "input_id_product") {
+ 
+  if ($valor == "") {
+    echo "Preencha o campo com o produto";
+  } elseif (strlen($valor) == 0) {
+    echo "produto inválido";
+  }
+ 
+}
+ 
+</script>
+
+
 {% endblock %}
