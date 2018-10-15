@@ -80,7 +80,7 @@ class ProductsController extends Controller
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
 
-           //   var_dump($products);
+              //var_dump($products);
        // exit;
 
         }

@@ -51,7 +51,7 @@
                      <div class="ui-widget">
                        <select class="form-control">
                          {% for remessaType in remessaTypes %}
-                            <option value="{{ remessatype.id }}">{{ remessaType.name }}</option>
+                            <option value="{{ id_remessa_type.id }}">{{ remessaType.name }}</option>
                          {% endfor %}
                        </select>
                      </div>
@@ -72,13 +72,13 @@
                <div class="row">
                  <div class=" col-sm-2 form-group">
                    <label for="quantity">Quantidade</label>
-                   <input type="number" class="form-control" id="input-quantity" name="quantity" placeholder="">
+                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="">
                  </div>
 
                  <div class=" col-sm-4 form-group">
-                   <label for="quantity">Custo</label>
+                   <label for="cost">Custo</label>
                    
-                   <input type="money" class="form-control" id="valor1" name="date" placeholder="R$ 00,00"/>
+                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00"/>
                    
                  </div>
 
@@ -87,7 +87,7 @@
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>
                </div>
-               <button type="submit" onclick="soma()" value="button" class="btn btn-primary">Adicionar</button>
+               <button type="submit" onclick="soma()"  value="button" class="btn btn-primary">Adicionar</button>
             </form>
             <p><a href="http://afarkas.github.io/webshim/demos/demos/cfgs/input-number.html" target="_blank"></a>
 </p>

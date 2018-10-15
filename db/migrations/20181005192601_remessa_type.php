@@ -27,7 +27,7 @@ class RemessaType extends AbstractMigration
      */
     public function change()
     {
-      $remessa = $this->table('remessa_type');
+      $remessa = $this->table('id_remessa_type');
       $remessa->addColumn('slug', 'string');
       $remessa->addColumn('name', 'string');
       $remessa->addColumn('description', 'string');
