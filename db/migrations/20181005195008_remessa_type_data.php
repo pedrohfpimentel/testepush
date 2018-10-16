@@ -41,6 +41,6 @@ class RemessaTypeData extends AbstractMigration
                'description' => 'Compra de itens diversos.'
            ]
          ];
-         $this->insert('id_remessa_type', $remessaType);
+         $this->insert('remessa_type', $remessaType);
      }
 }

@@ -70,33 +70,47 @@ class RemessaController extends Controller
     {
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
-        $products = $this->productsModel->getAll();
+          $products = $this->productsModel->getAll();
 
-            // remessa types
-        $remessaTypes = $this->remessaTypeModel->getAll();
+          // remessa types
+          $remessaTypes = $this->remessaTypeModel->getAll();
 
-            return $this->view->render($response, 'admin/remessa/index.twig',
-        [
-          'products' => $products,
-          'remessaTypes' => $remessaTypes
-        ]);
-    }
-        
+          return $this->view->render($response, 'admin/remessa/index.twig',
+          [
+            'products' => $products,
+            'remessaTypes' => $remessaTypes
+          ]);
+        }
+
 
       $remessa = $request->getParsedBody();
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
-      $remessa['cost'] = (bool) $remessa['cost'];
+      $remessa['cost'] =  $remessa['cost'];
 
 
       $remessa = $this->entityFactory->createRemessa($remessa);
       $idRemessa = $this->remessaModel->add($remessa);
       //var_dump($remessa);
       //die;
-            
-        $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/products');    
+
+      $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+      return $this->httpRedirect($request, $response, '/admin/products');
     }
+
+    public function consulta_produto(Request $request, Response $response): Response
+    {
+      $idProduct = $request->getQueryParams()['id'];
+      $product = $this->productsModel->get((int) $idProduct);
+      if ($product) {
+        return $response->withJson((array)$product, 200);
+      }
+
+      return $response->withJson('erro', 400);
+
+    }
+
+
 }

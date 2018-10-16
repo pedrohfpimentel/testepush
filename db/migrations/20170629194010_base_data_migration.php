@@ -222,7 +222,7 @@ class BaseDataMigration extends AbstractMigration
                 'role_id' => 2,
             ],
 
-            
+
             [
                 'resource' => '/admin/products_type',
                 'description' => 'Categoria de Produtos',
@@ -318,6 +318,11 @@ class BaseDataMigration extends AbstractMigration
             [
                 'resource' => '/admin/remessa/add',
                 'description' => 'Remessa -Add.',
+                'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa/consulta_produto',
+                'description' => 'Ajax para consulta de produto.',
                 'role_id' => 2,
             ],
             [
