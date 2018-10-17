@@ -97,7 +97,7 @@ class EventLogTypeDataMigration extends AbstractMigration
             [
                 'id' => 12,
                 'slug' => 'remessa_entrada_doacao',
-                'name' => 'Reebimento de Doação',
+                'name' => 'Recebimento de Doação',
                 'description' => 'Recebimento de doação de itens diversos.'
             ],
 

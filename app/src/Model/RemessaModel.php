@@ -13,29 +13,22 @@ class RemessaModel extends Model
         $sql = "
             INSERT INTO remessa (
                 id_product,
-                id_remessa_type,
+                remessa_type,
                 quantity,
                 cost,
                 date,
                 time
                 )
-            VALUES (
-                :id_product,
-                :id_remessa_type,
-                :quantity,
-                :cost,
-                :date,
-                :time
-                )
+            VALUES (:id_product, :remessa_type, :quantity, :cost, :date, :time)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id_product'       => $remessa->id_product,
-            ':id_remessa_type'   => $remessa->id_remessa_type,
+            ':id_product'        => $remessa->id_product,
+            ':remessa_type'      => $remessa->remessa_type,
             ':quantity'          => $remessa->quantity,
             ':cost'              => $remessa->cost,
             ':date'              => $remessa->date,
-            ':time'              => $remessa->time,
+            ':time'              => $remessa->time
 
         ];
         if ($query->execute($parameters)) {
@@ -94,7 +87,7 @@ class RemessaModel extends Model
                 remessa
             SET
                 id_product       = :id_product,
-                id_remessa_type  = :id_remessa_type,
+                remessa_type  = :remessa_type,
                 quantity         = :quantity,
                 cost             = :cost,
                 date             = :date,
@@ -105,9 +98,9 @@ class RemessaModel extends Model
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id'               => $remessa->id,
-            ':id_product'       => $remessa->id_product,
-            ':id_remessa_type'  => $remessa->id_remessa_type,
+            ':id'           => $remessa->id,
+            ':id_product'   => $remessa->id_product,
+            ':remessa_type' => $remessa->remessa_type,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,
             ':date'         => $remessa->date,

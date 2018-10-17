@@ -86,7 +86,7 @@ class RemessaController extends Controller
       $remessa = $request->getParsedBody();
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
-      $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+      $remessa['remessa_type'] = (int) $remessa['remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
       $remessa['cost'] =  $remessa['cost'];
 
@@ -96,8 +96,28 @@ class RemessaController extends Controller
       //var_dump($remessa);
       //die;
 
+      // aqui trabalhar eventlog
+        if ( ($idRemessa != null) || ($idRemessa != false) ) {
+            $eventLog['id_remessa'] = $idRemessa;
+
+            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+            $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
+
+             $eventLog['id_products'] = $idRemessa;
+           
+            
+
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+            
+            //var_dump($remessa);
+            //die;
+
+          }
+
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
       return $this->httpRedirect($request, $response, '/admin/products');
+    
     }
 
     public function consulta_produto(Request $request, Response $response): Response

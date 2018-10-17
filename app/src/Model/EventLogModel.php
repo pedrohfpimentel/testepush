@@ -18,7 +18,8 @@ class EventLogModel extends Model
                 description,
                 id_patient,
                 id_products,
-                id_professional
+                id_professional,
+                id_remessa
                 )
             VALUES (
                 :id_event_log_type,
@@ -27,7 +28,9 @@ class EventLogModel extends Model
                 :description,
                 :id_patient,
                 :id_products,
-                :id_professional)
+                :id_professional,
+                :id_remessa
+                )
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -37,7 +40,8 @@ class EventLogModel extends Model
             ':description'          => $eventLog->description,
             ':id_patient'           => $eventLog->id_patient,
             ':id_products'          => $eventLog->id_products,
-            ':id_professional'      => $eventLog->id_professional
+            ':id_professional'      => $eventLog->id_professional,
+            ':id_remessa'           => $eventLog->id_remessa
 
         ];
         if ($query->execute($parameters)) {
@@ -101,6 +105,7 @@ class EventLogModel extends Model
                 event_logs.id_patient,
                 event_logs.id_products,
                 event_logs.id_professional,
+                event_logs.id_remessa,
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
@@ -129,7 +134,7 @@ class EventLogModel extends Model
         return $query->fetchAll();
     }
 
-    //teste
+    
 
     public function getByProducts(int $id)
     {
@@ -140,6 +145,7 @@ class EventLogModel extends Model
                 event_logs.id_patient,
                 event_logs.id_products,
                 event_logs.id_professional,
+                event_logs.id_remessa,
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
@@ -177,6 +183,7 @@ class EventLogModel extends Model
                 event_logs.id_event_log_type,
                 event_logs.id_patient,
                 event_logs.id_professional,
+                event_logs.id_remessa,
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
@@ -205,6 +212,45 @@ class EventLogModel extends Model
         return $query->fetchAll();
     }
 
+    public function getByRemessa(int $id)
+    {
+        $sql = "
+            SELECT
+                event_logs.id as id,
+                event_logs.id_event_log_type,
+                event_logs.id_patient,
+                event_logs.id_products,
+                event_logs.id_professional,
+                event_logs.id_remessa,
+                event_logs.date,
+                event_logs.time,
+                event_logs.description,
+               
+                event_log_types.id as event_log_types_id,
+                event_log_types.slug as event_log_types_slug,
+                event_log_types.name as event_log_types_name,
+                event_log_types.description as event_log_types_description
+              #  products.id as products_id
+              #  products.id_user as products_id_user,
+              #  users.name as users_name
+              #  users.email as users_email
+
+            FROM
+                event_logs
+                LEFT JOIN event_log_types ON event_logs.id_event_log_type = event_log_types.id
+               # LEFT JOIN products ON products.id = event_logs.products
+               # LEFT JOIN users ON products.id = users.id
+            WHERE
+                id_products = :id
+
+        ";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        $query->execute($parameters);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
+        return $query->fetchAll();
+    }
+
     public function update(EventLog $eventLog): bool
     {
         $sql = "
@@ -218,7 +264,8 @@ class EventLogModel extends Model
                
                 id_patient          = :id_patient,
                 id_products         = :id_products,
-                id_professional     = :id_professional
+                id_professional     = :id_professional,
+                id_remessa          = :id_remessa
             WHERE
                 id = :id
         ";
@@ -232,6 +279,7 @@ class EventLogModel extends Model
             ':id_patient'       => $eventLog->id_patient,
             ':id_products'      => $eventLog->id_products,
             ':id_professional'  => $eventLog->id_professional,
+            ':id_remessa'       => $eventLog->id_remessa,
             ':id'               => $eventLog->id
         ];
         return $query->execute($parameters);
