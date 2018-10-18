@@ -12,7 +12,7 @@ class EventLogModel extends Model
     {
         $sql = "
             INSERT INTO event_logs (
-                id_event_log_type,
+                event_log_type,
                 date,
                 time,
                 description,
@@ -22,7 +22,7 @@ class EventLogModel extends Model
                 id_remessa
                 )
             VALUES (
-                :id_event_log_type,
+                :event_log_type,
                 :date,
                 :time,
                 :description,
@@ -34,7 +34,7 @@ class EventLogModel extends Model
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id_event_log_type'    => $eventLog->id_event_log_type,
+            ':event_log_type'       => $eventLog->event_log_type,
             ':date'                 => $eventLog->date,
             ':time'                 => $eventLog->time,
             ':description'          => $eventLog->description,
@@ -101,7 +101,7 @@ class EventLogModel extends Model
         $sql = "
             SELECT
                 event_logs.id as id,
-                event_logs.id_event_log_type,
+                event_logs.event_log_type,
                 event_logs.id_patient,
                 event_logs.id_products,
                 event_logs.id_professional,
@@ -120,7 +120,7 @@ class EventLogModel extends Model
 
             FROM
                 event_logs
-                LEFT JOIN event_log_types ON event_logs.id_event_log_type = event_log_types.id
+                LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN patients ON patients.id = event_logs.id_patient
                 LEFT JOIN users ON patients.id_user = users.id
             WHERE
@@ -141,7 +141,7 @@ class EventLogModel extends Model
         $sql = "
             SELECT
                 event_logs.id as id,
-                event_logs.id_event_log_type,
+                event_logs.event_log_type,
                 event_logs.id_patient,
                 event_logs.id_products,
                 event_logs.id_professional,
@@ -161,7 +161,7 @@ class EventLogModel extends Model
 
             FROM
                 event_logs
-                LEFT JOIN event_log_types ON event_logs.id_event_log_type = event_log_types.id
+                LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                # LEFT JOIN products ON products.id = event_logs.products
                # LEFT JOIN users ON products.id = users.id
             WHERE
@@ -180,7 +180,7 @@ class EventLogModel extends Model
        $sql = "
             SELECT
                 event_logs.id as id,
-                event_logs.id_event_log_type,
+                event_logs.event_log_type,
                 event_logs.id_patient,
                 event_logs.id_professional,
                 event_logs.id_remessa,
@@ -199,7 +199,7 @@ class EventLogModel extends Model
 
             FROM
                 event_logs
-                LEFT JOIN event_log_types ON event_logs.id_event_log_type = event_log_types.id
+                LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN professionals ON professionals.id = event_logs.id_professional
                 LEFT JOIN users ON professionals.id_user = users.id
             WHERE
@@ -217,7 +217,7 @@ class EventLogModel extends Model
         $sql = "
             SELECT
                 event_logs.id as id,
-                event_logs.id_event_log_type,
+                event_logs.event_log_type,
                 event_logs.id_patient,
                 event_logs.id_products,
                 event_logs.id_professional,
@@ -237,7 +237,7 @@ class EventLogModel extends Model
 
             FROM
                 event_logs
-                LEFT JOIN event_log_types ON event_logs.id_event_log_type = event_log_types.id
+                LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                # LEFT JOIN products ON products.id = event_logs.products
                # LEFT JOIN users ON products.id = users.id
             WHERE
@@ -257,7 +257,7 @@ class EventLogModel extends Model
             UPDATE
                 event_logs
             SET
-                id_event_log_type   = :id_event_log_type,
+                event_log_type      = :event_log_type,
                 date                = :date,
                 time                = :time,
                 description         = :description,
@@ -271,7 +271,7 @@ class EventLogModel extends Model
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id_event_log_type'=> $eventLog->id_event_log_type,
+            ':event_log_type'=> $eventLog->event_log_type,
             ':date'             => $eventLog->date,
             ':time'             => $eventLog->time,
             ':description'      => $eventLog->description,

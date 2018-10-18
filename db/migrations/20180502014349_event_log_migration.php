@@ -28,7 +28,7 @@ class EventLogMigration extends AbstractMigration
     public function change()
     {
         $event_logs = $this->table('event_logs');
-        $event_logs->addColumn('id_event_log_type', 'integer');
+        $event_logs->addColumn('event_log_type', 'integer');
         $event_logs->addColumn('id_patient', 'integer', ['null' => true]);
          $event_logs->addColumn('id_products', 'integer', ['null' => true]);
         $event_logs->addColumn('id_professional', 'integer', ['null' => true]);

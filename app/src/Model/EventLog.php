@@ -4,7 +4,7 @@
 class EventLog
 {
     public $id;
-    public $id_event_log_type;
+    public $event_log_type;
     public $id_patient;
     public $id_professional;
     public $id_products;
@@ -18,7 +18,7 @@ class EventLog
     public function __construct(array $data = [])
     {
         $this->id                  = $data['id'] ?? null;
-        $this->id_event_log_type   = $data['id_event_log_type'] ?? null;
+        $this->event_log_type      = $data['event_log_type'] ?? null;
         $this->date                = $data['date'] ?? null;
         $this->time                = $data['time'] ?? null;
         $this->description         = $data['description'] ?? null;

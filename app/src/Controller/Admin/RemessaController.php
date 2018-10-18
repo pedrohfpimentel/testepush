@@ -98,9 +98,16 @@ class RemessaController extends Controller
 
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
+             
+
             $eventLog['id_remessa'] = $idRemessa;
 
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+            if ($idRemessa == 12){
+            $eventLog['event_log_type']  =  $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+            } elseif ($idRemessa == 13){
+
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
+          }
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
 
              $eventLog['id_products'] = $idRemessa;

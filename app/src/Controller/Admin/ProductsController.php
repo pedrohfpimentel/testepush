@@ -73,7 +73,7 @@ class ProductsController extends Controller
         // aqui trabalhar eventlog
         if ( ($idProduct != null) || ($idProduct != false) ) {
             $eventLog['id_products'] = $idProduct;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
 
 
@@ -150,7 +150,7 @@ class ProductsController extends Controller
 
 
             $eventLog['id_products']         = $products->id;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
             $eventLog['description'] = 'Produto ' . $user->name .' atualizado';
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
