@@ -87,7 +87,7 @@ class RemessaModel extends Model
                 remessa
             SET
                 id_product       = :id_product,
-                remessa_type  = :remessa_type,
+                remessa_type     = :remessa_type,
                 quantity         = :quantity,
                 cost             = :cost,
                 date             = :date,

@@ -49,9 +49,9 @@
                    <div class="form-group">
                      <label for="name">Tipo de Entrada:</label>
                      <div class="ui-widget">
-                       <select class="form-control">
+                       <select class="form-control" id="selectRemessaType" name="id_remessa_type">
                          {% for remessaType in remessaTypes %}
-                            <option value="{{ id_remessa_type.id }}">{{ remessaType.name }}</option>
+                            <option value="{{ remessa_type.id }}">{{ remessaType.name }}</option>
                          {% endfor %}
                        </select>
                      </div>

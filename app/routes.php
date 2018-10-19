@@ -103,13 +103,8 @@ $app->group('/admin', function () {
 
     $this->group('/remessa', function () {
         $this->get('[/]', RemessaAdmin::class . ':index');
-        // $this->get('/products', RemessaAdmin::class . ':products');
         $this->get('/consulta_produto', RemessaAdmin::class . ':consulta_produto'); 
         $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
-        //$this->get('/remove/{id:[0-9]+}', RemessaAdmin::class . ':delete');
-        //$this->get('/edit/{id:[0-9]+}', RemessaAdmin::class . ':edit');
-        //$this->map(['GET', 'POST'], '/history/{id:[0-9]+}', ProductsAdmin::class . ':history');
-       // $this->post('/update', ProductsAdmin::class . ':update');
     });
 
     $this->group('/role', function () {

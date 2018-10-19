@@ -81,7 +81,7 @@ class ProductsController extends Controller
             $this->eventLogModel->add($eventLog);
 
               //var_dump($products);
-       // exit;
+             //exit;
 
         }
 

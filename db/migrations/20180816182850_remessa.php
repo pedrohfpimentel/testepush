@@ -29,7 +29,7 @@ class Remessa extends AbstractMigration
     {
         $remessa = $this->table('remessa');
         $remessa->addColumn('id_product', 'integer', ['null' => true]);
-        $remessa->addColumn('remessa_type', 'integer', ['null' => true]);
+        $remessa->addColumn('remessa_type', 'integer');
         $remessa->addColumn('quantity', 'integer', ['null' => true]);
         $remessa->addColumn('cost', 'string', ['null' => true]);
         $remessa->addColumn('date', 'timestamp', ['null' => true]);
