@@ -120,7 +120,7 @@ class ProductsController extends Controller
 
 
         $event_logs = $this->eventLogModel->getByProducts($id);
-
+        
         return $this->view->render($response, 'admin/products/history.twig', ['products' => $products,
             'event_logs' => $event_logs]);
 
