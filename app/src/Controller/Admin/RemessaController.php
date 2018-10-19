@@ -49,10 +49,11 @@ class RemessaController extends Controller
     {
       // get products to autocomplete
       $products = $this->productsModel->getAll();
-
+      var_dump($products);
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
-
+      var_dump($remessaTypes);
+      die;
       return $this->view->render($response, 'admin/remessa/index.twig',
       [
         'products' => $products,
@@ -71,7 +72,7 @@ class RemessaController extends Controller
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
           $products = $this->productsModel->getAll();
-
+         
           // remessa types
           $remessaTypes = $this->remessaTypeModel->getAll();
 
@@ -89,30 +90,42 @@ class RemessaController extends Controller
       //die;
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
-      $remessa['remessa_type'] = (int) $remessa['remessa_type'];
+      $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
       $remessa['cost'] =  $remessa['cost'];
-
+     
 
       $remessa = $this->entityFactory->createRemessa($remessa);
+     
       $idRemessa = $this->remessaModel->add($remessa);
-      var_dump($remessa_type);
-      die;
+    
 
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
          
             $eventLog['id_remessa'] = $idRemessa;
-             $remessa['remessa_type'] = (int) $remessa['remessa_type'];
-      $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
-            //var_dump($idRemessa);
-          //die;
-            $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado';
-            $eventLog['id_products'] = $idRemessa;
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            $this->eventLogModel->add($eventLog);
+
+            if ($remessa->remessa_type == 1){
+               $eventlog['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+
+               $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+               $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado';
+               $eventLog['id_products'] = $idRemessa;
+               $eventLog = $this->entityFactory->createEventLog($eventLog);
+               $this->eventLogModel->add($eventLog);
+          } elseif 
+                 ($remessa->remessa_type == 2){
+                 $eventlog['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+
+                 $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
+                 $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado';
+                 $eventLog['id_products'] = $idRemessa;
+                 $eventLog = $this->entityFactory->createEventLog($eventLog);
+                 $this->eventLogModel->add($eventLog);
+          }
+           
+           
             
             
 
