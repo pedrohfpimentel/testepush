@@ -39,6 +39,12 @@ class RemessaTypeData extends AbstractMigration
                'slug' => 'entrada_compra',
                'name' => 'Compra de item',
                'description' => 'Compra de itens diversos.'
+           ],
+           [
+               'id' => 3,
+               'slug' => 'entrada_inicial',
+               'name' => 'Quantidade inicial do item',
+               'description' => 'Quantidade no momento do cadastro.'
            ]
          ];
          $this->insert('remessa_type', $remessaType);

@@ -48,7 +48,22 @@
               <input type="number" class="form-control" id="quantity" name="quantity" placeholder="00">
             </div>
           </div>
-          
+          <p>Tela para cadastrar entradas no estoque.</p>
+              <input type="hidden" name="id" value="{{ products.id }}">
+              <div class="row">
+                 <div class="col-sm-12">
+                   <div class="form-group">
+                     <label for="name">Tipo de Entrada:</label>
+                     <div class="ui-widget">
+                       <select class="form-control" id="selectRemessaType" name="id_remessa_type">
+                         {% for remessaType in remessaTypes %}
+                            <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
+                         {% endfor %}
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+               </div>
           <button type="submit" class="btn btn-success">Adicionar</button>
         </form>
       </div>

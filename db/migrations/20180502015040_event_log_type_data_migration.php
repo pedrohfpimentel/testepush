@@ -106,6 +106,12 @@ class EventLogTypeDataMigration extends AbstractMigration
                 'name' => 'Recebimento de Doação',
                 'description' => 'Recebimento de doação de itens diversos.'
             ],
+            [
+                'id' => 14,
+                'slug' => 'entrada_inicial',
+                'name' => 'Quantidade inicial do item',
+                'description' => 'Quantidade no momento do cadastro.'
+            ],
 
         ];
         $this->insert('event_log_types', $event_log_types);
