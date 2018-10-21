@@ -76,28 +76,43 @@ class ProductsController extends Controller
                     'remessaTypes' => $remessaTypes
                 ]);
         }
-
         $products = $request->getParsedBody();
-
         $products['category'] = (int) $products['id_products_type'];
         $products['remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
-        var_dump($products);
-        die;
+
         $products = $this->entityFactory->createProducts($products);
         //$remessa = $this->entityFactory->createRemessa($remessa);
      
         $idProduct = $this->productsModel->add($products);
        // $idProduct = $this->remessaModel->add($products);
-    
+        
+
+        //adicionar informacoes da remessa
+        $remessa = $request->getParsedBody();
+        
+        $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
+        $remessa['id_product'] = (int) $remessa['id_product'];
+        $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+        $remessa['quantity'] = (int) $remessa['quantity'];
+        $remessa['cost'] =  $remessa['cost'];
+     
+
+        $remessa = $this->entityFactory->createRemessa($remessa);
+     
+        $idRemessa = $this->remessaModel->add($remessa);
+        //$idProduct = $this->productsModel->add($products);
+        var_dump($products);
+        var_dump($remessa);
+        die;
 
         // aqui trabalhar eventlog
         if ( ($idProduct != null) || ($idProduct != false) ) {
             $eventLog['id_products'] = $idProduct;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
-            $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
-            $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+            //$remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
+            //$remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
