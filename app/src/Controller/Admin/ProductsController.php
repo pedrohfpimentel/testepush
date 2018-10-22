@@ -85,7 +85,7 @@ class ProductsController extends Controller
         //$remessa = $this->entityFactory->createRemessa($remessa);
      
         $idProduct = $this->productsModel->add($products);
-       // $idProduct = $this->remessaModel->add($products);
+       // $idRemessa = $this->remessaModel->add($product);
         
 
         //adicionar informacoes da remessa
@@ -96,13 +96,13 @@ class ProductsController extends Controller
         $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
         $remessa['quantity'] = (int) $remessa['quantity'];
         $remessa['cost'] =  $remessa['cost'];
-     
+        $remessa['id_product'] = $idProduct;
 
         $remessa = $this->entityFactory->createRemessa($remessa);
-     
-        $idRemessa = $this->remessaModel->add($remessa);
+        
+        $idProduct = $this->remessaModel->add($remessa);
         //$idProduct = $this->productsModel->add($products);
-        var_dump($products);
+        //var_dump($products);
         var_dump($remessa);
         die;
 
