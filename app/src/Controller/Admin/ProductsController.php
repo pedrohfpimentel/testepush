@@ -109,14 +109,17 @@ class ProductsController extends Controller
             $eventLog['id_products'] = $idProduct;
             $eventLog['id_remessa'] = $idRemessa;
 
-            //$eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_inicial')->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
           
 
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
+
             $this->eventLogModel->add($eventLog);
+
+
 
         }
 
