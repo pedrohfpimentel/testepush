@@ -133,12 +133,7 @@ class RemessaController extends Controller
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);
           }
-           
-           
-            
-            
-
-          }
+        }
 
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
       return $this->httpRedirect($request, $response, '/admin/products');

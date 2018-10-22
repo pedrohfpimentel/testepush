@@ -100,30 +100,31 @@ class ProductsController extends Controller
 
         $remessa = $this->entityFactory->createRemessa($remessa);
         
+        $idRemessa = $this->remessaModel->add($remessa);
         $idProduct = $this->remessaModel->add($remessa);
-        //$idProduct = $this->productsModel->add($products);
-        //var_dump($products);
-        var_dump($remessa);
-        die;
+    
 
         // aqui trabalhar eventlog
         if ( ($idProduct != null) || ($idProduct != false) ) {
             $eventLog['id_products'] = $idProduct;
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
+            $eventLog['id_remessa'] = $idRemessa;
+
+            //$eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_inicial')->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
-            //$remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
-            //$remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
-      
+          
+
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
 
-
-
-              //var_dump($products);
-             //exit;
-
         }
+
+
+            var_dump($products);
+            var_dump($remessa);
+            var_dump($eventLog);
+             exit;
 
 
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
