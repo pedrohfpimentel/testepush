@@ -109,6 +109,8 @@ class ProductsController extends Controller
             $eventLog['id_products'] = $idProduct;
             $eventLog['id_remessa'] = $idRemessa;
 
+
+
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
             $eventLog = $this->entityFactory->createEventLog($eventLog);
@@ -121,17 +123,19 @@ class ProductsController extends Controller
            
 
             if ($remessa->remessa_type == 1){
+
                 if ( ($idProduct != null) || ($idProduct != false) ) {
-                    
+
                     $eventLog1['id_products'] = $idProduct;
                     $eventLog1['id_remessa'] = $idRemessa;
 
-                    $eventlog1['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+                    //$eventLog1['id_remessa_type'] = (int) $eventLog1['id_remessa_type'];
+                    
+                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
                     var_dump($products);
                     var_dump($remessa);
                     var_dump($eventLog);
                     die;
-                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
                     $eventLog1['description'] = 'Produto ' . $products->name .' cadastrado';
                     $eventLog1['id_products'] = $remessa->id_product;
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
@@ -145,7 +149,7 @@ class ProductsController extends Controller
                     $eventLog1['id_products'] = $idProduct;
                     $eventLog1['id_remessa'] = $idRemessa;
                     
-                    $eventlog1['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+                    //$eventlog1['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
                     $eventLog1['description'] = 'Produto ' . $products->name .' cadastrado';
                     $eventLog1['id_products'] = $remessa->id_product;
@@ -160,7 +164,7 @@ class ProductsController extends Controller
                     $eventLog1['id_products'] = $idProduct;
                     $eventLog1['id_remessa'] = $idRemessa;
                     
-                    $eventlog1['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+                    //$eventlog1['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_inicial')->id;
                     $eventLog1['description'] = 'Produto ' . $products->name .' cadastrado';
                     $eventLog1['id_products'] = $remessa->id_product;
@@ -181,7 +185,7 @@ class ProductsController extends Controller
         return $this->httpRedirect($request, $response, '/admin/products');
 
 
-
+    }
     }
     public function delete(Request $request, Response $response, array $args): Response
     {
