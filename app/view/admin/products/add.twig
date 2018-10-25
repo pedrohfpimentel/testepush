@@ -15,55 +15,87 @@
     <div class="row">
       <div class="col-xs-12">
         <h3>Adicionar Produto</h3>
+        
       </div>
     </div>
   </div>
   <div class="card-content">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
+        
         <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/products/add" method="POST">
-          <input type="hidden" name="id" value="{{ products.id }}">
-          <div class="form-group">
-            <label for="name">Nome:</label>
-            <input class="form-control" id="name" type="text" name="name" placeholder="Nome" autofocus required>
-          </div>
-
-          <div class="form-group">
-            <label for="description">Descrição:</label>
-            <input id="description" class="form-control" type="text" name="description" placeholder="Descrição" required>
-          </div>
-
           <div class="row">
-            <div class="col-sm-10">
-              <div class="form-group">
-            <label for="selectProductsType">Categoria do Produto</label>
-            <select class="form-control" id="selectProductsType" name="id_products_type">
-              {% for products_type in products_type %}
-              <option value="{{ products_type.id }}">{{ products_type.name }}</option>
-              {% endfor %}</select>
-          </div>
-          </div>
-            <div class=" col-sm-2 form-group">
-              <label for="quantity">Quantidade</label>
-              <input type="number" class="form-control" id="quantity" name="quantity" placeholder="00">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-10">
+                  <h4>Dados cadastrais do produto:</h4>
+                  <input type="hidden" name="id" value="{{ products.id }}">
+                  <div class="form-group">
+                    <label for="name">Nome:</label>
+                    <input class="form-control" id="name" type="text" name="name" placeholder="Nome" autofocus required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="description">Descrição:</label>
+                    <input id="description" class="form-control" type="text" name="description" placeholder="Descrição" required>
+                  </div>
+                </div>
+              </div>
+              
+
+              <div class="row">
+                <div class="col-sm-10">
+                  <div class="form-group">
+                    <label for="selectProductsType">Categoria do Produto</label>
+                    <select class="form-control" id="selectProductsType" name="id_products_type">
+                      {% for products_type in products_type %}
+                      <option value="{{ products_type.id }}">{{ products_type.name }}</option>
+                      {% endfor %}</select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <input type="hidden" name="id" value="{{ products.id }}">
+              <h4>Entrada Inicial do Estoque:</h4>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="name">Tipo de Entrada:</label>
+                    <div class="ui-widget">
+                      <select class="form-control" id="selectRemessaType" name="id_remessa_type">
+                        {% for remessaType in remessaTypes %}
+                          <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class=" col-sm-2 form-group">
+                  <label for="quantity">Quantidade</label>
+                  <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                </div>
+
+                <div class=" col-sm-4 form-group">
+                  <label for="cost">Custo</label>
+
+                  <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
+
+                </div>
+
+                <div class=" col-sm-4 form-group">
+                  <label for="quantity">Data de Entrada</label>
+                  <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                </div>
+              </div>
             </div>
           </div>
-          <p>Tela para cadastrar entradas no estoque.</p>
-              <input type="hidden" name="id" value="{{ products.id }}">
-              <div class="row">
-                 <div class="col-sm-12">
-                   <div class="form-group">
-                     <label for="name">Tipo de Entrada:</label>
-                     <div class="ui-widget">
-                       <select class="form-control" id="selectRemessaType" name="id_remessa_type">
-                         {% for remessaType in remessaTypes %}
-                            <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
-                         {% endfor %}
-                       </select>
-                     </div>
-                   </div>
-                 </div>
-               </div>
+          
+          <hr style="border-top: 5px solid #eee;">
+          
           <button type="submit" class="btn btn-success">Adicionar</button>
         </form>
       </div>
