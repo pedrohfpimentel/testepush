@@ -132,14 +132,17 @@ class ProductsController extends Controller
                     //$eventLog1['id_remessa_type'] = (int) $eventLog1['id_remessa_type'];
                     
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
-                    var_dump($products);
-                    var_dump($remessa);
-                    var_dump($eventLog);
-                    die;
+                    
+                   // var_dump($products);
+                   // var_dump($remessa);
+                   // var_dump($eventLog1);
+                   // die;
                     $eventLog1['description'] = 'Produto ' . $products->name .' cadastrado';
                     $eventLog1['id_products'] = $remessa->id_product;
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog);
+
+
             }      
           } elseif 
                 ($remessa->remessa_type == 2){
