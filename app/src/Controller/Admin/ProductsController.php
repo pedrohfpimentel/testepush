@@ -136,7 +136,10 @@ class ProductsController extends Controller
             // 5 - linha que adicona o EVENTO DE CADASTRO DO PRODUTO
             $this->eventLogModel->add($eventLog);
 
-            if ($remessa['isRemessaInicial'] == 'true') {
+            // conteúdo da interface
+            $body = $request->getParsedBody();
+
+            if ($body['isRemessaInicial'] == 'true') {
                 // 6 - tratamento de event logs 
                 if ($remessa->remessa_type == 1){
 
