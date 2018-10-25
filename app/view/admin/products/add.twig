@@ -41,8 +41,6 @@
                   </div>
                 </div>
               </div>
-              
-
               <div class="row">
                 <div class="col-sm-10">
                   <div class="form-group">
@@ -56,41 +54,56 @@
               </div>
             </div>
             <div class="col-sm-6">
-              <input type="hidden" name="id" value="{{ products.id }}">
-              <h4>Entrada Inicial do Estoque:</h4>
               <div class="row">
                 <div class="col-sm-12">
-                  <div class="form-group">
-                    <label for="name">Tipo de Entrada:</label>
-                    <div class="ui-widget">
-                      <select class="form-control" id="selectRemessaType" name="id_remessa_type">
-                        {% for remessaType in remessaTypes %}
-                          <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
-                        {% endfor %}
-                      </select>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="isRemessaInicial" id="isRemessaInicial" value="true">
+                      Remessa Inicial ?
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div id="remessaPanel" class="row" style="display:none;">
+                <div class="col-sm-12">
+                      <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <input type="hidden" name="id" value="{{ products.id }}">
+                        <h4>Entrada Inicial do Estoque:</h4>
+                        <label for="name">Tipo de Entrada:</label>
+                        <div class="ui-widget">
+                          <select class="form-control" id="selectRemessaType" name="id_remessa_type">
+                            {% for remessaType in remessaTypes %}
+                              <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-sm-2 form-group">
+                      <label for="quantity">Quantidade</label>
+                      <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" >
+                    </div>
+
+                    <div class=" col-sm-4 form-group">
+                      <label for="cost">Custo</label>
+
+                      <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" />
+
+                    </div>
+
+                    <div class=" col-sm-4 form-group">
+                      <label for="quantity">Data de Entrada</label>
+                      <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div class="row">
-                <div class=" col-sm-2 form-group">
-                  <label for="quantity">Quantidade</label>
-                  <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
-                </div>
-
-                <div class=" col-sm-4 form-group">
-                  <label for="cost">Custo</label>
-
-                  <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
-
-                </div>
-
-                <div class=" col-sm-4 form-group">
-                  <label for="quantity">Data de Entrada</label>
-                  <input type="date" class="form-control" id="input_date" name="date" placeholder="">
-                </div>
-              </div>
+              
             </div>
           </div>
           
@@ -107,5 +120,17 @@
 {% endblock %}
 {% block javascripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+
+<script>
+  $('#isRemessaInicial').on('change', function () {
+      console.log($(this).checked);
+      if ($(this).is(':checked')) {
+        $('#remessaPanel').show('slow');
+      } else {
+        $('#remessaPanel').hide('slow');
+      }
+    }
+  );
+</script>
 
 {% endblock %}

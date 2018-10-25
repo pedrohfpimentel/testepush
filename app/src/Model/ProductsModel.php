@@ -14,17 +14,15 @@ class ProductsModel extends Model
             INSERT INTO products (
                 name,
                 description,
-                category,
-                quantity
+                category
                 )
-            VALUES (:name, :description, :category, :quantity)
+            VALUES (:name, :description, :category)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
             ':name'          => $products->name,
             ':description'   => $products->description,
-            ':category'      => $products->category,
-            ':quantity'      => $products->quantity
+            ':category'      => $products->category
 
         ];
         if ($query->execute($parameters)) {
@@ -86,8 +84,7 @@ class ProductsModel extends Model
             SET
                 name         = :name,
                 description  = :description,
-                category     = :category,
-                quantity     = :quantity
+                category     = :category
 
             WHERE
                 id = :id
@@ -97,8 +94,7 @@ class ProductsModel extends Model
             ':id'           => $products->id,
             ':name'         => $products->name,
             ':description'  => $products->description,
-            ':category'     => $products->category,
-            ':quantity'     => $products->quantity
+            ':category'     => $products->category
             ];
         return $query->execute($parameters);
     }
