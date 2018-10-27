@@ -148,7 +148,7 @@ class ProductsController extends Controller
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
 
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
-                    $eventLog1['id_products'] = $remessa->id_product;
+                   // $eventLog1['id_products'] = $remessa->id_product;
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
 
