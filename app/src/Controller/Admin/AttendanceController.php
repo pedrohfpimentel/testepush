@@ -20,6 +20,8 @@ class AttendanceController extends Controller
     protected $patientModel;
     protected $productModel;
     protected $professionalModel;
+    protected $remessaModel;
+    protected $remessaTypeModel;
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
@@ -32,6 +34,8 @@ class AttendanceController extends Controller
         Model $patientModel,
         Model $productModel,
         Model $professionalModel,
+        Model $remessaModel,
+        Model $remessaTypeModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
@@ -42,6 +46,8 @@ class AttendanceController extends Controller
         $this->patientModel         = $patientModel;
         $this->productModel         = $productModel;
         $this->professionalModel    = $professionalModel;
+        $this->remessaModel         = $remessaModel;
+        $this->remessaTypeModel     = $remessaTypeModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
