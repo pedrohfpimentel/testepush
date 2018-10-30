@@ -53,6 +53,20 @@ class ProductsController extends Controller
         // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
 
+      // getQuantidade function
+       
+   
+                $remessa_quantidade = $this->productsModel->getQuantidade(1);
+                 $sum = 0;
+            foreach($sum as $remessa_quantidade => $value){
+                //$products['id_product'] = $id_product;
+                  var_dump($remessa_quantidade);
+                  die;
+
+                $sum += (int)$value['QuantidadeTotal'];
+            }
+            
+      
         // get quantity from remessas
         foreach ($products as $product) {
           // $remessaList = $this->remessaModel->getAll($product->id);
