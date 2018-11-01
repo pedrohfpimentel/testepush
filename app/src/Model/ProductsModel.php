@@ -99,9 +99,10 @@ class ProductsModel extends Model
             SELECT
                 id
             FROM
-                product
+                products
         ";
         $query = $this->db->prepare($sql);
+        $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Product::class);
         return $query->fetchAll();
     }

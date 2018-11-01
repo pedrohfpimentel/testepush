@@ -57,18 +57,19 @@ class ProductsController extends Controller
     
     
     
-        $products_id = $this->productsModel->getProductID();
+       // $products_id = $this->productsModel->getProductID();
 
-        foreach($products_id as $product_id) {
+        foreach($products as $product) {
 
-            $quantity = 0;     
-            $remessas = $this->productsModel->getRemessasByIdProduct($product_id->id); 
-           
+            $quantity = 0;               
+            $remessas = $this->productsModel->getRemessasByIdProduct($product->id); 
+            
                 foreach($remessas as $remessa) {
-                    $quantity = $quantity + $remessa->quantity;  
+                    $quantity = $quantity + $remessa->quantity; 
                 }
-                var_dump($quantity);
-                die;
+
+                var_dump($remessas);
+                die; 
         }
           
              
@@ -81,7 +82,7 @@ class ProductsController extends Controller
         [
             'products' => $products,
             'remessaTypes' => $remessaTypes,
-         //   'quantity'=> $quantity
+            'quantity'=> $quantity
         ]);
     }
 
