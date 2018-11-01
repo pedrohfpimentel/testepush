@@ -76,7 +76,7 @@ class ProductsModel extends Model
         return $query->fetchAll();
     }
 
-    public function getQuantidade($id_product): array
+    public function getRemessasByIdProduct($id_product): array
     {
         $sql = "
             SELECT
@@ -90,6 +90,19 @@ class ProductsModel extends Model
         $parameters = [':id_product' => $id_product];
         $query->execute($parameters);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
+        return $query->fetchAll();
+    }
+
+    public function getProductID(): array
+    {
+        $sql = "
+            SELECT
+                id
+            FROM
+                product
+        ";
+        $query = $this->db->prepare($sql);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Product::class);
         return $query->fetchAll();
     }
 
