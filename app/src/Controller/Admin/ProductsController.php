@@ -65,13 +65,11 @@ class ProductsController extends Controller
             $remessas = $this->productsModel->getRemessasByIdProduct($product->id); 
             
                 foreach($remessas as $remessa) {
-                    $quantity = $quantity + $remessa->quantity; 
+                    $quantity = $quantity + $remessa->quantity;      
                 }
-
-                var_dump($remessas);
-                die; 
+                var_dump($quantity);            
         }
-          
+          die;
              
         // get quantity from remessas
         foreach ($products as $product) {
