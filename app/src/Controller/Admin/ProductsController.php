@@ -67,9 +67,11 @@ class ProductsController extends Controller
                 foreach($remessas as $remessa) {
                     $quantity = $quantity + $remessa->quantity;      
                 }
-                var_dump($quantity);            
+
+            $product->quantity= $quantity;
+                //var_dump($quantity);            
         }
-          die;
+         // die;
              
         // get quantity from remessas
         foreach ($products as $product) {
