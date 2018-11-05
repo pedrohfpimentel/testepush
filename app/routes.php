@@ -12,6 +12,7 @@ use Farol360\Ancora\Controller\Admin\ProductsTypeController as ProductsTypeAdmin
 use Farol360\Ancora\Controller\Admin\ProfessionalController as ProfessionalAdmin;
 use Farol360\Ancora\Controller\Admin\ProfessionalTypeController as ProfessionalTypeAdmin;
 use Farol360\Ancora\Controller\Admin\RemessaController as RemessaAdmin;
+use Farol360\Ancora\Controller\Admin\RemessaSaidaController as RemessaSaidaAdmin;
 use Farol360\Ancora\Controller\Admin\RoleController as RoleAdmin;
 use Farol360\Ancora\Controller\Admin\UserController as UserAdmin;
 use Farol360\Ancora\Controller\Admin\SupplierController as SupplierAdmin;
