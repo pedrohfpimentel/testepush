@@ -12,7 +12,7 @@ use Slim\Views\Twig as View;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class RemessaController extends Controller
+class RemessaSaidaController extends Controller
 {
 
     protected $remessaSaidaModel;
@@ -52,7 +52,7 @@ class RemessaController extends Controller
       $products = $this->productsModel->getAll();
       
       // remessa types
-      $remessaSaidaTypes = $this->remessaSaidadTypeModel->getAll();
+      $remessaSaidaTypes = $this->remessaSaidaTypeModel->getAll();
      
       return $this->view->render($response, 'admin/remessa_saida/index.twig',
       [
@@ -93,21 +93,21 @@ class RemessaController extends Controller
         
 
 
-      $remessa_saida = $request->getParsedBody();
+      $remessa = $request->getParsedBody();
 
      // var_dump($remessa);
       //die;
 
-      $remessa_saida['id_product'] = (int) substr($remessa_saida['id_product'], 0, strpos($remessa_saida['id_product'], ' '));
-      $remessa_saida['remessa_type'] = (int) $remessa_saida['id_remessa_type'];
-      $remessa_saida['id_remessa_type'] = (int) $remessa_saida['id_remessa_type'];
-      $remessa_saida['quantity'] = (int) $remessa_saida['quantity'];
-      $remessa_saida['cost'] =  $remessa_saida['cost'];
+      $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
+      $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
+      $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+      $remessa['quantity'] = (int) $remessa['quantity'];
+      $remessa['cost'] =  $remessa['cost'];
      
 
-      $remessa_saida = $this->entityFactory->createRemessa($remessa_saida);
+      $remessa_saida = $this->entityFactory->createRemessaSaida($remessa);
      
-      $idRemessa = $this->remessaModel->add($remessa);
+      $idRemessa = $this->remessaSaidaModel->add($remessa);
     
 
       // aqui trabalhar eventlog

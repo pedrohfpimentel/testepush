@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class RemessaTypeData extends AbstractMigration
+class RemessaSaidaTypeData extends AbstractMigration
 {
     /**
      * Change Method.
@@ -25,28 +25,21 @@ class RemessaTypeData extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-     public function up()
+    public function up()
      {
          $remessaType = [
            [
-               'id' => 1,
-               'slug' => 'entrada_doacao',
-               'name' => 'Recebimento de Doação',
+               'id' => 4,
+               'slug' => 'saida_doacao',
+               'name' => 'Saida de Doação',
                'description' => 'Recebimento de doação de itens diversos.'
            ],
            [
-               'id' => 2,
-               'slug' => 'entrada_compra',
-               'name' => 'Compra de item',
-               'description' => 'Compra de itens diversos.'
+               'id' => 5,
+               'slug' => 'saida_emprestimo',
+               'name' => 'Saida de Empréstimo',
+               'description' => 'Saída do item por empréstimo.'
            ],
-           [
-               'id' => 3,
-               'slug' => 'remessa_inicial',
-               'name' => 'Remessa Inicial',
-               'description' => 'Entrada inicial de produtos.'
-           ],
-          
          ];
          $this->insert('remessa_type', $remessaType);
      }

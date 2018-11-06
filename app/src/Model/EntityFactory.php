@@ -14,6 +14,7 @@ use Farol360\Ancora\Model\ProductsType;
 use Farol360\Ancora\Model\Professional;
 use Farol360\Ancora\Model\ProfessionalType;
 use Farol360\Ancora\Model\Remessa;
+use Farol360\Ancora\Model\RemessaSaida;
 use Farol360\Ancora\Model\Supplier;
 
 
@@ -74,6 +75,11 @@ class EntityFactory
     public function createRemessa(array $data = []): Remessa
     {
         return new Remessa($data);
+    }
+
+    public function createRemessaSaida(array $data = []): RemessaSaida
+    {
+        return new RemessaSaida($data);
     }
 
     public function createSupplier(array $data = []): Supplier

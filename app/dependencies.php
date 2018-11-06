@@ -132,6 +132,8 @@ $container['Farol360\Ancora\Controller\Admin\AttendanceController'] = function (
         new Farol360\Ancora\Model\ProfessionalModel($c['db']),
         new Farol360\Ancora\Model\RemessaModel($c['db']),
         new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
+        new Farol360\Ancora\Model\RemessaSaidaModel($c['db']),
+        new Farol360\Ancora\Model\RemessaSaidaTypeModel($c['db']),
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
@@ -179,6 +181,8 @@ $container['Farol360\Ancora\Controller\Admin\ProductsController'] = function ($c
         new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
         new Farol360\Ancora\Model\RemessaModel($c['db']),
         new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
+        new Farol360\Ancora\Model\RemessaSaidaModel($c['db']),
+        new Farol360\Ancora\Model\RemessaSaidaTypeModel($c['db']),
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
@@ -235,6 +239,25 @@ $container['Farol360\Ancora\Controller\Admin\RemessaController'] = function ($c)
         $c['flash'],
         new Farol360\Ancora\Model\RemessaModel($c['db']),
         new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
+         new Farol360\Ancora\Model\RemessaSaidaModel($c['db']),
+        new Farol360\Ancora\Model\RemessaSaidaTypeModel($c['db']),
+        new Farol360\Ancora\Model\ProductsModel($c['db']),
+        new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+        new Farol360\Ancora\Model\UserModel($c['db']),
+        new Farol360\Ancora\Model\EventLogModel($c['db']),
+        new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
+        new Farol360\Ancora\Model\EntityFactory()
+    );
+};
+
+$container['Farol360\Ancora\Controller\Admin\RemessaSaidaController'] = function ($c) {
+    return new Farol360\Ancora\Controller\Admin\RemessaSaidaController(
+        $c['view'],
+        $c['flash'],
+        new Farol360\Ancora\Model\RemessaModel($c['db']),
+        new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
+         new Farol360\Ancora\Model\RemessaSaidaModel($c['db']),
+        new Farol360\Ancora\Model\RemessaSaidaTypeModel($c['db']),
         new Farol360\Ancora\Model\ProductsModel($c['db']),
         new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
         new Farol360\Ancora\Model\UserModel($c['db']),

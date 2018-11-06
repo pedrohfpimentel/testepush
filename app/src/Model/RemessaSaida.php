@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Farol360\Ancora\Model;
 
-class Remessa
+class RemessaSaida
 {
     public $id;
     public $id_product;

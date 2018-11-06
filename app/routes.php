@@ -108,6 +108,12 @@ $app->group('/admin', function () {
         $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
     });
 
+    $this->group('/remessa_saida', function () {
+        $this->get('[/]', RemessaSaidaAdmin::class . ':index');
+        $this->get('/consulta_produto', RemessaSaidaAdmin::class . ':consulta_produto'); 
+        $this->map(['GET', 'POST'], '/add', RemessaSaidaAdmin::class . ':add');
+    });
+
     $this->group('/role', function () {
         $this->get('[/]', RoleAdmin::class . ':index');
         $this->map(['GET', 'POST'], '/add', RoleAdmin::class . ':add');

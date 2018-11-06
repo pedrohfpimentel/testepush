@@ -340,6 +340,42 @@ class BaseDataMigration extends AbstractMigration
                 'description' => 'Remessa - update',
                 'role_id' => 2,
             ],
+
+
+
+            [
+                'resource' => '/admin/remessa_saida',
+                'description' => 'Fabricantes',
+                'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa_saida/add',
+                'description' => 'Remessa Saida -Add.',
+                'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa_saida/consulta_produto',
+                'description' => 'Ajax para consulta de produto.',
+                'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa_saida/edit/:id',
+                'description' => 'Remessa Saida',
+                'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa_saida/remove/:id',
+                'description' => 'Remessa Saida -Remove.',
+                'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa_saida/update',
+                'description' => 'Remessa Saida - update',
+                'role_id' => 2,
+            ],
+
+
+
             [
                 'resource' => '/admin/suppliers',
                 'description' => 'Fabricantes',

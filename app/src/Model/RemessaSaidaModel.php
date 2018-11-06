@@ -6,7 +6,7 @@ namespace Farol360\Ancora\Model;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\Remessa;
 
-class RemessaModel extends Model
+class RemessaSaidaModel extends Model
 {
     public function add(Remessa $remessa)
     {
