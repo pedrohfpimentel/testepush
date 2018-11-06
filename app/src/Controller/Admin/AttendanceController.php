@@ -87,7 +87,7 @@ class AttendanceController extends Controller
         {
             $eventLog['id_patient']         = $attendance->id_patient;
             $eventLog['id_professional']    = $attendance->id_professional;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance')->id;
             $eventLog['description'] = $attendance->description;
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);

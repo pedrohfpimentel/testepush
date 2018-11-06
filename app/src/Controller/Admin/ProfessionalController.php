@@ -78,7 +78,7 @@ class ProfessionalController extends Controller
 
         if ( ($id_professional != null) || ($id_professional != false) ) {
             $eventLog['id_professional']    = $id_professional;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('create_professional')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_professional')->id;
             $eventLog['description'] = 'Profissional ' . $user->name .' cadastrado';
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);

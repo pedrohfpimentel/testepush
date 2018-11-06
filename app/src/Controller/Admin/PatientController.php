@@ -77,7 +77,7 @@ class PatientController extends Controller
         }
 
         $user = $this->entityFactory->createUser($data);
-
+        
         // add new user
         $patient['id_user'] = $this->userModel->add($user);
 
@@ -87,9 +87,9 @@ class PatientController extends Controller
         // set disease
         $patient['id_disease'] = (int) $data['id_disease'];
 
-        $patient['tel_area_2'] = $data['tel_area_2'];
+        $patient['tel_area_2'] = (int) $data['tel_area_2'];
 
-        $patient['tel_numero_2'] = $data['tel_numero_2'];
+        $patient['tel_numero_2'] = (int) $data['tel_numero_2'];
 
         $patient['obs_tel'] = $data['obs_tel'];
 
@@ -110,7 +110,7 @@ class PatientController extends Controller
         if ( ($id_patient != null) || ($id_patient != false) )
         {
             $eventLog['id_patient']         = $id_patient;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('create_patient')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_patient')->id;
             $eventLog['description'] = 'Paciente ' . $user->name .' cadastrado';
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
