@@ -20,6 +20,7 @@ class ProductsController extends Controller
     protected $productsTypeModel;
     protected $remessaModel;
     protected $remessaTypeModel;
+    protected $supplierModel;
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
@@ -29,6 +30,7 @@ class ProductsController extends Controller
         Model $productsTypeModel,
         Model $remessaModel,
         Model $remessaTypeModel,
+        Model $supplierModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
@@ -39,6 +41,7 @@ class ProductsController extends Controller
         $this->productsTypeModel    = $productsTypeModel;
         $this->remessaModel         = $remessaModel;
         $this->remessaTypeModel     = $remessaTypeModel;
+        $this->supplierModel        = $supplierModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
@@ -106,10 +109,12 @@ class ProductsController extends Controller
         if (empty($request->getParsedBody())) {
             $products_type = $this->productsTypeModel->getAll();
             $remessaTypes = $this->remessaTypeModel->getAll();
+            $id_supplier = $this->supplierModel->getAll();
             return $this->view->render($response, 'admin/products/add.twig', 
                 [
                     'products_type' => $products_type, 
-                    'remessaTypes' => $remessaTypes
+                    'remessaTypes' => $remessaTypes,
+                    'id_supplier'      => $id_supplier
                 ]);
         }
 
@@ -120,15 +125,18 @@ class ProductsController extends Controller
         $products['category'] = (int) $products['id_products_type'];
         $products['remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
+        $products['id_supplier'] = (int) $products['id_supplier'];
+
+        
 
         $products = $this->entityFactory->createProducts($products);
         
         // 2 - CADASTRO DO PRODUTO
         $idProduct = $this->productsModel->add($products);
-
+   
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
-        
+         
         if ($remessa['isRemessaInicial'] == 'true') {
             $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
             //$remessa['id_product'] = (int) $remessa['id_product'];
@@ -143,7 +151,7 @@ class ProductsController extends Controller
             $idRemessa = $this->remessaModel->add($remessa);
         
         }
-         
+        
 
         // tratamento de eventlogs
         if ( ($idProduct != null) || ($idProduct != false) ) {
@@ -194,7 +202,7 @@ class ProductsController extends Controller
             }
 
             
-        }
+        } 
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');
 
@@ -244,6 +252,7 @@ class ProductsController extends Controller
         $products['id'] = (int) $data['id'];
         $products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
+         $products['id_supplier'] = (int) $products['id_supplier'];
 
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;

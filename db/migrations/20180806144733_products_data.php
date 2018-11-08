@@ -33,7 +33,7 @@ class ProductsData extends AbstractMigration
                 'name'        => 'Produto Padrão',
                 'description' => 'Descrição do Produto Padrão',
                 'category'    => 1,
-                
+                'id_supplier'    => 1,
             ]
         ];
         $this->insert('products', $products);

@@ -10,6 +10,7 @@ class Products
     public $description;
     public $category;
     public $quantity;
+    public $id_supplier;
    
     public function __construct(array $data = [])
     {
@@ -18,5 +19,6 @@ class Products
         $this->description = $data['description'] ?? null;
         $this->category = $data['category'] ?? null;
         $this->quantity = $data['quantity'] ?? null;
+        $this->id_supplier = $data['id_supplier'] ?? null;
      }
 }
