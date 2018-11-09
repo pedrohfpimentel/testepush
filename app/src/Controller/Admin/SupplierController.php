@@ -60,7 +60,7 @@ class SupplierController extends Controller
         $id = intval($args['id']);
         $this->supplierModel->delete($id);
 
-        $this->flash->addMessage('success', 'Fornecedor removida com sucesso.');
+        $this->flash->addMessage('success', 'Fornecedor removido com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/suppliers'); 
     }
 

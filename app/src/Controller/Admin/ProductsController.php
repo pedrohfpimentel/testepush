@@ -110,13 +110,18 @@ class ProductsController extends Controller
             $products_type = $this->productsTypeModel->getAll();
             $remessaTypes = $this->remessaTypeModel->getAll();
             $id_supplier = $this->supplierModel->getAll();
+
             return $this->view->render($response, 'admin/products/add.twig', 
                 [
                     'products_type' => $products_type, 
                     'remessaTypes' => $remessaTypes,
-                    'id_supplier'      => $id_supplier
+                    'id_supplier'      => $id_supplier,
+                    'patrimony'    => $patrimony,
+                    'patrimony_code' => $patrimony_code
                 ]);
         }
+
+   
 
         // A partir desta linha, segue a lógica para o cadastro do produto.
 
@@ -126,14 +131,34 @@ class ProductsController extends Controller
         $products['remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
+        
+        if (isset($products['patrimony'])) {
+
+
+            if ($products['patrimony'] == true) {
+ 
+                $products['patrimony'] == 1;
+        
+            } else {
+
+                $products['patrimony'] == 0;
+
+            }
+
+        }
+        $products['patrimony_code'] = (int) $products['patrimony_code'];
 
         
-
+        var_dump($products);
+        die;
+        
         $products = $this->entityFactory->createProducts($products);
         
         // 2 - CADASTRO DO PRODUTO
         $idProduct = $this->productsModel->add($products);
-   
+
+
+
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
          
@@ -212,7 +237,7 @@ class ProductsController extends Controller
     {
         $id = intval($args['id']);
         $this->productsModel->delete($id);
-        $this->flash->addMessage('success', 'Produto removida com sucesso.');
+        $this->flash->addMessage('success', 'Produto removido com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');
     }
 
