@@ -137,11 +137,11 @@ class ProductsController extends Controller
 
             if ($products['patrimony'] == true) {
  
-                $products['patrimony'] == 1;
+                $products['patrimony'] = 1;
         
             } else {
 
-                $products['patrimony'] == 0;
+                $products['patrimony'] = 0;
 
             }
 
