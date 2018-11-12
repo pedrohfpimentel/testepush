@@ -132,10 +132,11 @@ class ProductsController extends Controller
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
         
-        if (isset($products['patrimony'])) {
+      //  if (isset($products['patrimony'])) {
 
 
-            if ($products['patrimony'] == true) {
+            if (
+                $products['patrimony'] == true) {
  
                 $products['patrimony'] = 1;
         
@@ -145,12 +146,12 @@ class ProductsController extends Controller
 
             }
 
-        }
+        //}
         $products['patrimony_code'] = (int) $products['patrimony_code'];
 
         
-        var_dump($products);
-        die;
+        //var_dump($products);
+        //die;
         
         $products = $this->entityFactory->createProducts($products);
         
