@@ -33,7 +33,7 @@ class ProductsMigration extends AbstractMigration
         $products->addColumn('category', 'integer',['null' => true]);
         $products->addColumn('id_supplier', 'integer',['null' => true]);
         $products->addColumn('patrimony', 'integer',['null' => true]);
-        $products->addColumn('patrimony_code', 'integer',['null' => true]);
+       // $products->addColumn('patrimony_code', 'integer',['null' => true]);
         
         $products->create();
     }

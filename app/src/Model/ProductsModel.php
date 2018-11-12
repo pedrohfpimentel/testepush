@@ -16,10 +16,10 @@ class ProductsModel extends Model
                 description,
                 category,
                 id_supplier,
-                patrimony,
-                patrimony_code
+                patrimony
+                
                 )
-            VALUES (:name, :description, :category, :id_supplier, :patrimony, :patrimony_code)
+            VALUES (:name, :description, :category, :id_supplier, :patrimony)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -27,8 +27,8 @@ class ProductsModel extends Model
             ':description'   => $products->description,
             ':category'      => $products->category,
             ':id_supplier'   => $products->id_supplier,
-            ':patrimony'     => $products->patrimony,
-            ':patrimony_code'=> $products->patrimony_code
+            ':patrimony'     => $products->patrimony
+            
 
         ];
         if ($query->execute($parameters)) {
@@ -123,8 +123,8 @@ class ProductsModel extends Model
                 description  = :description,
                 category     = :category,
                 id_supplier  = :id_supplier,
-                patimony     = :patimony,
-                patrimony_code = :patrimony_code
+                patrimony     = :patrimony
+                
 
             WHERE
                 id = :id
@@ -136,8 +136,8 @@ class ProductsModel extends Model
             ':description'  => $products->description,
             ':category'     => $products->category,
             ':id_supplier'  => $products->id_supplier,
-            'patrimony'=> $products->patrimony,
-            'patrimony_code' => $products->patrimony_code
+            ':patrimony'=> $products->patrimony
+            
             ];
         return $query->execute($parameters);
     }

@@ -111,13 +111,15 @@ class ProductsController extends Controller
             $remessaTypes = $this->remessaTypeModel->getAll();
             $id_supplier = $this->supplierModel->getAll();
 
+            $patrimony = 1;
+
             return $this->view->render($response, 'admin/products/add.twig', 
                 [
                     'products_type' => $products_type, 
                     'remessaTypes' => $remessaTypes,
-                    'id_supplier'      => $id_supplier,
-                    'patrimony'    => $patrimony,
-                    'patrimony_code' => $patrimony_code
+                    'id_supplier'    => $id_supplier,
+                    'patrimony'    => $patrimony
+                    //'patrimony_code' => $patrimony_code
                 ]);
         }
 
@@ -147,7 +149,7 @@ class ProductsController extends Controller
             }
 
         //}
-        $products['patrimony_code'] = (int) $products['patrimony_code'];
+     //   $products['patrimony_code'] = (int) $products['patrimony_code'];
 
         
         //var_dump($products);
@@ -170,6 +172,8 @@ class ProductsController extends Controller
             $remessa['quantity'] = (int) $remessa['quantity'];
             //$remessa['cost'] =  $remessa['cost'];
             $remessa['id_product'] = $idProduct;
+
+            $remessa['patrimony_code'] = (int) $remessa['patrimony_code'];
 
             $remessa = $this->entityFactory->createRemessa($remessa);
             
@@ -278,7 +282,7 @@ class ProductsController extends Controller
         $products['id'] = (int) $data['id'];
         $products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
-         $products['id_supplier'] = (int) $products['id_supplier'];
+        $products['id_supplier'] = (int) $products['id_supplier'];
 
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;

@@ -86,7 +86,8 @@ class RemessaController extends Controller
           return $this->view->render($response, 'admin/remessa/index.twig',
           [
             'products' => $products,
-            'remessaTypes' => $remessaTypes
+            'remessaTypes' => $remessaTypes,
+            'patrimony_code' => $patrimony_code
           ]);
         }
 

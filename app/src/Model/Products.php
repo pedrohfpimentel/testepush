@@ -12,7 +12,7 @@ class Products
     public $quantity;
     public $id_supplier;
     public $patrimony;
-    public $patrimony_code;
+    //public $patrimony_code;
    
     public function __construct(array $data = [])
     {
@@ -23,6 +23,6 @@ class Products
         $this->quantity = $data['quantity'] ?? null;
         $this->id_supplier = $data['id_supplier'] ?? null;
         $this->patrimony = $data['patrimony'] ?? null;
-        $this->patrimony_code = $data['patrimony_code'] ?? null;
+        //$this->patrimony_code = $data['patrimony_code'] ?? null;
      }
 }
