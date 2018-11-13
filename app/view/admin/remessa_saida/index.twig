@@ -42,12 +42,12 @@
         <div class="row">
           <div class="col-md-12">
             <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
-              <p>Tela para cadastrar entradas no estoque.</p>
+              <p>Tela para cadastrar saída no estoque.</p>
               <input type="hidden" name="id" value="{{ products.id }}">
               <div class="row">
                  <div class="col-sm-12">
                    <div class="form-group">
-                     <label for="name">Tipo de Entrada:</label>
+                     <label for="name">Tipo de Saída:</label>
                      <div class="ui-widget">
                        <select class="form-control" id="selectRemessaSaidaType" name="id_remessa_saida_type">
                          {% for remessaSaidaType in remessaSaidaTypes %}
@@ -83,7 +83,7 @@
                  </div>
 
                  <div class=" col-sm-4 form-group">
-                   <label for="quantity">Data de Entrada</label>
+                   <label for="quantity">Data de Saída</label>
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>
                </div>
