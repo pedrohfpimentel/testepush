@@ -57,12 +57,7 @@ class ProductsController extends Controller
       $remessaTypes = $this->remessaTypeModel->getAll();
 
       // getRemessasByIdProduct function
-    
-    
-    
-       // $products_id = $this->productsModel->getProductID();
-
-        foreach($products as $product) {
+          foreach($products as $product) {
 
             $quantity = 0;               
             $remessas = $this->productsModel->getRemessasByIdProduct($product->id); 
@@ -72,13 +67,12 @@ class ProductsController extends Controller
                 }
 
             $product->quantity= $quantity;
-                //var_dump($quantity);            
+                           
         }
-         // die;
+        
              
         // get quantity from remessas
         foreach ($products as $product) {
-          // $remessaList = $this->remessaModel->getAll($product->id);
         }
 
         return $this->view->render($response, 'admin/products/index.twig', 

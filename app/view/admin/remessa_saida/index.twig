@@ -1,0 +1,170 @@
+{% extends "admin/layout.twig" %}
+{% block html_title %}Produtos - Administração - {{ parent() }}{% endblock %}
+{% set nav_active = 'products' %}
+{% block breadcrumbs %}
+
+
+
+{#<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    var availableTags = ["{{ base_url() }}/admin/products/add"];
+    $( 'products.name' ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+</head>#}
+
+<ol class="breadcrumb">
+  <li><a href="{{ base_url() }}/admin">Início</a></li>
+
+  <li class="active">Adicionar</li>
+   <li>{{ products.name }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-7">
+    <div class=" card">
+      <div class="card-header" data-background-color="blue">
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>Entrada de Estoque</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-12">
+            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
+              <p>Tela para cadastrar entradas no estoque.</p>
+              <input type="hidden" name="id" value="{{ products.id }}">
+              <div class="row">
+                 <div class="col-sm-12">
+                   <div class="form-group">
+                     <label for="name">Tipo de Entrada:</label>
+                     <div class="ui-widget">
+                       <select class="form-control" id="selectRemessaSaidaType" name="id_remessa_saida_type">
+                         {% for remessaSaidaType in remessaSaidaTypes %}
+                            <option value="{{ remessaSaidaType.id }}">{{ remessaSaidaType.name }}</option>
+                         {% endfor %}
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                  <label for="name">Produto:</label>
+                    <div class="ui-widget" >
+                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
+                      <div id="campo_login"> </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+               <div class="row">
+                 <div class=" col-sm-2 form-group">
+                   <label for="quantity">Quantidade</label>
+                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                 </div>
+
+                 <div class=" col-sm-4 form-group">
+                   <label for="cost">Custo</label>
+
+                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
+
+                 </div>
+
+                 <div class=" col-sm-4 form-group">
+                   <label for="quantity">Data de Entrada</label>
+                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                 </div>
+               </div>
+               <button type="submit" value="button" class="btn btn-primary">Adicionar</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+{#mascara monetaria#}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(function() {
+    $('[type=money]').maskMoney({
+      thousands: '.',
+      decimal: ','
+    });
+  });
+</script>
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<script type="text/javascript">
+    $(document).ready(function() {
+       var availableTags = [];
+
+       //autcomplete
+       {% for product in products %}
+        availableTags.push("{{ product.id }} - {{ product.name }}");
+       {% endfor %}
+
+       $( "#input_id_product" ).autocomplete({
+         source: availableTags
+      });
+    });
+</script>
+
+<script type="text/javascript">
+
+  $('#input_id_product').on('change', function() {
+
+    var id_product = $(this).val();
+    id_product = id_product.replace(/ .*/,'');
+
+    console.log(id_product);
+
+    //if (Number.isInteger(id_product)) {
+      $.ajax({
+
+        url: '{{ base_url() }}/admin/remessa_saida/consulta_produto?id='+ id_product,
+
+        beforeSend: function(data) {
+          $("#campo_login").html('');
+        },
+
+        success: function(data) {
+          console.log('sucesso' + data);
+          $("#campo_login").html('<p style="color:green;">Produto selecionado!</p>');
+        },
+
+        error: function(data) {
+          console.log('error' + data);
+          $("#input_id_product").val('');
+          $("#campo_login").html('<p style="color:red;">Erro. Tente um produto válido!</p>');
+        }
+
+      });
+
+    //}
+
+  });
+
+</script>
+{% endblock %}
