@@ -154,7 +154,7 @@ class ProfessionalController extends Controller
         if ( (($professional_return != null) || ($professional_return != false)) && ($user_return != null) || ($user_return != false)  ) {
 
             $eventLog['id_professional']         = $professional->id;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_professional')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_professional')->id;
             $eventLog['description'] = 'Profissional ' . $user->name .' atualizado';
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);

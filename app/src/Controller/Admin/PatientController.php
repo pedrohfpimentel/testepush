@@ -203,7 +203,7 @@ class PatientController extends Controller
         if ( (($patient_return != null) || ($patient_return != false)) && ($user_return != null) || ($user_return != false)  ) {
 
             $eventLog['id_patient']         = $patient->id;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_patient')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_patient')->id;
             $eventLog['description'] = 'Paciente ' . $user->name .' atualizado';
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
