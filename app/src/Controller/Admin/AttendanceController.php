@@ -82,6 +82,9 @@ class AttendanceController extends Controller
 
         $id_attendance = $this->attendanceModel->add($attendance);
 
+       // var_dump($attendance);
+       // die;
+
         // create eventLog when add attendance
         if ( ($id_attendance != null) || ($id_attendance != false) )
         {

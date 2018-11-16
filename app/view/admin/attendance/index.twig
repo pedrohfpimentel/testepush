@@ -87,7 +87,7 @@
               {% for attendance in attendances %}
                 <tr>
                   <td>{{ attendance.id }}</td>
-                  <td>{{ attendance.date }}</td>
+                  <td>{{ attendance.attendance_day }}</td>
                   <td>{{ attendance.professional_name }}</td>
                   <td>{{ attendance.patient_name }}</td>
                   <td style="width:80px"><a class="btn btn-info" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">

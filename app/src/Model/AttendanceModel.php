@@ -14,14 +14,14 @@ class AttendanceModel extends Model
             INSERT INTO attendances (
                 id_patient,
                 id_professional,
-                date,
+                attendance_day,
                 time,
                 description
                 )
             VALUES (
                 :id_patient,
                 :id_professional,
-                :date,
+                :attendance_day,
                 :time,
                 :description
                 )
@@ -30,7 +30,7 @@ class AttendanceModel extends Model
         $parameters = [
             ':id_patient'           => $attendance->id_patient,
             ':id_professional'      => $attendance->id_professional,
-            ':date'                 => $attendance->date,
+            ':attendance_day'                 => $attendance->attendance_day,
             ':time'                 => $attendance->time,
             ':description'          => $attendance->description
 
@@ -76,7 +76,7 @@ class AttendanceModel extends Model
             FROM
                 attendances
             ORDER BY
-                date
+                attendance_day
             LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
@@ -95,7 +95,7 @@ class AttendanceModel extends Model
                 event_logs.id_event_log_type,
                 event_logs.id_patient,
                 event_logs.id_professional,
-                event_logs.date,
+                event_logs.attendance_day,
                 event_logs.description,
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
@@ -130,7 +130,7 @@ class AttendanceModel extends Model
                 event_logs.id_event_log_type,
                 event_logs.id_patient,
                 event_logs.id_professional,
-                event_logs.date,
+                event_logs.attendance_day,
                 event_logs.description,
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
@@ -164,7 +164,7 @@ class AttendanceModel extends Model
             SET
                 id_patient          = :id_patient,
                 id_professional     = :id_professional,
-                date                = :date,
+                attendance_day                = :attendance_day,
                 time                = :time,
                 description         = :description
             WHERE
@@ -174,7 +174,7 @@ class AttendanceModel extends Model
         $parameters = [
             ':id_patient'       => $eventLog->id_patient,
             ':id_professional'  => $eventLog->id_professional,
-            ':date'             => $eventLog->date,
+            ':attendance_day'             => $eventLog->attendance_day,
             ':time'             => $eventLog->time,
             ':description'      => $eventLog->description,
             ':id'               => $eventLog->id

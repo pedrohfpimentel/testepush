@@ -17,7 +17,7 @@ class Attendance
         $this->id = $data['id'] ?? null;
         $this->id_patient = $data['id_patient'] ?? null;
         $this->id_professional = $data['id_professional'] ?? null;
-        $this->data = $data['data'] ?? null;
+        $this->attendance_day = $data['attendance_day'] ?? null;
         $this->time = $data['time'] ?? null;
         $this->description = $data['description'] ?? null;
     }
