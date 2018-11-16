@@ -31,7 +31,7 @@ class AttendanceMigration extends AbstractMigration
         $event_logs->addColumn('id_patient', 'integer', ['null' => true]);
         $event_logs->addColumn('id_professional', 'integer', ['null' => true]);
         $event_logs->addColumn('attendance_day', 'date', ['null' => true]);
-        $event_logs->addColumn('time', 'time');
+        $event_logs->addColumn('attendance_hour', 'time', ['null' => true]);
         $event_logs->addColumn('description', 'string');
         $event_logs->create();
     }
