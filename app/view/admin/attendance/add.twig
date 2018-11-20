@@ -31,7 +31,7 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="attendance_day">Data:</label>
-                <input id="attendance_day" class="form-control" type="date" name="attendance_day">
+                <input id="attendance_day" class="form-control" type="date" name="attendance_day" required>
               </div>
             </div>
           </div>
@@ -50,7 +50,7 @@
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label for="selectDisease">Paciente</label>
-                <select class="form-control" id="selectPatient" name="id_patient">
+                <select class="form-control" id="selectPatient" name="id_patient"required>
                   {% for patient in patients %}
                   <option value="{{ patient.id }}">{{ patient.name }}</option>
                   {% endfor %}
@@ -63,7 +63,7 @@
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label for="selectDisease">Profissional</label>
-                <select class="form-control" id="selectProfessional" name="id_professional">
+                <select class="form-control" id="selectProfessional" name="id_professional" required>
                   {% for professional in professionals %}
                   <option value="{{ professional.id }}"> {{ professional.user_name }}</option>
                   {% endfor %}
