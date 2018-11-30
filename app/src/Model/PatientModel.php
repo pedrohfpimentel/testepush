@@ -123,6 +123,22 @@ class PatientModel extends Model
         return $query->fetchAll();
     }
 
+
+
+     public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                patients
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
+
     public function update(Patient $patient): bool
     {
         $sql = "

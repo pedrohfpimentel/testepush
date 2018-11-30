@@ -6,6 +6,11 @@ namespace Farol360\Ancora\Controller\Admin;
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\EntityFactory;
+use Fusonic\SpreadsheetExport\Spreadsheet;
+use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
+use Fusonic\SpreadsheetExport\ColumnTypes\NumericColumn;
+use Fusonic\SpreadsheetExport\ColumnTypes\TextColumn;
+use Fusonic\SpreadsheetExport\Writers\OdsWriter;
 use Slim\Flash\Messages as FlashMessages;
 use Slim\Views\Twig as View;
 
@@ -46,9 +51,38 @@ class PatientController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-        $patients = $this->patientModel->getAll();
 
-        return $this->view->render($response, 'admin/patient/index.twig', ['patients' => $patients]);
+        $params = $request->getQueryParams();
+
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 3;
+        $offset = ($page - 1) * $limit;
+
+       
+        $patients = $this->patientModel->getAll($offset, $limit);
+        $patient_status = $this->patientStatusModel->getAll();
+               
+        $amountPatients = $this->patientModel->getAmount();
+        $amountPages = ceil($amountPatients->amount / $limit);
+
+        return $this->view->render($response, 'admin/patient/index.twig', [
+            'patients' => $patients,
+            'patient_status' => $patient_status,
+            'page' => $page,
+            'amountPages' => $amountPages
+            ]);
+
+        
+    }
+
+
+    public function patientpage (Request $request, Response $response): Response 
+    {
+        
     }
 
     public function add(Request $request, Response $response): Response
@@ -156,6 +190,68 @@ class PatientController extends Controller
         $patient_status = $this->patientStatusModel->getAll();
         return $this->view->render($response, 'admin/patient/edit.twig', ['patient' => $patient, 'diseases' => $diseases, 'patient_status' => $patient_status]);
     }
+
+
+    //download
+    public function export(Request $request, Response $response)
+    {
+        $export = new Spreadsheet();
+        $export->addColumn(new TextColumn('Nome'));
+        $export->addColumn(new TextColumn('Email'));
+        $export->addColumn(new DateColumn('Data de nascimento'));
+        $export->addColumn(new TextColumn('CPF'));
+        $export->addColumn(new TextColumn('RG'));
+        $export->addColumn(new TextColumn('Cartao SUS'));
+        $export->addColumn(new NumericColumn('DDD'));
+        $export->addColumn(new NumericColumn('Telefone'));
+        $export->addColumn(new TextColumn('Observacoes'));
+        $export->addColumn(new NumericColumn('DDD-2'));
+        $export->addColumn(new NumericColumn('Telefone-2'));        
+        $export->addColumn(new TextColumn('CEP'));
+        $export->addColumn(new TextColumn('Rua'));
+        $export->addColumn(new TextColumn('Número'));
+        $export->addColumn(new TextColumn('Complemento'));
+        $export->addColumn(new TextColumn('Bairro'));
+        $export->addColumn(new TextColumn('Cidade'));
+        $export->addColumn(new TextColumn('Estado'));
+        $export->addColumn(new TextColumn('Situacao'));
+        $export->addColumn(new TextColumn('Observacao'));
+        $export->addColumn(new TextColumn('CID'));
+        $patients = $this->patientModel->getAll();
+        foreach ($patients as $patient) {
+            $export->addRow([
+                $patient->name,
+                $patient->email,
+                $patient->nascimento,
+                $patient->cpf,
+                $patient->rg,
+                $patient->sus,
+                $patient->tel_area,
+                $patient->tel_numero,
+                $patient->obs_tel,                
+                $patient->tel_area_2,
+                $patient->tel_numero_2,
+                $patient->end_cep,
+                $patient->end_rua,
+                $patient->end_numero,
+                $patient->end_complemento,
+                $patient->end_bairro,
+                $patient->end_cidade,
+                $patient->end_estado,
+                $patient->id_status,
+                $patient->obs,
+                $patient->id_disease,
+                
+            ]);
+        }
+        $writer = new OdsWriter();
+        $writer->includeColumnHeaders = true;
+     
+        $export->download($writer, 'Pacientes-' . time());
+    }
+
+    
+
 
     public function history (Request $request, Response $response, array $args)
     {
