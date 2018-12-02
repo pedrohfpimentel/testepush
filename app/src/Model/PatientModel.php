@@ -100,7 +100,7 @@ class PatientModel extends Model
         $query->execute($parameters);
         return $query->fetch();
     }
-    public function getAll(): array
+    public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
@@ -116,11 +116,17 @@ class PatientModel extends Model
             LEFT JOIN diseases ON patients.id_disease = diseases.id
             ORDER BY
                 patients.id ASC
+            LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
         return $query->fetchAll();
+
+
+
     }
 
 

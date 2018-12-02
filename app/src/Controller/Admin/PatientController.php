@@ -80,10 +80,7 @@ class PatientController extends Controller
     }
 
 
-    public function patientpage (Request $request, Response $response): Response 
-    {
-        
-    }
+ 
 
     public function add(Request $request, Response $response): Response
     {
@@ -250,7 +247,7 @@ class PatientController extends Controller
         $export->download($writer, 'Pacientes-' . time());
     }
 
-    
+
 
 
     public function history (Request $request, Response $response, array $args)
