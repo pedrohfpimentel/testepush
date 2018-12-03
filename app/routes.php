@@ -49,6 +49,7 @@ $app->group('/admin', function () {
 
     $this->group('/patients', function() {
         $this->get('[/]', PatientAdmin::class . ':index');
+        $this->get('/export', PatientAdmin::class . ':export');
         $this->map(['GET', 'POST'], '/add', PatientAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', PatientAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', PatientAdmin::class . ':edit');
