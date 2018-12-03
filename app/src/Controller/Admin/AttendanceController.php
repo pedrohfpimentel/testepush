@@ -56,12 +56,34 @@ class AttendanceController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-        $attendances = $this->attendanceModel->getAll();
+         $params = $request->getQueryParams();
+
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 3;
+        $offset = ($page - 1) * $limit;
+
+       
+        $attendances = $this->attendanceModel->getAll($offset, $limit);
         foreach ($attendances as $attendance) {
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;
             $attendance->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
         }
-        return $this->view->render($response, 'admin/attendance/index.twig', ['attendances' => $attendances]);
+               
+        $amountAttendances = $this->attendanceModel->getAmount();
+        $amountPages = ceil($amountAttendances->amount / $limit);
+
+        return $this->view->render($response, 'admin/attendance/index.twig', [
+            'attendances' => $attendances,
+            'page' => $page,
+            'amountPages' => $amountPages
+            ]);
+
+
+
     }
 
     public function add(Request $request, Response $response): Response

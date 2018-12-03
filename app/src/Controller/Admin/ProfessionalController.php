@@ -44,9 +44,35 @@ class ProfessionalController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-        $professionals = $this->professionalModel->getAll();
+         $params = $request->getQueryParams();
 
-        return $this->view->render($response, 'admin/professional/index.twig', ['professionals' => $professionals]);
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 3;
+        $offset = ($page - 1) * $limit;
+
+       
+        $professionals = $this->professionalModel->getAll($offset, $limit);
+        $professional_types = $this->professionalTypeModel->getAll();
+               
+        $amountProfessionals = $this->professionalModel->getAmount();
+        $amountPages = ceil($amountProfessionals->amount / $limit);
+
+        return $this->view->render($response, 'admin/professional/index.twig', [
+            'professionals' => $professionals,
+            'professional_types' => $professional_types,
+            'page' => $page,
+            'amountPages' => $amountPages
+            ]);
+
+
+
+       
+
+       
     }
 
     public function add(Request $request, Response $response): Response

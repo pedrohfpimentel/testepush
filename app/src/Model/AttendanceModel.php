@@ -156,6 +156,21 @@ class AttendanceModel extends Model
         return $query->fetchAll();
     }
 
+
+    public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                attendances
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
+
     public function update(Attendance $attendances): bool
     {
         $sql = "

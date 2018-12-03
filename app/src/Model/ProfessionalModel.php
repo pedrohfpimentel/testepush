@@ -73,7 +73,7 @@ class ProfessionalModel extends Model
         return $query->fetch();
     }
 
-    public function getAll(): array
+    public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
@@ -91,10 +91,29 @@ class ProfessionalModel extends Model
                 professionals.id ASC
         ";
         $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
         return $query->fetchAll();
     }
+
+
+      public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                professionals
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
+
+
 
     public function update(Professional $professional): bool
     {
