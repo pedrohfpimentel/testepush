@@ -275,6 +275,11 @@ class BaseDataMigration extends AbstractMigration
                 'description' => 'Histórico de eventos do profissional.',
                 'role_id' => 2,
             ],
+             [
+                'resource' => '/admin/professionals/export/',
+                'description' => 'Exportar Informações do Profissional.',
+                'role_id' => 2,
+            ],
             [
                 'resource' => '/admin/professionals/remove/:id',
                 'description' => 'Administração de Profissionais - Remove.',

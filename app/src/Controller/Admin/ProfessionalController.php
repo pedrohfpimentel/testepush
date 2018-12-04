@@ -6,6 +6,11 @@ namespace Farol360\Ancora\Controller\Admin;
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\EntityFactory;
+use Fusonic\SpreadsheetExport\Spreadsheet;
+use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
+use Fusonic\SpreadsheetExport\ColumnTypes\NumericColumn;
+use Fusonic\SpreadsheetExport\ColumnTypes\TextColumn;
+use Fusonic\SpreadsheetExport\Writers\OdsWriter;
 use Slim\Flash\Messages as FlashMessages;
 use Slim\Views\Twig as View;
 
@@ -154,6 +159,50 @@ class ProfessionalController extends Controller
         $event_logs = $this->eventLogModel->getByProfessional($id);
 
         return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,'event_logs' => $event_logs]);
+    }
+
+    //download
+    public function export(Request $request, Response $response)
+    {
+        $export = new Spreadsheet();
+        $export->addColumn(new TextColumn('Nome'));
+        $export->addColumn(new TextColumn('Email'));
+        $export->addColumn(new DateColumn('Data de nascimento'));
+        $export->addColumn(new TextColumn('CPF'));
+        $export->addColumn(new TextColumn('DDD'));
+        $export->addColumn(new TextColumn('Telefone'));
+        $export->addColumn(new NumericColumn('CEP'));
+        $export->addColumn(new NumericColumn('Rua'));
+        $export->addColumn(new TextColumn('Numero'));
+        $export->addColumn(new NumericColumn('Complemento'));
+        $export->addColumn(new NumericColumn('Bairro'));        
+        $export->addColumn(new TextColumn('Cidade'));
+        $export->addColumn(new TextColumn('Estado'));
+        $export->addColumn(new TextColumn('Categoria'));
+        $professionals = $this->professionalModel->getAll();
+        foreach ($professionals as $professional) {
+            $export->addRow([
+                $professional->name,
+                $professional->email,
+                $professional->nascimento,
+                $professional->cpf,
+                $professional->tel_area,
+                $professional->tel_numero,
+                $professional->end_cep,
+                $professional->end_rua,
+                $professional->end_numero,                
+                $professional->end_complemento,
+                $professional->end_bairro,
+                $professional->end_cidade,
+                $professional->end_estado,
+                $professional->id_professional_type,
+                
+            ]);
+        }
+        $writer = new OdsWriter();
+        $writer->includeColumnHeaders = true;
+     
+        $export->download($writer, 'Profissional-' . time());
     }
 
     public function update(Request $request, Response $response): Response

@@ -86,6 +86,7 @@ $app->group('/admin', function () {
 
     $this->group('/professionals', function() {
         $this->get('[/]', ProfessionalAdmin::class . ':index');
+        $this->get('/export', ProfessionalAdmin::class . ':export');
         $this->map(['GET', 'POST'], '/add', ProfessionalAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', ProfessionalAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', ProfessionalAdmin::class . ':edit');
