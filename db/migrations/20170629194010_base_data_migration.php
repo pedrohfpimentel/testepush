@@ -148,6 +148,11 @@ class BaseDataMigration extends AbstractMigration
                 'role_id' => 2,
             ],
             [
+                'resource' => '/admin/patients/export/',
+                'description' => 'Exportar Informações do Paciente.',
+                'role_id' => 2,
+            ],
+            [
                 'resource' => '/admin/patients/remove/:id',
                 'description' => 'Administração de Pacientes - Remove.',
                 'role_id' => 2,
