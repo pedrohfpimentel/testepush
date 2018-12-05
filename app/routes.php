@@ -32,6 +32,7 @@ $app->group('/admin', function () {
 
     $this->group('/attendances', function() {
         $this->get('[/]', AttendanceAdmin::class . ':index');
+         $this->get('/export', AttendanceAdmin::class . ':export');
         $this->get('/{id:[0-9]+}', AttendanceAdmin::class . ':view');
         $this->map(['GET', 'POST'], '/add', AttendanceAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', AttendanceAdmin::class . ':delete');

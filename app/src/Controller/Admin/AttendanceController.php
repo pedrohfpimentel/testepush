@@ -6,6 +6,11 @@ namespace Farol360\Ancora\Controller\Admin;
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\EntityFactory;
+use Fusonic\SpreadsheetExport\Spreadsheet;
+use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
+use Fusonic\SpreadsheetExport\ColumnTypes\NumericColumn;
+use Fusonic\SpreadsheetExport\ColumnTypes\TextColumn;
+use Fusonic\SpreadsheetExport\Writers\OdsWriter;
 use Slim\Flash\Messages as FlashMessages;
 use Slim\Views\Twig as View;
 
@@ -153,6 +158,35 @@ class AttendanceController extends Controller
 
         return $this->view->render($response, 'admin/patient/edit.twig', ['patient' => $patient, 'diseases' => $diseases]);
     }
+
+
+    //download
+    public function export(Request $request, Response $response)
+    {
+        $export = new Spreadsheet();
+        $export->addColumn(new DateColumn('Data'));
+        $export->addColumn(new TextColumn('Hora'));
+        $export->addColumn(new TextColumn('Paciente'));
+        $export->addColumn(new TextColumn('Profissional'));
+        $export->addColumn(new TextColumn('Observações'));
+        $attendances = $this->attendanceModel->getAll();
+        foreach ($attendances as $attendance) {
+            $export->addRow([
+                $attendance->attendance_day,
+                $attendance->attendance_hour,
+                $attendance->id_patient,
+                $attendance->id_professional,
+                $attendance->description,                
+            ]);
+        }
+        $writer = new OdsWriter();
+        $writer->includeColumnHeaders = true;
+     
+        $export->download($writer, 'Atendimentos-' . time());
+    }
+
+
+
 
     public function history (Request $request, Response $response, array $args)
     {

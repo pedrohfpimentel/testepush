@@ -97,6 +97,11 @@ class BaseDataMigration extends AbstractMigration
                 'description' => 'Administração de Atendimentos - edit.',
                 'role_id' => 2,
             ],
+             [
+                'resource' => '/admin/attendances/export',
+                'description' => 'Exportar Atendimentos',
+                'role_id' => 2,
+            ],
             [
                 'resource' => '/admin/attendances/remove/:id',
                 'description' => 'Administração de Atendimentos - remover.',
