@@ -179,6 +179,7 @@ class AttendanceController extends Controller
                 $attendance->description,                
             ]);
         }
+        
         $writer = new OdsWriter();
         $writer->includeColumnHeaders = true;
      

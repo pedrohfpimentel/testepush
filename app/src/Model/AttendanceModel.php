@@ -171,6 +171,30 @@ class AttendanceModel extends Model
         return $query->fetch();
     }
 
+    public function getPatientDownload()
+    {
+        $sql = "
+        SELECT
+            attendances.*, users.name
+        FROM
+            attendances
+            LEFT JOIN patients ON patients.id = attendances.id_patient
+            LEFT JOIN users ON users.id = patients.id_user
+    ";
+    }
+
+    public function getProfessionalDownload()
+    {
+        $sql = "
+        SELECT
+            attendances.*, users.name
+        FROM
+            attendances
+            LEFT JOIN professionals ON professionals.id = attendances.professionals
+            LEFT JOIN users ON users.id = professionals.id_user
+    ";
+    }
+
     public function update(Attendance $attendances): bool
     {
         $sql = "
