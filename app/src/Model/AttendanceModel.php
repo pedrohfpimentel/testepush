@@ -171,7 +171,7 @@ class AttendanceModel extends Model
         return $query->fetch();
     }
 
-    public function getPatientDownload()
+    public function getPatientDownload($id_patient)
     {
         $sql = "
         SELECT
@@ -181,6 +181,12 @@ class AttendanceModel extends Model
             LEFT JOIN patients ON patients.id = attendances.id_patient
             LEFT JOIN users ON users.id = patients.id_user
     ";
+    $query = $this->db->prepare($sql);
+    $parameters = [
+            ':id_patient'           => $id_patient
+        ];
+    $query->execute();
+    return $query->fetch();
     }
 
     public function getProfessionalDownload()
@@ -190,9 +196,12 @@ class AttendanceModel extends Model
             attendances.*, users.name
         FROM
             attendances
-            LEFT JOIN professionals ON professionals.id = attendances.professionals
+            LEFT JOIN professionals ON professionals.id = attendances.id_professional
             LEFT JOIN users ON users.id = professionals.id_user
     ";
+    $query = $this->db->prepare($sql);
+    $query->execute();
+    return $query->fetch();
     }
 
     public function update(Attendance $attendances): bool

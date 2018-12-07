@@ -170,6 +170,8 @@ class AttendanceController extends Controller
         $export->addColumn(new TextColumn('Profissional'));
         $export->addColumn(new TextColumn('Observações'));
         $attendances = $this->attendanceModel->getAll();
+        $attendances = $this->attendanceModel->getPatientDownload();
+
         foreach ($attendances as $attendance) {
             $export->addRow([
                 $attendance->attendance_day,
@@ -179,7 +181,6 @@ class AttendanceController extends Controller
                 $attendance->description,                
             ]);
         }
-        
         $writer = new OdsWriter();
         $writer->includeColumnHeaders = true;
      
