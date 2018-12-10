@@ -86,9 +86,6 @@ class AttendanceController extends Controller
             'page' => $page,
             'amountPages' => $amountPages
             ]);
-
-
-
     }
 
     public function add(Request $request, Response $response): Response
@@ -169,9 +166,11 @@ class AttendanceController extends Controller
         $export->addColumn(new TextColumn('Paciente'));
         $export->addColumn(new TextColumn('Profissional'));
         $export->addColumn(new TextColumn('Observações'));
-        $attendances = $this->attendanceModel->getAll();
+        //$attendances = $this->attendanceModel->getAll();
         $attendances = $this->attendanceModel->getAttendancesDownload();
          
+        var_dump($attendances);
+        die;
      
         foreach ($attendances as $attendance) {
             $export->addRow([

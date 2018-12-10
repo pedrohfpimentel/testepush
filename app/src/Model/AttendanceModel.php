@@ -176,13 +176,19 @@ class AttendanceModel extends Model
     public function getAttendancesDownload()
     {
         $sql = "
-        SELECT
-            attendances.*, users.name
-        FROM
-            attendances
-            LEFT JOIN patients ON patients.id = attendances.id_patient 
-            LEFT JOIN professionals ON professionals.id = attendances.id_professional
-           LEFT JOIN users ON users.id = patients.id_user OR  users.id = professionals.id_user
+        SELECT 
+            attendances.*,
+            (SELECT users.name 
+            FROM users 
+            LEFT JOIN 
+                patients ON patients.id_user = users.id
+            WHERE users.id = patients.id_user) AS patient_name,
+            (SELECT users.name 
+            FROM users 
+            LEFT JOIN 
+                professionals ON professionals.id_user = users.id
+            WHERE users.id = professionals.id_user) AS professional_name
+        FROM `attendances`
 
            
     ";
