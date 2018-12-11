@@ -77,6 +77,7 @@ class ProfessionalModel extends Model
     {
         $sql = "
             SELECT
+             
                 professionals.*,
                 users.id as id_user,
                 users.name as user_name,
@@ -89,6 +90,7 @@ class ProfessionalModel extends Model
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
             ORDER BY
                 professionals.id ASC
+
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $offset, \PDO::PARAM_INT);

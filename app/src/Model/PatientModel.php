@@ -112,8 +112,9 @@ class PatientModel extends Model
                 diseases.cid_version as disease_cid_version,
                 diseases.cid_code as disease_cid_code
             FROM
-                patients LEFT JOIN users ON users.id = patients.id_user
-            LEFT JOIN diseases ON patients.id_disease = diseases.id
+                patients
+                LEFT JOIN users ON users.id = patients.id_user
+                LEFT JOIN diseases ON patients.id_disease = diseases.id
             ORDER BY
                 patients.id ASC
             LIMIT ? , ?

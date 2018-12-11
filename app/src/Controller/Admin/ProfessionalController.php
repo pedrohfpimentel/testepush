@@ -169,20 +169,24 @@ class ProfessionalController extends Controller
         $export->addColumn(new TextColumn('Email'));
         $export->addColumn(new DateColumn('Data de nascimento'));
         $export->addColumn(new TextColumn('CPF'));
-        $export->addColumn(new TextColumn('DDD'));
-        $export->addColumn(new TextColumn('Telefone'));
-        $export->addColumn(new NumericColumn('CEP'));
-        $export->addColumn(new NumericColumn('Rua'));
+        $export->addColumn(new NumericColumn('DDD'));
+        $export->addColumn(new NumericColumn('Telefone'));
+        $export->addColumn(new TextColumn('CEP'));
+        $export->addColumn(new TextColumn('Rua'));
         $export->addColumn(new TextColumn('Numero'));
-        $export->addColumn(new NumericColumn('Complemento'));
-        $export->addColumn(new NumericColumn('Bairro'));        
+        $export->addColumn(new TextColumn('Complemento'));
+        $export->addColumn(new TextColumn('Bairro'));        
         $export->addColumn(new TextColumn('Cidade'));
         $export->addColumn(new TextColumn('Estado'));
         $export->addColumn(new TextColumn('Categoria'));
         $professionals = $this->professionalModel->getAll();
+       // var_dump($professionals);
+       // die;
         foreach ($professionals as $professional) {
+            //var_dump($professional);
+            //die;
             $export->addRow([
-                $professional->name,
+                $professional['name']->name,
                 $professional->email,
                 $professional->nascimento,
                 $professional->cpf,
@@ -202,7 +206,7 @@ class ProfessionalController extends Controller
         $writer = new OdsWriter();
         $writer->includeColumnHeaders = true;
      
-        $export->download($writer, 'Profissional-' . time());
+        $export->download($writer, 'Profissionais-' . time());
     }
 
     public function update(Request $request, Response $response): Response
