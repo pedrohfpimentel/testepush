@@ -77,7 +77,7 @@ class ProfessionalModel extends Model
     {
         $sql = "
             SELECT
-             
+                users.*,
                 professionals.*,
                 users.id as id_user,
                 users.name as user_name,

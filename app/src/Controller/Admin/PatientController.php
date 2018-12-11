@@ -215,6 +215,8 @@ class PatientController extends Controller
         $export->addColumn(new TextColumn('Observacao'));
         $export->addColumn(new TextColumn('CID'));
         $patients = $this->patientModel->getAll();
+        var_dump($patients);
+        die;
         foreach ($patients as $patient) {
             $export->addRow([
                 $patient->name,
