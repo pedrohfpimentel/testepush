@@ -169,15 +169,15 @@ class AttendanceController extends Controller
         //$attendances = $this->attendanceModel->getAll();
         $attendances = $this->attendanceModel->getAttendancesDownload();
          
-        var_dump($attendances);
-        die;
+        //var_dump($attendances);
+        //die;
      
         foreach ($attendances as $attendance) {
             $export->addRow([
                 $attendance->attendance_day,
                 $attendance->attendance_hour,
-                $attendance->id_patient,
-                $attendance->id_professional,
+                $attendance->patient_name,
+                $attendance->professional_name,
                 $attendance->description,                
             ]);
            
