@@ -57,14 +57,25 @@
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-4">
           <h4>Últimos Atendimentos</h4>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-8">
           <p class="pull-right">
-  
-            <a class="btn btn-default" href="{{ base_url() }}/admin/attendances/export">
-              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+
+            <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
+               <label for="attendance_start">Data Inicial:</label>
+               <input id="attendance_start" class="form-control" type="date" name="attendance_start" required>
+             </div>
+
+              <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
+               <label for="attendance_finish">Data Final:</label>
+               <input id="attendance_finish" class="form-control" type="date" name="attendance_finish" required>
+             </div>
+            
+       
+            <a class="btn btn-default " href="{{ base_url() }}/admin/attendances/export">
+              <span class="glyphicon glyphicon-export" id="attendance_download" aria-hidden="true"></span>
             </a>
          
           </p>
@@ -124,3 +135,16 @@
 </div>
 
 {% endblock %}
+
+{% block javascripts %}
+
+
+  <script type="text/javascript">
+      $('#attendance_download').click(
+          function({
+              $('#attendance_download').attr('href', '{{ base_url() }}/admin/attendances/export?attendance_start=xx-xx-xxxx&attendance_finish=xx-xx-xxxx') 
+      })));
+      
+        </script>
+{% endblock %}
+

@@ -33,6 +33,8 @@ class AttendanceMigration extends AbstractMigration
         $event_logs->addColumn('attendance_day', 'date', ['null' => true]);
         $event_logs->addColumn('attendance_hour', 'string', ['null' => true]);
         $event_logs->addColumn('description', 'string');
+        //$event_logs->addColumn('attendance_start', 'date', ['null' => true]);
+        //$event_logs->addColumn('attendance_finish', 'date', ['null' => true]);
         $event_logs->create();
     }
 }

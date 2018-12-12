@@ -161,7 +161,9 @@ class AttendanceController extends Controller
     public function export(Request $request, Response $response)
     {
         $export = new Spreadsheet();
-        $export->addColumn(new DateColumn('Data'));
+        //$export->addColumn(new DateColumn('Data Inicial'));
+        //$export->addColumn(new DateColumn('Data Final'));
+        $export->addColumn(new DateColumn('Data do Atendimento'));
         $export->addColumn(new TextColumn('Hora'));
         $export->addColumn(new TextColumn('Paciente'));
         $export->addColumn(new TextColumn('Profissional'));
@@ -174,6 +176,8 @@ class AttendanceController extends Controller
      
         foreach ($attendances as $attendance) {
             $export->addRow([
+               // $attendance->attendance_start,
+               // $attendance->attendance_finish,
                 $attendance->attendance_day,
                 $attendance->attendance_hour,
                 $attendance->patient_name,

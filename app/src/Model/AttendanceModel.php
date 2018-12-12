@@ -16,14 +16,16 @@ class AttendanceModel extends Model
                 id_professional,
                 attendance_day,
                 attendance_hour,
-                description
+                description,
+                attendance_start
                 )
             VALUES (
                 :id_patient,
                 :id_professional,
                 :attendance_day,
                 :attendance_hour,
-                :description
+                :description,
+                :attendance_start
                 )
         ";
         $query = $this->db->prepare($sql);
@@ -32,7 +34,8 @@ class AttendanceModel extends Model
             ':id_professional'      => $attendance->id_professional,
             ':attendance_day'                 => $attendance->attendance_day,
             ':attendance_hour'                 => $attendance->attendance_hour,
-            ':description'          => $attendance->description
+            ':description'          => $attendance->description,
+            ':attendance_start'     => $attendance->attendance_start,
 
         ];
         if ($query->execute($parameters)) {
@@ -97,10 +100,12 @@ class AttendanceModel extends Model
                 event_logs.id_professional,
                 event_logs.attendance_day,
                 event_logs.description,
+                event_logs.attendance_start,
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
                 event_log_types.description as event_log_types_description,
+                event_log_types.attendance_start as event_log_types_attendance_start,
                 patients.id as patients_id,
                 patients.id_user as patients_id_user,
                 users.name as users_name,
@@ -132,6 +137,7 @@ class AttendanceModel extends Model
                 event_logs.id_professional,
                 event_logs.attendance_day,
                 event_logs.description,
+                event_logs.attendance_start,
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -209,9 +215,10 @@ class AttendanceModel extends Model
             SET
                 id_patient          = :id_patient,
                 id_professional     = :id_professional,
-                attendance_day                = :attendance_day,
-                attendance_hour                = :attendance_hour,
-                description         = :description
+                attendance_day      = :attendance_day,
+                attendance_hour     = :attendance_hour,
+                description         = :description,
+                attendance_start    = :attendance_start
             WHERE
                 id = :id
         ";
@@ -219,9 +226,10 @@ class AttendanceModel extends Model
         $parameters = [
             ':id_patient'       => $eventLog->id_patient,
             ':id_professional'  => $eventLog->id_professional,
-            ':attendance_day'             => $eventLog->attendance_day,
-            ':attendance_hour'             => $eventLog->attendance_hour,
+            ':attendance_day'   => $eventLog->attendance_day,
+            ':attendance_hour'  => $eventLog->attendance_hour,
             ':description'      => $eventLog->description,
+            ':attendance_start' => $eventLog->attendance_start,
             ':id'               => $eventLog->id
         ];
         return $query->execute($parameters);
