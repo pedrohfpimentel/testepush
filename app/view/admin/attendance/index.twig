@@ -147,7 +147,7 @@
        // console.log($('#attendance_finish #attendance_start').val());
         //alert(attendance_start);
        
-          $("#attendance_download").attr('href', "{{ base_url() }}/admin/attendances/export?"+ attendance_start );
+          $("#attendance_download").attr('href', "{{ base_url() }}/admin/attendances/export?attendance_start=attendance_start&attendance_finish=attendance_finish";
 });
         </script>
 {% endblock %}
