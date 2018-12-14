@@ -75,6 +75,7 @@
             
        
             <a class="btn btn-default" id="attendance_download" name="attendance_download"  href="{{ base_url() }}/admin/attendances/export">
+              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
             </a>
          
@@ -144,10 +145,11 @@
        // console.log('teste');
       var attendance_start = $('#attendance_start').val()
        var attendance_finish =$('#attendance_finish').val()
+       var base_url_hidden =$('#base_url_hidden').val()
        // console.log($('#attendance_finish #attendance_start').val());
-        //alert(attendance_start);
-       
-          $("#attendance_download").attr('href', "{{ base_url() }}/admin/attendances/export?attendance_start=attendance_start&attendance_finish=attendance_finish";
+       // alert(base_url_hidden);
+          console.log($('#attendance_download').attr('href'));
+          $("#attendance_download").attr('href',   base_url_hidden +'/admin/attendances/export?attendance_start=' + attendance_start + '&attendance_finish=' + attendance_finish);
 });
         </script>
 {% endblock %}

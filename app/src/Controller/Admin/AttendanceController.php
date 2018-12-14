@@ -160,6 +160,10 @@ class AttendanceController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
+
+        $params = $request->getQueryParams();
+        //var_dump($params);
+        //die;
         $export = new Spreadsheet();
         //$export->addColumn(new DateColumn('Data Inicial'));
         //$export->addColumn(new DateColumn('Data Final'));
