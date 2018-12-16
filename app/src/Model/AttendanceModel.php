@@ -183,7 +183,7 @@ class AttendanceModel extends Model
 
     
 
-    public function getAttendancesDownload()
+    public function getAttendancesDownload($attendance_start, $attendance_finish)
     {
         $sql = "
         SELECT 
@@ -200,11 +200,13 @@ class AttendanceModel extends Model
             WHERE users.id = professionals.id_user) AS professional_name
         FROM `attendances`
 
-           
+        WHERE
+            attendances.attendance_day BETWEEN :attendance_start AND :attendance_finish
     ";
     $query = $this->db->prepare($sql);
 
-    $query->execute();
+    $params = [':attendance_start' => $attendance_start, ':attendance_finish' => $attendance_finish];
+    $query->execute($params);
     return $query->fetchAll();
     }
 
