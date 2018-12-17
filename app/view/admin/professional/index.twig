@@ -14,21 +14,32 @@
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
-        <div class="col-sm-8">
-          <h3>Profissionais</h3>
-        </div>
         <div class="col-sm-4">
+          <h4>Profissionais</h4>
+        </div>
+        <div class="col-sm-8">
           <p class="pull-right">
-            <p class="pull-right">
-           
-            <a class="btn btn-default" href="{{ base_url() }}/admin/professionals/export">
+
+            <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
+               <label for="professionals_start">Data Inicial:</label>
+               <input id="professionals_start" class="form-control" type="date" name="professionals_start" required>
+             </div>
+
+              <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
+               <label for="professionals_finish">Data Final:</label>
+               <input id="professionals_finish" class="form-control" type="date" name="professionals_finish" required>
+             </div>
+            
+       
+            <a class="btn btn-default" id="professionals_download" name="professionals_download"  href="{{ base_url() }}/admin/professionals/export">
+              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
             </a>
-         
-          
+
             <a class="btn btn-success" href="{{ base_url() }}/admin/professionals/add">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </a>
+         
           </p>
         </div>
       </div>
@@ -89,4 +100,20 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+
+
+  <script type="text/javascript">
+      $("#professionals_download").click(function(){
+       // console.log('teste');
+      var professionals_start = $('#professionals_start').val()
+       var professionals_finish =$('#professionals_finish').val()
+       var base_url_hidden =$('#base_url_hidden').val()
+
+          console.log($('#professionals_download').attr('href'));
+          $("#professionals_download").attr('href',   base_url_hidden +'/admin/professionals/export?professionals_start=' + professionals_start + '&professionals_finish=' + professionals_finish);
+});
+        </script>
 {% endblock %}

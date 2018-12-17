@@ -14,22 +14,32 @@
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
-        <div class="col-sm-8">
-          <h3>Pacientes</h3>
-        </div>
         <div class="col-sm-4">
+          <h4>Pacientes</h4>
+        </div>
+        <div class="col-sm-8">
           <p class="pull-right">
-           <p class="pull-right">
-           
-            <a class="btn btn-default" href="{{ base_url() }}/admin/patients/export">
+
+            <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
+               <label for="patients_start">Data Inicial:</label>
+               <input id="patients_start" class="form-control" type="date" name="patients_start" required>
+             </div>
+
+              <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
+               <label for="patients_finish">Data Final:</label>
+               <input id="patients_finish" class="form-control" type="date" name="patients_finish" required>
+             </div>
+            
+       
+            <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export">
+              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
             </a>
-         
-         
-           
+
             <a class="btn btn-success" href="{{ base_url() }}/admin/patients/add">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </a>
+         
           </p>
         </div>
       </div>
@@ -97,4 +107,20 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+
+
+  <script type="text/javascript">
+      $("#patients_download").click(function(){
+       // console.log('teste');
+      var patients_start = $('#patients_start').val()
+       var patients_finish =$('#patients_finish').val()
+       var base_url_hidden =$('#base_url_hidden').val()
+       
+          console.log($('#patients_download').attr('href'));
+          $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish);
+});
+        </script>
 {% endblock %}

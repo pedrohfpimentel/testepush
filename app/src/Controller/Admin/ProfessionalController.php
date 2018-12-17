@@ -164,6 +164,10 @@ class ProfessionalController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
+        $params = $request->getQueryParams();
+        //var_dump($params);
+        //die;
+
         $export = new Spreadsheet();
         $export->addColumn(new TextColumn('Nome'));
         $export->addColumn(new TextColumn('Email'));
@@ -179,7 +183,7 @@ class ProfessionalController extends Controller
         $export->addColumn(new TextColumn('Cidade'));
         $export->addColumn(new TextColumn('Estado'));
         $export->addColumn(new TextColumn('Categoria'));
-        $professionals = $this->professionalModel->getAll();
+        $professionals = $this->professionalModel->getProfessionalsDownload($params['professionals_start'], $params[ 'professionals_finish']);
        // var_dump($professionals);
        // die;
         foreach ($professionals as $professional) {

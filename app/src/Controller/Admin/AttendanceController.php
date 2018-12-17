@@ -173,15 +173,13 @@ class AttendanceController extends Controller
         $export->addColumn(new TextColumn('Profissional'));
         $export->addColumn(new TextColumn('Observações'));
         //$attendances = $this->attendanceModel->getAll();
-        $attendances = $this->attendanceModel->getAttendancesDownload();
+        $attendances = $this->attendanceModel->getAttendancesDownload($params['attendance_start'], $params[ 'attendance_finish']);
          
         //var_dump($attendances);
         //die;
      
         foreach ($attendances as $attendance) {
             $export->addRow([
-               // $attendance->attendance_start,
-               // $attendance->attendance_finish,
                 $attendance->attendance_day,
                 $attendance->attendance_hour,
                 $attendance->patient_name,

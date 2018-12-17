@@ -116,6 +116,26 @@ class ProfessionalModel extends Model
     }
 
 
+      public function getProfessionalsDownload($professionals_start, $professionals_finish)
+    {
+        $sql = "
+        SELECT 
+            event_logs.date,
+            professionals.*
+        FROM
+            professionals,
+            event_logs
+
+        WHERE
+            event_logs.date BETWEEN :professionals_start AND :professionals_finish
+    ";
+    $query = $this->db->prepare($sql);
+
+    $params = [':professionals_start' => $professionals_start, ':professionals_finish' => $professionals_finish];
+    $query->execute($params);
+    return $query->fetchAll();
+    }
+
 
     public function update(Professional $professional): bool
     {

@@ -132,6 +132,7 @@ class PatientModel extends Model
 
 
 
+
      public function getAmount()
     {
         $sql = "
@@ -144,6 +145,27 @@ class PatientModel extends Model
         $query = $this->db->prepare($sql);
         $query->execute();
         return $query->fetch();
+    }
+
+
+     public function getPatientsDownload($patients_start, $patients_finish)
+    {
+        $sql = "
+        SELECT 
+            event_logs.date,
+            patients.*
+        FROM
+            patients,
+            event_logs
+
+        WHERE
+            event_logs.date BETWEEN :patients_start AND :patients_finish
+    ";
+    $query = $this->db->prepare($sql);
+
+    $params = [':patients_start' => $patients_start, ':patients_finish' => $patients_finish];
+    $query->execute($params);
+    return $query->fetchAll();
     }
 
     public function update(Patient $patient): bool

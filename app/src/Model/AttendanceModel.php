@@ -168,7 +168,7 @@ class AttendanceModel extends Model
         $sql = "
             SELECT
                 COUNT(id) AS amount
-                CONVERT(VARCHAR(19), GETDATE(), 120) AS attendance_start
+               
             FROM
                 attendances
 
