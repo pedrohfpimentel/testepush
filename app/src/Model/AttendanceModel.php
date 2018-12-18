@@ -16,16 +16,14 @@ class AttendanceModel extends Model
                 id_professional,
                 attendance_day,
                 attendance_hour,
-                description,
-                attendance_start
+                description
                 )
             VALUES (
                 :id_patient,
                 :id_professional,
                 :attendance_day,
                 :attendance_hour,
-                :description,
-                :attendance_start
+                :description
                 )
         ";
         $query = $this->db->prepare($sql);
@@ -34,9 +32,7 @@ class AttendanceModel extends Model
             ':id_professional'      => $attendance->id_professional,
             ':attendance_day'                 => $attendance->attendance_day,
             ':attendance_hour'                 => $attendance->attendance_hour,
-            ':description'          => $attendance->description,
-            ':attendance_start'     => $attendance->attendance_start,
-
+            ':description'          => $attendance->description
         ];
         if ($query->execute($parameters)) {
             return $this->db->lastInsertId();
