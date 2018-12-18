@@ -129,6 +129,14 @@ class PatientController extends Controller
         $patient['sus'] = $data['sus'];
         $patient['id_status'] = (int) $data['id_status'];
         $patient['obs'] = $data['obs'];
+        $patient['cancer_type'] = $data['cancer_type'];
+        $patient['discovery_time'] = $data['discovery_time'];
+        $patient['discovery_how'] = $data['discovery_how'];
+        $patient['treatment_time'] = $data['treatment_time'];
+        $patient['treatment_where'] = $data['treatment_where'];
+        $patient['doctor_name'] = $data['doctor_name'];
+        $patient['fundation_need'] = $data['fundation_need'];
+
 
 
 
@@ -213,6 +221,14 @@ class PatientController extends Controller
         $export->addColumn(new TextColumn('Estado'));
         $export->addColumn(new TextColumn('Situacao'));
         $export->addColumn(new TextColumn('Observacao'));
+
+        $export->addColumn(new TextColumn('Tipo de Câncer'));
+        $export->addColumn(new TextColumn('Há quanto tempo descobriu?'));
+        $export->addColumn(new TextColumn('Como descobriu?'));
+        $export->addColumn(new TextColumn('Quando começou o tratamento?'));
+        $export->addColumn(new TextColumn('Onde se trata?'));
+        $export->addColumn(new TextColumn('Qual o médico?'));
+        $export->addColumn(new TextColumn('Qual apoio necessita da funcação?'));
         $export->addColumn(new TextColumn('CID'));
         $patients = $this->patientModel->getAll();
         //var_dump($patients);
@@ -239,6 +255,14 @@ class PatientController extends Controller
                 $patient->end_estado,
                 $patient->id_status,
                 $patient->obs,
+                
+                $patient->cancer_type,
+                $patient->discovery_time,
+                $patient->discovery_how,
+                $patient->treatment_time,
+                $patient->treatment_where,
+                $patient->doctor_name,
+                $patient->fundation_need,
                 $patient->id_disease,
                 
             ]);
@@ -281,6 +305,13 @@ class PatientController extends Controller
         $patient['id_status'] = (int) $data['id_status'];
 
         $patient['obs'] = $data['obs'];
+        $patient['cancer_type'] = $data['cancer_type'];
+        $patient['discovery_time'] = $data['discovery_time'];
+        $patient['discovery_how'] = $data['discovery_how'];
+        $patient['treatment_time'] = $data['treatment_time'];
+        $patient['treatment_where'] = $data['treatment_where'];
+        $patient['doctor_name'] = $data['doctor_name'];
+        $patient['fundation_need'] = $data['fundation_need'];
 
         $patient = $this->entityFactory->createPatient($patient);
 

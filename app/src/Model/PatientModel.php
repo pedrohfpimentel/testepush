@@ -21,9 +21,16 @@ class PatientModel extends Model
                 rg,
                 sus,
                 id_status,
-                obs
+                obs,
+                cancer_type,
+                discovery_time,
+                discovery_how,
+                treatment_time,
+                treatment_where,
+                doctor_name,
+                fundation_need
                 )
-            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs)
+            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -37,6 +44,14 @@ class PatientModel extends Model
             ':sus'              => $patient->sus,
             ':id_status'        => $patient->id_status,
             ':obs'              => $patient->obs,
+            ':cancer_type'      => $patient->cancer_type,
+            ':discovery_time'   => $patient->discovery_time,
+            ':discovery_how'    => $patient->discovery_how,
+            ':treatment_time'   => $patient->treatment_time,
+            ':doctor_name'      => $patient->doctor_name,
+            ':fundation_need'   => $patient->fundation_need,
+
+
         ];
         if ($query->execute($parameters)) {
             return $this->db->lastInsertId();
@@ -66,6 +81,13 @@ class PatientModel extends Model
                 patients.sus as sus,
                 patients.id_status as id_status,
                 patients.obs as obs,
+                patients.cancer_type as cancer_type,
+                patients.discovery_time as discovery_time,
+                patients.discovery_how as discovery_how,
+                patients.treatment_time as treatment_time,
+                patients.treatment_where as treatment_where,
+                patients.doctor_name as doctor_name,
+                patients.fundation_need as fundation_need,
                 patients.id_user,
                 diseases.id as disease_id,
                 diseases.name as disease_name,
@@ -183,7 +205,14 @@ class PatientModel extends Model
                 rg              = :rg,
                 sus             = :sus,
                 id_status       = :id_status,
-                obs        = :obs
+                obs             = :obs,
+                cancer_type     = :cancer_type,
+                discovery_time  = :discovery_time,
+                discovery_how   = :discovery_how,
+                treatment_time  = :treatment_time,
+                treatment_where = :treatment_where,
+                doctor_name     = :doctor_name,
+                fundation_need  = :fundation_need
             WHERE
                 id = :id
         ";
@@ -200,6 +229,13 @@ class PatientModel extends Model
             ':sus'              => $patient->sus,
             ':id_status'        => $patient->id_status,
             ':obs'              => $patient->obs,
+            ':cancer_type'      => $patient->cancer_type,
+            ':discovery_time'   => $patient->discovery_time,
+            ':discovery_how'    => $patient->discovery_how,
+            ':treatment_time'   => $patient->treatment_time,
+            ':treatment_where'  => $patient->treatment_where,
+            ':doctor_name'      => $patient->doctor_name,
+            ':fundation_need'   => $patient->fundation_need,
 
         ];
 

@@ -16,6 +16,13 @@ class Patient
     public $sus;
     public $id_status;
     public $obs;
+    public $cancer_type;
+    public $discovery_time;
+    public $discovery_how;
+    public $treatment_time;
+    public $treatment_where;
+    public $doctor_name;
+    public $fundation_need;
 
     public function __construct(array $data = [])
     {
@@ -30,5 +37,12 @@ class Patient
         $this->sus = $data['sus'] ?? null;
         $this->id_status = $data['id_status'] ?? null;
         $this->obs = $data['obs'] ?? null;
+        $this->cancer_type = $data['cancer_type'] ?? null;
+        $this->discovery_time = $data['discovery_time'] ?? null;
+        $this->discovery_how = $data['discovery_how'] ?? null;
+        $this->treatment_time = $data['treatment_time'] ?? null;
+        $this->treatment_where = $data['treatment_where'] ?? null;
+        $this->doctor_name = $data['doctor_name'] ?? null;
+        $this->fundation_need = $data['fundation_need'] ?? null;
     }
 }

@@ -24,6 +24,8 @@
       <div class="col-md-12">
         <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/add" method="POST">
 
+
+
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
@@ -79,6 +81,8 @@
               </div>
             </div>
           </div>
+
+
           <div class="row">
             <div class="col-sm-3 form-group">
               <label for="inputNascimento">Data de nascimento</label>
@@ -99,6 +103,7 @@
 
           </div>
           <hr>
+
 
           <div class="row">
 
@@ -239,6 +244,79 @@
             </div>
 
           </div>
+
+
+
+
+
+
+
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Tipo de Câncer?</label>
+                 <input type="text" name="cancer_type" class="form-control">
+              </div>
+            </div>        
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Há quanto tempo descobriu?</label>
+                 <input type="text" name="discovery_time" class="form-control">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Como descobriu?</label>
+                 <input type="text" name="discovery_how" class="form-control">
+              </div>
+            </div>      
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Quando começou o tratamento?</label>
+                 <input type="text" name="treatment_time" class="form-control">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Onde se trata?</label>
+                 <input type="text" name="treatment_where" class="form-control">
+              </div>
+            </div>        
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Qual o médico?</label>
+                 <input type="text" name="doctor_name" class="form-control">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Qual apoio necessita da funcação?</label>
+                 <input type="text" name="fundation_need" class="form-control">
+              </div>
+            </div>         
+            <div class="col-sm-6 form-group">
+              <label for="visitDate">Data no Comparecimento na Fundação</label>
+              <input type="date" class="form-control" id="visitDate" name="visitDate">
+            </div>
+          </div>
+           <hr>
+
+
+
 
           <button type="submit" class="btn btn-success">Adicionar</button>
         </form>
