@@ -164,7 +164,7 @@ class ProfessionalController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-        $params = $request->getQueryParams();
+        //$params = $request->getQueryParams();
         //var_dump($params);
         //die;
 
@@ -183,27 +183,28 @@ class ProfessionalController extends Controller
         $export->addColumn(new TextColumn('Cidade'));
         $export->addColumn(new TextColumn('Estado'));
         $export->addColumn(new TextColumn('Categoria'));
-        $professionals = $this->professionalModel->getProfessionalsDownload($params['professionals_start'], $params[ 'professionals_finish']);
+        $professionals = $this->professionalModel->getAll();
        // var_dump($professionals);
        // die;
         foreach ($professionals as $professional) {
             //var_dump($professional);
             //die;
             $export->addRow([
-                $professional->namespace,               
-                $professional->email,
-                $professionalnascimento,
-                $professional->cpf,
-                $professional->tel_area,
-                $professional->tel_numero,
-                $professional->end_cep,
-                $professional->end_rua,
-                $professional->end_numero,                
-                $professional->end_complemento,
-                $professional->end_bairro,
-                $professional->end_cidade,
-                $professional->end_estado,
-                $professional->id_professional_type,
+                   $professional['name'],
+                
+                $professional['email'],
+                $professional['nascimento'],
+                $professional['cpf'],
+                $professional['tel_area'],
+                $professional['tel_numero'],
+                $professional['end_cep'],
+                $professional['end_rua'],
+                $professional['end_numero'],                
+                $professional['end_complemento'],
+                $professional['end_bairro'],
+                $professional['end_cidade'],
+                $professional['end_estado'],
+                $professional['id_professional_type'],
                 
             ]);//var_dump($professional);
             //die;

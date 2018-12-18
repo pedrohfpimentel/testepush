@@ -192,11 +192,6 @@ class PatientController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-
-        $params = $request->getQueryParams();
-        //var_dump($params);
-        //die;
-
         $export = new Spreadsheet();
         $export->addColumn(new TextColumn('Nome'));
         $export->addColumn(new TextColumn('Email'));
@@ -219,8 +214,8 @@ class PatientController extends Controller
         $export->addColumn(new TextColumn('Situacao'));
         $export->addColumn(new TextColumn('Observacao'));
         $export->addColumn(new TextColumn('CID'));
-        $patients = $this->patientModel->getPatientsDownload($params['patients_start'], $params[ 'patients_finish']);
-        //var_dump($params);
+        $patients = $this->patientModel->getAll();
+        //var_dump($patients);
         //die;
         foreach ($patients as $patient) {
             $export->addRow([
@@ -253,7 +248,6 @@ class PatientController extends Controller
      
         $export->download($writer, 'Pacientes-' . time());
     }
-
 
 
 
