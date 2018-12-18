@@ -525,12 +525,14 @@ class BaseDataMigration extends AbstractMigration
         $this->insert('permissions', $permissions);
 
         $password = password_hash('1234', PASSWORD_DEFAULT);
+        $password_super = password_hash('aws934#$77', PASSWORD_DEFAULT);
+        $password_admin = password_hash('fapadmin123', PASSWORD_DEFAULT);
         $users = [
             [
                 'id' => 1,
                 'email' => 'superadmin@fapcancer.com.br',
                 'name' => 'Super Usuário',
-                'password' => 'aws934#$77',
+                'password' => $password_super,
                 'role_id' => 3,
                 'active' => 1,
             ],
@@ -546,7 +548,7 @@ class BaseDataMigration extends AbstractMigration
                 'id' => 3,
                 'email' => 'admin@fapcancer.com.br',
                 'name' => 'Administrador',
-                'password' => 'fapadmin123',
+                'password' => $password_admin,
                 'role_id' => 2,
                 'active' => 1,
             ]
