@@ -528,9 +528,9 @@ class BaseDataMigration extends AbstractMigration
         $users = [
             [
                 'id' => 1,
-                'email' => 'root@localhost',
+                'email' => 'superadmin@fapcancer.com.br',
                 'name' => 'Super Usuário',
-                'password' => $password,
+                'password' => 'aws934#$77',
                 'role_id' => 3,
                 'active' => 1,
             ],
@@ -546,7 +546,7 @@ class BaseDataMigration extends AbstractMigration
                 'id' => 3,
                 'email' => 'admin@fapcancer.com.br',
                 'name' => 'Administrador',
-                'password' => $password,
+                'password' => 'fapadmin123',
                 'role_id' => 2,
                 'active' => 1,
             ]
