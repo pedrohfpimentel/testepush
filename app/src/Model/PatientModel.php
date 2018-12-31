@@ -48,6 +48,7 @@ class PatientModel extends Model
             ':discovery_time'   => $patient->discovery_time,
             ':discovery_how'    => $patient->discovery_how,
             ':treatment_time'   => $patient->treatment_time,
+            ':treatment_where'  => $patient->treatment_where,
             ':doctor_name'      => $patient->doctor_name,
             ':fundation_need'   => $patient->fundation_need,
 

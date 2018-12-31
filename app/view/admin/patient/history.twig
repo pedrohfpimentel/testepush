@@ -21,9 +21,10 @@
       <div class="col-sm-4">
           <p class="pull-right">
            
-          {#<a class="btn btn-default" href="{{ base_url() }}/admin/patients/export">
+          <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export">
+              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-            </a> #}
+            </a>
          
           </p>
         </div>

@@ -11,6 +11,7 @@ use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
 use Fusonic\SpreadsheetExport\ColumnTypes\NumericColumn;
 use Fusonic\SpreadsheetExport\ColumnTypes\TextColumn;
 use Fusonic\SpreadsheetExport\Writers\OdsWriter;
+use Mpdf\Mpdf;
 use Slim\Flash\Messages as FlashMessages;
 use Slim\Views\Twig as View;
 
@@ -200,77 +201,114 @@ class PatientController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-        $export = new Spreadsheet();
-        $export->addColumn(new TextColumn('Nome'));
-        $export->addColumn(new TextColumn('Email'));
-        $export->addColumn(new DateColumn('Data de nascimento'));
-        $export->addColumn(new TextColumn('CPF'));
-        $export->addColumn(new TextColumn('RG'));
-        $export->addColumn(new TextColumn('Cartao SUS'));
-        $export->addColumn(new NumericColumn('DDD'));
-        $export->addColumn(new NumericColumn('Telefone'));
-        $export->addColumn(new TextColumn('Observacoes'));
-        $export->addColumn(new NumericColumn('DDD-2'));
-        $export->addColumn(new NumericColumn('Telefone-2'));        
-        $export->addColumn(new TextColumn('CEP'));
-        $export->addColumn(new TextColumn('Rua'));
-        $export->addColumn(new TextColumn('Número'));
-        $export->addColumn(new TextColumn('Complemento'));
-        $export->addColumn(new TextColumn('Bairro'));
-        $export->addColumn(new TextColumn('Cidade'));
-        $export->addColumn(new TextColumn('Estado'));
-        $export->addColumn(new TextColumn('Situacao'));
-        $export->addColumn(new TextColumn('Observacao'));
+      $patients = $this->patientModel->getAll();
 
-        $export->addColumn(new TextColumn('Tipo de Câncer'));
-        $export->addColumn(new TextColumn('Há quanto tempo descobriu?'));
-        $export->addColumn(new TextColumn('Como descobriu?'));
-        $export->addColumn(new TextColumn('Quando começou o tratamento?'));
-        $export->addColumn(new TextColumn('Onde se trata?'));
-        $export->addColumn(new TextColumn('Qual o médico?'));
-        $export->addColumn(new TextColumn('Qual apoio necessita da funcação?'));
-        $export->addColumn(new TextColumn('CID'));
-        $patients = $this->patientModel->getAll();
-        //var_dump($patients);
-        //die;
-        foreach ($patients as $patient) {
-            $export->addRow([
-                $patient->name,
-                $patient->email,
-                $patient->nascimento,
-                $patient->cpf,
-                $patient->rg,
-                $patient->sus,
-                $patient->tel_area,
-                $patient->tel_numero,
-                $patient->obs_tel,                
-                $patient->tel_area_2,
-                $patient->tel_numero_2,
-                $patient->end_cep,
-                $patient->end_rua,
-                $patient->end_numero,
-                $patient->end_complemento,
-                $patient->end_bairro,
-                $patient->end_cidade,
-                $patient->end_estado,
-                $patient->id_status,
-                $patient->obs,
-                
-                $patient->cancer_type,
-                $patient->discovery_time,
-                $patient->discovery_how,
-                $patient->treatment_time,
-                $patient->treatment_where,
-                $patient->doctor_name,
-                $patient->fundation_need,
-                $patient->id_disease,
-                
-            ]);
+      $html = "<table>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Data de nascimento</th>
+                <th>CPF</th>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>RG</th>
+                <th>Cartao SUS</th>
+                <th>DDD</th>
+                <th>Telefone</th>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Observacoes</th>
+                <th>DDD-2</th>
+                <th>Telefone-2</th>
+                <th>CEP</th>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Complemento</th>
+                <th>Bairro</th>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Situacao</th>
+                <th>Observacao</th>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Tipo de Câncer</th>
+                <th>Há quanto tempo descobriu?</th>
+                <th>Como descobriu?</th>
+                <th>Quando começou o tratamento?</th>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Onde se trata?</th>
+                <th>Qual o médico?</th>
+                <th>Qual apoio necessita da funcação?</th>
+                <th>CID</th>
+            </tr>
+        </table>";
+
+      foreach ($patients as $patient) {
+        //var_dump( $patient->name);
+       //die;
         }
-        $writer = new OdsWriter();
-        $writer->includeColumnHeaders = true;
-     
-        $export->download($writer, 'Pacientes-' . time());
+        $html .= "<p>$patient->name</p>
+                <p>$patient->email</p>
+                <p>$patient->nascimento</p>
+                <p>$patient->cpf</p>
+                <p>$patient->rg</p>
+                <p>$patient->sus</p>
+                <p>$patient->tel_area</p>
+                <p>$patient->tel_numero</p>
+                <p>$patient->obs_tel</p>              
+                <p>$patient->tel_area_2</p>
+                <p>$patient->tel_numero_2</p>
+                <p>$patient->end_cep</p>
+                <p>$patient->end_rua</p>
+                <p>$patient->end_numero</p>
+                <p>$patient->end_complemento</p>
+                <p>$patient->end_bairro</p>
+                <p>$patient->end_cidade</p>
+                <p>$patient->end_estado</p>
+                <p>$patient->id_status</p>
+                <p>$patient->obs</p>
+                
+                <p>$patient->cancer_type</p>
+                <p>$patient->discovery_time</p>
+                <p>$patient->discovery_how</p>
+                <p>$patient->treatment_time</p>
+                <p>$patient->treatment_where</p>
+                <p>$patient->doctor_name</p>
+                <p>$patient->fundation_need</p>
+                <p>$patient->id_disease</p>
+                ";
+
+    
+
+    $mpdf=new mPDF(); 
+    $mpdf->SetDisplayMode('fullpage');
+    //$css = file_get_contents("css/estilo.css");
+    //$mpdf->WriteHTML($css,1);
+    $mpdf->WriteHTML($html);
+    $mpdf->Output();
+    exit;
+          
+        
+ 
+        
+               
     }
 
 
