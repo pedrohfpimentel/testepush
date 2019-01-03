@@ -68,7 +68,7 @@ class AttendanceController extends Controller
         } else {
             $page = 1;
         }
-        $limit = 3;
+        $limit = 20;
         $offset = ($page - 1) * $limit;
 
        
