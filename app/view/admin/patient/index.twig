@@ -20,14 +20,24 @@
         <div class="col-sm-8">
           <p class="pull-right">
 
-            <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
-               <label for="patients_start">Data Inicial:</label>
-               <input id="patients_start" class="form-control" type="date" name="patients_start" required>
+            <div class="container col-sm-4" id="patients_date" name="patients_date" style="margin-right:55px; padding:10px; border-radius: 5px; border-color: white;border-style: solid;">
+               <label for="patients_start" style="color: white; padding-botton:0;">Data Inicial:</label>
+
+                <style>
+
+                    .form-group {
+                        
+                        margin: 0px;
+                    }
+                </style>
+
+
+               <input id="patients_start" class="form-control" type="date" name="patients_start" style="color: white;" required>
              </div>
 
-              <div class="container col-sm-4" style="background-color:white; margin-right:55px; padding:10px; border-radius: 2px;">
-               <label for="patients_finish">Data Final:</label>
-               <input id="patients_finish" class="form-control" type="date" name="patients_finish" required>
+              <div class="container col-sm-4" style="margin-right:55px; padding:10px; border-radius: 5px; border-color: white;border-style: solid;">
+               <label for="patients_finish" style="color: white;">Data Final:</label>
+               <input id="patients_finish" class="form-control" type="date" name="patients_finish" style="color: white;" required>
              </div>
             
        
