@@ -153,7 +153,41 @@ class PatientModel extends Model
 
     }
 
+    public function getAllByStatus( int $status, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+            SELECT
+                users.*,
+                patients.*,
+                diseases.id as disease_id,
+                diseases.name as disease_name,
+                diseases.description as disease_description,
+                diseases.cid_version as disease_cid_version,
+                diseases.cid_code as disease_cid_code
+            FROM
+                patients
+                LEFT JOIN users ON users.id = patients.id_user
+                LEFT JOIN diseases ON patients.id_disease = diseases.id
+            
+            WHERE 
+                patients.id_status =  ?
+            ORDER BY
+                patients.id ASC
+            LIMIT ? , ?
 
+            
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $status, \PDO::PARAM_INT);
+        $query->bindValue(2, $offset, \PDO::PARAM_INT);
+        $query->bindValue(3, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+        return $query->fetchAll();
+
+
+
+    }
 
 
      public function getAmount()
