@@ -108,8 +108,11 @@ class PatientController extends Controller
             return $this->httpRedirect($request, $response, '/admin/patients/add');
         }
 
+        $data['tel_area'] = (int) $data['tel_area'];
+        $data['tel_numero'] = (int) $data['tel_numero'];
+        $data['end_numero'] = (int) $data['end_numero'];
         $user = $this->entityFactory->createUser($data);
-        
+ 
         // add new user
         $patient['id_user'] = $this->userModel->add($user);
 
@@ -201,114 +204,74 @@ class PatientController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-      $patients = $this->patientModel->getAll();
+      $patients = $this->patientModel->getAllByStatus(2);
 
-      $html = "<table>
+      $html = "
+      <div style='width: 24%; float:left;'>
+        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+      </div>
+      <div style='width: 75%;'>
+        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
+        <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+      
+      </div>
+      <hr>
+      <div style='width:100%; margin-top: 10px;'>
+      <table>
+            
             <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Data de nascimento</th>
-                <th>CPF</th>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th>RG</th>
-                <th>Cartao SUS</th>
-                <th>DDD</th>
-                <th>Telefone</th>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th>Observacoes</th>
-                <th>DDD-2</th>
-                <th>Telefone-2</th>
-                <th>CEP</th>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th>Rua</th>
-                <th>Número</th>
-                <th>Complemento</th>
-                <th>Bairro</th>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>Situacao</th>
-                <th>Observacao</th>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th>Tipo de Câncer</th>
-                <th>Há quanto tempo descobriu?</th>
-                <th>Como descobriu?</th>
-                <th>Quando começou o tratamento?</th>
-            </tr>
-        </table>
-        <table>
-            <tr>
-                <th>Onde se trata?</th>
-                <th>Qual o médico?</th>
-                <th>Qual apoio necessita da funcação?</th>
-                <th>CID</th>
-            </tr>
-        </table>";
-
-      foreach ($patients as $patient) {
-        //var_dump( $patient->name);
-       //die;
-        }
-        $html .= "<p>$patient->name</p>
-                <p>$patient->email</p>
-                <p>$patient->nascimento</p>
-                <p>$patient->cpf</p>
-                <p>$patient->rg</p>
-                <p>$patient->sus</p>
-                <p>$patient->tel_area</p>
-                <p>$patient->tel_numero</p>
-                <p>$patient->obs_tel</p>              
-                <p>$patient->tel_area_2</p>
-                <p>$patient->tel_numero_2</p>
-                <p>$patient->end_cep</p>
-                <p>$patient->end_rua</p>
-                <p>$patient->end_numero</p>
-                <p>$patient->end_complemento</p>
-                <p>$patient->end_bairro</p>
-                <p>$patient->end_cidade</p>
-                <p>$patient->end_estado</p>
-                <p>$patient->id_status</p>
-                <p>$patient->obs</p>
+                <th style='width: 20%;'>Nome</th>
+                <th style='width: 10%;'>Nascimento</th>
+                <th style='width: 10%;'>CPF</th>
+                <th style='width: 10%;'>RG</th>
+                <th style='width:  5%;'>DDD</th>
+                <th style='width: 10%;'>Telefone</th>
+                <th style='width: 10%;'>CEP</th>
                 
-                <p>$patient->cancer_type</p>
-                <p>$patient->discovery_time</p>
-                <p>$patient->discovery_how</p>
-                <p>$patient->treatment_time</p>
-                <p>$patient->treatment_where</p>
-                <p>$patient->doctor_name</p>
-                <p>$patient->fundation_need</p>
-                <p>$patient->id_disease</p>
-                ";
+                <th style='width: 5%;'>Núm.</th>
+                <th style='width: 10%;'>Comp.</th>
+                
+                
+                <th style='width: 10%;'>Situacao</th>
+            </tr>
+        ";
 
+      
+      
+        foreach ($patients as $patient) {
+            //var_dump( $patient->name);
+            //die;
+            $html .= "
+            <tr>
+            <td style='width: 20%;'>$patient->name</td>
+            <td style='width: 10%;'>$patient->nascimento</td>
+            <td style='width: 10%;'>$patient->cpf</td>
+            <td style='width: 10%;'>$patient->rg</td>
+            <td style='width: 5%;'>$patient->tel_area</td>
+            <td style='width: 10%;'>$patient->tel_numero</td>
+            <td style='width: 10%;'>$patient->end_cep</td>
+            
+            <td style='width: 5%;'>$patient->end_numero</td>
+            <td style='width: 10%;'>$patient->end_complemento</td>
+            
+            <td style='width: 10%;'>$patient->id_status</td>
+            
+            </tr>";
+        }
     
-
-    $mpdf=new mPDF(); 
-    $mpdf->SetDisplayMode('fullpage');
-    //$css = file_get_contents("css/estilo.css");
-    //$mpdf->WriteHTML($css,1);
-    $mpdf->WriteHTML($html);
-    $mpdf->Output();
-    exit;
-          
-        
- 
-        
-               
+    $html .= "</table> </div>";
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;        
     }
 
 
