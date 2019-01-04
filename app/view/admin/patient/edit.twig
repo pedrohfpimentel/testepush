@@ -11,7 +11,7 @@
 {% endblock %}
 {% block content %}
 <div class="row">
-  <div class="col-sm-10">
+  <div class="col-sm-12">
     <div class="card">
   <div class="card-header" data-background-color="blue">
     <div class="row">
@@ -247,6 +247,74 @@
               {% endfor %}
             </select>
           </div>
+
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Tipo de Câncer?</label>
+                 <input type="text" name="cancer_type" id="cancer_type" class="form-control" value="{{ patient.cancer_type }}">
+              </div>
+            </div>        
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Há quanto tempo descobriu?</label>
+                 <input type="text" name="discovery_time" id="discovery_time" class="form-control" value="{{ patient.discovery_time }}">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Como descobriu?</label>
+                 <input type="text" name="discovery_how" id="discovery_how" class="form-control" value="{{ patient.discovery_how }}">
+              </div>
+            </div>      
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Quando começou o tratamento?</label>
+                 <input type="text" name="treatment_time" id="treatment_time" class="form-control" value="{{ patient.treatment_time }}">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Onde se trata?</label>
+                 <input type="text" name="treatment_where" id="treatment_where" class="form-control" value="{{ patient.treatment_where }}">
+              </div>
+            </div>        
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Qual o médico?</label>
+                 <input type="text" name="doctor_name" id="doctor_name" class="form-control" value="{{ patient.doctor_name }}">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="obs">Qual apoio necessita da funcação?</label>
+                 <input type="text" name="fundation_need" id="fundation_need" class="form-control" value="{{ patient.fundation_need }}">
+              </div>
+            </div>         
+            <div class="col-sm-6 form-group">
+              <label for="visitDate">Data no Comparecimento na Fundação</label>
+              <input type="date" class="form-control" id="visitDate" name="visitDate" value="{{ patient.visitDate }}">
+            </div>
+          </div>
+           <hr>
+
+
+
+
 
 
 

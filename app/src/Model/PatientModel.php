@@ -28,9 +28,10 @@ class PatientModel extends Model
                 treatment_time,
                 treatment_where,
                 doctor_name,
-                fundation_need
+                fundation_need,
+                visitDate
                 )
-            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need)
+            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need, :visitDate)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -51,6 +52,7 @@ class PatientModel extends Model
             ':treatment_where'  => $patient->treatment_where,
             ':doctor_name'      => $patient->doctor_name,
             ':fundation_need'   => $patient->fundation_need,
+            ':visitDate'        => $patient->visitDate,
 
 
         ];
@@ -89,6 +91,7 @@ class PatientModel extends Model
                 patients.treatment_where as treatment_where,
                 patients.doctor_name as doctor_name,
                 patients.fundation_need as fundation_need,
+                patients.visitDate as visitDate,
                 patients.id_user,
                 diseases.id as disease_id,
                 diseases.name as disease_name,
@@ -153,11 +156,9 @@ class PatientModel extends Model
 
     }
 
-<<<<<<< HEAD
-    public function getAllByStatus( int $status, int $start, int $finish,  int $offset = 0, int $limit = PHP_INT_MAX): array
-=======
+
     public function getAllByStatus( int $status = 1, int $offset = 0, int $limit = PHP_INT_MAX): array
->>>>>>> 8085d3d41a450d0d8fb0d916f119eacc7da4656d
+
     {
         $sql = "
             SELECT
@@ -252,7 +253,8 @@ class PatientModel extends Model
                 treatment_time  = :treatment_time,
                 treatment_where = :treatment_where,
                 doctor_name     = :doctor_name,
-                fundation_need  = :fundation_need
+                fundation_need  = :fundation_need,
+                visitDate       = :visitDate
             WHERE
                 id = :id
         ";
@@ -276,6 +278,7 @@ class PatientModel extends Model
             ':treatment_where'  => $patient->treatment_where,
             ':doctor_name'      => $patient->doctor_name,
             ':fundation_need'   => $patient->fundation_need,
+            ':visitDate'        => $patient->visitDate,
 
         ];
 

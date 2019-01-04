@@ -23,6 +23,7 @@ class Patient
     public $treatment_where;
     public $doctor_name;
     public $fundation_need;
+    public $visitDate;
 
     public function __construct(array $data = [])
     {
@@ -44,5 +45,6 @@ class Patient
         $this->treatment_where = $data['treatment_where'] ?? null;
         $this->doctor_name = $data['doctor_name'] ?? null;
         $this->fundation_need = $data['fundation_need'] ?? null;
+        $this->visitDate = $data['visitDate'] ?? null;
     }
 }

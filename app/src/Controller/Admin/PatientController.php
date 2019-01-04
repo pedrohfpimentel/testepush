@@ -143,6 +143,7 @@ class PatientController extends Controller
         $patient['treatment_where'] = $data['treatment_where'];
         $patient['doctor_name'] = $data['doctor_name'];
         $patient['fundation_need'] = $data['fundation_need'];
+        $patient['visitDate'] = $data['visitDate'];
 
 
 
@@ -327,6 +328,7 @@ class PatientController extends Controller
         $patient['treatment_where'] = $data['treatment_where'];
         $patient['doctor_name'] = $data['doctor_name'];
         $patient['fundation_need'] = $data['fundation_need'];
+        $patient['visitDate'] = $data['visitDate'];
 
         $patient = $this->entityFactory->createPatient($patient);
 
