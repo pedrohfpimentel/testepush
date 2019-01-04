@@ -157,7 +157,7 @@ class PatientModel extends Model
     }
 
 
-    public function getAllByStatus( int $status = 1, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getAllByStatus( int $status = 1, string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
 
     {
         $sql = "
@@ -176,7 +176,7 @@ class PatientModel extends Model
             
             WHERE 
                 patients.id_status =  ?
-                AND 
+                AND (patients.visitDate BETWEEN ? AND ?)
             ORDER BY
                 patients.id ASC
             LIMIT ? , ?
@@ -185,8 +185,10 @@ class PatientModel extends Model
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $status, \PDO::PARAM_INT);
-        $query->bindValue(2, $offset, \PDO::PARAM_INT);
-        $query->bindValue(3, $limit, \PDO::PARAM_INT);
+        $query->bindValue(2, $start, \PDO::PARAM_STR);
+        $query->bindValue(3, $finish, \PDO::PARAM_STR);
+        $query->bindValue(4, $offset, \PDO::PARAM_INT);
+        $query->bindValue(5, $limit, \PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
         return $query->fetchAll();
