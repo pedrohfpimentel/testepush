@@ -207,6 +207,7 @@ class PatientController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
+
         $params = $request->getQueryParams();
 
         $patients_status =  (int)$params['patients_status'];
@@ -217,6 +218,7 @@ class PatientController extends Controller
         $patients_finish =  date('d-m-y',strtotime($params['patients_finish']));
 
         $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
+
 
       $html = "
       <div style='width: 24%; float:left;'>

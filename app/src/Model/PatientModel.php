@@ -153,7 +153,11 @@ class PatientModel extends Model
 
     }
 
+<<<<<<< HEAD
     public function getAllByStatus( int $status, int $start, int $finish,  int $offset = 0, int $limit = PHP_INT_MAX): array
+=======
+    public function getAllByStatus( int $status = 1, int $offset = 0, int $limit = PHP_INT_MAX): array
+>>>>>>> 8085d3d41a450d0d8fb0d916f119eacc7da4656d
     {
         $sql = "
             SELECT
