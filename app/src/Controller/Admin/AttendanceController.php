@@ -160,43 +160,69 @@ class AttendanceController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
+      $attendances = $this->attendanceModel->getAll();
 
-        $params = $request->getQueryParams();
-        //var_dump($params);
-        //die;
-        $export = new Spreadsheet();
-        //$export->addColumn(new DateColumn('Data Inicial'));
-        //$export->addColumn(new DateColumn('Data Final'));
-        $export->addColumn(new DateColumn('Data do Atendimento'));
-        $export->addColumn(new TextColumn('Hora'));
-        $export->addColumn(new TextColumn('Paciente'));
-        $export->addColumn(new TextColumn('Profissional'));
-        $export->addColumn(new TextColumn('Observações'));
-        //$attendances = $this->attendanceModel->getAll();
-        $attendances = $this->attendanceModel->getAttendancesDownload($params['attendance_start'], $params[ 'attendance_finish']);
-         
-        //var_dump($attendances);
-        //die;
-     
-        foreach ($attendances as $attendance) {
-            $export->addRow([
-                $attendance->attendance_day,
-                $attendance->attendance_hour,
-                $attendance->patient_name,
-                $attendance->professional_name,
-                $attendance->description,                
-            ]);
+      $html = "
+      <div style='width: 24%; float:left;'>
+        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+      </div>
+      <div style='width: 75%;'>
+        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Atendimentos</h3>
+        <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+      
+      </div>
+      <hr>
+      <div style='width:100%; margin-top: 10px;'>
+      <table>
+            
+            <tr>
+                <th style='width: 20%;'>Data do Atendimento</th>
+                <th style='width: 10%;'>Hora</th>
+                <th style='width: 10%;'>Paciente</th>
+                <th style='width: 10%;'>Profissional</th>
+                <th style='width:  5%;'>Observações</th>
+               
+            </tr>
+        ";
+         foreach ($attendances as $attendance) {
+            //var_dump( $attendance->id_professional);
+            //die;
+            $html .= "
+            <tr>
+            <td style='width: 15%;'>$attendance->attendance_day</td>
+            <td style='width: 15%;'>$attendance->attendance_hour</td>
+            <td style='width: 20%;'>$attendance->id_patient</td>
+            <td style='width: 20%;'>$attendance->id_professional</td>
+            <td style='width: 30%;'>$attendance->description</td>
            
-
+            
+            </tr>";
         }
-        $writer = new OdsWriter();
-        $writer->includeColumnHeaders = true;
-     
-        $export->download($writer, 'Atendimentos-' . time());
+    
+        $html .= "</table> </div>";
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;        
     }
 
 
 
+
+
+
+
+
+
+    
 
     public function history (Request $request, Response $response, array $args)
     {

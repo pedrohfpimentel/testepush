@@ -204,7 +204,7 @@ class PatientController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-      $patients = $this->patientModel->getAllByStatus(2);
+      $patients = $this->patientModel->getAll();
 
       $html = "
       <div style='width: 24%; float:left;'>

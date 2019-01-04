@@ -163,56 +163,72 @@ class ProfessionalController extends Controller
 
     //download
     public function export(Request $request, Response $response)
-    {
-        //$params = $request->getQueryParams();
-        //var_dump($params);
-        //die;
+     {
+      $professionals = $this->professionalModel->getAll();
 
-        $export = new Spreadsheet();
-        $export->addColumn(new TextColumn('Nome'));
-        $export->addColumn(new TextColumn('Email'));
-        $export->addColumn(new DateColumn('Data de nascimento'));
-        $export->addColumn(new TextColumn('CPF'));
-        $export->addColumn(new NumericColumn('DDD'));
-        $export->addColumn(new NumericColumn('Telefone'));
-        $export->addColumn(new TextColumn('CEP'));
-        $export->addColumn(new TextColumn('Rua'));
-        $export->addColumn(new TextColumn('Numero'));
-        $export->addColumn(new TextColumn('Complemento'));
-        $export->addColumn(new TextColumn('Bairro'));        
-        $export->addColumn(new TextColumn('Cidade'));
-        $export->addColumn(new TextColumn('Estado'));
-        $export->addColumn(new TextColumn('Categoria'));
-        $professionals = $this->professionalModel->getAll();
-       // var_dump($professionals);
-       // die;
-        foreach ($professionals as $professional) {
-            //var_dump($professional);
-            //die;
-            $export->addRow([
-                   $professional['name'],
+      $html = "
+      <div style='width: 24%; float:left;'>
+        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+      </div>
+      <div style='width: 75%;'>
+        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Profissionais Cadastrados</h3>
+        <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+      
+      </div>
+      <hr>
+      <div style='width:100%; margin-top: 10px;'>
+      <table>
+            
+            <tr>
+                <th style='width: 20%;'>Nome</th>
+                <th style='width: 10%;'>Email</th>
+                <th style='width: 10%;'>CPF</th>
+                <th style='width: 10%;'>RG</th>
+                <th style='width:  5%;'>DDD</th>
+                <th style='width: 10%;'>Telefone</th>
+                <th style='width: 10%;'>CEP</th>
                 
-                $professional['email'],
-                $professional['nascimento'],
-                $professional['cpf'],
-                $professional['tel_area'],
-                $professional['tel_numero'],
-                $professional['end_cep'],
-                $professional['end_rua'],
-                $professional['end_numero'],                
-                $professional['end_complemento'],
-                $professional['end_bairro'],
-                $professional['end_cidade'],
-                $professional['end_estado'],
-                $professional['id_professional_type'],
+                <th style='width: 5%;'>Núm.</th>
+                <th style='width: 10%;'>Comp.</th>
                 
-            ]);//var_dump($professional);
-            //die;
+                
+                <th style='width: 10%;'>Categoria</th>
+            </tr>
+        ";
+         foreach ($professionals as $professional) {
+            var_dump( $professionals);
+            die;
+            $html .= "
+            <tr>
+            <td style='width: 20%;'>$professional->name</td>
+            <td style='width: 10%;'>$professional->email</td>
+            <td style='width: 10%;'>$professional->cpf</td>
+            <td style='width: 10%;'>$professional->rg</td>
+            <td style='width: 5%;'>$professional->tel_area</td>
+            <td style='width: 10%;'>$professional->tel_numero</td>
+            <td style='width: 10%;'>$professional->end_cep</td>
+            
+            <td style='width: 5%;'>$professional->end_numero</td>
+            <td style='width: 10%;'>$professional->end_complemento</td>
+            
+            <td style='width: 10%;'>$professional->id_professional_type</td>
+            
+            </tr>";
         }
-        $writer = new OdsWriter();
-        $writer->includeColumnHeaders = true;
-     
-        $export->download($writer, 'Profissionais-' . time());
+    
+        $html .= "</table> </div>";
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;        
     }
 
     public function update(Request $request, Response $response): Response
