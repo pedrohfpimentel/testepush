@@ -11,46 +11,59 @@
 {% block content %}
 
 <div class="main">
+  <div class="row">
+      <div class="col-xs-12 col-sm-3">
+        <a class="btn btn-success" href="{{ base_url() }}/admin/patients/add">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Paciente
+        </a>
+      </div>
+      <div class="col-sm-9">
+        <div class="card">
+          <div class="card-header" data-background-color="purple">
+            Relatório
+          </div>
+          <div class="card-content" style="padding-top:5px;">
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="id">Status Paciente</label>
+                <select name="patients_status" id="patients_status">
+                  {% for status in patient_status %}
+                    <option value="{{ status.id }}" >{{ status.name }}</option>
+
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="patient_name">Data Inicial</label>
+                <input id="patients_start" class="form-control" type="date" name="patients_start" required>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="professional_name">Data Final</label>
+                <input id="patients_finish" class="form-control" type="date" name="patients_finish" value="{{ today }}"  required>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export">
+                  <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+                  Relatório
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
         <div class="col-sm-4">
-          <h4>Pacientes</h4>
-        </div>
-        <div class="col-sm-8">
-          <p class="pull-right">
-
-            <div class="container col-sm-4" id="patients_date" name="patients_date" style="margin-right:55px; padding:10px; border-radius: 5px; border-color: white;border-style: solid;">
-               <label for="patients_start" style="color: white; padding-botton:0;">Data Inicial:</label>
-
-                <style>
-
-                    .form-group {
-                        
-                        margin: 0px;
-                    }
-                </style>
-
-
-               <input id="patients_start" class="form-control" type="date" name="patients_start" style="color: white;" required>
-             </div>
-
-              <div class="container col-sm-4" style="margin-right:55px; padding:10px; border-radius: 5px; border-color: white;border-style: solid;">
-               <label for="patients_finish" style="color: white;">Data Final:</label>
-               <input id="patients_finish" class="form-control" type="date" name="patients_finish" style="color: white;" required>
-             </div>
-            
-       
-            <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export">
-              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-            </a>
-
-            <a class="btn btn-success" href="{{ base_url() }}/admin/patients/add">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </a>
-         
-          </p>
+          <h4>Pacientes Cadastrados</h4>
         </div>
       </div>
 
@@ -125,12 +138,13 @@
   <script type="text/javascript">
       $("#patients_download").click(function(){
        // console.log('teste');
-      var patients_start = $('#patients_start').val()
-       var patients_finish =$('#patients_finish').val()
-       var base_url_hidden =$('#base_url_hidden').val()
+      var patients_start = $('#patients_start').val();
+       var patients_finish =$('#patients_finish').val();
+       var base_url_hidden =$('#base_url_hidden').val();
+       var patients_status = $('#patients_status').val();
        
           console.log($('#patients_download').attr('href'));
-          $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish);
+          $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status);
 });
         </script>
 {% endblock %}

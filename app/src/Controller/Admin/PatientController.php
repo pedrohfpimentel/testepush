@@ -66,15 +66,18 @@ class PatientController extends Controller
        
         $patients = $this->patientModel->getAll($offset, $limit);
         $patient_status = $this->patientStatusModel->getAll();
-               
+
         $amountPatients = $this->patientModel->getAmount();
         $amountPages = ceil($amountPatients->amount / $limit);
+
+        $today = date('Y-m-d');
 
         return $this->view->render($response, 'admin/patient/index.twig', [
             'patients' => $patients,
             'patient_status' => $patient_status,
             'page' => $page,
-            'amountPages' => $amountPages
+            'amountPages' => $amountPages,
+            'today' => $today
             ]);
 
         
@@ -204,7 +207,16 @@ class PatientController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-      $patients = $this->patientModel->getAllByStatus(2);
+        $params = $request->getQueryParams();
+
+        $patients_status =  (int)$params['patients_status'];
+        $patients_start =   $params['patients_start'];
+        if ($patients_start == "") {
+            $patients_start = "2000-01-01";
+        }
+        $patients_finish =  date('d-m-y',strtotime($params['patients_finish']));
+
+        $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
 
       $html = "
       <div style='width: 24%; float:left;'>

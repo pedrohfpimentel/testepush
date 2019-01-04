@@ -153,7 +153,7 @@ class PatientModel extends Model
 
     }
 
-    public function getAllByStatus( int $status, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getAllByStatus( int $status, int $start, int $finish,  int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
@@ -171,6 +171,7 @@ class PatientModel extends Model
             
             WHERE 
                 patients.id_status =  ?
+                AND 
             ORDER BY
                 patients.id ASC
             LIMIT ? , ?
