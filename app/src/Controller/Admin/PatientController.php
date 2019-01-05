@@ -242,48 +242,35 @@ class PatientController extends Controller
       <table>
             
             <tr>
-                <th style='width: 20%;'>Nome</th>
-                <th style='width: 10%;'>Nascimento</th>
-                <th style='width: 10%;'>CPF</th>
-                <th style='width: 10%;'>RG</th>
-                <th style='width:  5%;'>DDD</th>
-                <th style='width: 10%;'>Telefone</th>
-                <th style='width: 10%;'>CEP</th>
-                
-                <th style='width: 5%;'>Núm.</th>
-                <th style='width: 10%;'>Comp.</th>
-                
-                
-                <th style='width: 10%;'>Situacao</th>
+                <th style='width: 20%; text-align:left;'>Nome</th>
+                <th style='width: 10%; text-align:left;'>Entrada</th>
+                <th style='width: 10%; text-align:left;'>Nascimento</th>
+                <th style='width: 10%; text-align:left;'>Telefone</th>
+                <th style='width: 10%; text-align:left;'>Situacao</th>
             </tr>
         ";
-
-      
-      
         foreach ($patients as $patient) {
-            //var_dump( $patient->name);
-            //die;
+            
+            if ($patient->nascimento != "") {
+                $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
+            }
+            
             $html .= "
-            <tr>
-            <td style='width: 20%;'>$patient->name</td>
-            <td style='width: 10%;'>$patient->nascimento</td>
-            <td style='width: 10%;'>$patient->cpf</td>
-            <td style='width: 10%;'>$patient->rg</td>
-            <td style='width: 5%;'>$patient->tel_area</td>
-            <td style='width: 10%;'>$patient->tel_numero</td>
-            <td style='width: 10%;'>$patient->end_cep</td>
-            
-            <td style='width: 5%;'>$patient->end_numero</td>
-            <td style='width: 10%;'>$patient->end_complemento</td>
-            
-            <td style='width: 10%;'>$patient->id_status</td>
-            
-            </tr>";
+                <tr>
+                <td style='width: 20%;'>$patient->name</td>
+                <td style='width: 10%;'>" . date('d/m/Y', strtotime($patient->visitDate)) . "</td>
+                <td style='width: 10%;'>$patient->nascimento</td>
+                
+                <td style='width: 10%;'>($patient->tel_area) $patient->tel_numero</td>
+                <td style='width: 10%;'>$patient->status_name</td>
+                
+                </tr>";
         }
     
     $html .= "</table> </div>";
     try {
         $mpdf = new \Mpdf\Mpdf();
+        $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML($html);
         // Other code
         header('Content-Type: application/pdf');

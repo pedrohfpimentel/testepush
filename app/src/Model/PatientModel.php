@@ -166,16 +166,18 @@ class PatientModel extends Model
             diseases.name as disease_name,
             diseases.description as disease_description,
             diseases.cid_version as disease_cid_version,
-            diseases.cid_code as disease_cid_code
+            diseases.cid_code as disease_cid_code,
+            patient_status.name as status_name
         FROM
             patients
             LEFT JOIN users ON users.id = patients.id_user
             LEFT JOIN diseases ON patients.id_disease = diseases.id
+            LEFT JOIN patient_status ON patients.id_status = patient_status.id
         
         WHERE 
            patients.visitDate BETWEEN ? AND ?
         ORDER BY
-            patients.id ASC
+            users.name ASC
         LIMIT ? , ?
 
         
@@ -203,12 +205,14 @@ class PatientModel extends Model
                 diseases.name as disease_name,
                 diseases.description as disease_description,
                 diseases.cid_version as disease_cid_version,
-                diseases.cid_code as disease_cid_code
+                diseases.cid_code as disease_cid_code,
+                patient_status.name as status_name
+
             FROM
                 patients
                 LEFT JOIN users ON users.id = patients.id_user
                 LEFT JOIN diseases ON patients.id_disease = diseases.id
-            
+                LEFT JOIN patient_status ON patients.id_status = patient_status.id
             WHERE 
                 patients.id_status =  ?
                 AND (patients.visitDate BETWEEN ? AND ?)
