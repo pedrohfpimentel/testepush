@@ -33,6 +33,7 @@ $app->group('/admin', function () {
     $this->group('/attendances', function() {
         $this->get('[/]', AttendanceAdmin::class . ':index');
          $this->get('/export', AttendanceAdmin::class . ':export');
+         $this->get('/export_history', AttendanceAdmin::class . ':export_history');
         $this->get('/{id:[0-9]+}', AttendanceAdmin::class . ':view');
         $this->map(['GET', 'POST'], '/add', AttendanceAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', AttendanceAdmin::class . ':delete');
@@ -51,6 +52,7 @@ $app->group('/admin', function () {
     $this->group('/patients', function() {
         $this->get('[/]', PatientAdmin::class . ':index');
         $this->get('/export', PatientAdmin::class . ':export');
+        $this->get('/export_history', PatientAdmin::class . ':export_history');
         $this->map(['GET', 'POST'], '/add', PatientAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', PatientAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', PatientAdmin::class . ':edit');
@@ -88,6 +90,7 @@ $app->group('/admin', function () {
     $this->group('/professionals', function() {
         $this->get('[/]', ProfessionalAdmin::class . ':index');
         $this->get('/export', ProfessionalAdmin::class . ':export');
+        $this->get('/export_history', ProfessionalAdmin::class . ':export_history');
         $this->map(['GET', 'POST'], '/add', ProfessionalAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', ProfessionalAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', ProfessionalAdmin::class . ':edit');

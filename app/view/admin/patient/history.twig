@@ -20,10 +20,10 @@
       </div>
       <div class="col-sm-4">
           <p class="pull-right">
-           
-          <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export" target="_blank">
-              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+          <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+          <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}" >
+              
+              Exportar Relatório
             </a>
          
           </p>

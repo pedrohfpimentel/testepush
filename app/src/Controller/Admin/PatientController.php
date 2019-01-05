@@ -228,26 +228,26 @@ class PatientController extends Controller
         
 
       $html = "
-      <div style='width: 24%; float:left;'>
-        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
-      </div>
-      <div style='width: 75%;'>
-        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
-        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
-        <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
-      
-      </div>
-      <hr>
-      <div style='width:100%; margin-top: 10px;'>
-      <table>
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
             
-            <tr>
-                <th style='width: 20%; text-align:left;'>Nome</th>
-                <th style='width: 10%; text-align:left;'>Entrada</th>
-                <th style='width: 10%; text-align:left;'>Nascimento</th>
-                <th style='width: 10%; text-align:left;'>Telefone</th>
-                <th style='width: 10%; text-align:left;'>Situacao</th>
-            </tr>
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+                <tr>
+                    <th style='width: 20%; text-align:left;'>Nome</th>
+                    <th style='width: 10%; text-align:left;'>Entrada</th>
+                    <th style='width: 10%; text-align:left;'>Nascimento</th>
+                    <th style='width: 10%; text-align:left;'>Telefone</th>
+                    <th style='width: 10%; text-align:left;'>Situacao</th>
+                </tr>
         ";
         foreach ($patients as $patient) {
             
@@ -282,13 +282,65 @@ class PatientController extends Controller
         die;        
     }
 
+    public function export_history(Request $request, Response $response) {
+        
+        $id = (int)$request->getQueryParams()['id'];
+        $patient = $this->patientModel->get($id);
+        $event_logs = $this->eventLogModel->getByPatient($id);
+        $html = "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Paciente</h3>
+                <p> <strong>Paciente:</strong> $patient->name </p>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+            
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+            <tr>
+                <th style='width: 33%; text-align:left;'>Data / Hora</th>
+                <th style='width: 33%; text-align:left;'>Tipo</th>
+                <th style='width: 33%; text-align:left;'>Descrição</th>
+                
+            </tr>
+        ";
+        foreach ($event_logs as $event_log) {
+            
+            $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+            $html .="
+            <tr>
+                <td style='width: 33%; text-align:left;'>$event_log->date</td>
+                <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='width: 33%; text-align:left;'>$event_log->description</td>
+            
+            </tr> ";
+            
+        }
+        $html .= "</table> </div>";
+        try {
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->setFooter('{PAGENO}');
+            $mpdf->WriteHTML($html);
+            // Other code
+            //header('Content-Type: application/pdf');
+            $mpdf->Output( );
+              
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+            // Process the exception, log, print etc.
+            echo $e->getMessage();
+        }
 
+        return  $response->withHeader('Content-Type', 'application/pdf');
+    }
 
     public function history (Request $request, Response $response, array $args)
     {
         $id = intval($args['id']);
         $patient = $this->patientModel->get($id);
-
 
         $event_logs = $this->eventLogModel->getByPatient($id);
 
