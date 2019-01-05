@@ -216,10 +216,16 @@ class PatientController extends Controller
         if ($patients_start == "") {
             $patients_start = "2000-01-01";
         }
-        $patients_finish =  date('d-m-y',strtotime($params['patients_finish']));
+        $patients_finish =  $params['patients_finish'];
 
-        $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
+        if ($patients_status == 0) {
 
+            $patients = $this->patientModel->getAllByDate($patients_start, $patients_finish);
+
+        } else {
+            $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
+        }
+        
 
       $html = "
       <div style='width: 24%; float:left;'>

@@ -27,6 +27,7 @@
               <div class="form-group">
                 <label for="id">Status Paciente</label>
                 <select name="patients_status" id="patients_status">
+                  <option value="0">Todos</option>
                   {% for status in patient_status %}
                     <option value="{{ status.id }}" >{{ status.name }}</option>
 
