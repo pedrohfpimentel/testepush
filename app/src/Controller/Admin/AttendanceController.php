@@ -160,7 +160,23 @@ class AttendanceController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-      $attendances = $this->attendanceModel->getAll();
+      $params = $request->getQueryParams();
+
+        //var_dump( $params);
+            //die;
+        $attendance_start =   $params['attendance_finish'];
+        if ($attendance_start == "") {
+            $attendance_start = "2000-01-01";
+        }
+        $attendance_finish =  $params['attendance_finish'];
+
+       // if ($patients_status == 0) {
+
+            $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish);
+
+       // } else {
+         //   $patients = $this->patientModel->getAllByStatus($patients_status, $attendance_start, $attendance_finish);
+        //}
 
       $html = "
       <div style='width: 24%; float:left;'>
@@ -185,15 +201,16 @@ class AttendanceController extends Controller
                
             </tr>
         ";
+        //var_dump( $attendances);
+          //  die;
          foreach ($attendances as $attendance) {
-            //var_dump( $attendance->id_professional);
-            //die;
+           
             $html .= "
             <tr>
-            <td style='width: 15%;'>$attendance->attendance_day</td>
+            
             <td style='width: 15%;'>$attendance->attendance_hour</td>
-            <td style='width: 20%;'>$attendance->id_patient</td>
-            <td style='width: 20%;'>$attendance->id_professional</td>
+            <td style='width: 20%;'>$attendance->patient_name</td>
+            <td style='width: 20%;'>$attendance->professional_name</td>
             <td style='width: 30%;'>$attendance->description</td>
            
             

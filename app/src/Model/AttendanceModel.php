@@ -208,6 +208,44 @@ class AttendanceModel extends Model
 
 
 
+    public function getAllByDate(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+        SELECT 
+            attendances.*,
+            (SELECT users.name 
+            FROM users 
+            LEFT JOIN 
+                patients ON patients.id_user = users.id
+            WHERE users.id = patients.id_user) AS patient_name,
+            (SELECT users.name 
+            FROM users 
+            LEFT JOIN 
+                professionals ON professionals.id_user = users.id
+            WHERE users.id = professionals.id_user) AS professional_name
+        FROM `attendances`
+        
+        WHERE 
+           attendances.attendance_day BETWEEN ? AND ?
+        ORDER BY
+            attendances.attendance_day ASC
+        LIMIT ? , ?
+
+        
+    ";
+    $query = $this->db->prepare($sql);
+    $query->bindValue(1, $start, \PDO::PARAM_STR);
+    $query->bindValue(2, $finish, \PDO::PARAM_STR);
+    $query->bindValue(3, $offset, \PDO::PARAM_INT);
+    $query->bindValue(4, $limit, \PDO::PARAM_INT);
+    $query->execute();
+    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+    return $query->fetchAll();
+
+
+
+    }
+
 
     public function update(Attendance $attendances): bool
     {
