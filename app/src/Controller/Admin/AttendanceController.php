@@ -193,21 +193,25 @@ class AttendanceController extends Controller
       <table>
             
             <tr>
-                <th style='width: 20%;'>Data do Atendimento</th>
+                <th style='width: 10%;'>Data do Atendimento</th>
                 <th style='width: 10%;'>Hora</th>
-                <th style='width: 10%;'>Paciente</th>
-                <th style='width: 10%;'>Profissional</th>
-                <th style='width:  5%;'>Observações</th>
+                <th style='width: 25%;'>Paciente</th>
+                <th style='width: 25%;'>Profissional</th>
+                <th style='width: 30%;'>Observações</th>
                
             </tr>
         ";
         //var_dump( $attendances);
-          //  die;
+         //   die;
          foreach ($attendances as $attendance) {
+
+            if ($attendance->attendance_day != "") {
+                $attendance->attendance_day = date('d/m/Y', strtotime($attendance->attendance_day));
+            }
            
             $html .= "
             <tr>
-            
+            <td style='width: 15%;'>$attendance->attendance_day</td>
             <td style='width: 15%;'>$attendance->attendance_hour</td>
             <td style='width: 20%;'>$attendance->patient_name</td>
             <td style='width: 20%;'>$attendance->professional_name</td>
