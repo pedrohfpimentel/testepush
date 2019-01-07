@@ -164,7 +164,22 @@ class ProfessionalController extends Controller
     //download
     public function export(Request $request, Response $response)
      {
-      $professionals = $this->professionalModel->getAll();
+      $params = $request->getQueryParams();
+      //var_dump($params);
+      //die;
+
+        
+        $professionals_start =   $params['professionals_start'];
+        if ($professionals_start == "") {
+            $professionals_start = "2000-01-01";
+        }
+        $professionals_finish =  $params['professionals_finish'];
+
+        
+
+            $professionals = $this->professionalModel->getAllByDate($professionals_start, $professionals_finish);
+
+        
 
       $html = "
       <div style='width: 24%; float:left;'>
@@ -197,8 +212,8 @@ class ProfessionalController extends Controller
             </tr>
         ";
          foreach ($professionals as $professional) {
-            var_dump( $professionals);
-            die;
+            //var_dump( $professionals);
+            //die;
             $html .= "
             <tr>
             <td style='width: 20%;'>$professional->name</td>
