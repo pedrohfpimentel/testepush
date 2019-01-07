@@ -164,7 +164,7 @@ class AttendanceController extends Controller
 
         //var_dump( $params);
             //die;
-        $attendance_start =   $params['attendance_finish'];
+        $attendance_start =   $params['attendance_start'];
         if ($attendance_start == "") {
             $attendance_start = "2000-01-01";
         }
