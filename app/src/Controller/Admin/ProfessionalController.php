@@ -166,20 +166,13 @@ class ProfessionalController extends Controller
      {
       $params = $request->getQueryParams();
       //var_dump($params);
-      //die;
-
-        
+      //die;       
         $professionals_start =   $params['professionals_start'];
         if ($professionals_start == "") {
             $professionals_start = "2000-01-01";
         }
         $professionals_finish =  $params['professionals_finish'];
-
-        
-
             $professionals = $this->professionalModel->getAllByDate($professionals_start, $professionals_finish);
-
-        
 
       $html = "
       <div style='width: 24%; float:left;'>
@@ -202,12 +195,9 @@ class ProfessionalController extends Controller
                 <th style='width: 10%;'>RG</th>
                 <th style='width:  5%;'>DDD</th>
                 <th style='width: 10%;'>Telefone</th>
-                <th style='width: 10%;'>CEP</th>
-                
+                <th style='width: 10%;'>CEP</th>             
                 <th style='width: 5%;'>Núm.</th>
-                <th style='width: 10%;'>Comp.</th>
-                
-                
+                <th style='width: 10%;'>Comp.</th>                
                 <th style='width: 10%;'>Categoria</th>
             </tr>
         ";
@@ -222,13 +212,10 @@ class ProfessionalController extends Controller
             <td style='width: 10%;'>$professional->rg</td>
             <td style='width: 5%;'>$professional->tel_area</td>
             <td style='width: 10%;'>$professional->tel_numero</td>
-            <td style='width: 10%;'>$professional->end_cep</td>
-            
+            <td style='width: 10%;'>$professional->end_cep</td>           
             <td style='width: 5%;'>$professional->end_numero</td>
-            <td style='width: 10%;'>$professional->end_complemento</td>
-            
-            <td style='width: 10%;'>$professional->id_professional_type</td>
-            
+            <td style='width: 10%;'>$professional->end_complemento</td>          
+            <td style='width: 10%;'>$professional->id_professional_type</td>          
             </tr>";
         }
     

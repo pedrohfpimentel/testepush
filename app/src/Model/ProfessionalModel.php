@@ -123,24 +123,22 @@ class ProfessionalModel extends Model
         SELECT
                 users.*,
                 professionals.*,
-                event_logs.date,
+                
                 users.id as id_user,
                 users.name as user_name,
                 users.email as user_email,
                 professional_types.name as professional_type_name
-
             FROM
                 professionals
-                event_logs
+                
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
         
         WHERE 
-           event_logs.date BETWEEN ? AND ?
+           users.id BETWEEN ? AND ?
         ORDER BY
             users.name ASC
         LIMIT ? , ?
-
         
     ";
     $query = $this->db->prepare($sql);
@@ -151,9 +149,6 @@ class ProfessionalModel extends Model
     $query->execute();
     $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
     return $query->fetchAll();
-
-
-
     }
 
 
