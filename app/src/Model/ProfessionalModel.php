@@ -117,7 +117,7 @@ class ProfessionalModel extends Model
 
 
 
-    public function getAllByDate(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getAllByDate( int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
         SELECT
@@ -129,13 +129,14 @@ class ProfessionalModel extends Model
                 users.email as user_email,
                 professional_types.name as professional_type_name
             FROM
+                
                 professionals
                 
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
         
         WHERE 
-           users.nascimento BETWEEN ? AND ?
+            users.id  BETWEEN ? AND ?
         ORDER BY
             users.name ASC
         LIMIT ? , ?
