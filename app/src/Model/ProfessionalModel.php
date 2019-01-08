@@ -135,7 +135,7 @@ class ProfessionalModel extends Model
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
         
         WHERE 
-           users.id BETWEEN ? AND ?
+           users.nascimento BETWEEN ? AND ?
         ORDER BY
             users.name ASC
         LIMIT ? , ?
