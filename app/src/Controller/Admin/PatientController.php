@@ -250,6 +250,8 @@ class PatientController extends Controller
                 </tr>
         ";
         foreach ($patients as $patient) {
+            var_dump($patient->name);
+            die;
             
             if ($patient->nascimento != "") {
                 $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
