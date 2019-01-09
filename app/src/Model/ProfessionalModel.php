@@ -119,37 +119,35 @@ class ProfessionalModel extends Model
 
     public function getAllByDate( int $offset = 0, int $limit = PHP_INT_MAX): array
     {
-        $sql = "
-        SELECT
+      $sql = "
+            SELECT
                 users.*,
                 professionals.*,
-                
                 users.id as id_user,
                 users.name as user_name,
                 users.email as user_email,
                 professional_types.name as professional_type_name
+
             FROM
-                
                 professionals
-                
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
-        
-        WHERE 
-            users.id  BETWEEN ? AND ?
-        ORDER BY
-            users.name ASC
-        LIMIT ? , ?
-        
-    ";
-    $query = $this->db->prepare($sql);
-    $query->bindValue(1, $start, \PDO::PARAM_STR);
-    $query->bindValue(2, $finish, \PDO::PARAM_STR);
-    $query->bindValue(3, $offset, \PDO::PARAM_INT);
-    $query->bindValue(4, $limit, \PDO::PARAM_INT);
-    $query->execute();
-    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
-    return $query->fetchAll();
+            WHERE 
+        professionals.id BETWEEN ? AND ?
+       
+            
+            ORDER BY
+                professionals.id ASC
+
+                LIMIT ? , ?
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        return $query->fetchAll();
     }
 
 
