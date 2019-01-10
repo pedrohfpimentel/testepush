@@ -168,6 +168,9 @@ class ProfessionalController extends Controller
 
             //var_dump($professionals);
             //die;
+
+            echo getcwd();
+            die;
       $html = "
       <div style='width: 24%; float:left;'>
         <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
