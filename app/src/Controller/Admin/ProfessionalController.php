@@ -168,6 +168,9 @@ class ProfessionalController extends Controller
 
             //var_dump($professionals);
             //die;
+
+            $dir = getcwd();
+            
       $html = "
       <div style='width: 24%; float:left;'>
         <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -215,6 +218,7 @@ class ProfessionalController extends Controller
         $html .= "</table> </div>";
     try {
         $mpdf = new \Mpdf\Mpdf();
+        $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
         // Other code
         header('Content-Type: application/pdf');
