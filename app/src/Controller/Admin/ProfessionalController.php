@@ -183,14 +183,14 @@ class ProfessionalController extends Controller
       <table>
             
             <tr>
-                <th style='width: 25%;'>Nome</th>
-                <th style='width: 25%;'>Email</th>
+                <th style='width: 25%; text-align:left;'>Nome</th>
+                <th style='width: 25%; text-align:left;'>Email</th>
                
                
-                <th style='width:  5%;'>DDD</th>
-                <th style='width: 10%;'>Telefone</th>
-                <th style='width: 10%;'>CEP</th>               
-                <th style='width: 20%;'>Categoria</th>
+                <th style='width:  5%; text-align:left;'>DDD</th>
+                <th style='width: 10%; text-align:left;'>Telefone</th>
+                <th style='width: 10%; text-align:left;'>CEP</th>               
+                <th style='width: 20%; text-align:left;'>Categoria</th>
             </tr>
         ";
 
@@ -199,14 +199,14 @@ class ProfessionalController extends Controller
             $professional = $this->entityFactory->createProfessional($professional);
             $html .= "
             <tr>
-            <td style='width: 25%;'>$professional->name</td>
-            <th style='width: 25%;'>$professional->email</th>
+            <td style='width: 25%; text-align:left;'>$professional->name</td>
+            <td style='width: 25%; text-align:left;'>$professional->email</td>
             
            
-            <th style='width:  5%;'>$professional->tel_area</th>
-            <th style='width: 15%;'>$professional->tel_numero</th>
-            <th style='width: 10%;'>$professional->end_cep</th>               
-            <th style='width: 20%;'>$professional->professional_type_name</th>
+            <td style='width:  5%; text-align:left;'>$professional->tel_area</td>
+            <td style='width: 15%; text-align:left;'>$professional->tel_numero</td>
+            <td style='width: 10%; text-align:left;'>$professional->end_cep</td>               
+            <td style='width: 20%; text-align:left;'>$professional->professional_type_name</td>
                    
             </tr>";
         }
