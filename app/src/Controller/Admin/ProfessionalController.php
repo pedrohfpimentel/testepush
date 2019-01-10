@@ -169,11 +169,11 @@ class ProfessionalController extends Controller
             //var_dump($professionals);
             //die;
 
-            echo getcwd();
-            die;
+            $dir = getcwd();
+            
       $html = "
       <div style='width: 24%; float:left;'>
-        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+        <img src='". $dir ."/logo.png' style='width: 120px; float:left; padding-right: 15px;'>
       </div>
       <div style='width: 75%;'>
         <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
