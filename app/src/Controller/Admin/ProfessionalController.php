@@ -164,16 +164,10 @@ class ProfessionalController extends Controller
     //download
     public function export(Request $request, Response $response)
      {
-      //$params = $request->getQueryParams();
-      //var_dump($params);
-      //die;       
-       // $professionals_start =   $params['professionals_start'];
-       // if ($professionals_start == "") {
-       //     $professionals_start = "2000-01-01";
-       // }
-       // $professionals_finish =  $params['professionals_finish'];
             $professionals = $this->professionalModel->getAll();
 
+            //var_dump($professionals);
+            //die;
       $html = "
       <div style='width: 24%; float:left;'>
         <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -189,10 +183,10 @@ class ProfessionalController extends Controller
       <table>
             
             <tr>
-                <th style='width: 20%;'>Nome</th>
-                <th style='width: 10%;'>Email</th>
-                <th style='width: 10%;'>CPF</th>
-                <th style='width: 10%;'>RG</th>
+                <th style='width: 25%;'>Nome</th>
+                <th style='width: 25%;'>Email</th>
+               
+               
                 <th style='width:  5%;'>DDD</th>
                 <th style='width: 10%;'>Telefone</th>
                 <th style='width: 10%;'>CEP</th>               
@@ -202,19 +196,21 @@ class ProfessionalController extends Controller
 
          foreach ($professionals as $professional) {
             //var_dump( $professional);
-            //die;
+            $professional = $this->entityFactory->createProfessional($professional);
             $html .= "
             <tr>
-            <td style='width: 20%;'>$professional->name</td>
-            <td style='width: 10%;'>$professional->email</td>
-            <td style='width: 10%;'>$professional->cpf</td>
-            <td style='width: 10%;'>$professional->rg</td>
-            <td style='width:  5%;'>$professional->tel_area</td>
-            <td style='width: 10%;'>$professional->tel_numero</td>
-            <td style='width: 10%;'>$professional->end_cep</td>                   
-            <td style='width: 20%;'>$professional->id_professional_type</td>          
+            <td style='width: 25%;'>$professional->name</td>
+            <th style='width: 25%;'>$professional->email</th>
+            
+           
+            <th style='width:  5%;'>$professional->tel_area</th>
+            <th style='width: 15%;'>$professional->tel_numero</th>
+            <th style='width: 10%;'>$professional->end_cep</th>               
+            <th style='width: 20%;'>$professional->professional_type_name</th>
+                   
             </tr>";
         }
+        //die;
     
         $html .= "</table> </div>";
     try {
@@ -236,6 +232,9 @@ class ProfessionalController extends Controller
         $id = (int)$request->getQueryParams()['id'];
         $professional = $this->professionalModel->get($id);
         $event_logs = $this->eventLogModel->getByProfessional($id);
+
+        //var_dump($event_logs);
+          //  die;
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -258,7 +257,9 @@ class ProfessionalController extends Controller
             </tr>
         ";
         foreach ($event_logs as $event_log) {
-            
+            //var_dump($event_log);
+            //die;
+           
             $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
             $html .="
             <tr>
