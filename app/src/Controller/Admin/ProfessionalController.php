@@ -218,6 +218,7 @@ class ProfessionalController extends Controller
         $html .= "</table> </div>";
     try {
         $mpdf = new \Mpdf\Mpdf();
+        $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
         // Other code
         header('Content-Type: application/pdf');
