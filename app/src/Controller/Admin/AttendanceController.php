@@ -71,7 +71,7 @@ class AttendanceController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-       
+     
         $attendances = $this->attendanceModel->getAll($offset, $limit);
         foreach ($attendances as $attendance) {
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;

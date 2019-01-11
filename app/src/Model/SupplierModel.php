@@ -71,8 +71,11 @@ class SupplierModel extends Model
                 suppliers
             ORDER BY
                 id ASC
+                LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Supplier::class);
         return $query->fetchAll();

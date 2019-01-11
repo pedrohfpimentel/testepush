@@ -90,6 +90,7 @@ class ProfessionalModel extends Model
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
             ORDER BY
                 professionals.id ASC
+                LIMIT ? , ?
 
         ";
         $query = $this->db->prepare($sql);
@@ -101,7 +102,7 @@ class ProfessionalModel extends Model
     }
 
 
-      public function getAmount()
+       public function getAmount()
     {
         $sql = "
             SELECT

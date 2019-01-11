@@ -64,7 +64,7 @@ class ProductsModel extends Model
         return $query->fetch();
     }
 
-    public function getAll(): array
+    public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
@@ -75,8 +75,12 @@ class ProductsModel extends Model
                 LEFT JOIN products_type ON products.category = products_type.id
             ORDER BY
                 id ASC
+                LIMIT ? , ?
+                
         ";
         $query = $this->db->prepare($sql);
+          $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Products::class);
         return $query->fetchAll();

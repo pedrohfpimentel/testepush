@@ -40,7 +40,7 @@ class SupplierController extends Controller
         } else {
             $page = 1;
         }
-        $limit = 20;
+        $limit = 3;
         $offset = ($page - 1) * $limit;
 
 

@@ -167,10 +167,6 @@ class AttendanceModel extends Model
                
             FROM
                 attendances
-
-            
-          
-
         ";
         $query = $this->db->prepare($sql);
         $query->execute();

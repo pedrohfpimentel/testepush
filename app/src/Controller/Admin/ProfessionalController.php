@@ -49,7 +49,8 @@ class ProfessionalController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-         $params = $request->getQueryParams();
+        
+        $params = $request->getQueryParams();
 
         if (!empty($params['page'])) {
             $page = intval($params['page']);
@@ -59,7 +60,7 @@ class ProfessionalController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-       
+        
         $professionals = $this->professionalModel->getAll($offset, $limit);
         $professional_types = $this->professionalTypeModel->getAll();
                
@@ -71,13 +72,7 @@ class ProfessionalController extends Controller
             'professional_types' => $professional_types,
             'page' => $page,
             'amountPages' => $amountPages
-            ]);
-
-
-
-       
-
-       
+            ]);     
     }
 
     public function add(Request $request, Response $response): Response
