@@ -50,23 +50,39 @@ class ProductsController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-        // get products list
-        $products = $this->productsModel->getAll();
 
+        $params = $request->getQueryParams();
+
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+        // get products list
+        $products = $this->productsModel->getAll($offset, $limit);
         // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
 
+      $amountProducts = $this->productsModel->getAmount();
+        $amountPages = ceil($amountProducts->amount / $limit);
+
       // getRemessasByIdProduct function
           foreach($products as $product) {
-
+            $cost = 0;
             $quantity = 0;               
             $remessas = $this->productsModel->getRemessasByIdProduct($product->id); 
             
                 foreach($remessas as $remessa) {
-                    $quantity = $quantity + $remessa->quantity;      
+                   // var_dump($remessa);
+                   // die;
+                    $quantity = $quantity + $remessa->quantity;
+                    $cost = $remessa->cost;      
                 }
 
             $product->quantity= $quantity;
+            $product->cost= $cost;
                            
         }
         
@@ -79,7 +95,10 @@ class ProductsController extends Controller
         [
             'products' => $products,
             'remessaTypes' => $remessaTypes,
-            'quantity'=> $quantity
+            'quantity'=> $quantity,
+            'cost'=> $cost,
+            'page' => $page,
+            'amountPages' => $amountPages
         ]);
     }
 
@@ -164,7 +183,7 @@ class ProductsController extends Controller
             //$remessa['id_product'] = (int) $remessa['id_product'];
             $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
             $remessa['quantity'] = (int) $remessa['quantity'];
-            //$remessa['cost'] =  $remessa['cost'];
+            $remessa['cost'] =  $remessa['cost'];
             $remessa['id_product'] = $idProduct;
 
             $remessa['patrimony_code'] = (int) $remessa['patrimony_code'];
@@ -280,6 +299,7 @@ class ProductsController extends Controller
 
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;
+        $products['cost'] = (int) $old_product->cost;
 
         $products = $this->entityFactory->createProducts($products);
 

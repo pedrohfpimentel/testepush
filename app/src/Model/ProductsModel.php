@@ -113,6 +113,24 @@ class ProductsModel extends Model
         return $query->fetchAll();
     }
 
+
+
+    public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                products
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
+
+
+    
     public function update(Products $products): bool
     {
         $sql = "

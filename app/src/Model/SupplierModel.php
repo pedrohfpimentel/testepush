@@ -62,7 +62,7 @@ class SupplierModel extends Model
         return $query->fetch();
     }
 
-    public function getAll(): array
+    public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
@@ -76,6 +76,41 @@ class SupplierModel extends Model
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Supplier::class);
         return $query->fetchAll();
+    }
+
+
+    public function getAllDownload(int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+            SELECT
+                *
+
+            FROM
+                suppliers
+            ORDER BY
+                suppliers.id ASC
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Suppliers::class);
+        return $query->fetchAll();
+    }
+
+     public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                suppliers
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
     }
 
     public function update(Supplier $supplier): bool

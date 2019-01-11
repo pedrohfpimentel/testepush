@@ -10,6 +10,39 @@
 
 {% block content %}
 
+  {#padrao#}
+<div class="main">
+  <div class="row">
+      <div class="col-xs-12 col-sm-3">
+        <a class="btn btn-success" href="{{ base_url() }}/admin/suppliers/add">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Fabricante
+        </a>
+      </div>
+      <div class="col-sm-9">
+        <div class="card">
+          <div class="card-header" data-background-color="purple">
+            Relatório
+          </div>
+          <div class="card-content" style="padding-top:5px;">
+            <div class="col-sm-10">
+              <div class="form-group">              
+              </div>
+            </div>           
+          
+            <div class="col-sm-2">
+              <div class="form-group">
+                <a class="btn btn-default" id="suppliers_download" name="suppliers_download"  href="{{ base_url() }}/admin/suppliers/export" target="_blank">
+                  <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+                  Relatório
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
 <div class="main">
   <div class="card">
     <div class="card-header" data-background-color="blue">
@@ -17,13 +50,13 @@
         <div class="col-sm-8">
           <h3>Fabricantes</h3>
         </div>
-        <div class="col-sm-4">
+       {# <div class="col-sm-4">
           <p class="pull-right">
             <a class="btn btn-success" href="{{ base_url() }}/admin/suppliers/add">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </a>
           </p>
-        </div>
+        </div>#}
       </div>
 
     </div>
@@ -65,6 +98,24 @@
           </table>
         </div>
       </div>
+
+
+
+       <div class="row">
+        <div class="col-xs-12">
+          <ul class="pager">
+            <li{% if page == 1 %} class="disabled"{% endif %}>
+              <a{% if page > 1 %} href="{{ base_url() }}/admin/suppliers?page={{ page - 1 }}"{% endif %}>Anterior</a>
+            </li>
+            <li{% if page >= amountPages %} class="disabled"{% endif %}>
+              <a{% if page < amountPages %} href="{{ base_url() }}/admin/suppliers?page={{ page + 1 }}"{% endif %}>Próximo</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+
     </div>
   </div>
 </div>

@@ -10,6 +10,7 @@ class Products
     public $description;
     public $category;
     public $quantity;
+    public $cost;
     public $id_supplier;
     public $patrimony;
     //public $patrimony_code;
@@ -21,6 +22,7 @@ class Products
         $this->description = $data['description'] ?? null;
         $this->category = $data['category'] ?? null;
         $this->quantity = $data['quantity'] ?? null;
+        $this->cost = $data['cost'] ?? null;
         $this->id_supplier = $data['id_supplier'] ?? null;
         $this->patrimony = $data['patrimony'] ?? null;
         //$this->patrimony_code = $data['patrimony_code'] ?? null;
