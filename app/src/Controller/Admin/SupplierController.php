@@ -130,6 +130,8 @@ class SupplierController extends Controller
                     <th style='width: 20%; text-align:left;'>Nome</th>
                     <th style='width: 20%; text-align:left;'>Email</th>
                     <th style='width: 20%; text-align:left;'>Descrição</th>
+                    <th style='width: 10%; text-align:left;'>DDD</th>
+                    <th style='width: 10%; text-align:left;'>Telefone</th>
                     
                 </tr>
         ";
@@ -140,9 +142,11 @@ class SupplierController extends Controller
            
            $html .= "
             <tr>
-                <th style='width: 20%; text-align:left;'>$supplier->name</th>
-                <th style='width: 20%; text-align:left;'>$supplier->email</th>
-                <th style='width: 20%; text-align:left;'>$supplier->description</th>
+                <td style='width: 20%; text-align:left;'>$supplier->name</td>
+                <td style='width: 20%; text-align:left;'>$supplier->email</td>
+                <td style='width: 20%; text-align:left;'>$supplier->description</td>
+                <td style='width: 10%; text-align:left;'>$supplier->ddd</td>
+                <td style='width: 10%; text-align:left;'>$supplier->telefone</td>
                
             </tr>";
         }

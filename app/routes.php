@@ -72,6 +72,7 @@ $app->group('/admin', function () {
     $this->group('/products', function () {
         $this->get('[/]', ProductsAdmin::class . ':index');
         $this->get('/export', ProductsAdmin::class . ':export');
+        $this->get('/export_history', ProductsAdmin::class . ':export_history');
         $this->map(['GET', 'POST'], '/add', ProductsAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', ProductsAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', ProductsAdmin::class . ':edit');

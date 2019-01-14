@@ -317,11 +317,11 @@ class ProductsController extends Controller
            
            $html .= "
             <tr>
-                <th style='width: 20%; text-align:left;'>$product->name</th>
-                <th style='width: 20%; text-align:left;'>$product->description</th>
-                <th style='width: 10%; text-align:left;'>$product->products_type_name</th>
-                <th style='width: 10%; text-align:left;'>$product->quantity</th>
-                <th style='width: 10%; text-align:left;'>$product->cost</th>
+                <td style='width: 20%; text-align:left;'>$product->name</td>
+                <td style='width: 20%; text-align:left;'>$product->description</td>
+                <td style='width: 10%; text-align:left;'>$product->products_type_name</td>
+                <td style='width: 10%; text-align:left;'>$product->quantity</td>
+                <td style='width: 10%; text-align:left;'>$product->cost</td>
             </tr>";
         }
     
@@ -342,7 +342,67 @@ class ProductsController extends Controller
 
 
 
+    public function export_history(Request $request, Response $response) {
+        
+        $id = (int)$request->getQueryParams()['id'];
+        $product = $this->productsModel->get($id);
+        var_dump($product);
+        die;
+        $event_logs = $this->eventLogModel->getByProducts($id);
 
+        //var_dump($event_logs);
+          //  die;
+        $html = "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Produto</h3>
+                <p> <strong>Produto:</strong> $product->name </p>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+            
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+            <tr>
+                <th style='width: 33%; text-align:left;'>Data / Hora</th>
+                <th style='width: 33%; text-align:left;'>Tipo</th>
+                <th style='width: 33%; text-align:left;'>Descrição</th>
+                
+            </tr>
+        ";
+        foreach ($event_logs as $event_log) {
+            //var_dump($event_log);
+            //die;
+           
+            $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+            $html .="
+            <tr>
+                <td style='width: 33%; text-align:left;'>$event_log->date</td>
+                <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='width: 33%; text-align:left;'>$event_log->description</td>
+            
+            </tr> ";
+            
+        }
+        $html .= "</table> </div>";
+        try {
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->setFooter('{PAGENO}');
+            $mpdf->WriteHTML($html);
+            // Other code
+            //header('Content-Type: application/pdf');
+            $mpdf->Output( );
+              
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+            // Process the exception, log, print etc.
+            echo $e->getMessage();
+        }
+
+        return  $response->withHeader('Content-Type', 'application/pdf');
+    }
 
 
     public function history(Request $request, Response $response, array $args)
