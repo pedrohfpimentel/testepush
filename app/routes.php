@@ -133,7 +133,7 @@ $app->group('/admin', function () {
 
     $this->group('/suppliers', function () {
         $this->get('[/]', SupplierAdmin::class . ':index');
-        $this->get('/export', ProfessionalAdmin::class . ':export');
+        $this->get('/export', SupplierAdmin::class . ':export');
         $this->map(['GET', 'POST'], '/add', SupplierAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', SupplierAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', SupplierAdmin::class . ':edit');

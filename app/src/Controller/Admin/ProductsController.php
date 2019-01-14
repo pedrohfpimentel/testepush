@@ -272,6 +272,79 @@ class ProductsController extends Controller
 
     }
 
+
+
+
+
+    //download
+    public function export(Request $request, Response $response)
+    {
+
+            
+        
+
+            $products = $this->productsModel->getAll();
+
+     //var_dump($products);
+            //die;
+
+      $html = "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Produtos Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+            
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+                <tr>
+                    <th style='width: 20%; text-align:left;'>Nome</th>
+                    <th style='width: 20%; text-align:left;'>Descrição</th>
+                    <th style='width: 10%; text-align:left;'>Categoria</th>
+                    <th style='width: 10%; text-align:left;'>Quantidade</th>
+                    <th style='width: 10%; text-align:left;'>Custo</th>
+                </tr>
+        ";
+        foreach ($products as $product) {
+            //var_dump($product);
+            //die;
+            
+           
+           $html .= "
+            <tr>
+                <th style='width: 20%; text-align:left;'>$product->name</th>
+                <th style='width: 20%; text-align:left;'>$product->description</th>
+                <th style='width: 10%; text-align:left;'>$product->products_type_name</th>
+                <th style='width: 10%; text-align:left;'>$product->quantity</th>
+                <th style='width: 10%; text-align:left;'>$product->cost</th>
+            </tr>";
+        }
+    
+    $html .= "</table> </div>";
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->setFooter('{PAGENO}');
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;        
+    }
+
+
+
+
+
+
     public function history(Request $request, Response $response, array $args)
     {
         $id = intval($args['id']);

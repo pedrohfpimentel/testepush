@@ -40,7 +40,7 @@ class SupplierController extends Controller
         } else {
             $page = 1;
         }
-        $limit = 3;
+        $limit = 20;
         $offset = ($page - 1) * $limit;
 
 
@@ -99,56 +99,58 @@ class SupplierController extends Controller
 
 
 
-     public function export(Request $request, Response $response)
-     {
-            $suppliers = $this->supplierModel->getAllDownload();
+    
+    //download
+    public function export(Request $request, Response $response)
+    {
 
-            var_dump($suppliers);
-            die;
-
-            $dir = getcwd();
             
+        
+
+            $suppliers = $this->supplierModel->getAll();
+
+     //var_dump($suppliers);
+            //die;
+
       $html = "
-      <div style='width: 24%; float:left;'>
-        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
-      </div>
-      <div style='width: 75%;'>
-        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
-        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Fabricantes Cadastrados</h3>
-        <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
-      
-      </div>
-      <hr>
-      <div style='width:100%; margin-top: 10px;'>
-      <table>
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Fornecedores Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
             
-            <tr>
-                <th style='width: 25%; text-align:left;'>Nome</th>
-                <th style='width: 25%; text-align:left;'>Email</th>
-               
-               
-               
-            </tr>
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+                <tr>
+                    <th style='width: 20%; text-align:left;'>Nome</th>
+                    <th style='width: 20%; text-align:left;'>Email</th>
+                    <th style='width: 20%; text-align:left;'>Descrição</th>
+                    
+                </tr>
         ";
-
-         foreach ($suppliers as $supplier) {
-            //var_dump( $supplier);
-            //$supplier = $this->entityFactory->createSupplier($supplier);
-            $html .= "
-            <tr>
-            <td style='width: 25%; text-align:left;'>$supplier->name</td>
-            <td style='width: 25%; text-align:left;'>$supplier->email</td>
+        foreach ($suppliers as $supplier) {
+            //var_dump($supplier);
+            //die;
             
            
-           
+           $html .= "
+            <tr>
+                <th style='width: 20%; text-align:left;'>$supplier->name</th>
+                <th style='width: 20%; text-align:left;'>$supplier->email</th>
+                <th style='width: 20%; text-align:left;'>$supplier->description</th>
+               
             </tr>";
         }
-        //die;
     
-        $html .= "</table> </div>";
+    $html .= "</table> </div>";
     try {
         $mpdf = new \Mpdf\Mpdf();
-        $mpdf->showImageErrors = true;
+        $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML($html);
         // Other code
         header('Content-Type: application/pdf');
@@ -159,7 +161,6 @@ class SupplierController extends Controller
     }
         die;        
     }
-
 
 
 
