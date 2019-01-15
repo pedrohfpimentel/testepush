@@ -229,11 +229,14 @@ class ProfessionalController extends Controller
     public function export_history(Request $request, Response $response) {
         
         $id = (int)$request->getQueryParams()['id'];
+       //var_dump($id);
+        //die;
         $professional = $this->professionalModel->get($id);
         $event_logs = $this->eventLogModel->getByProfessional($id);
 
-        //var_dump($event_logs);
+       // var_dump($event_logs);
           //  die;
+       
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -258,7 +261,7 @@ class ProfessionalController extends Controller
         foreach ($event_logs as $event_log) {
             //var_dump($event_log);
             //die;
-           
+            $event_log = $this->entityFactory->createEventLog($event_log);
             $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
             $html .="
             <tr>

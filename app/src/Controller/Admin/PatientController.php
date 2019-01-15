@@ -287,6 +287,8 @@ class PatientController extends Controller
     public function export_history(Request $request, Response $response) {
         
         $id = (int)$request->getQueryParams()['id'];
+        //var_dump($id);
+        //die;
         $patient = $this->patientModel->get($id);
         $event_logs = $this->eventLogModel->getByPatient($id);
         $html = "
@@ -311,7 +313,8 @@ class PatientController extends Controller
             </tr>
         ";
         foreach ($event_logs as $event_log) {
-            
+            //var_dump($event_log);
+           // die;
             $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
             $html .="
             <tr>

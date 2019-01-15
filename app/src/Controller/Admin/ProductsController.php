@@ -346,8 +346,8 @@ class ProductsController extends Controller
         
         $id = (int)$request->getQueryParams()['id'];
         $product = $this->productsModel->get($id);
-        var_dump($product);
-        die;
+       // var_dump($product);
+       // die;
         $event_logs = $this->eventLogModel->getByProducts($id);
 
         //var_dump($event_logs);
