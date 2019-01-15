@@ -162,12 +162,14 @@ class AttendanceController extends Controller
     {
       $params = $request->getQueryParams();
 
-        //var_dump( $params);
-            //die;
+        
         $attendance_start =   $params['attendance_start'];
         if ($attendance_start == "") {
             $attendance_start = "2000-01-01";
         }
+
+        //var_dump( $params);
+            //die;
         $attendance_finish =  $params['attendance_finish'];
 
        // if ($patients_status == 0) {
