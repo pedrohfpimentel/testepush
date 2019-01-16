@@ -212,10 +212,13 @@ class PatientController extends Controller
         $params = $request->getQueryParams();
 
         $patients_status =  (int)$params['patients_status'];
+
         $patients_start =   $params['patients_start'];
         if ($patients_start == "") {
             $patients_start = "2000-01-01";
         }
+        //var_dump($patients_start);
+        //die;
         $patients_finish =  $params['patients_finish'];
 
         if ($patients_status == 0) {
@@ -250,8 +253,8 @@ class PatientController extends Controller
                 </tr>
         ";
         foreach ($patients as $patient) {
-            //var_dump($patient->name);
-            //die;
+            var_dump($patient->name);
+            die;
             
             if ($patient->nascimento != "") {
                 $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
