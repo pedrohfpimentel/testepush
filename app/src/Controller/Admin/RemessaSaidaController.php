@@ -93,7 +93,7 @@ class RemessaSaidaController extends Controller
         
 
 
-      $remessa = $request->getParsedBody();
+        $remessa = $request->getParsedBody();
 
      // var_dump($remessa);
       //die;
@@ -105,9 +105,9 @@ class RemessaSaidaController extends Controller
       $remessa['cost'] =  $remessa['cost'];
      
 
-      $remessa_saida = $this->entityFactory->createRemessaSaida($remessa);
+      $remessa = $this->entityFactory->createRemessa($remessa);
      
-      $idRemessa = $this->remessaSaidaModel->add($remessa);
+      $idRemessa = $this->remessaModel->add($remessa);
     
 
       // aqui trabalhar eventlog

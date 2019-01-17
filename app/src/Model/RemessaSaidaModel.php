@@ -16,10 +16,11 @@ class RemessaSaidaModel extends Model
                 remessa_type,
                 quantity,
                 cost,
+                patrimony_code,
                 date,
                 time
                 )
-            VALUES (:id_product, :remessa_type, :quantity, :cost, :date, :time)
+            VALUES (:id_product, :remessa_type, :quantity, :cost, :patrimony_code, :date, :time)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -27,6 +28,7 @@ class RemessaSaidaModel extends Model
             ':remessa_type'      => $remessa->remessa_type,
             ':quantity'          => $remessa->quantity,
             ':cost'              => $remessa->cost,
+            ':patrimony_code'    => $remessa->patrimony_code,
             ':date'              => $remessa->date,
             ':time'              => $remessa->time
 
@@ -90,6 +92,7 @@ class RemessaSaidaModel extends Model
                 remessa_type     = :remessa_type,
                 quantity         = :quantity,
                 cost             = :cost,
+                patrimony_code   = :patrimony_code,
                 date             = :date,
                 time             = :time
 
@@ -103,6 +106,7 @@ class RemessaSaidaModel extends Model
             ':remessa_type' => $remessa->remessa_type,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,
+            'patrimony_code' => $remessa->patrimony_code,
             ':date'         => $remessa->date,
             ':time'         => $remessa->time
             ];

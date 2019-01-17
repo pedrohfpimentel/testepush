@@ -87,7 +87,7 @@ class RemessaController extends Controller
           [
             'products' => $products,
             'remessaTypes' => $remessaTypes,
-            'patrimony_code' => $patrimony_code
+           // 'patrimony_code' => $patrimony_code
           ]);
         }
 

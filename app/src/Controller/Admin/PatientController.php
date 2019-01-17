@@ -228,7 +228,7 @@ class PatientController extends Controller
         } else {
             $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
         }
-        
+
 
       $html = "
             <div style='width: 24%; float:left;'>
@@ -253,8 +253,8 @@ class PatientController extends Controller
                 </tr>
         ";
         foreach ($patients as $patient) {
-            var_dump($patient->name);
-            die;
+           // var_dump($patient->name);
+            //die;
             
             if ($patient->nascimento != "") {
                 $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
