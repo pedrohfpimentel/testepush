@@ -4,7 +4,7 @@
 {% block breadcrumbs %}
 <ol class="breadcrumb">
   <li><a href="{{ base_url() }}/admin">Início</a></li>
-  <li><a href="{{ base_url() }}/admin/remessa">Remessa</a></li>
+  <li><a href="{{ base_url() }}/admin/remessa_saida">Remessa</a></li>
   <li class="active">Adicionar</li>
 </ol>
 {% endblock %}
@@ -20,7 +20,7 @@
   <div class="card-content">
     <div class="row">
       <div class="col-md-6">
-        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
+        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
           <div class="form-group">
             <label for="quantity">Quantidade:</label>
            <input type="number" class="form-control" id="inputQuantity" name="quantity" placeholder="">

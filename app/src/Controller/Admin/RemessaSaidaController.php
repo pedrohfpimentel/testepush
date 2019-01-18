@@ -15,8 +15,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class RemessaSaidaController extends Controller
 {
 
-    protected $remessaModel;
-    protected $remessaTypeModel;
+    protected $remessaSaidaModel;
+    protected $remessaSaidaTypeModel;
     protected $productsModel;
     protected $productsTypeModel;
     protected $userModel;
@@ -26,8 +26,8 @@ class RemessaSaidaController extends Controller
     public function __construct(
         View $view,
         FlashMessages $flash,
-        Model $remessaModel,
-        Model $remessaTypeModel,
+        Model $remessaSaidaModel,
+        Model $remessaSaidaTypeModel,
         Model $productsModel,
         Model $productsTypeModel,
         Model $userModel,
@@ -36,8 +36,8 @@ class RemessaSaidaController extends Controller
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
-        $this->remessaModel         = $remessaModel;
-        $this->remessaTypeModel     = $remessaTypeModel;
+        $this->remessaSaidaModel         = $remessaSaidaModel;
+        $this->remessaSaidaTypeModel     = $remessaSaidaTypeModel;
         $this->productsModel        = $productsModel;
         $this->productsTypeModel    = $productsTypeModel;
         $this->userModel            = $userModel;
@@ -52,19 +52,19 @@ class RemessaSaidaController extends Controller
       $products = $this->productsModel->getAll();
       
       // remessa types
-      $remessaTypes = $this->remessaTypeModel->getAll();
+      $remessaSaidaTypes = $this->remessaSaidaTypeModel->getAll();
      
-      return $this->view->render($response, 'admin/remessa/index.twig',
+      return $this->view->render($response, 'admin/remessa_saida/index.twig',
       [
         'products' => $products,
-        'remessaTypes' => $remessaTypes
+        'remessaSaidaTypes' => $remessaSaidaTypes
       ]);
 
     }
 
     public function sobre(Request $request, Response $response): Response
     {
-        return $this->view->render($response, 'admin/remessa/sobre.twig', ['version' => $this->version]);
+        return $this->view->render($response, 'admin/remessa_saida/sobre.twig', ['version' => $this->version]);
     }
 
     public function add(Request $request, Response $response): Response
@@ -76,18 +76,17 @@ class RemessaSaidaController extends Controller
           // remessa types
 
           //$remessaTypes = [];
-          $remessaTypes[] = $this->remessaTypeModel->get(1);
+          $remessaSaidaTypes[] = $this->remessaSaidaTypeModel->get(1);
 
-          $remessaTypes[] = $this->remessaTypeModel->get(2);
+          $remessaSaidaTypes[] = $this->remessaSaidaTypeModel->get(2);
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
 
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
 
-          return $this->view->render($response, 'admin/remessa/index.twig',
+          return $this->view->render($response, 'admin/remessa_saida/index.twig',
           [
             'products' => $products,
-            'remessaTypes' => $remessaTypes,
-           // 'patrimony_code' => $patrimony_code
+            'remessaSaidaTypes' => $remessaSaidaTypes
           ]);
         }
 
@@ -106,9 +105,9 @@ class RemessaSaidaController extends Controller
       $remessa['cost'] =  $remessa['cost'];
      
 
-      $remessa = $this->entityFactory->createRemessa($remessa);
+      $remessa_saida = $this->entityFactory->createRemessaSaida($remessa);
      
-      $idRemessa = $this->remessaModel->add($remessa);
+      $idRemessa = $this->remessaSaidaModel->add($remessa);
     
 
       // aqui trabalhar eventlog
