@@ -15,8 +15,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class RemessaSaidaController extends Controller
 {
 
-    protected $remessaSaidaModel;
-    protected $remessaSaidaTypeModel;
+    protected $remessaModel;
+    protected $remessaTypeModel;
     protected $productsModel;
     protected $productsTypeModel;
     protected $userModel;
@@ -26,8 +26,8 @@ class RemessaSaidaController extends Controller
     public function __construct(
         View $view,
         FlashMessages $flash,
-        Model $remessaSaidaModel,
-        Model $remessaSaidaTypeModel,
+        Model $remessaModel,
+        Model $remessaTypeModel,
         Model $productsModel,
         Model $productsTypeModel,
         Model $userModel,
@@ -36,8 +36,8 @@ class RemessaSaidaController extends Controller
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
-        $this->remessaSaidaModel         = $remessaSaidaModel;
-        $this->remessaSaidaTypeModel     = $remessaSaidaTypeModel;
+        $this->remessaModel         = $remessaModel;
+        $this->remessaTypeModel     = $remessaTypeModel;
         $this->productsModel        = $productsModel;
         $this->productsTypeModel    = $productsTypeModel;
         $this->userModel            = $userModel;
@@ -52,19 +52,19 @@ class RemessaSaidaController extends Controller
       $products = $this->productsModel->getAll();
       
       // remessa types
-      $remessaSaidaTypes = $this->remessaSaidaTypeModel->getAll();
+      $remessaTypes = $this->remessaTypeModel->getAll();
      
-      return $this->view->render($response, 'admin/remessa_saida/index.twig',
+      return $this->view->render($response, 'admin/remessa/index.twig',
       [
         'products' => $products,
-        'remessaSaidaTypes' => $remessaSaidaTypes
+        'remessaTypes' => $remessaTypes
       ]);
 
     }
 
     public function sobre(Request $request, Response $response): Response
     {
-        return $this->view->render($response, 'admin/remessa_saida/sobre.twig', ['version' => $this->version]);
+        return $this->view->render($response, 'admin/remessa/sobre.twig', ['version' => $this->version]);
     }
 
     public function add(Request $request, Response $response): Response
@@ -76,38 +76,39 @@ class RemessaSaidaController extends Controller
           // remessa types
 
           //$remessaTypes = [];
-          $remessaSaidaTypes[] = $this->remessaSaidaTypeModel->get(1);
+          $remessaTypes[] = $this->remessaTypeModel->get(1);
 
-          $remessaSaidaTypes[] = $this->remessaSaidaTypeModel->get(2);
+          $remessaTypes[] = $this->remessaTypeModel->get(2);
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
 
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
 
-          return $this->view->render($response, 'admin/remessa_saida/index.twig',
+          return $this->view->render($response, 'admin/remessa/index.twig',
           [
             'products' => $products,
-            'remessaSaidaTypes' => $remessaSaidaTypes
+            'remessaTypes' => $remessaTypes,
+           // 'patrimony_code' => $patrimony_code
           ]);
         }
 
         
 
 
-      $remessa_saida = $request->getParsedBody();
+      $remessa = $request->getParsedBody();
 
      // var_dump($remessa);
       //die;
 
-      $remessa_saida['id_product'] = (int) substr($remessa_saida['id_product'], 0, strpos($remessa_saida['id_product'], ' '));
-      $remessa_saida['remessa_type'] = (int) $remessa_saida['id_remessa_type'];
-      $remessa_saida['id_remessa_type'] = (int) $remessa_saida['id_remessa_type'];
-      $remessa_saida['quantity'] = (int) $remessa_saida['quantity'];
-      $remessa_saida['cost'] =  $remessa_saida['cost'];
+      $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
+      $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
+      $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+      $remessa['quantity'] = (int) $remessa['quantity'];
+      $remessa['cost'] =  $remessa['cost'];
      
 
-      $remessa_saida = $this->entityFactory->createRemessaSaida($remessa_saida);
+      $remessa = $this->entityFactory->createRemessa($remessa);
      
-      $idRemessa = $this->remessaSaidaModel->add($remessa_saida);
+      $idRemessa = $this->remessaModel->add($remessa);
     
 
       // aqui trabalhar eventlog
