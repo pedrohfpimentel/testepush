@@ -48,16 +48,37 @@ class RemessaController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
+
+      $params = $request->getQueryParams();
+
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
+
+      $remessa = $this->remessaModel->getAll($offset, $limit);
       // get products to autocomplete
       $products = $this->productsModel->getAll();
       
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
+
+      $amountRemessas = $this->remessaModel->getAmount();
+        $amountPages = ceil($amountRemessas->amount / $limit);
+
+        $today = date('Y-m-d');
      
-      return $this->view->render($response, 'admin/remessa/index.twig',
-      [
+      return $this->view->render($response, 'admin/remessa/index.twig',[
+        'remessa' => $remessa,
         'products' => $products,
-        'remessaTypes' => $remessaTypes
+        'remessaTypes' => $remessaTypes,
+        'page' => $page,
+        'amountPages' => $amountPages,
+        'today' => $today
       ]);
 
     }
@@ -83,7 +104,7 @@ class RemessaController extends Controller
 
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
 
-          return $this->view->render($response, 'admin/remessa/index.twig',
+          return $this->view->render($response, 'admin/remessa/add.twig',
           [
             'products' => $products,
             'remessaTypes' => $remessaTypes,

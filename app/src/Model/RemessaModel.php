@@ -70,7 +70,8 @@ class RemessaModel extends Model
     {
         $sql = "
             SELECT
-               *
+               
+               remessa.*
             FROM
                 remessa
             ORDER BY
@@ -80,6 +81,21 @@ class RemessaModel extends Model
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetchAll();
+    }
+
+
+     public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                remessa
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
     }
 
     public function update(Remessa $remessa): bool
