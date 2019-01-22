@@ -61,19 +61,32 @@ class RemessaController extends Controller
 
 
       $remessa = $this->remessaModel->getAll($offset, $limit);
-      
-      
+      $remessa_type = $this->remessaTypeModel->getAll();
+      //var_dump($remessa_type);
+      //die;
+      foreach ($remessa as $remessas) {
+         
+            $remessas->products_name = $this->productsModel->get((int)$remessas->id_product)->name;
+
+
+            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+
+             
+        }
+
      
 
       $amountRemessas = $this->remessaModel->getAmount();
         $amountPages = ceil($amountRemessas->amount / $limit);
 
         $today = date('Y-m-d');
+
+       //var_dump($remessa);
+      //die;
      
       return $this->view->render($response, 'admin/remessa/index.twig',[
         'remessa' => $remessa,
-        'products' => $products,
-        'remessaTypes' => $remessaTypes,
+        'remessa_type' => $remessa_type,
         'page' => $page,
         'amountPages' => $amountPages,
         'today' => $today

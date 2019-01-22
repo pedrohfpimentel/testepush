@@ -70,12 +70,12 @@ class RemessaModel extends Model
     {
         $sql = "
             SELECT
-               
-               remessa.*
+                *
             FROM
                 remessa
             ORDER BY
-                id ASC
+                id
+            LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $offset, \PDO::PARAM_INT);
