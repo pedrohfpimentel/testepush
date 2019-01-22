@@ -100,6 +100,27 @@ class RemessaModel extends Model
         return $query->fetch();
     }
 
+
+    public function getRemessaDownload($remessa_start, $remessa_finish)
+    {
+        $sql = "
+        SELECT 
+            event_logs.date,
+            remessa.*
+        FROM
+            remessa,
+            event_logs
+
+        WHERE
+            event_logs.date BETWEEN :remessa_start AND :remessa_finish
+    ";
+    $query = $this->db->prepare($sql);
+
+    $params = [':remessa_start' => $remessa_start, ':remessa_finish' => $remessa_finish];
+    $query->execute($params);
+    return $query->fetchAll();
+    }
+
     public function update(Remessa $remessa): bool
     {
         $sql = "

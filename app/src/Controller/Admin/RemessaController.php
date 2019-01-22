@@ -162,6 +162,63 @@ class RemessaController extends Controller
     
     }
 
+
+
+    //download
+    public function export(Request $request, Response $response)
+    {
+
+        $params = $request->getQueryParams();
+
+        $remessa_type =  (int)$params['remessa_type'];
+
+        $remessa_start =   $params['remessa_start'];
+        if ($remessa_start == "") {
+            $remessa_start = "2000-01-01";
+        }
+
+        var_dump($params);
+        die;
+        
+        $remessa_finish =  $params['remessa_finish'];
+
+        if ($remessa_type == 0) {
+
+            $remessa = $this->remessaModel->getAllByDate($remessa_start, $remessa_finish);
+
+        } else {
+            $remessa = $this->remessaModel->getAllByType($remessa_type, $remessa_start, $remessa_finish);
+        }
+
+
+      $html = "
+           
+        ";
+        foreach ($remessa as $remessas) {
+           // var_dump($remessa->name);
+            //die;
+            
+            
+            
+            $html .= "
+               ";
+        }
+    
+    $html .= "</table> </div>";
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->setFooter('{PAGENO}');
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;        
+    }
+
     public function consulta_produto(Request $request, Response $response): Response
     {
       $idProduct = $request->getQueryParams()['id'];

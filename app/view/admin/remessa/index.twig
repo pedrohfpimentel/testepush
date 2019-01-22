@@ -140,10 +140,10 @@
       var remessa_start = $('#remessa_start').val();
        var remessa_finish =$('#remessa_finish').val();
        var base_url_hidden =$('#base_url_hidden').val();
-       var remessa_status = $('#remessa_status').val();
+       var remessa_type = $('#remessa_type').val();
        
           console.log($('#remessa_download').attr('href'));
-          $("#remessa_download").attr('href',   base_url_hidden +'/admin/remessa/export?remessa_start=' + remessa_start + '&remessa_finish=' + remessa_finish + '&remessa_status=' + remessa_status);
+          $("#remessa_download").attr('href',   base_url_hidden +'/admin/remessa/export?remessa_start=' + remessa_start + '&remessa_finish=' + remessa_finish + '&remessa_type=' + remessa_type);
 });
         </script>
 {% endblock %}
