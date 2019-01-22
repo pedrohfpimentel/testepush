@@ -66,7 +66,7 @@ class RemessaModel extends Model
         return $query->fetch();
     }
 
-    public function getAll(): array
+    public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
@@ -78,6 +78,8 @@ class RemessaModel extends Model
                 id ASC
         ";
         $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetchAll();

@@ -61,11 +61,9 @@ class RemessaController extends Controller
 
 
       $remessa = $this->remessaModel->getAll($offset, $limit);
-      // get products to autocomplete
-      $products = $this->productsModel->getAll();
       
-      // remessa types
-      $remessaTypes = $this->remessaTypeModel->getAll();
+      
+     
 
       $amountRemessas = $this->remessaModel->getAmount();
         $amountPages = ceil($amountRemessas->amount / $limit);
@@ -91,31 +89,20 @@ class RemessaController extends Controller
     public function add(Request $request, Response $response): Response
     {
         if (empty($request->getParsedBody())) {
-          // get products to autocomplete
-          $products = $this->productsModel->getAll();
-         
-          // remessa types
-
-          //$remessaTypes = [];
-          $remessaTypes[] = $this->remessaTypeModel->get(1);
-
-          $remessaTypes[] = $this->remessaTypeModel->get(2);
-          //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
-
-         // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
-
-          return $this->view->render($response, 'admin/remessa/add.twig',
-          [
-            'products' => $products,
-            'remessaTypes' => $remessaTypes,
-           // 'patrimony_code' => $patrimony_code
-          ]);
+          return $this->view->render($response, 'admin/remessa/add.twig');
         }
 
-        
-
-
       $remessa = $request->getParsedBody();
+        
+      $remessa = $this->entityFactory->createRemessa($request->getParsedBody());
+
+
+      $this->remessaModel->add($remessa);
+
+
+
+        $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/remessa'); 
 
      // var_dump($remessa);
       //die;
