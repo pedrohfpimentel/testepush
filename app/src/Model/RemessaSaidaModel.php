@@ -82,6 +82,25 @@ class RemessaSaidaModel extends Model
         return $query->fetchAll();
     }
 
+
+
+     public function getAmount()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                remessa
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
+
+
+
+    
     public function update(Remessa $remessa): bool
     {
         $sql = "

@@ -48,23 +48,55 @@ class RemessaSaidaController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-      // get products to autocomplete
-      $products = $this->productsModel->getAll();
-      
-      // remessa types
-      $remessaTypes = $this->remessaTypeModel->getAll();
+
+      $params = $request->getQueryParams();
+
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
+
+      $remessa_saida = $this->remessaSaidaModel->getAll($offset, $limit);
+      $remessa_type = $this->remessaTypeModel->getAll();
+      //var_dump($remessa_type);
+      //die;
+      foreach ($remessa_saida as $remessas_saida) {
+         
+            $remessas_saida->products_name = $this->productsModel->get((int)$remessas_saida->id_product)->name;
+
+
+            $remessas_saida->remessa_type_name = $this->remessaTypeModel->get((int)$remessas_saida->remessa_type)->name;
+
+             
+        }
+
      
-      return $this->view->render($response, 'admin/remessa_saida/index.twig',
-      [
-        'products' => $products,
-        'remessaTypes' => $remessaTypes
+
+      $amountRemessas = $this->remessaSaidaModel->getAmount();
+        $amountPages = ceil($amountRemessas->amount / $limit);
+
+        $today = date('Y-m-d');
+
+       //var_dump($remessa);
+      //die;
+     
+      return $this->view->render($response, 'admin/remessa_saida/index.twig',[
+        'remessa_saida' => $remessa_saida,
+        'remessa_type' => $remessa_type,
+        'page' => $page,
+        'amountPages' => $amountPages,
+        'today' => $today
       ]);
 
     }
 
     public function sobre(Request $request, Response $response): Response
     {
-        return $this->view->render($response, 'admin/remessa/sobre.twig', ['version' => $this->version]);
+        return $this->view->render($response, 'admin/remessa_saida/sobre.twig', ['version' => $this->version]);
     }
 
     public function add(Request $request, Response $response): Response
