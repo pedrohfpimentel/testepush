@@ -177,8 +177,8 @@ class RemessaController extends Controller
             $remessa_start = "2000-01-01";
         }
 
-        var_dump($params);
-        die;
+        //var_dump($params);
+        //die;
         
         $remessa_finish =  $params['remessa_finish'];
 
