@@ -121,6 +121,68 @@ class RemessaModel extends Model
     return $query->fetchAll();
     }
 
+
+
+
+    public function getAllByDate(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+        SELECT
+            event_logs.date,
+            remessa.*
+        FROM
+            remessa,
+            event_logs
+        
+        WHERE 
+           event_logs.date BETWEEN :remessa_start AND :remessa_finish
+
+        
+    ";
+    $query = $this->db->prepare($sql);
+    $query->bindValue(1, $start, \PDO::PARAM_STR);
+    $query->bindValue(2, $finish, \PDO::PARAM_STR);
+    $query->bindValue(3, $offset, \PDO::PARAM_INT);
+    $query->bindValue(4, $limit, \PDO::PARAM_INT);
+    $query->execute();
+    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+    return $query->fetchAll();
+
+
+
+    }
+
+
+     public function getAllByType( int $status = 1, string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+
+    {
+        $sql = "
+            SELECT
+                event_logs.date,
+                remessa_type.*,
+                remessa.*
+
+            FROM
+            remessa,
+            remessa_type,
+            event_logs
+            
+            
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $status, \PDO::PARAM_INT);
+        $query->bindValue(2, $start, \PDO::PARAM_STR);
+        $query->bindValue(3, $finish, \PDO::PARAM_STR);
+        $query->bindValue(4, $offset, \PDO::PARAM_INT);
+        $query->bindValue(5, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+        return $query->fetchAll();
+
+
+
+    }
+
     public function update(Remessa $remessa): bool
     {
         $sql = "
