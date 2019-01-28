@@ -115,7 +115,7 @@ class RemessaSaidaController extends Controller
 
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
 
-          return $this->view->render($response, 'admin/remessa_saida/index.twig',
+          return $this->view->render($response, 'admin/remessa_saida/add.twig',
           [
             'products' => $products,
             'remessaTypes' => $remessaTypes,
@@ -128,8 +128,8 @@ class RemessaSaidaController extends Controller
 
       $remessa = $request->getParsedBody();
 
-      var_dump($remessa);
-      die;
+     // var_dump($remessa);
+      //die;
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];

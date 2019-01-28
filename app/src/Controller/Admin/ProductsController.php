@@ -63,44 +63,52 @@ class ProductsController extends Controller
         // get products list
         $products = $this->productsModel->getAll($offset, $limit);
         // remessa types
-      $remessaTypes = $this->remessaTypeModel->getAll();
+        $remessaTypes = $this->remessaTypeModel->getAll();
 
-      $amountProducts = $this->productsModel->getAmount();
+        $amountProducts = $this->productsModel->getAmount();
         $amountPages = ceil($amountProducts->amount / $limit);
 
       // getRemessasByIdProduct function
           foreach($products as $product) {
-            $cost = 0;
-            $quantity = 0;               
+
+            $cost =  0;
+            $quantity = 0; 
+            $media = 0;              
             $remessas = $this->productsModel->getRemessasByIdProduct($product->id); 
             
                 foreach($remessas as $remessa) {
-                   // var_dump($remessa);
-                   // die;
-                    $quantity = $quantity + $remessa->quantity;
-                    $cost = $remessa->cost;      
+                 
+                    $quantity = $quantity + (int)$remessa->quantity;
+                    $cost = $cost + (float)$remessa->cost;
+                    $media = $cost / $quantity;
+                    //$cost = $remessa->cost;      
                 }
 
+
             $product->quantity= $quantity;
-            $product->cost= $cost;
-                           
+            $product->cost= (float)$cost;
+          
+
         }
-        
+
              
         // get quantity from remessas
         foreach ($products as $product) {
         }
 
+
+     
         return $this->view->render($response, 'admin/products/index.twig', 
         [
             'products' => $products,
+            'media' => $media,
             'remessaTypes' => $remessaTypes,
             'quantity'=> $quantity,
             'cost'=> $cost,
             'page' => $page,
             'amountPages' => $amountPages
         ]);
-    }
+    }   
 
     /*
         A função trata o CADASTRO DE PRODUTOS, CADASTRO DE REMESSA e EVENT LOGS para ambos.
