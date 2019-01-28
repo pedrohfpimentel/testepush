@@ -49,6 +49,13 @@ class RemessaController extends Controller
     public function index(Request $request, Response $response): Response
     {
 
+
+      // get products to autocomplete
+      $products = $this->productsModel->getAll();
+      
+      // remessa types
+      $remessaTypes = $this->remessaTypeModel->getAll();
+
       $params = $request->getQueryParams();
 
         if (!empty($params['page'])) {
@@ -71,6 +78,10 @@ class RemessaController extends Controller
 
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
 
+        
+       // $date = substr($remessas->date, 0, 10);
+       // $date = strtotime($date);
+       // $remessas->date = date('d/m/Y', $date);
              
         }
 
@@ -80,11 +91,13 @@ class RemessaController extends Controller
         $amountPages = ceil($amountRemessas->amount / $limit);
 
         $today = date('Y-m-d');
-
-       //var_dump($remessa);
+        
+        
+      // var_dump($products);
       //die;
      
       return $this->view->render($response, 'admin/remessa/index.twig',[
+        'products' => $products,
         'remessa' => $remessa,
         'remessa_type' => $remessa_type,
         'page' => $page,
@@ -102,20 +115,34 @@ class RemessaController extends Controller
     public function add(Request $request, Response $response): Response
     {
         if (empty($request->getParsedBody())) {
-          return $this->view->render($response, 'admin/remessa/add.twig');
+          // get products to autocomplete
+          $products = $this->productsModel->getAll();
+         
+          // remessa types
+          //$remessaTypes = [];
+          $remessaTypes[] = $this->remessaTypeModel->get(1);
+          $remessaTypes[] = $this->remessaTypeModel->get(2);
+          //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
+         // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
+          return $this->view->render($response, 'admin/remessa/add.twig',
+          [
+            'products' => $products,
+            'remessaTypes' => $remessaTypes,
+           
+          ]);
         }
 
       $remessa = $request->getParsedBody();
         
-      $remessa = $this->entityFactory->createRemessa($request->getParsedBody());
+     // $remessa = $this->entityFactory->createRemessa($request->getParsedBody());
+
+      
+      //$this->remessaModel->add($remessa);
 
 
-      $this->remessaModel->add($remessa);
 
-
-
-        $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/remessa'); 
+       // $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+       // return $this->httpRedirect($request, $response, '/admin/remessa'); 
 
      // var_dump($remessa);
       //die;
