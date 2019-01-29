@@ -89,6 +89,18 @@ $app->group('/admin', function () {
 
     });
 
+
+    $this->group('/produto_remessa', function() {
+        $this->get('[/]', ProdutoRemessaAdmin::class . ':index');
+        $this->get('/export', ProdutoRemessaAdmin::class . ':export');
+        $this->get('/export_history', ProdutoRemessaAdmin::class . ':export_history');
+        $this->map(['GET', 'POST'], '/add', ProdutoRemessaAdmin::class . ':add');
+        $this->get('/remove/{id:[0-9]+}', ProdutoRemessaAdmin::class . ':delete');
+        $this->get('/edit/{id:[0-9]+}', ProdutoRemessaAdmin::class . ':edit');
+        $this->map(['GET', 'POST'], '/history/{id:[0-9]+}', ProdutoRemessaAdmin::class . ':history');
+        $this->post('/update', ProdutoRemessaAdmin::class . ':update');
+    });
+
     $this->group('/professionals', function() {
         $this->get('[/]', ProfessionalAdmin::class . ':index');
         $this->get('/export', ProfessionalAdmin::class . ':export');

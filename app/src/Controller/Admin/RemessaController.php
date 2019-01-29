@@ -93,7 +93,7 @@ class RemessaController extends Controller
         $today = date('Y-m-d');
         
         
-      // var_dump($products);
+      // var_dump($remessa);
       //die;
      
       return $this->view->render($response, 'admin/remessa/index.twig',[
@@ -151,7 +151,7 @@ class RemessaController extends Controller
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
-      $remessa['cost'] =  $remessa['cost'];
+      $remessa['cost'] = (float) $remessa['cost'];
      
 
       $remessa = $this->entityFactory->createRemessa($remessa);

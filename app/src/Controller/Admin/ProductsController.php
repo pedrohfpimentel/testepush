@@ -87,6 +87,8 @@ class ProductsController extends Controller
 
             $product->quantity= $quantity;
             $product->cost= (float)$cost;
+            $product->media= (float)$media;
+         
           
 
         }
