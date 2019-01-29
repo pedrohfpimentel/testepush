@@ -8,6 +8,7 @@ use Farol360\Ancora\Controller\Admin\DiseaseController as DiseaseAdmin;
 use Farol360\Ancora\Controller\Admin\PatientController as PatientAdmin;
 use Farol360\Ancora\Controller\Admin\PermissionController as PermissionAdmin;
 use Farol360\Ancora\Controller\Admin\ProductsController as ProductsAdmin;
+use Farol360\Ancora\Controller\Admin\ProdutoRemessaController as ProductsAdmin;
 use Farol360\Ancora\Controller\Admin\ProductsTypeController as ProductsTypeAdmin;
 use Farol360\Ancora\Controller\Admin\ProfessionalController as ProfessionalAdmin;
 use Farol360\Ancora\Controller\Admin\ProfessionalTypeController as ProfessionalTypeAdmin;

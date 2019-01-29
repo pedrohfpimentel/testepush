@@ -45,7 +45,31 @@ class ProdutoRemessaController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
+        $params = $request->getQueryParams();
 
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        $limit = 20;
+        $offset = ($page - 1) * $limit;
+
+     
+        $produto_remessa = $this->produtoRemessaModel->getAll($offset, $limit);
+        foreach ($produto_remessa as $produto_de_remessa) {
+            $produto_de_remessa->product_name = $this->productsModel->get((int)$produto_de_remessa->id_products)->name;
+            $produto_de_remessa->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
+        }
+               
+        $amountProdutoDeRemessa = $this->produtoRemessaModel->getAmount();
+        $amountPages = ceil($amountProdutoDeRemessa->amount / $limit);
+
+        return $this->view->render($response, 'admin/attendance/index.twig', [
+            'produto_remessa' => $produto_remessa,
+            'page' => $page,
+            'amountPages' => $amountPages
+            ]);
     }
 
 
@@ -53,18 +77,55 @@ class ProdutoRemessaController extends Controller
 
     public function add(Request $request, Response $response): Response
     {
-       
+       if (empty($request->getParsedBody())) {
+
+            $products       = $this->productsModel->getAll();
+            $remessa  = $this->remessaModel->getAll();
+
+            return $this->view->render($response, 'admin/produto_remessa/add.twig', [
+                'products'      => $products,
+                'remessa' => $remessa
+            ]);
+        }
+
+        $data = $request->getParsedBody();
+
+        $produto_remessa = $this->entityFactory->createProdutoRemessa($data);
+
+        $id_produto_remessa = $this->produtoRemessaModel->add($produto_remessa);
+
+        //var_dump($attendance);
+        //die;
+
+        // create eventLog when add attendance
+        if ( ($id_produto_remessa != null) || ($id_produto_remessa != false) )
+        {
+            $eventLog['id_product']         = $produto_remessa->id_product;
+            $eventLog['id_remessa']    = $produto_remessa->id_remessa;
+            $eventLog['patrimony_code'] = $produto_remessa->patrimony_code;
+            $eventLog['cost'] = $produto_remessa->cost;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('produto_remessa')->id;
+
+
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+
+            $this->flash->addMessage('success', 'Evento adicionado com sucesso.');
+            return $this->httpRedirect($request, $response, '/admin/produto_remessa');
+        }
+
+
     }
 
     public function delete(Request $request, Response $response, array $args): Response
     {
-        
+         $id = intval($args['id']);
+        $this->produtoRemessaModel->delete($id);
+        $this->flash->addMessage('success', 'Evento removido com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/produto_remessa');
     }
 
-    public function edit(Request $request, Response $response, array $args): Response
-    {
-        
-    }
+   
 
 
     public function history (Request $request, Response $response, array $args)

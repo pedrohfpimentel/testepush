@@ -10,6 +10,7 @@ use Farol360\Ancora\Model\EventLog;
 use Farol360\Ancora\Model\Patient;
 use Farol360\Ancora\Model\PatientType;
 use Farol360\Ancora\Model\Products;
+use Farol360\Ancora\Model\ProdutoRemessa;
 use Farol360\Ancora\Model\ProductsType;
 use Farol360\Ancora\Model\Professional;
 use Farol360\Ancora\Model\ProfessionalType;
@@ -60,6 +61,11 @@ class EntityFactory
      public function createProductsType(array $data = []): ProductsType
     {
         return new ProductsType($data);
+    }
+
+     public function createProdutoRemessa(array $data = []): ProdutoRemessa
+    {
+        return new ProdutoRemessa($data);
     }
 
     public function createProfessional(array $data = []): Professional
