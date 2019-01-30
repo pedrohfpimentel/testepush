@@ -69,6 +69,18 @@
                   </div>
                 </div>
                </div>
+
+               <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                  <label for="name">Fornecedor:</label>
+                    <div class="ui-widget" >
+                      <input class="form-control" id="input_id_suppliers" type="text" name="id_suppliers" placeholder="Nome" autofocus required >
+                      <div id="campo_login_fornecedor"> </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
                <div class="row">
                  <div class=" col-sm-2 form-group">
                    <label for="quantity">Quantidade</label>
@@ -131,6 +143,24 @@
     });
 </script>
 
+
+<script type="text/javascript">
+    $(document).ready(function() {
+       var availableTags = [];
+
+       //autcomplete fornecedores
+       {% for supplier in suppliers %}
+        availableTags.push("{{ supplier.id }} - {{ supplier.name }}");
+       {% endfor %}
+
+       $( "#input_id_suppliers" ).autocomplete({
+         source: availableTags
+      });
+    });
+</script>
+
+
+
 <script type="text/javascript">
 
   $('#input_id_product').on('change', function() {
@@ -158,6 +188,43 @@
           console.log('error' + data);
           $("#input_id_product").val('');
           $("#campo_login").html('<p style="color:red;">Erro. Tente um produto válido!</p>');
+        }
+
+      });
+
+    //}
+
+  });
+
+</script>
+
+<script type="text/javascript">
+
+  $('#input_id_suppliers').on('change', function() {
+
+    var id_suppliers = $(this).val();
+    id_suppliers = id_suppliers.replace(/ .*/,'');
+
+    console.log(id_suppliers);
+
+    //if (Number.isInteger(id_product)) {
+      $.ajax({
+
+        url: '{{ base_url() }}/admin/remessa/consulta_supplier?id='+ id_suppliers,
+
+        beforeSend: function(data) {
+          $("#campo_login_fornecedor").html('');
+        },
+
+        success: function(data) {
+          console.log('sucesso' + data);
+          $("#campo_login_fornecedor").html('<p style="color:green;">Fornecedor selecionado!</p>');
+        },
+
+        error: function(data) {
+          console.log('error' + data);
+          $("#input_id_suppliers").val('');
+          $("#campo_login_fornecedor").html('<p style="color:red;">Erro. Tente um fornecedor válido!</p>');
         }
 
       });

@@ -238,6 +238,7 @@ $container['Farol360\Ancora\Controller\Admin\RemessaController'] = function ($c)
         new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
         new Farol360\Ancora\Model\ProductsModel($c['db']),
         new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+        new Farol360\Ancora\Model\SupplierModel($c['db']),
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),

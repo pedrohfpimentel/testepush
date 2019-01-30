@@ -13,6 +13,7 @@ class RemessaModel extends Model
         $sql = "
             INSERT INTO remessa (
                 id_product,
+                suppliers,
                 remessa_type,
                 quantity,
                 cost,
@@ -20,11 +21,12 @@ class RemessaModel extends Model
                 date,
                 time
                 )
-            VALUES (:id_product, :remessa_type, :quantity, :cost, :patrimony_code, :date, :time)
+            VALUES (:id_product, :suppliers, :remessa_type, :quantity, :cost, :patrimony_code, :date, :time)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id_product'        => $remessa->id_product,
+            ':suppliers'         => $remessa->suppliers,
             ':remessa_type'      => $remessa->remessa_type,
             ':quantity'          => $remessa->quantity,
             ':cost'              => $remessa->cost,
@@ -190,6 +192,7 @@ class RemessaModel extends Model
                 remessa
             SET
                 id_product       = :id_product,
+                suppliers        = :suppliers,
                 remessa_type     = :remessa_type,
                 quantity         = :quantity,
                 cost             = :cost,
@@ -204,6 +207,7 @@ class RemessaModel extends Model
         $parameters = [
             ':id'           => $remessa->id,
             ':id_product'   => $remessa->id_product,
+            ':suppliers'    => $remessa->suppliers,
             ':remessa_type' => $remessa->remessa_type,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,

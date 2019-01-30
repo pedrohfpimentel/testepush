@@ -19,6 +19,7 @@ class RemessaController extends Controller
     protected $remessaTypeModel;
     protected $productsModel;
     protected $productsTypeModel;
+    protected $supplierModel;
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
@@ -30,6 +31,7 @@ class RemessaController extends Controller
         Model $remessaTypeModel,
         Model $productsModel,
         Model $productsTypeModel,
+        Model $supplierModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
@@ -40,6 +42,7 @@ class RemessaController extends Controller
         $this->remessaTypeModel     = $remessaTypeModel;
         $this->productsModel        = $productsModel;
         $this->productsTypeModel    = $productsTypeModel;
+        $this->supplierModel        = $supplierModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
@@ -52,7 +55,8 @@ class RemessaController extends Controller
 
       // get products to autocomplete
       $products = $this->productsModel->getAll();
-      
+      $suppliers = $this->supplierModel->getAll();
+
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
 
@@ -75,6 +79,7 @@ class RemessaController extends Controller
          
             $remessas->products_name = $this->productsModel->get((int)$remessas->id_product)->name;
 
+            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->id_suppliers)->name;
 
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
 
@@ -98,6 +103,7 @@ class RemessaController extends Controller
      
       return $this->view->render($response, 'admin/remessa/index.twig',[
         'products' => $products,
+        'suppliers' => $suppliers,
         'remessa' => $remessa,
         'remessa_type' => $remessa_type,
         'page' => $page,
@@ -117,7 +123,7 @@ class RemessaController extends Controller
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
           $products = $this->productsModel->getAll();
-         
+          $suppliers = $this->supplierModel->getAll();
           // remessa types
           //$remessaTypes = [];
           $remessaTypes[] = $this->remessaTypeModel->get(1);
@@ -127,6 +133,7 @@ class RemessaController extends Controller
           return $this->view->render($response, 'admin/remessa/add.twig',
           [
             'products' => $products,
+            'suppliers' => $suppliers,
             'remessaTypes' => $remessaTypes,
            
           ]);
@@ -252,6 +259,18 @@ class RemessaController extends Controller
       $product = $this->productsModel->get((int) $idProduct);
       if ($product) {
         return $response->withJson((array)$product, 200);
+      }
+
+      return $response->withJson('erro', 400);
+
+    }
+
+    public function consulta_suppliers(Request $request, Response $response): Response
+    {
+      $idSuppliers = $request->getQueryParams()['id'];
+      $suppliers = $this->supplierModel->get((int) $idSuppliers);
+      if ($product) {
+        return $response->withJson((array)$suppliers, 200);
       }
 
       return $response->withJson('erro', 400);
