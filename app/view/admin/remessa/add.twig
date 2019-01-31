@@ -28,8 +28,9 @@
 {% endblock %}
 
 {% block content %}
+  <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
 <div class="row">
-  <div class="col-sm-7">
+  <div class="col-sm-6">
     <div class=" card">
       <div class="card-header" data-background-color="blue">
         <div class="row">
@@ -41,7 +42,7 @@
       <div class="card-content">
         <div class="row">
           <div class="col-md-12">
-            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
+           {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
               <p>Tela para cadastrar entradas no estoque.</p>
               <input type="hidden" name="id" value="{{ products.id }}">
               <div class="row">
@@ -58,7 +59,7 @@
                    </div>
                  </div>
                </div>
-              <div class="row">
+              {#<div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
                   <label for="name">Produto:</label>
@@ -68,7 +69,7 @@
                     </div>
                   </div>
                 </div>
-               </div>
+               </div>#}
 
                <div class="row">
                 <div class="col-sm-12">
@@ -81,7 +82,7 @@
                   </div>
                 </div>
                </div>
-               <div class="row">
+               {#<div class="row">
                  <div class=" col-sm-2 form-group">
                    <label for="quantity">Quantidade</label>
                    <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
@@ -98,9 +99,82 @@
                    <label for="quantity">Data de Entrada</label>
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>
+               </div>#}
+              <div class=" col-sm-4 form-group">
+                   <label for="quantity">Data de Entrada</label>
+                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                 </div>
+           {# </form>#}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="col-sm-6">
+    <div class=" card">
+      <div class="card-header" data-background-color="blue">
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>Incluir Produtos</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-12">
+           {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
+              
+              <input type="hidden" name="id" value="{{ products.id }}">
+              
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                  <label for="name">Produto:</label>
+                    <div class="ui-widget" >
+                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
+                      <div id="campo_login"> </div>
+                    </div>
+                  </div>
+                </div>
                </div>
-               <button type="submit" value="button" class="btn btn-primary">Adicionar</button>
-            </form>
+
+               
+               <div class="row">
+                 <div class=" col-sm-3 form-group">
+                   <label for="quantity">Quantidade</label>
+                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                 </div>
+
+                 <div class=" col-sm-4 form-group">
+                   <label for="cost">Custo</label>
+
+                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
+
+                 </div>
+
+
+                
+
+                 {#<div class=" col-sm-4 form-group">
+                   <label for="quantity">Data de Entrada</label>
+                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                 </div>#}
+
+                  <div class="col-sm-12">
+                    <p class="pull-right" style="padding-top: 25px;">
+                        <button class="btn btn-primary" id="add_product">Adicionar Produto</button>
+                        </a>
+                    </p>
+                </div>
+               </div>
+
+              
+              
+           {# </form> #}
 
           </div>
         </div>
@@ -110,6 +184,66 @@
   </div>
 </div>
 
+
+<div class="main">
+  <div class="card">
+    <div class="card-header" data-background-color="blue">
+      <div class="row">
+        <div class="col-sm-8">
+          <h3>Produtos</h3>
+        </div>
+        {#<div class="col-sm-4">
+          <p class="pull-right">
+            <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </a>
+          </p>
+        </div>#}
+      </div>
+
+    </div>
+    <div class="card-content">
+      <div class="row">
+        <div class="col-xs-12">
+          <table class="table table-striped data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Custo Unitário</th>
+                <th class="th-button"></th>
+                <th class="th-button"></th>
+              </tr>
+            </thead>
+
+
+             {# <script>
+               // function soma()
+               // {
+              //    products.quantity.value = (form.quantity2.value*1) + (form.quantity.value*1)
+               // }
+            //  </script> #}
+
+
+            <tbody id="corpo_tabela">
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+     
+
+
+
+    </div>
+  </div>
+</div>
+
+<button type="submit" value="button" class="btn btn-primary" id="button_adicionar">Adicionar</button>
+
+</form>
 {% endblock %}
 {% block javascripts %}
 
@@ -233,6 +367,32 @@
     //}
 
   });
+
+</script>
+
+
+<script type="text/javascript">
+ 
+
+
+  $(document).on('click', '#add_product', function() {
+    
+    //console.log('TEST');
+    var nome_produto = $('#input_id_product').val();
+    var quantidade_produto = $('#quantity').val();
+    var custo_produto = $('#cost').val();
+
+    console.log(nome_produto);
+    console.log(quantidade_produto);
+    console.log(custo_produto); 
+
+
+    $('#corpo_tabela').append(
+      `<tr><td>${nome_produto}</td>
+      <td>${quantidade_produto}</td>
+      <td>${custo_produto}</td></tr>`
+      );
+});
 
 </script>
 

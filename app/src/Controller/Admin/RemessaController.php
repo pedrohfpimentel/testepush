@@ -79,7 +79,7 @@ class RemessaController extends Controller
          
             $remessas->products_name = $this->productsModel->get((int)$remessas->id_product)->name;
 
-            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+           // $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->id;
 
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
 
