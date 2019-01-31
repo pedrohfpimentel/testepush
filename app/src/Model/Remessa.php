@@ -7,6 +7,7 @@ class Remessa
 {
     public $id;
     public $id_product;
+    public $suppliers;
     public $id_remessa_type;
     public $remessa_type;
     public $quantity;
@@ -20,6 +21,7 @@ class Remessa
     {
         $this->id = $data['id'] ?? null;
         $this->id_product = $data['id_product'] ?? null;
+        $this->suppliers = $data['suppliers'] ?? null;
         $this->id_remessa_type = $data['id_remessa_type'] ?? null;
         $this->remessa_type = $data['remessa_type'] ?? null;
         $this->quantity = $data['quantity'] ?? null;

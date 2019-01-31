@@ -75,7 +75,7 @@
                   <div class="form-group">
                   <label for="name">Fornecedor:</label>
                     <div class="ui-widget" >
-                      <input class="form-control" id="input_id_suppliers" type="text" name="id_suppliers" placeholder="Nome" autofocus required >
+                      <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome" autofocus required >
                       <div id="campo_login_fornecedor"> </div>
                     </div>
                   </div>
@@ -153,7 +153,7 @@
         availableTags.push("{{ supplier.id }} - {{ supplier.name }}");
        {% endfor %}
 
-       $( "#input_id_suppliers" ).autocomplete({
+       $( "#input_suppliers" ).autocomplete({
          source: availableTags
       });
     });
@@ -198,19 +198,20 @@
 
 </script>
 
+
 <script type="text/javascript">
 
-  $('#input_id_suppliers').on('change', function() {
+  $('#input_suppliers').on('change', function() {
 
     var id_suppliers = $(this).val();
     id_suppliers = id_suppliers.replace(/ .*/,'');
 
     console.log(id_suppliers);
 
-    //if (Number.isInteger(id_product)) {
+    //if (Number.isInteger(id_suppliers)) {
       $.ajax({
 
-        url: '{{ base_url() }}/admin/remessa/consulta_supplier?id='+ id_suppliers,
+        url: '{{ base_url() }}/admin/remessa/consulta_suppliers?id='+ id_suppliers,
 
         beforeSend: function(data) {
           $("#campo_login_fornecedor").html('');
@@ -223,7 +224,7 @@
 
         error: function(data) {
           console.log('error' + data);
-          $("#input_id_suppliers").val('');
+          $("#input_suppliers").val('');
           $("#campo_login_fornecedor").html('<p style="color:red;">Erro. Tente um fornecedor válido!</p>');
         }
 
@@ -234,4 +235,5 @@
   });
 
 </script>
+
 {% endblock %}

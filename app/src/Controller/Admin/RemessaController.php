@@ -79,7 +79,7 @@ class RemessaController extends Controller
          
             $remessas->products_name = $this->productsModel->get((int)$remessas->id_product)->name;
 
-            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->id_suppliers)->name;
+            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
 
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
 
@@ -140,7 +140,8 @@ class RemessaController extends Controller
         }
 
       $remessa = $request->getParsedBody();
-        
+        //var_dump($remessa);
+        //die;
      // $remessa = $this->entityFactory->createRemessa($request->getParsedBody());
 
       
@@ -151,10 +152,10 @@ class RemessaController extends Controller
        // $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
        // return $this->httpRedirect($request, $response, '/admin/remessa'); 
 
-     // var_dump($remessa);
-      //die;
+      
 
       $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
+       $remessa['suppliers'] = (int) $remessa['suppliers'];
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
@@ -164,7 +165,8 @@ class RemessaController extends Controller
       $remessa = $this->entityFactory->createRemessa($remessa);
      
       $idRemessa = $this->remessaModel->add($remessa);
-    
+    //var_dump($remessa);
+//die;
 
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
@@ -177,6 +179,7 @@ class RemessaController extends Controller
                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
                $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
                $eventLog['id_products'] = $remessa->id_product;
+               $eventlog['supplier'] = $remessa->suppliers;
                $eventLog = $this->entityFactory->createEventLog($eventLog);
                $this->eventLogModel->add($eventLog);
           } elseif 
@@ -186,11 +189,12 @@ class RemessaController extends Controller
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
                  $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
                  $eventLog['id_products'] = $remessa->id_product;
+                 $eventLog['supplier'] = $remessa->suppliers;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);
           }
         }
-
+        
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
       return $this->httpRedirect($request, $response, '/admin/products');
     
@@ -269,7 +273,7 @@ class RemessaController extends Controller
     {
       $idSuppliers = $request->getQueryParams()['id'];
       $suppliers = $this->supplierModel->get((int) $idSuppliers);
-      if ($product) {
+      if ($suppliers) {
         return $response->withJson((array)$suppliers, 200);
       }
 
