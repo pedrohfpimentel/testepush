@@ -70,6 +70,11 @@ class AddColumnRemessaRoutes extends AbstractMigration
                 'resource' => '/admin/produto_remessa/update',
                 'description' => 'Administração de Pacientes - update.',
                 'role_id' => 2,
+            ],
+            [
+                'resource' => '/admin/remessa/add_ajax',
+                'description' => 'Administração de Remessa',
+                'role_id' => 2,
             ]
             ];
 

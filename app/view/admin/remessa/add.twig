@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block content %}
-  <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
+  <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
 <div class="row">
   <div class="col-sm-6">
     <div class=" card">
@@ -155,6 +155,7 @@
                    <label for="cost">Custo</label>
 
                    <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
+                   <input type="hidden" name="cost_hidden" id="cost_hidden" value="cost">
 
                  </div>
 
@@ -243,11 +244,22 @@
   </div>
 </div>
 
-<button type="submit" value="button" class="btn btn-primary" id="button_adicionar">Adicionar</button>
+<button value="button" class="btn btn-primary" id="button_adicionar">Adicionar</button>
 
 </form>
 {% endblock %}
 {% block javascripts %}
+
+
+
+<script type="text/javascript">
+
+$('#button_adicionar').on("click",function(){
+    return false;
+});
+
+
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 {#mascara monetaria#}
@@ -375,7 +387,10 @@
 
 <script type="text/javascript">
  
-
+  function submitTabela() {
+    var corpo_tabela = $('#corpo_tabela').html();
+    console.log(corpo_tabela);
+  }
 
   $(document).on('click', '#add_product', function() {
     

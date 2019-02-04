@@ -128,6 +128,18 @@ class RemessaController extends Controller
           //$remessaTypes = [];
           $remessaTypes[] = $this->remessaTypeModel->get(1);
           $remessaTypes[] = $this->remessaTypeModel->get(2);
+
+          
+          $temp['id_products'] = 0;
+          $temp['quantity'] = 0;
+          $temp['cost'] = 0;
+          $temp['remessa_type'] = 99;
+
+          $temp = $this->entityFactory->createRemessa($temp);
+     
+          $idTemp = $this->remessaModel->add($temp);
+
+
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
           return $this->view->render($response, 'admin/remessa/add.twig',
@@ -200,7 +212,12 @@ class RemessaController extends Controller
     
     }
 
+    public function produto_remessa_add(Request $request, Response $response)
+    {
 
+      return $this->view->render($response, 'admin/produto_remessa/add.twig', ['version' => $this->version]);
+      
+    }
 
     //download
     public function export(Request $request, Response $response)
