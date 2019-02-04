@@ -136,6 +136,7 @@
                   <label for="name">Produto:</label>
                     <div class="ui-widget" >
                       <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
+                      <input type="hidden" name="id_product_hidden" id="id_product_hidden" value="input_id_product">
                       <div id="campo_login"> </div>
                     </div>
                   </div>
@@ -147,6 +148,7 @@
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
                    <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                    <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
 
                  <div class=" col-sm-4 form-group">
@@ -166,7 +168,7 @@
 
                   <div class="col-sm-12">
                     <p class="pull-right" style="padding-top: 25px;">
-                        <button class="btn btn-primary" id="add_product">Adicionar Produto</button>
+                        <button type="button" class="btn btn-primary" id="add_product">Adicionar Produto</button>
                         </a>
                     </p>
                 </div>
@@ -382,6 +384,15 @@
     var quantidade_produto = $('#quantity').val();
     var custo_produto = $('#cost').val();
 
+
+    var products_array = [
+    nome_produto,
+    quantidade_produto,
+    custo_produto
+    ];
+
+
+    console.log(products_array);
     console.log(nome_produto);
     console.log(quantidade_produto);
     console.log(custo_produto); 
