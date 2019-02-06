@@ -50,6 +50,14 @@ class RemessaModel extends Model
         return $query->execute($parameters);
     }
 
+    public function deleteByRemessaType(int $id = 99): bool
+    {
+       $sql = "DELETE FROM remessa WHERE remessa_type = :id";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        return $query->execute($parameters);
+    }
+
     public function get(int $id)
     {
         $sql = "

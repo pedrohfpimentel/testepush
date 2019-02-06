@@ -244,7 +244,9 @@
   </div>
 </div>
 
-<button value="button" class="btn btn-primary" id="button_adicionar">Adicionar</button>
+
+<input type="hidden" id="remessa_id" name="remessa_id" value="{{ remessa.id }}">
+<button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
 
 </form>
 {% endblock %}
@@ -255,7 +257,7 @@
 <script type="text/javascript">
 
 $('#button_adicionar').on("click",function(){
-    return false;
+   return false;
 });
 
 
@@ -395,22 +397,23 @@ $('#button_adicionar').on("click",function(){
   $(document).on('click', '#add_product', function() {
     
     //console.log('TEST');
+    var input_suppliers =$('#input_suppliers').val();
     var nome_produto = $('#input_id_product').val();
     var quantidade_produto = $('#quantity').val();
     var custo_produto = $('#cost').val();
+    var remessa_id = $('#remessa_id').val();
 
 
     var products_array = [
     nome_produto,
     quantidade_produto,
-    custo_produto
+    custo_produto,
+    remessa_id
     ];
 
 
     console.log(products_array);
-    console.log(nome_produto);
-    console.log(quantidade_produto);
-    console.log(custo_produto); 
+    
 
 
     $('#corpo_tabela').append(
@@ -418,6 +421,26 @@ $('#button_adicionar').on("click",function(){
       <td>${quantidade_produto}</td>
       <td>${custo_produto}</td></tr>`
       );
+
+
+
+    $.ajax({
+      url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}`,
+      type: "GET",
+      data: products_array, 
+     
+      success: function (data) {
+        console.log(data);
+         if (data == "true") {    
+        }
+        else if (data == "false") {         
+        }
+      },
+        error: function (data) {
+          console.error(data);
+        }
+
+    });
 });
 
 </script>

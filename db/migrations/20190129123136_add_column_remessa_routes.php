@@ -27,7 +27,18 @@ class AddColumnRemessaRoutes extends AbstractMigration
      */
     public function up()
     {
-        $permissions = [
+       
+    }
+
+    public function change()
+    {
+        $remessa = $this->table('remessa');
+        
+        $remessa->addColumn('suppliers', 'string', ['null' => true]);
+        $remessa->update();
+
+
+         $permissions = [
             //adicionar rotas para produto_remessa 
             [
                 'resource' => '/admin/produto_remessa',
@@ -79,13 +90,5 @@ class AddColumnRemessaRoutes extends AbstractMigration
             ];
 
             $this->insert('permissions', $permissions);
-    }
-
-    public function change()
-    {
-        $remessa = $this->table('remessa');
-        
-        $remessa->addColumn('suppliers', 'string', ['null' => true]);
-        $remessa->update();
     }
 }

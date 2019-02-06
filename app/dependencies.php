@@ -198,6 +198,21 @@ $container['Farol360\Ancora\Controller\Admin\ProductsTypeController'] = function
 };
 
 
+$container['Farol360\Ancora\Controller\Admin\ProdutoRemessaController'] = function ($c) {
+    return new Farol360\Ancora\Controller\Admin\ProdutoRemessaController(
+        $c['view'],
+        $c['flash'],
+        new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+        new Farol360\Ancora\Model\RemessaModel($c['db']),
+        new Farol360\Ancora\Model\ProductsModel($c['db']),
+        new Farol360\Ancora\Model\EventLogModel($c['db']),
+        new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
+        new Farol360\Ancora\Model\EntityFactory()
+    );
+};
+
+
+
 $container['Farol360\Ancora\Controller\Admin\ProfessionalController'] = function ($c) {
     return new Farol360\Ancora\Controller\Admin\ProfessionalController(
         $c['view'],

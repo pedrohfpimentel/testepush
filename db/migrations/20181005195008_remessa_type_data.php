@@ -46,7 +46,12 @@ class RemessaTypeData extends AbstractMigration
                'name' => 'Remessa Inicial',
                'description' => 'Entrada inicial de produtos.'
            ],
-          
+           [
+               'id' => 99,
+               'slug' => 'remessa_type_temp',
+               'name' => 'Remessa Temporária',
+               'description' => 'Entrada temporaria de produtos.'
+           ]    
          ];
          $this->insert('remessa_type', $remessaType);
      }

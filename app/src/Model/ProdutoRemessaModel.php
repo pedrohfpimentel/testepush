@@ -10,30 +10,27 @@ class ProdutoRemessaModel extends Model
 {
     public function add(ProdutoRemessa $produto_remessa)
     {
-       $sql = "
+        $sql = "
             INSERT INTO produto_remessa (
-                id_product,
-                id_remessa,
-                patrimony_code,
-                cost
-                
-                )
-            VALUES (:id_product, :id_remessa, :patrimony_code, :cost)
+            id_product,
+            id_remessa,
+            patrimony_code,
+            cost
+            )  
+        VALUES (:id_product, :id_remessa, :patrimony_code, :cost)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id_product'          => $produto_remessa->id_product,
-            ':id_remessa'   => $produto_remessa->id_remessa,
-            ':patrimony_code'      => $produto_remessa->patrimony_code,
-            ':cost'   => $produto_remessa->cost
-            
-
+            ':id_product'        => $produto_remessa->id_product,
+            ':id_remessa'        => $produto_remessa->id_remessa,
+            ':patrimony_code'    => $produto_remessa->patrimony_code,
+            ':cost'              => $produto_remessa->cost
         ];
         if ($query->execute($parameters)) {
             return $this->db->lastInsertId();
         } else {
             return null;
-        } 
+        }
     }
 
     public function delete(int $id): bool
@@ -84,8 +81,7 @@ class ProdutoRemessaModel extends Model
 
 
      public function getAmount()
-    {
-       
+    {  
     }
 
 

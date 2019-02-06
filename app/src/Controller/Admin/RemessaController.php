@@ -120,6 +120,9 @@ class RemessaController extends Controller
 
     public function add(Request $request, Response $response): Response
     {
+
+      $this->remessaModel->deleteByRemessaType();
+
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
           $products = $this->productsModel->getAll();
@@ -136,8 +139,8 @@ class RemessaController extends Controller
           $temp['remessa_type'] = 99;
 
           $temp = $this->entityFactory->createRemessa($temp);
-     
-          $idTemp = $this->remessaModel->add($temp);
+          
+          ($id_remessa = $this->remessaModel->add($temp));
 
 
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
@@ -147,7 +150,7 @@ class RemessaController extends Controller
             'products' => $products,
             'suppliers' => $suppliers,
             'remessaTypes' => $remessaTypes,
-           
+            'id_remessa' => $id_remessa,
           ]);
         }
 
@@ -212,12 +215,6 @@ class RemessaController extends Controller
     
     }
 
-    public function produto_remessa_add(Request $request, Response $response)
-    {
-
-      return $this->view->render($response, 'admin/produto_remessa/add.twig', ['version' => $this->version]);
-      
-    }
 
     //download
     public function export(Request $request, Response $response)

@@ -27,8 +27,7 @@ class ProdutoRemessaController extends Controller
         FlashMessages $flash,
         Model $produtoRemessaModel,
         Model $remessaModel,
-        Model $productsModel,
-        Model $userModel,
+        Model $productsModel,   
         Model $eventLogModel,
         Model $eventLogTypeModel,
         EntityFactory $entityFactory
@@ -36,8 +35,7 @@ class ProdutoRemessaController extends Controller
         parent::__construct($view, $flash);
         $this->produtoRemessaModel  = $produtoRemessaModel;
         $this->remessaModel         = $remessaModel;
-        $this->productsModel        = $productsModel;
-        $this->userModel            = $userModel;
+        $this->productsModel        = $productsModel;   
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
         $this->entityFactory        = $entityFactory;
@@ -77,43 +75,15 @@ class ProdutoRemessaController extends Controller
 
     public function add(Request $request, Response $response): Response
     {
-       if (empty($request->getParsedBody())) {
-
-            $products       = $this->productsModel->getAll();
-            $remessa  = $this->remessaModel->getAll();
-
-            return $this->view->render($response, 'admin/produto_remessa/add.twig', [
-                'products'      => $products,
-                'remessa' => $remessa
-            ]);
-        }
-
-        $data = $request->getParsedBody();
-
-        $produto_remessa = $this->entityFactory->createProdutoRemessa($data);
-
-        $id_produto_remessa = $this->produtoRemessaModel->add($produto_remessa);
-
-        //var_dump($attendance);
+       
+        $data = $request->getQueryParams();
+        //var_dump($data);
         //die;
+       //return $response->withJSON($data);
+        
+        $data = $this->entityFactory->createProdutoRemessa($request->getQueryParams());
 
-        // create eventLog when add attendance
-        if ( ($id_produto_remessa != null) || ($id_produto_remessa != false) )
-        {
-            $eventLog['id_product']         = $produto_remessa->id_product;
-            $eventLog['id_remessa']    = $produto_remessa->id_remessa;
-            $eventLog['patrimony_code'] = $produto_remessa->patrimony_code;
-            $eventLog['cost'] = $produto_remessa->cost;
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('produto_remessa')->id;
-
-
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            $this->eventLogModel->add($eventLog);
-
-            $this->flash->addMessage('success', 'Evento adicionado com sucesso.');
-            return $this->httpRedirect($request, $response, '/admin/produto_remessa');
-        }
-
+        $this->produtoRemessaModel->add($data);
 
     }
 
