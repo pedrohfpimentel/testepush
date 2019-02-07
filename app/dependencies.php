@@ -202,7 +202,8 @@ $container['Farol360\Ancora\Controller\Admin\ProdutoRemessaController'] = functi
     return new Farol360\Ancora\Controller\Admin\ProdutoRemessaController(
         $c['view'],
         $c['flash'],
-        new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+       // new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+        new Farol360\Ancora\Model\ProdutoRemessaModel($c['db']),
         new Farol360\Ancora\Model\RemessaModel($c['db']),
         new Farol360\Ancora\Model\ProductsModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
