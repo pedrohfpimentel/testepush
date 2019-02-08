@@ -146,7 +146,7 @@
        var patients_status = $('#patients_status').val();
        
           console.log($('#patients_download').attr('href'));
-          $("#patients_download").attr('href',   base_url_hidden +'/admin/patientsa/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status);
+          $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status);
 });
         </script>
 {% endblock %}

@@ -77,14 +77,26 @@ class ProdutoRemessaController extends Controller
     {
        
         $data = $request->getQueryParams();
+       
+        
+
+        $data["id_product"] = (int) substr($data["nome_produto"], 0, strpos($data["nome_produto"], ' '));
+        $data["id_remessa"] = (int) $data["remessa_id"];
+        $data["patrimony_code"] = $data["patrimony"];
+        $data["cost"] = $data["custo_produto"];
+        $data["quantity"] = $data["quantidade_produto"];
+       //
+
+
+       // var_dump($id_produto);
+        //die;
+
         //var_dump($data);
         //die;
-       //return $response->withJSON($data);
-        
-        $data = $this->entityFactory->createProdutoRemessa($request->getQueryParams());
+        $data = $this->entityFactory->createProdutoRemessa($data);
 
-        $this->produtoRemessaModel->add($data);
-
+        $data->id = $this->produtoRemessaModel->add($data);
+        return $response->withJson($data, 200);
     }
 
     public function delete(Request $request, Response $response, array $args): Response

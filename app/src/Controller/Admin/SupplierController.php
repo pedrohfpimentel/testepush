@@ -64,7 +64,8 @@ class SupplierController extends Controller
         }
 
         $suppliers = $request->getParsedBody();
-
+//var_dump($suppliers);
+//die;
         $suppliers = $this->entityFactory->createSupplier($request->getParsedBody());
 
         $this->supplierModel->add($suppliers);

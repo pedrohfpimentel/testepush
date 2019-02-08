@@ -25,39 +25,25 @@
             Relatório
           </div>
           <div class="card-content" style="padding-top:5px;">
-            <div class="col-sm-10">
-              <div class="form-group">              
-              </div>
-            </div> 
-            
-
+            <div class="col-sm-2">
+              
+            </div>
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="attendance_date">Data Inicial</label>
+                <label for="attendance_name">Data Inicial</label>
                 <input id="attendance_start" class="form-control" type="date" name="attendance_start" required>
               </div>
             </div>
-
-            <div class="col-sm-1">
-              <div class="form-group">
-               
-              </div>
-            </div> 
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="attendance_date">Data Final</label>
+                <label for="attendance_name">Data Final</label>
                 <input id="attendance_finish" class="form-control" type="date" name="attendance_finish" value="{{ today }}"  required>
               </div>
             </div>
-            <div class="col-sm-1">
-              <div class="form-group">
-               
-              </div>
-            </div> 
             <div class="col-sm-2">
               <div class="form-group">
                 <a class="btn btn-default" id="attendance_download" name="attendance_download"  href="{{ base_url() }}/admin/attendances/export" target="_blank">
-              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+                  <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
                   Relatório
                 </a>
               </div>
@@ -66,6 +52,7 @@
         </div>
 
       </div>
+    </div>
 
 
      {# <div class="col-sm-9">
@@ -103,43 +90,13 @@
 
       </div>
     </div>#}
-  </div>
+  
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
         <div class="col-sm-4">
           <h4>Últimos Atendimentos</h4>
         </div>
-        {#<div class="col-sm-8">
-          <p class="pull-right">
-
-            <div class="container col-sm-4" style="margin-right:55px; padding:10px; border-radius: 5px; border-color: white;border-style: solid;">
-               <label for="attendance_start" style="color: white; padding-botton:0;">Data Inicial:</label>
-
-                <style>
-                    .form-group {
-                        
-                        margin: 0px;
-                    }
-                </style>
-
-          
-               <input id="attendance_start" class="form-control" type="date" name="attendance_start" style="color: white;" required>
-             </div>
-
-              <div class="container col-sm-4" style="margin-right:55px; padding:10px; border-radius: 5px; border-color: white;border-style: solid;">
-               <label for="attendance_finish" style="color: white; padding-botton:0;">Data Final:</label>
-               <input id="attendance_finish" class="form-control" type="date" name="attendance_finish" style="color: white;" required>
-             </div>
-            
-       
-            <a class="btn btn-default" id="attendance_download" name="attendance_download"  href="{{ base_url() }}/admin/attendances/export" target="_blank">
-              <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-            </a>
-         
-          </p>
-        </div>#}
       </div>
 
     </div>

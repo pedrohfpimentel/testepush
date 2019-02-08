@@ -81,10 +81,13 @@ class AttendanceController extends Controller
         $amountAttendances = $this->attendanceModel->getAmount();
         $amountPages = ceil($amountAttendances->amount / $limit);
 
+         $today = date('Y-m-d');
+
         return $this->view->render($response, 'admin/attendance/index.twig', [
             'attendances' => $attendances,
             'page' => $page,
-            'amountPages' => $amountPages
+            'amountPages' => $amountPages,
+            'today' => $today
             ]);
     }
 
@@ -160,22 +163,43 @@ class AttendanceController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-      $params = $request->getQueryParams();
+        $params = $request->getQueryParams();
 
         
         $attendance_start =   $params['attendance_start'];
-        if ($attendance_start == "") {
+        if ($attendance_start == '') {
             $attendance_start = "2000-01-01";
         }
 
-        //var_dump( $params);
-           // die;
+        
         $attendance_finish =  $params['attendance_finish'];
 
        // if ($patients_status == 0) {
 
-            $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish);
+        $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish);
 
+        $professionals = $this->professionalModel->getAll();
+
+        $patients = $this->patientModel->getAll();
+
+
+        foreach ($attendances as $attendance) {
+            
+            foreach($professionals as $professional) {
+                if ($professional['id'] == $attendance->id_professional) {
+
+                    $attendance->name_professional = $professional['name'];
+                }
+            }
+
+            foreach ($patients as $patient) {
+                if ($patient->id == $attendance->id_patient) {
+                    $attendance->name_patient = $patient->name;
+                }
+            }
+        }
+        
+ 
        // } else {
          //   $patients = $this->patientModel->getAllByStatus($patients_status, $attendance_start, $attendance_finish);
         //}
@@ -215,8 +239,8 @@ class AttendanceController extends Controller
             <tr>
             <td style='width: 15%;'>$attendance->attendance_day</td>
             <td style='width: 15%;'>$attendance->attendance_hour</td>
-            <td style='width: 20%;'>$attendance->patient_name</td>
-            <td style='width: 20%;'>$attendance->professional_name</td>
+            <td style='width: 20%;'>$attendance->name_patient</td>
+            <td style='width: 20%;'>$attendance->name_professional</td>
             <td style='width: 30%;'>$attendance->description</td>
            
             
@@ -224,6 +248,8 @@ class AttendanceController extends Controller
         }
     
         $html .= "</table> </div>";
+        //var_dump($html);
+        //die;
     try {
         $mpdf = new \Mpdf\Mpdf();
         $mpdf->WriteHTML($html);

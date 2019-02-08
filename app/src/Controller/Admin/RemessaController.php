@@ -140,7 +140,7 @@ class RemessaController extends Controller
 
           $temp = $this->entityFactory->createRemessa($temp);
           
-          ($id_remessa = $this->remessaModel->add($temp));
+          $id_remessa = $this->remessaModel->add($temp);
 
 
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));

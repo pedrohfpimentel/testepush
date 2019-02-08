@@ -316,23 +316,22 @@ class ProductsController extends Controller
                     <th style='width: 20%; text-align:left;'>Nome</th>
                     <th style='width: 20%; text-align:left;'>Descrição</th>
                     <th style='width: 10%; text-align:left;'>Categoria</th>
-                    <th style='width: 10%; text-align:left;'>Quantidade</th>
-                    <th style='width: 10%; text-align:left;'>Custo</th>
+                    
                 </tr>
         ";
-        foreach ($products as $product) {
+        foreach ($products as $product){
             //var_dump($product);
             //die;
-            
+           
            
            $html .= "
             <tr>
                 <td style='width: 20%; text-align:left;'>$product->name</td>
                 <td style='width: 20%; text-align:left;'>$product->description</td>
                 <td style='width: 10%; text-align:left;'>$product->products_type_name</td>
-                <td style='width: 10%; text-align:left;'>$product->quantity</td>
-                <td style='width: 10%; text-align:left;'>$product->cost</td>
+               
             </tr>";
+        
         }
     
     $html .= "</table> </div>";

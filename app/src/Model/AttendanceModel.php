@@ -208,17 +208,8 @@ class AttendanceModel extends Model
     {
         $sql = "
         SELECT 
-            attendances.*,
-            (SELECT users.name 
-            FROM users 
-            LEFT JOIN 
-                patients ON patients.id_user = users.id
-            WHERE users.id = patients.id_user) AS patient_name,
-            (SELECT users.name 
-            FROM users 
-            LEFT JOIN 
-                professionals ON professionals.id_user = users.id
-            WHERE users.id = professionals.id_user) AS professional_name
+            attendances.*
+            
         FROM `attendances`
         
         WHERE 
@@ -235,7 +226,7 @@ class AttendanceModel extends Model
     $query->bindValue(3, $offset, \PDO::PARAM_INT);
     $query->bindValue(4, $limit, \PDO::PARAM_INT);
     $query->execute();
-    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Attendance::class);
     return $query->fetchAll();
 
 

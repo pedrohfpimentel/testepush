@@ -15,16 +15,18 @@ class ProdutoRemessaModel extends Model
             id_product,
             id_remessa,
             patrimony_code,
-            cost
+            cost,
+            quantity
             )  
-        VALUES (:id_product, :id_remessa, :patrimony_code, :cost)
+        VALUES (:id_product, :id_remessa, :patrimony_code, :cost, :quantity)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id_product'        => $produto_remessa->id_product,
             ':id_remessa'        => $produto_remessa->id_remessa,
             ':patrimony_code'    => $produto_remessa->patrimony_code,
-            ':cost'              => $produto_remessa->cost
+            ':cost'              => $produto_remessa->cost,
+            ':quantity'          => $produto_remessa->quantity
         ];
         if ($query->execute($parameters)) {
             return $this->db->lastInsertId();

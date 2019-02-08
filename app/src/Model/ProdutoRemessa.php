@@ -10,6 +10,7 @@ class ProdutoRemessa
     public $id_remessa;
     public $patrimony_code;
     public $cost;
+    public $quantity;
 
     public function __construct(array $data = [])
     {
@@ -18,6 +19,7 @@ class ProdutoRemessa
         $this->id_remessa = $data['id_remessa'] ?? null;
         $this->patrimony_code = $data['patrimony_code'] ?? null;
         $this->cost = $data['cost'] ?? null;
+        $this->quantity = $data['quantity'] ?? null;
         
     }
 }

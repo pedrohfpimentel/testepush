@@ -151,7 +151,7 @@
                     <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
 
-                 <div class=" col-sm-4 form-group">
+                 <div class=" col-sm-3 form-group">
                    <label for="cost">Custo</label>
 
                    <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
@@ -159,7 +159,11 @@
 
                  </div>
 
-
+                  <div class=" col-sm-4 form-group">
+                   <label for="quantity">Código Patrimonial</label>
+                   <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" required>
+                    <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
+                 </div>
                 
 
                  {#<div class=" col-sm-4 form-group">
@@ -245,7 +249,7 @@
 </div>
 
 
-<input type="hidden" id="remessa_id" name="remessa_id" value="{{ remessa.id }}">
+<input type="hidden" id="remessa_id" name="remessa_id" value="{{ id_remessa }}">
 <button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
 
 </form>
@@ -256,8 +260,8 @@
 
 <script type="text/javascript">
 
-$('#button_adicionar').on("click",function(){
-   return false;
+$('#button_adicionar').on("submit",function(){
+   //return false;
 });
 
 
@@ -392,6 +396,7 @@ $('#button_adicionar').on("click",function(){
   function submitTabela() {
     var corpo_tabela = $('#corpo_tabela').html();
     console.log(corpo_tabela);
+    return false;
   }
 
   $(document).on('click', '#add_product', function() {
@@ -402,13 +407,15 @@ $('#button_adicionar').on("click",function(){
     var quantidade_produto = $('#quantity').val();
     var custo_produto = $('#cost').val();
     var remessa_id = $('#remessa_id').val();
+    var patrimony = $('#patrimony').val();
 
 
     var products_array = [
     nome_produto,
     quantidade_produto,
     custo_produto,
-    remessa_id
+    remessa_id,
+    patrimony
     ];
 
 
@@ -416,32 +423,63 @@ $('#button_adicionar').on("click",function(){
     
 
 
-    $('#corpo_tabela').append(
-      `<tr><td>${nome_produto}</td>
-      <td>${quantidade_produto}</td>
-      <td>${custo_produto}</td></tr>`
-      );
 
 
 
     $.ajax({
-      url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}`,
+      url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
       type: "GET",
-      data: products_array, 
+      
      
       success: function (data) {
-        console.log(data);
-         if (data == "true") {    
-        }
-        else if (data == "false") {         
-        }
+         $('#corpo_tabela').append(
+      `<tr><td>${nome_produto}</td>
+      <td>${quantidade_produto}</td>
+      <td>${custo_produto}</td>
+      <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+      );
+
+        
       },
         error: function (data) {
           console.error(data);
         }
 
     });
+
+
+
 });
+
+ $(document).on('click', '.excluir_ajax', function() {
+
+  
+  var id_produto_remessa = $(this).attr("id");
+  var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
+  console.log(resultado);
+
+
+
+  $.ajax({
+      url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
+      type: "GET",
+      
+     
+      success: function (data) {
+         
+      
+
+        
+      },
+        error: function (data) {
+          console.error(data);
+        }
+
+    });
+
+
+
+ });
 
 </script>
 
