@@ -70,7 +70,7 @@ class SupplierModel extends Model
             FROM
                 suppliers
             ORDER BY
-                id ASC
+                suppliers.name ASC
                 LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);

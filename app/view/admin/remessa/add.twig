@@ -76,7 +76,7 @@
                   <div class="form-group">
                   <label for="name">Fornecedor:</label>
                     <div class="ui-widget" >
-                      <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome" autofocus required >
+                      <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome"  >
                       <div id="campo_login_fornecedor"> </div>
                     </div>
                   </div>
@@ -135,7 +135,7 @@
                   <div class="form-group">
                   <label for="name">Produto:</label>
                     <div class="ui-widget" >
-                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
+                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome"  >
                       <input type="hidden" name="id_product_hidden" id="id_product_hidden" value="input_id_product">
                       <div id="campo_login"> </div>
                     </div>
@@ -147,21 +147,21 @@
                <div class="row">
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
-                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" >
                     <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
 
                  <div class=" col-sm-3 form-group">
                    <label for="cost">Custo</label>
 
-                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
+                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" />
                    <input type="hidden" name="cost_hidden" id="cost_hidden" value="cost">
 
                  </div>
 
                   <div class=" col-sm-4 form-group">
-                   <label for="quantity">Código Patrimonial</label>
-                   <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" required>
+                   <label for="patrimony">Código Patrimonial</label>
+                   <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
                     <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
                 
@@ -170,7 +170,9 @@
                    <label for="quantity">Data de Entrada</label>
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>#}
-
+                 <div class="col-sm-12">
+                  <p id="error-adicionar-produto-remessa"></p>
+                 </div>
                   <div class="col-sm-12">
                     <p class="pull-right" style="padding-top: 25px;">
                         <button type="button" class="btn btn-primary" id="add_product">Adicionar Produto</button>
@@ -400,6 +402,7 @@ $('#button_adicionar').on("submit",function(){
   }
 
   $(document).on('click', '#add_product', function() {
+
     
     //console.log('TEST');
     var input_suppliers =$('#input_suppliers').val();
@@ -430,18 +433,51 @@ $('#button_adicionar').on("submit",function(){
       url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
       type: "GET",
       
-     
+      beforeSend: function (xhr) {
+        if (input_suppliers == '') {
+            $('#input_suppliers').focus();
+            xhr.abort();
+        }
+
+        else if (nome_produto == '') {
+            $('#input_id_product').focus();
+            xhr.abort();
+        }
+
+        else if (quantidade_produto == '') {
+           $('#quantity').focus();
+            xhr.abort();
+        }
+
+       
+
+        
+      },
+
       success: function (data) {
+        $('#error-adicionar-produto-remessa').html('');
          $('#corpo_tabela').append(
       `<tr><td>${nome_produto}</td>
       <td>${quantidade_produto}</td>
       <td>${custo_produto}</td>
       <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+
+
       );
+
+        $("#input_id_product").val('');
+        $("#quantity").val('');
+        $("#cost").val('');
+        $("#patrimony").val('');
 
         
       },
         error: function (data) {
+
+          if (data.responseText == 1) {
+            $('#error-adicionar-produto-remessa').html('O produto não pode ser vazio.');
+          }
+          
           console.error(data);
         }
 
@@ -456,9 +492,9 @@ $('#button_adicionar').on("submit",function(){
   
   var id_produto_remessa = $(this).attr("id");
   var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
-  console.log(resultado);
+ // console.log(resultado);
 
-
+ var tr = $(this).parent().parent();
 
   $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
@@ -466,12 +502,16 @@ $('#button_adicionar').on("submit",function(){
       
      
       success: function (data) {
-         
-      
-
+       if (data == true) {
         
+
+          console.log(tr);
+          tr.remove();
+        }
       },
         error: function (data) {
+
+          
           console.error(data);
         }
 

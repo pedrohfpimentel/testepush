@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class RemessaSaidaController extends Controller
 {
-
+    protected $remessaModel;
     protected $remessaSaidaModel;
     protected $remessaTypeModel;
     protected $productsModel;
@@ -26,6 +26,7 @@ class RemessaSaidaController extends Controller
     public function __construct(
         View $view,
         FlashMessages $flash,
+        Model $remessaModel,
         Model $remessaSaidaModel,
         Model $remessaTypeModel,
         Model $productsModel,
@@ -36,6 +37,7 @@ class RemessaSaidaController extends Controller
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
+        $this->remessaModel         = $remessaModel;
         $this->remessaSaidaModel         = $remessaSaidaModel;
         $this->remessaTypeModel     = $remessaTypeModel;
         $this->productsModel        = $productsModel;
@@ -47,8 +49,25 @@ class RemessaSaidaController extends Controller
     }
 
     public function index(Request $request, Response $response): Response
-    {
+   {
+      $this->remessaModel->deleteByRemessaType();
 
+      // get products to autocomplete
+      $products = $this->productsModel->getAll();
+      
+
+      // remessa types
+      $remessaTypes = $this->remessaTypeModel->getAll();
+
+          
+          $temp['suppliers'] = 0;
+          $temp['quantity'] = 0;
+          $temp['cost'] = 0;
+          $temp['remessa_type'] = 99;
+
+         
+          //var_dump($temp);
+          //die;
       $params = $request->getQueryParams();
 
         if (!empty($params['page'])) {
@@ -60,38 +79,69 @@ class RemessaSaidaController extends Controller
         $offset = ($page - 1) * $limit;
 
 
-      $remessa_saida = $this->remessaSaidaModel->getAll($offset, $limit);
-      $remessa_type = $this->remessaTypeModel->getAll();
-      //var_dump($remessa_type);
+      $remessa = $this->remessaModel->getAllByType([4,5], $offset, $limit);
+
+      //$remessa_type = $this->remessaTypeModel->getAll();
+      $remessa_type[] = $this->remessaTypeModel->get(4);
+      $remessa_type[] = $this->remessaTypeModel->get(5);
+      
+      //$product_name = $this->productsModel->getAll();
+      //var_dump($product_name);
       //die;
-      foreach ($remessa_saida as $remessas_saida) {
-         
-            $remessas_saida->products_name = $this->productsModel->get((int)$remessas_saida->id_product)->name;
+      foreach ($remessa as $remessas) {
+       // var_dump($remessas);
+        //die;
+            //var_dump($remessas);
+            //die;
+            // $remessas->product_name = $this->productsModel->get((int)$remessas->id_product)->name;
+           
+            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+            
+           if ($remessas->date == '0000-00-00 00:00:00') {
+            
+              $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
 
+            } else if ($remessas->date == NULL) {
+            
+              $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
 
-            $remessas_saida->remessa_type_name = $this->remessaTypeModel->get((int)$remessas_saida->remessa_type)->name;
+            }  
 
+            else {
+              $remessas->date = date("d/m/Y", strtotime($remessas->date));
+          
+            }
+          
+             
+
+        
+       // $date = substr($remessas->date, 0, 10);
+       // $date = strtotime($date);
+       // $remessas->date = date('d/m/Y', $date);
              
         }
 
-     
+      
 
-      $amountRemessas = $this->remessaSaidaModel->getAmount();
+      $amountRemessas = $this->remessaModel->getAmount();
         $amountPages = ceil($amountRemessas->amount / $limit);
 
         $today = date('Y-m-d');
+        
 
+        
        //var_dump($remessa);
       //die;
      
       return $this->view->render($response, 'admin/remessa_saida/index.twig',[
-        'remessa_saida' => $remessa_saida,
+        //'date' => $date,
+        'remessa' => $remessa,
         'remessa_type' => $remessa_type,
         'page' => $page,
         'amountPages' => $amountPages,
         'today' => $today
       ]);
-
+       
     }
 
     public function sobre(Request $request, Response $response): Response
@@ -101,47 +151,54 @@ class RemessaSaidaController extends Controller
 
     public function add(Request $request, Response $response): Response
     {
+
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
           $products = $this->productsModel->getAll();
          
+
+          $this->remessaModel->deleteByRemessaType();
+
           // remessa types
-
           //$remessaTypes = [];
-          $remessaTypes[] = $this->remessaTypeModel->get(1);
+          $remessaTypes[] = $this->remessaTypeModel->get(4);
+          $remessaTypes[] = $this->remessaTypeModel->get(5);
 
-          $remessaTypes[] = $this->remessaTypeModel->get(2);
+          
+          $temp['id_products'] = 0;
+          $temp['quantity'] = 0;
+          $temp['cost'] = 0;
+          $temp['remessa_type'] = 99;
+
+          $temp = $this->entityFactory->createRemessa($temp);
+          
+          $id_remessa = $this->remessaModel->add($temp);
+
+
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
-
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
-
           return $this->view->render($response, 'admin/remessa_saida/add.twig',
           [
             'products' => $products,
             'remessaTypes' => $remessaTypes,
-           // 'patrimony_code' => $patrimony_code
+            'id_remessa' => $id_remessa,
           ]);
         }
 
-        
-
-
       $remessa = $request->getParsedBody();
-
-     // var_dump($remessa);
-      //die;
-
-      $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
+       
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
-      $remessa['cost'] =  $remessa['cost'];
+      $remessa['id'] = (int) $remessa['remessa_id'];
      
+      
 
-      $remessa = $this->entityFactory->createRemessaSaida($remessa);
-     
-      $idRemessa = $this->remessaSaidaModel->add($remessa);
-    
+      $remessa = $this->entityFactory->createRemessa($remessa);
+      //var_dump($remessa);
+      //die;
+      $idRemessa = $this->remessaModel->update($remessa);
+
 
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
@@ -167,9 +224,9 @@ class RemessaSaidaController extends Controller
                  $this->eventLogModel->add($eventLog);
           }
         }
-
+        
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-      return $this->httpRedirect($request, $response, '/admin/products');
+      return $this->httpRedirect($request, $response, 'admin/remessa_saida');
     
     }
 

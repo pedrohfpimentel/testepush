@@ -422,6 +422,12 @@ class ProductsController extends Controller
 
         $event_logs = $this->eventLogModel->getByProducts($id);
         
+        foreach ($event_logs as $event_log) {
+            //var_dump($event_log);
+           // die;
+            $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
+        }
+        
         return $this->view->render($response, 'admin/products/history.twig', ['products' => $products,
             'event_logs' => $event_logs]);
 

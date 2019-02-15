@@ -89,7 +89,7 @@ class ProfessionalModel extends Model
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
             ORDER BY
-                professionals.id ASC
+                users.name ASC
                 LIMIT ? , ?
 
         ";

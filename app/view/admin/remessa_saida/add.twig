@@ -1,5 +1,5 @@
 {% extends "admin/layout.twig" %}
-{% block html_title %}Produtos - Administração - {{ parent() }}{% endblock %}
+{% block html_title %}Saída de Estoque - Administração - {{ parent() }}{% endblock %}
 {% set nav_active = 'products' %}
 {% block breadcrumbs %}
 
@@ -28,8 +28,9 @@
 {% endblock %}
 
 {% block content %}
+  <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
 <div class="row">
-  <div class="col-sm-7">
+  <div class="col-sm-6">
     <div class=" card">
       <div class="card-header" data-background-color="blue">
         <div class="row">
@@ -41,7 +42,7 @@
       <div class="card-content">
         <div class="row">
           <div class="col-md-12">
-            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
+           {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
               <p>Tela para cadastrar saídas no estoque.</p>
               <input type="hidden" name="id" value="{{ products.id }}">
               <div class="row">
@@ -58,37 +59,81 @@
                    </div>
                  </div>
                </div>
+              
+              <div class=" col-sm-4 form-group">
+                   <label for="quantity">Data de Saída</label>
+                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                 </div>
+       
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="col-sm-6">
+    <div class=" card">
+      <div class="card-header" data-background-color="blue">
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>Incluir Produtos</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col-md-12">
+           {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
+              
+              <input type="hidden" name="id" value="{{ products.id }}">
+              
               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
                   <label for="name">Produto:</label>
                     <div class="ui-widget" >
-                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
+                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome"  >
+                      <input type="hidden" name="id_product_hidden" id="id_product_hidden" value="input_id_product">
                       <div id="campo_login"> </div>
                     </div>
                   </div>
                 </div>
                </div>
+
+               
                <div class="row">
-                 <div class=" col-sm-2 form-group">
+                 <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
-                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" >
+                    <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
+
 
                  <div class=" col-sm-4 form-group">
-                   <label for="cost">Custo</label>
-
-                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
-
+                   <label for="patrimony">Código Patrimonial</label>
+                   <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
+                    <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
+                
 
-                 <div class=" col-sm-4 form-group">
-                   <label for="quantity">Data de Saída</label>
-                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                 
+                 <div class="col-sm-12">
+                  <p id="error-adicionar-produto-remessa"></p>
                  </div>
+                  <div class="col-sm-12">
+                    <p class="pull-right" style="padding-top: 25px;">
+                        <button type="button" class="btn btn-primary" id="add_product">Adicionar Produto</button>
+                        </a>
+                    </p>
+                </div>
                </div>
-               <button type="submit" value="button" class="btn btn-primary">Adicionar</button>
-            </form>
+
+              
+              
+           {# </form> #}
 
           </div>
         </div>
@@ -98,8 +143,81 @@
   </div>
 </div>
 
+
+<div class="main">
+  <div class="card">
+    <div class="card-header" data-background-color="blue">
+      <div class="row">
+        <div class="col-sm-8">
+          <h3>Produtos</h3>
+        </div>
+        {#<div class="col-sm-4">
+          <p class="pull-right">
+            <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </a>
+          </p>
+        </div>#}
+      </div>
+
+    </div>
+    <div class="card-content">
+      <div class="row">
+        <div class="col-xs-12">
+          <table class="table table-striped data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Código Patrimonial</th>
+                <th class="th-button"></th>
+                <th class="th-button"></th>
+              </tr>
+            </thead>
+
+
+             {# <script>
+               // function soma()
+               // {
+              //    products.quantity.value = (form.quantity2.value*1) + (form.quantity.value*1)
+               // }
+            //  </script> #}
+
+
+            <tbody id="corpo_tabela">
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+     
+
+
+
+    </div>
+  </div>
+</div>
+
+
+<input type="hidden" id="remessa_id" name="remessa_id" value="{{ id_remessa }}">
+<button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
+
+</form>
 {% endblock %}
 {% block javascripts %}
+
+
+
+<script type="text/javascript">
+
+$('#button_adicionar').on("submit",function(){
+   //return false;
+});
+
+
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 {#mascara monetaria#}
@@ -130,6 +248,24 @@
       });
     });
 </script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+       var availableTags = [];
+
+       //autcomplete fornecedores
+       {% for supplier in suppliers %}
+        availableTags.push("{{ supplier.id }} - {{ supplier.name }}");
+       {% endfor %}
+
+       $( "#input_suppliers" ).autocomplete({
+         source: availableTags
+      });
+    });
+</script>
+
+
 
 <script type="text/javascript">
 
@@ -167,4 +303,174 @@
   });
 
 </script>
+
+
+<script type="text/javascript">
+
+  $('#input_suppliers').on('change', function() {
+
+    var id_suppliers = $(this).val();
+    id_suppliers = id_suppliers.replace(/ .*/,'');
+
+    console.log(id_suppliers);
+
+    //if (Number.isInteger(id_suppliers)) {
+      $.ajax({
+
+        url: '{{ base_url() }}/admin/remessa/consulta_suppliers?id='+ id_suppliers,
+
+        beforeSend: function(data) {
+          $("#campo_login_fornecedor").html('');
+        },
+
+        success: function(data) {
+          console.log('sucesso' + data);
+          $("#campo_login_fornecedor").html('<p style="color:green;">Fornecedor selecionado!</p>');
+        },
+
+        error: function(data) {
+          console.log('error' + data);
+          $("#input_suppliers").val('');
+          $("#campo_login_fornecedor").html('<p style="color:red;">Erro. Tente um fornecedor válido!</p>');
+        }
+
+      });
+
+    //}
+
+  });
+
+</script>
+
+
+<script type="text/javascript">
+ 
+  function submitTabela() {
+    var corpo_tabela = $('#corpo_tabela').html();
+    console.log(corpo_tabela);
+    return false;
+  }
+
+  $(document).on('click', '#add_product', function() {
+
+    
+    //console.log('TEST');
+    var input_suppliers =$('#input_suppliers').val();
+    var nome_produto = $('#input_id_product').val();
+    var quantidade_produto = $('#quantity').val();
+    var custo_produto = $('#cost').val();
+    var remessa_id = $('#remessa_id').val();
+    var patrimony = $('#patrimony').val();
+
+
+    var products_array = [
+    nome_produto,
+    quantidade_produto,
+    custo_produto,
+    remessa_id,
+    patrimony
+    ];
+
+
+    console.log(products_array);
+    
+
+
+
+
+
+    $.ajax({
+      url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
+      type: "GET",
+      
+      beforeSend: function (xhr) {
+        if (input_suppliers == '') {
+            $('#input_suppliers').focus();
+            xhr.abort();
+        }
+
+        else if (nome_produto == '') {
+            $('#input_id_product').focus();
+            xhr.abort();
+        }
+
+        else if (quantidade_produto == '') {
+           $('#quantity').focus();
+            xhr.abort();
+        }
+
+       
+
+        
+      },
+
+      success: function (data) {
+        $('#error-adicionar-produto-remessa').html('');
+         $('#corpo_tabela').append(
+      `<tr><td>${nome_produto}</td>
+      <td>${quantidade_produto}</td>
+      <td>${patrimony}</td>
+      <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+
+
+      );
+
+        $("#input_id_product").val('');
+        $("#quantity").val('');
+        $("#cost").val('');
+        $("#patrimony").val('');
+
+        
+      },
+        error: function (data) {
+
+          if (data.responseText == 1) {
+            $('#error-adicionar-produto-remessa').html('O produto não pode ser vazio.');
+          }
+          
+          console.error(data);
+        }
+
+    });
+
+
+
+});
+
+ $(document).on('click', '.excluir_ajax', function() {
+
+  
+  var id_produto_remessa = $(this).attr("id");
+  var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
+ // console.log(resultado);
+
+ var tr = $(this).parent().parent();
+
+  $.ajax({
+      url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
+      type: "GET",
+      
+     
+      success: function (data) {
+       if (data == true) {
+        
+
+          console.log(tr);
+          tr.remove();
+        }
+      },
+        error: function (data) {
+
+          
+          console.error(data);
+        }
+
+    });
+
+
+
+ });
+
+</script>
+
 {% endblock %}

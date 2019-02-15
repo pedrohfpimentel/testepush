@@ -47,6 +47,18 @@ class RemessaTypeData extends AbstractMigration
                'description' => 'Entrada inicial de produtos.'
            ],
            [
+               'id' => 4,
+               'slug' => 'saida_doacao',
+               'name' => 'Saída Doação',
+               'description' => 'Saída de doação de itens diversos.'
+           ],
+           [
+               'id' => 5,
+               'slug' => 'saida_emprestimo',
+               'name' => 'Saída por empréstimo',
+               'description' => 'Saída de itens diversos por empréstimo.'
+           ],
+           [
                'id' => 99,
                'slug' => 'remessa_type_temp',
                'name' => 'Remessa Temporária',

@@ -66,7 +66,7 @@ class ProductsTypeModel extends Model
             FROM
                 products_type
             ORDER BY
-                id ASC
+                products_type.name ASC
         ";
         $query = $this->db->prepare($sql);
         $query->execute();

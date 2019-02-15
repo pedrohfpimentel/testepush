@@ -66,7 +66,7 @@ class ProfessionalTypeModel extends Model
             FROM
                 professional_types
             ORDER BY
-                id ASC
+                professional_types.name ASC
         ";
         $query = $this->db->prepare($sql);
         $query->execute();

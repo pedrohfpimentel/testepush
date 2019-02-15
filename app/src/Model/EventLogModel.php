@@ -131,6 +131,7 @@ class EventLogModel extends Model
                 id_patient = :id
 
         ";
+        
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $query->execute($parameters);

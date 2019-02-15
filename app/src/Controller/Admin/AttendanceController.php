@@ -76,6 +76,7 @@ class AttendanceController extends Controller
         foreach ($attendances as $attendance) {
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;
             $attendance->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
+            $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
         }
                
         $amountAttendances = $this->attendanceModel->getAmount();
@@ -83,7 +84,10 @@ class AttendanceController extends Controller
 
          $today = date('Y-m-d');
 
+
+         
         return $this->view->render($response, 'admin/attendance/index.twig', [
+            
             'attendances' => $attendances,
             'page' => $page,
             'amountPages' => $amountPages,
@@ -345,6 +349,7 @@ class AttendanceController extends Controller
 
         $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
         $attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
+        $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
 
 
         if (!$attendance) {

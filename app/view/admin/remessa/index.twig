@@ -77,8 +77,7 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Produto</th>
-                <th>Quantidade</th>
+                <th>Fornecedor</th>
                 <th>Tipo de Entrada</th>
                 <th>Data</th>
                 
@@ -93,8 +92,7 @@
               {% for remessas in remessa %}
                 <tr>
                   <td>{{ remessas.id }}</td>
-                  <td>{{ remessas.products_name }}</td>
-                  <td>{{ remessas.quantity }}</td>
+                  <td>{{ remessas.suppliers_name }}</td>
                   <td>{{ remessas.remessa_type_name }}</td>
                   <td>{{ remessas.date}} </td>
                   

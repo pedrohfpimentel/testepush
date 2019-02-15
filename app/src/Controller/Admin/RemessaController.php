@@ -51,7 +51,7 @@ class RemessaController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-
+      $this->remessaModel->deleteByRemessaType();
 
       // get products to autocomplete
       $products = $this->productsModel->getAll();
@@ -59,7 +59,16 @@ class RemessaController extends Controller
 
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
+     
+          
+          $temp['suppliers'] = 0;
+          $temp['quantity'] = 0;
+          $temp['cost'] = 0;
+          $temp['remessa_type'] = 99;
 
+         
+          //var_dump($temp);
+          //die;
       $params = $request->getQueryParams();
 
         if (!empty($params['page'])) {
@@ -71,17 +80,40 @@ class RemessaController extends Controller
         $offset = ($page - 1) * $limit;
 
 
-      $remessa = $this->remessaModel->getAll($offset, $limit);
-      $remessa_type = $this->remessaTypeModel->getAll();
+      $remessa = $this->remessaModel->getAllByType([1,2], $offset, $limit);
+
+     // $remessa_type = $this->remessaTypeModel->getAll();
+      $remessa_type[] = $this->remessaTypeModel->get(1);
+      $remessa_type[] = $this->remessaTypeModel->get(2);
+      //$product_name = $this->productsModel->getAll();
       //var_dump($remessa_type);
       //die;
       foreach ($remessa as $remessas) {
-         
-            $remessas->products_name = $this->productsModel->get((int)$remessas->id_product)->name;
-
-           // $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->id;
-
+       // var_dump($remessas);
+        //die;
+            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+            //var_dump($remessas);
+            //die;
+            // $remessas->product_name = $this->productsModel->get((int)$remessas->id_product)->name;
+           
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+            
+           if ($remessas->date == '0000-00-00 00:00:00') {
+            
+              $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
+
+            } else if ($remessas->date == NULL) {
+            
+              $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
+
+            }  
+
+            else {
+              $remessas->date = date("d/m/Y", strtotime($remessas->date));
+          
+            }
+          
+             
 
         
        // $date = substr($remessas->date, 0, 10);
@@ -90,19 +122,20 @@ class RemessaController extends Controller
              
         }
 
-     
+      
 
       $amountRemessas = $this->remessaModel->getAmount();
         $amountPages = ceil($amountRemessas->amount / $limit);
 
         $today = date('Y-m-d');
         
+
         
-      // var_dump($remessa);
+       //var_dump($remessa);
       //die;
      
       return $this->view->render($response, 'admin/remessa/index.twig',[
-        'products' => $products,
+        //'date' => $date,
         'suppliers' => $suppliers,
         'remessa' => $remessa,
         'remessa_type' => $remessa_type,
@@ -110,7 +143,7 @@ class RemessaController extends Controller
         'amountPages' => $amountPages,
         'today' => $today
       ]);
-
+       
     }
 
     public function sobre(Request $request, Response $response): Response
@@ -121,12 +154,13 @@ class RemessaController extends Controller
     public function add(Request $request, Response $response): Response
     {
 
-      $this->remessaModel->deleteByRemessaType();
-
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
           $products = $this->productsModel->getAll();
           $suppliers = $this->supplierModel->getAll();
+
+          $this->remessaModel->deleteByRemessaType();
+
           // remessa types
           //$remessaTypes = [];
           $remessaTypes[] = $this->remessaTypeModel->get(1);
@@ -155,33 +189,21 @@ class RemessaController extends Controller
         }
 
       $remessa = $request->getParsedBody();
-        //var_dump($remessa);
-        //die;
-     // $remessa = $this->entityFactory->createRemessa($request->getParsedBody());
-
-      
-      //$this->remessaModel->add($remessa);
-
-
-
-       // $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-       // return $this->httpRedirect($request, $response, '/admin/remessa'); 
-
-      
-
-      $remessa['id_product'] = (int) substr($remessa['id_product'], 0, strpos($remessa['id_product'], ' '));
-       $remessa['suppliers'] = (int) $remessa['suppliers'];
+       
+      $remessa['suppliers'] = (int) $remessa['suppliers'];
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
       $remessa['cost'] = (float) $remessa['cost'];
+      $remessa['id'] = (int) $remessa['remessa_id'];
      
+      
 
       $remessa = $this->entityFactory->createRemessa($remessa);
-     
-      $idRemessa = $this->remessaModel->add($remessa);
-    //var_dump($remessa);
-//die;
+      //var_dump($remessa);
+      //die;
+      $idRemessa = $this->remessaModel->update($remessa);
+
 
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
@@ -211,7 +233,7 @@ class RemessaController extends Controller
         }
         
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-      return $this->httpRedirect($request, $response, '/admin/products');
+      return $this->httpRedirect($request, $response, '/admin/remessa');
     
     }
 

@@ -266,7 +266,7 @@ $container['Farol360\Ancora\Controller\Admin\RemessaSaidaController'] = function
     return new Farol360\Ancora\Controller\Admin\RemessaSaidaController(
         $c['view'],
         $c['flash'],
-        //new Farol360\Ancora\Model\RemessaModel($c['db']),
+        new Farol360\Ancora\Model\RemessaModel($c['db']),
        // new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
         new Farol360\Ancora\Model\RemessaSaidaModel($c['db']),
         new Farol360\Ancora\Model\RemessaSaidaTypeModel($c['db']),

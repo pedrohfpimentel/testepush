@@ -142,7 +142,7 @@ class PatientModel extends Model
                 LEFT JOIN users ON users.id = patients.id_user
                 LEFT JOIN diseases ON patients.id_disease = diseases.id
             ORDER BY
-                patients.id ASC
+                users.name ASC
             LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);

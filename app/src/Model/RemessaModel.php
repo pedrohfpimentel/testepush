@@ -163,34 +163,63 @@ class RemessaModel extends Model
     }
 
 
-     public function getAllByType( int $status = 1, string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
-
+      public function getAllByType(array $id_tipos_remessas = null, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
+        $i_num_params = 0;
+        $num_params = [];
+
         $sql = "
             SELECT
-                event_logs.date,
-                remessa_type.*,
-                remessa.*
-
+                *
             FROM
-            remessa,
-            remessa_type,
-            event_logs
-            
-            
+                remessa
         ";
+
+        // se houver tipos de remessas, então haverá where
+        if ( $id_tipos_remessas != null) {
+            $sql .= "WHERE ";
+
+            // i para verificar o primeiro elemento
+            $i = 0;
+
+            // percorre o vetor de tipos de remessas.
+            foreach ($id_tipos_remessas as $id) {
+
+                // se não for o primeiro
+                if ($i > 0) {
+                    $sql .= "OR (remessa.remessa_type = ?) ";
+
+                    $num_params[$i_num_params] = $id;
+                    $i_num_params++;
+                } else {
+                    $sql .= "(remessa.remessa_type = ?) ";
+
+                    $num_params[$i_num_params] = $id;
+                    $i_num_params++;
+                    
+                }
+                
+                $i++;
+            }
+        }
+            
+
+        
+        $sql .= "LIMIT ?,?";
+
         $query = $this->db->prepare($sql);
-        $query->bindValue(1, $status, \PDO::PARAM_INT);
-        $query->bindValue(2, $start, \PDO::PARAM_STR);
-        $query->bindValue(3, $finish, \PDO::PARAM_STR);
-        $query->bindValue(4, $offset, \PDO::PARAM_INT);
-        $query->bindValue(5, $limit, \PDO::PARAM_INT);
+
+        foreach ($num_params as $key => $value) {
+            $query->bindValue($key+1, $value, \PDO::PARAM_INT);
+
+        }
+  
+        $query->bindValue($i_num_params+1, $offset, \PDO::PARAM_INT);
+        $query->bindValue($i_num_params+2, $limit, \PDO::PARAM_INT);
+
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetchAll();
-
-
-
     }
 
     public function update(Remessa $remessa): bool

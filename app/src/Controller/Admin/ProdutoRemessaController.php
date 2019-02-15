@@ -79,7 +79,7 @@ class ProdutoRemessaController extends Controller
         $data = $request->getQueryParams();
        
         
-
+        
         $data["id_product"] = (int) substr($data["nome_produto"], 0, strpos($data["nome_produto"], ' '));
         $data["id_remessa"] = (int) $data["remessa_id"];
         $data["patrimony_code"] = $data["patrimony"];
@@ -102,9 +102,9 @@ class ProdutoRemessaController extends Controller
     public function delete(Request $request, Response $response, array $args): Response
     {
          $id = intval($args['id']);
-        $this->produtoRemessaModel->delete($id);
-        $this->flash->addMessage('success', 'Evento removido com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/produto_remessa');
+        $var = $this->produtoRemessaModel->delete($id);
+      
+        return $response->withJson($var);
     }
 
    

@@ -351,8 +351,18 @@ class PatientController extends Controller
         $patient = $this->patientModel->get($id);
 
         $event_logs = $this->eventLogModel->getByPatient($id);
+        foreach ($event_logs as $event_log) {
+            //var_dump($event_log);
+           // die;
+            $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
+        }
+        //$today = date('d-m-Y');
+        //var_dump($event_logs);
+        //die;
 
-        return $this->view->render($response, 'admin/patient/history.twig', ['patient' => $patient,
+        return $this->view->render($response, 'admin/patient/history.twig', [
+
+            'patient' => $patient,
             'event_logs' => $event_logs]);
     }
 

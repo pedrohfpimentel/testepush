@@ -48,6 +48,15 @@ class RemessaSaidaModel extends Model
         return $query->execute($parameters);
     }
 
+
+      public function deleteByRemessaType(int $id = 99): bool
+    {
+       $sql = "DELETE FROM remessa WHERE remessa_type = :id";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        return $query->execute($parameters);
+    }
+
     public function get(int $id)
     {
         $sql = "
@@ -83,6 +92,65 @@ class RemessaSaidaModel extends Model
     }
 
 
+
+     public function getAllByType(array $id_tipos_remessas = null, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $i_num_params = 0;
+        $num_params = [];
+
+        $sql = "
+            SELECT
+                *
+            FROM
+                remessa
+        ";
+
+        // se houver tipos de remessas, então haverá where
+        if ( $id_tipos_remessas != null) {
+            $sql .= "WHERE ";
+
+            // i para verificar o primeiro elemento
+            $i = 0;
+
+            // percorre o vetor de tipos de remessas.
+            foreach ($id_tipos_remessas as $id) {
+
+                // se não for o primeiro
+                if ($i > 0) {
+                    $sql .= "OR (remessa.remessa_type = ?) ";
+
+                    $num_params[$i_num_params] = $id;
+                    $i_num_params++;
+                } else {
+                    $sql .= "(remessa.remessa_type = ?) ";
+
+                    $num_params[$i_num_params] = $id;
+                    $i_num_params++;
+                    
+                }
+                
+                $i++;
+            }
+        }
+            
+
+        
+        $sql .= "LIMIT ?,?";
+
+        $query = $this->db->prepare($sql);
+
+        foreach ($num_params as $key => $value) {
+            $query->bindValue($key+1, $value, \PDO::PARAM_INT);
+
+        }
+  
+        $query->bindValue($i_num_params+1, $offset, \PDO::PARAM_INT);
+        $query->bindValue($i_num_params+2, $limit, \PDO::PARAM_INT);
+
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
+        return $query->fetchAll();
+    }
 
      public function getAmount()
     {
