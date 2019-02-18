@@ -28,9 +28,9 @@
 {% endblock %}
 
 {% block content %}
-  <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
+  <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <div class=" card">
       <div class="card-header" data-background-color="blue">
         <div class="row">
@@ -59,33 +59,40 @@
                    </div>
                  </div>
                </div>
+
+               <div class="row">
+                 <div class="col-sm-12">
+                   <div class="form-group">
+                     <label for="name">Paciente:</label>
+                     <div class="ui-widget">
+                       <select class="form-control" id="selectPatient" name="patient_id">
+                         {% for patient in patients %}
+                            <option value="{{ patient.id }}">{{ patient.name }}</option>
+                         {% endfor %}
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+               </div>
               
               <div class=" col-sm-4 form-group">
-                   <label for="quantity">Data de Saída</label>
-                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
-                 </div>
-       
-
+                <label for="quantity">Data de Saída</label>
+                <input type="date" class="form-control" id="input_date" name="date" placeholder="" required>
+              </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 
 
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <div class=" card">
-      <div class="card-header" data-background-color="blue">
-        <div class="row">
-          <div class="col-xs-12">
-            <h3>Incluir Produtos</h3>
-          </div>
-        </div>
-      </div>
+      
       <div class="card-content">
         <div class="row">
           <div class="col-md-12">
+            <h4>Incluir Produtos</h4>
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
               
               <input type="hidden" name="id" value="{{ products.id }}">
@@ -146,24 +153,11 @@
 
 <div class="main">
   <div class="card">
-    <div class="card-header" data-background-color="blue">
-      <div class="row">
-        <div class="col-sm-8">
-          <h3>Produtos</h3>
-        </div>
-        {#<div class="col-sm-4">
-          <p class="pull-right">
-            <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </a>
-          </p>
-        </div>#}
-      </div>
-
-    </div>
+    
     <div class="card-content">
       <div class="row">
         <div class="col-xs-12">
+          <h4>Produtos</h4>
           <table class="table table-striped data-table">
             <thead>
               <tr>
@@ -190,12 +184,6 @@
           </table>
         </div>
       </div>
-
-
-     
-
-
-
     </div>
   </div>
 </div>

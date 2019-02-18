@@ -22,6 +22,8 @@ class RemessaSaidaController extends Controller
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
+    protected $produtoRemessaModel;
+    protected $patientModel;
 
     public function __construct(
         View $view,
@@ -34,6 +36,8 @@ class RemessaSaidaController extends Controller
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
+        Model $produtoRemessaModel,
+        Model $patientModel,
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
@@ -45,12 +49,14 @@ class RemessaSaidaController extends Controller
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
+        $this->produtoRemessaModel  = $produtoRemessaModel;
+        $this->patientModel         = $patientModel;
         $this->entityFactory        = $entityFactory;
     }
 
     public function index(Request $request, Response $response): Response
    {
-      $this->remessaModel->deleteByRemessaType();
+      $this->remessaModel->deleteByRemessaType(99);
 
       // get products to autocomplete
       $products = $this->productsModel->getAll();
@@ -95,6 +101,7 @@ class RemessaSaidaController extends Controller
             //die;
             // $remessas->product_name = $this->productsModel->get((int)$remessas->id_product)->name;
            
+            $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name; 
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
             
            if ($remessas->date == '0000-00-00 00:00:00') {
@@ -127,12 +134,7 @@ class RemessaSaidaController extends Controller
         $amountPages = ceil($amountRemessas->amount / $limit);
 
         $today = date('Y-m-d');
-        
 
-        
-       //var_dump($remessa);
-      //die;
-     
       return $this->view->render($response, 'admin/remessa_saida/index.twig',[
         //'date' => $date,
         'remessa' => $remessa,
@@ -175,11 +177,14 @@ class RemessaSaidaController extends Controller
           $id_remessa = $this->remessaModel->add($temp);
 
 
+          $patients = $this->patientModel->getAll();
+
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
           return $this->view->render($response, 'admin/remessa_saida/add.twig',
           [
             'products' => $products,
+            'patients' => $patients,
             'remessaTypes' => $remessaTypes,
             'id_remessa' => $id_remessa,
           ]);
@@ -191,13 +196,19 @@ class RemessaSaidaController extends Controller
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
       $remessa['id'] = (int) $remessa['remessa_id'];
+      $remessa['patient_id'] = (int) $remessa['patient_id'];
      
-      
+      $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
+
+      if (count($products_remessa) < 1 ) {
+        $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');
+        return $this->httpRedirect($request, $response, '/admin/remessa_saida/add');
+      }
 
       $remessa = $this->entityFactory->createRemessa($remessa);
       //var_dump($remessa);
       //die;
-      $idRemessa = $this->remessaModel->update($remessa);
+      $idRemessa = $this->remessaModel->updatePatient($remessa);
 
 
       // aqui trabalhar eventlog
@@ -210,7 +221,7 @@ class RemessaSaidaController extends Controller
 
                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
                $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
-               $eventLog['id_products'] = $remessa->id_product;
+               //$eventLog['id_products'] = $remessa->id_product;
                $eventLog = $this->entityFactory->createEventLog($eventLog);
                $this->eventLogModel->add($eventLog);
           } elseif 
@@ -219,14 +230,15 @@ class RemessaSaidaController extends Controller
 
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
                  $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
-                 $eventLog['id_products'] = $remessa->id_product;
+                 //$eventLog['id_products'] = $remessa->id_product;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);
           }
         }
-        
+
+    
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-      return $this->httpRedirect($request, $response, 'admin/remessa_saida');
+      return $this->httpRedirect($request, $response, '/admin/remessa_saida');
     
     }
 
