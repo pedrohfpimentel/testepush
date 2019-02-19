@@ -260,6 +260,8 @@ $container['Farol360\Ancora\Controller\Admin\RemessaController'] = function ($c)
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
+        new Farol360\Ancora\Model\ProdutoRemessaModel($c['db']),
+        new Farol360\Ancora\Model\PatientModel($c['db']),
         new Farol360\Ancora\Model\EntityFactory()
     );
 };
@@ -277,6 +279,8 @@ $container['Farol360\Ancora\Controller\Admin\RemessaSaidaController'] = function
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
+        new Farol360\Ancora\Model\ProdutoRemessaModel($c['db']),
+        new Farol360\Ancora\Model\PatientModel($c['db']),
         new Farol360\Ancora\Model\EntityFactory()
     );
 };

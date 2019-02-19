@@ -77,7 +77,7 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Fornecedor</th>
+                <th>Fornecedor/Paciente</th>
                 <th>Tipo de Entrada</th>
                 <th>Data</th>
                 
@@ -92,7 +92,17 @@
               {% for remessas in remessa %}
                 <tr>
                   <td>{{ remessas.id }}</td>
-                  <td>{{ remessas.suppliers_name }}</td>
+                  <td>
+                    {% if remessas.remessa_type == 6 %} 
+                      {{remessas.patient_name }}
+                    {% endif %} 
+                    {% if remessas.remessa_type == 1 %} 
+                      {{remessas.suppliers_name }}
+                    {% endif %} 
+                    {% if remessas.remessa_type == 2 %} 
+                      {{remessas.suppliers_name }}
+                    {% endif %} 
+                  </td>
                   <td>{{ remessas.remessa_type_name }}</td>
                   <td>{{ remessas.date}} </td>
                   

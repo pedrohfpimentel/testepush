@@ -30,7 +30,7 @@
 {% block content %}
   <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <div class=" card">
       <div class="card-header" data-background-color="blue">
         <div class="row">
@@ -45,7 +45,7 @@
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
               <p>Tela para cadastrar entradas no estoque.</p>
               <input type="hidden" name="id" value="{{ products.id }}">
-              <div class="row">
+              <div class="row" >
                  <div class="col-sm-12">
                    <div class="form-group">
                      <label for="name">Tipo de Entrada:</label>
@@ -71,12 +71,28 @@
                 </div>
                </div>#}
 
-               <div class="row">
+               <div class="row" id="patients_select">
+                 <div class="col-sm-12">
+                   <div class="form-group">
+                     <label for="name">Paciente:</label>
+                     <div class="ui-widget">
+                       <select class="form-control" id="selectPatient" name="patient_id">
+                         {% for patient in patients %}
+                            <option value="{{ patient.id }}">{{ patient.name }}</option>
+                         {% endfor %}
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+
+               <div class="row" id="suppliers_select">
                 <div class="col-sm-12">
                   <div class="form-group">
                   <label for="name">Fornecedor:</label>
                     <div class="ui-widget" >
-                      <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome"  >
+                      <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome" >
                       <div id="campo_login_fornecedor"> </div>
                     </div>
                   </div>
@@ -100,10 +116,13 @@
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>
                </div>#}
-              <div class=" col-sm-4 form-group">
-                   <label for="quantity">Data de Entrada</label>
-                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
-                 </div>
+               <div class="row"> 
+                <div class=" col-sm-4 form-group">
+                  <label for="quantity">Data de Entrada</label>
+                  <input type="date" class="form-control" id="input_date" name="date" placeholder="" required>
+                </div>
+               </div>
+              
            {# </form>#}
 
           </div>
@@ -114,20 +133,13 @@
   </div>
 
 
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <div class=" card">
-      <div class="card-header" data-background-color="blue">
-        <div class="row">
-          <div class="col-xs-12">
-            <h3>Incluir Produtos</h3>
-          </div>
-        </div>
-      </div>
       <div class="card-content">
         <div class="row">
           <div class="col-md-12">
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
-              
+              <h4>Incluir Produtos</h4>
               <input type="hidden" name="id" value="{{ products.id }}">
               
               <div class="row">
@@ -160,7 +172,7 @@
                  </div>
 
                   <div class=" col-sm-4 form-group">
-                   <label for="patrimony">Código Patrimonial</label>
+                   <label for="patrimony">Código Patrimonial (opcional)</label>
                    <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
                     <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
@@ -196,24 +208,10 @@
 
 <div class="main">
   <div class="card">
-    <div class="card-header" data-background-color="blue">
-      <div class="row">
-        <div class="col-sm-8">
-          <h3>Produtos</h3>
-        </div>
-        {#<div class="col-sm-4">
-          <p class="pull-right">
-            <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </a>
-          </p>
-        </div>#}
-      </div>
-
-    </div>
     <div class="card-content">
       <div class="row">
         <div class="col-xs-12">
+          <h4>Lista de Produtos</h4>
           <table class="table table-striped data-table">
             <thead>
               <tr>
@@ -302,6 +300,16 @@ $('#button_adicionar').on("submit",function(){
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+      $('#patients_select').hide();
+      $('#suppliers_select').hide();
+
+      var tipo = $('#selectRemessaType').val();
+
+      if ( (tipo == 1) || (tipo == 2) ) {
+        $('#suppliers_select').show();
+      }
+
        var availableTags = [];
 
        //autcomplete fornecedores
@@ -362,7 +370,7 @@ $('#button_adicionar').on("submit",function(){
     var id_suppliers = $(this).val();
     id_suppliers = id_suppliers.replace(/ .*/,'');
 
-    console.log(id_suppliers);
+    //console.log(id_suppliers);
 
     //if (Number.isInteger(id_suppliers)) {
       $.ajax({
@@ -405,7 +413,7 @@ $('#button_adicionar').on("submit",function(){
 
     
     //console.log('TEST');
-    var input_suppliers =$('#input_suppliers').val();
+    //var input_suppliers =$('#input_suppliers').val();
     var nome_produto = $('#input_id_product').val();
     var quantidade_produto = $('#quantity').val();
     var custo_produto = $('#cost').val();
@@ -430,16 +438,12 @@ $('#button_adicionar').on("submit",function(){
 
 
     $.ajax({
-      url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
+      url:`{{ base_url() }}/admin/produto_remessa/add?nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
       type: "GET",
       
       beforeSend: function (xhr) {
-        if (input_suppliers == '') {
-            $('#input_suppliers').focus();
-            xhr.abort();
-        }
-
-        else if (nome_produto == '') {
+ 
+        if (nome_produto == '') {
             $('#input_id_product').focus();
             xhr.abort();
         }
@@ -449,9 +453,6 @@ $('#button_adicionar').on("submit",function(){
             xhr.abort();
         }
 
-       
-
-        
       },
 
       success: function (data) {
@@ -518,6 +519,25 @@ $('#button_adicionar').on("submit",function(){
     });
 
 
+
+ });
+
+ $('#selectRemessaType').on('change', function() {
+   //console.log('oi mãe');
+
+  $('#patients_select').hide();
+  $('#suppliers_select').hide();
+  
+  
+  var tipo = $('#selectRemessaType').val();
+
+  if ( (tipo == 1) || (tipo == 2) ) {
+    $('#suppliers_select').show();
+  }
+
+  if (tipo == 6) {
+    $('#patients_select').show();
+  }
 
  });
 

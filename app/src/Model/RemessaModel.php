@@ -42,6 +42,42 @@ class RemessaModel extends Model
         }
     }
 
+    public function addPatient(Remessa $remessa)
+    {
+        $sql = "
+            INSERT INTO remessa (
+                id_product,
+                suppliers,
+                remessa_type,
+                quantity,
+                cost,
+                patrimony_code,
+                patient_id,
+                date,
+                time
+                )
+            VALUES (:id_product, :suppliers, :remessa_type, :quantity, :cost, :patrimony_code, :patient_id, :date, :time)
+        ";
+        $query = $this->db->prepare($sql);
+        $parameters = [
+            ':id_product'        => $remessa->id_product,
+            ':suppliers'         => $remessa->suppliers,
+            ':remessa_type'      => $remessa->remessa_type,
+            ':quantity'          => $remessa->quantity,
+            ':cost'              => $remessa->cost,
+            ':patrimony_code'    => $remessa->patrimony_code,
+            ':id_product'        => $remessa->id_product,
+            ':date'              => $remessa->date,
+            ':time'              => $remessa->time
+
+        ];
+        if ($query->execute($parameters)) {
+            return $this->db->lastInsertId();
+        } else {
+            return null;
+        }
+    }
+
     public function delete(int $id): bool
     {
        $sql = "DELETE FROM remessa WHERE id = :id";
@@ -228,7 +264,6 @@ class RemessaModel extends Model
             UPDATE
                 remessa
             SET
-                id_product       = :id_product,
                 suppliers        = :suppliers,
                 remessa_type     = :remessa_type,
                 quantity         = :quantity,
@@ -243,12 +278,44 @@ class RemessaModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id'           => $remessa->id,
-            ':id_product'   => $remessa->id_product,
             ':suppliers'    => $remessa->suppliers,
             ':remessa_type' => $remessa->remessa_type,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,
             'patrimony_code' => $remessa->patrimony_code,
+            ':date'         => $remessa->date,
+            ':time'         => $remessa->time
+            ];
+        return $query->execute($parameters);
+    }
+
+    public function updatePatient(Remessa $remessa): bool
+    {
+        $sql = "
+            UPDATE
+                remessa
+            SET
+                suppliers        = :suppliers,
+                remessa_type     = :remessa_type,
+                quantity         = :quantity,
+                cost             = :cost,
+                patrimony_code   = :patrimony_code,
+                patient_id       = :patient_id,
+                date             = :date,
+                time             = :time
+
+            WHERE
+                id = :id
+        ";
+        $query = $this->db->prepare($sql);
+        $parameters = [
+            ':id'           => $remessa->id,
+            ':suppliers'    => $remessa->suppliers,
+            ':remessa_type' => $remessa->remessa_type,
+            ':quantity'     => $remessa->quantity,
+            ':cost'         => $remessa->cost,
+            'patrimony_code' => $remessa->patrimony_code,
+            'patient_id'    => $remessa->patient_id,
             ':date'         => $remessa->date,
             ':time'         => $remessa->time
             ];
