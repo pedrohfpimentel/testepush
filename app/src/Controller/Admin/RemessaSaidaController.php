@@ -174,7 +174,7 @@ class RemessaSaidaController extends Controller
           
           $id_remessa = $this->remessaModel->add($temp);
 
-
+          
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
           return $this->view->render($response, 'admin/remessa_saida/add.twig',
@@ -186,17 +186,17 @@ class RemessaSaidaController extends Controller
         }
 
       $remessa = $request->getParsedBody();
+
        
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
       $remessa['id'] = (int) $remessa['remessa_id'];
      
-      
+     
 
       $remessa = $this->entityFactory->createRemessa($remessa);
-      //var_dump($remessa);
-      //die;
+      
       $idRemessa = $this->remessaModel->update($remessa);
 
 
@@ -226,8 +226,8 @@ class RemessaSaidaController extends Controller
         }
         
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-      return $this->httpRedirect($request, $response, 'admin/remessa_saida');
-    
+      return $this->httpRedirect($request, $response, '/admin/remessa_saida');
+
     }
 
     public function consulta_produto(Request $request, Response $response): Response
