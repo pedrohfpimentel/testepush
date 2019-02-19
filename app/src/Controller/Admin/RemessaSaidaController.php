@@ -177,8 +177,6 @@ class RemessaSaidaController extends Controller
           $id_remessa = $this->remessaModel->add($temp);
 
 
-          $patients = $this->patientModel->getAll();
-
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
           return $this->view->render($response, 'admin/remessa_saida/add.twig',
@@ -191,6 +189,7 @@ class RemessaSaidaController extends Controller
         }
 
       $remessa = $request->getParsedBody();
+
        
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
@@ -198,6 +197,7 @@ class RemessaSaidaController extends Controller
       $remessa['id'] = (int) $remessa['remessa_id'];
       $remessa['patient_id'] = (int) $remessa['patient_id'];
      
+
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
 
       if (count($products_remessa) < 1 ) {
@@ -209,6 +209,7 @@ class RemessaSaidaController extends Controller
       //var_dump($remessa);
       //die;
       $idRemessa = $this->remessaModel->updatePatient($remessa);
+
 
 
       // aqui trabalhar eventlog
@@ -239,7 +240,7 @@ class RemessaSaidaController extends Controller
     
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
       return $this->httpRedirect($request, $response, '/admin/remessa_saida');
-    
+
     }
 
     public function consulta_produto(Request $request, Response $response): Response

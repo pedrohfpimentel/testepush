@@ -22,10 +22,12 @@ class AttendanceController extends Controller
 {
 
     protected $attendanceModel;
+    protected $attendanceStatusModel;
     protected $patientModel;
     protected $productModel;
     protected $professionalModel;
     protected $remessaModel;
+    protected $remessaStatusModel;
     protected $remessaTypeModel;
     protected $userModel;
     protected $eventLogModel;
@@ -36,10 +38,12 @@ class AttendanceController extends Controller
         View $view,
         FlashMessages $flash,
         Model $attendanceModel,
+        Model $attendanceStatusModel,
         Model $patientModel,
         Model $productModel,
         Model $professionalModel,
         Model $remessaModel,
+        Model $remessaStatusModel,
         Model $remessaTypeModel,
         Model $userModel,
         Model $eventLogModel,
@@ -48,10 +52,12 @@ class AttendanceController extends Controller
     ) {
         parent::__construct($view, $flash);
         $this->attendanceModel      = $attendanceModel;
+        $this->attendanceStatusModel = $attendanceStatusModel;
         $this->patientModel         = $patientModel;
         $this->productModel         = $productModel;
         $this->professionalModel    = $professionalModel;
         $this->remessaModel         = $remessaModel;
+        $this->remessaStatusModel   = $remessaStatusModel;
         $this->remessaTypeModel     = $remessaTypeModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
@@ -71,7 +77,7 @@ class AttendanceController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-     
+        
         $attendances = $this->attendanceModel->getAll($offset, $limit);
         foreach ($attendances as $attendance) {
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;
@@ -101,10 +107,14 @@ class AttendanceController extends Controller
 
             $patients       = $this->patientModel->getAll();
             $professionals  = $this->professionalModel->getAll();
+            $status = $this->attendanceStatusModel->getAll();
+
+        
 
             return $this->view->render($response, 'admin/attendance/add.twig', [
                 'patients'      => $patients,
-                'professionals' => $professionals]);
+                'professionals' => $professionals,
+                'status' => $status]);
         }
 
         $data = $request->getParsedBody();
@@ -112,15 +122,13 @@ class AttendanceController extends Controller
         $attendance = $this->entityFactory->createAttendance($data);
 
         $id_attendance = $this->attendanceModel->add($attendance);
-
-        //var_dump($attendance);
-        //die;
-
+        
         // create eventLog when add attendance
         if ( ($id_attendance != null) || ($id_attendance != false) )
         {
             $eventLog['id_patient']         = $attendance->id_patient;
             $eventLog['id_professional']    = $attendance->id_professional;
+            $eventLog['status']         = $attendance->status;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance')->id;
             $eventLog['description'] = $attendance->description;
 
@@ -344,19 +352,29 @@ class AttendanceController extends Controller
 
     public function view(Request $request, Response $response, array $args): Response
     {
+
+        if (empty($request->getParsedBody())) {
+            $attendance_status = $this->attendanceStatusModel->getAll();
+           // var_dump($attendance_status);
+           // die;
+        }
+        
+
         $id = intval($args['id']);
         $attendance = $this->attendanceModel->get($id);
 
         $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
         $attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
         $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
-
+       var_dump($attendance);
+       die;
 
         if (!$attendance) {
             $this->flash->addMessage('danger', 'Atendimento não encontrado.');
             return $this->httpRedirect($request, $response, '/admin/attendances');
         }
 
-        return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance]);
+        return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status]);
+    
     }
 }

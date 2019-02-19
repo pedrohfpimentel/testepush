@@ -14,6 +14,7 @@ class AttendanceModel extends Model
             INSERT INTO attendances (
                 id_patient,
                 id_professional,
+                status,
                 attendance_day,
                 attendance_hour,
                 description
@@ -21,6 +22,7 @@ class AttendanceModel extends Model
             VALUES (
                 :id_patient,
                 :id_professional,
+                :status,
                 :attendance_day,
                 :attendance_hour,
                 :description
@@ -30,8 +32,9 @@ class AttendanceModel extends Model
         $parameters = [
             ':id_patient'           => $attendance->id_patient,
             ':id_professional'      => $attendance->id_professional,
-            ':attendance_day'                 => $attendance->attendance_day,
-            ':attendance_hour'                 => $attendance->attendance_hour,
+            ':status'               => $attendance->status,
+            ':attendance_day'       => $attendance->attendance_day,
+            ':attendance_hour'      => $attendance->attendance_hour,
             ':description'          => $attendance->description
         ];
         if ($query->execute($parameters)) {

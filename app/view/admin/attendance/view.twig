@@ -35,7 +35,7 @@
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label>Data e Hora:</label>
-              <input class="form-control" type="datetime" name="date" value="{{ attendance.attendance_day }}">
+              <input class="form-control" type="datetime" name="date" value="{{ attendance.attendance_day }}" disabled="">
             </div>
           </div>
           <div class="col-xs-12 col-sm-3">
@@ -72,8 +72,22 @@
             </div>
           </div>
         </div>
+       </div>
+
+
+          <div class="col-sm-6">
+              <div class="form-group">
+                <label for="selectStatus">Situação</label>
+                 <select class="form-control" id="selectStatus" name="id_status">
+                  {% for status in attendance_status %}
+                  <option value="{{ status.id }}">{{ status.name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+          </div>
       </div>
-    </div>
+      <a href="{{ base_url }}/admin/attendance/edit?attendance_id={{ attendance.id }}&" class="btn btn-success">Atualizar</a>
   </div>
 </div>
   </div>

@@ -26,6 +26,8 @@ class AddColumnRemessaRoutes extends AbstractMigration
      * with the Table class.
      */
    
+ 
+
     public function up()
     {
         $remessa = $this->table('remessa');
