@@ -366,8 +366,8 @@ class AttendanceController extends Controller
         $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
         $attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
         $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
-       var_dump($attendance);
-       die;
+       //var_dump($attendance);
+       //die;
 
         if (!$attendance) {
             $this->flash->addMessage('danger', 'Atendimento não encontrado.');
