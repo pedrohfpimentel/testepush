@@ -12,3 +12,10 @@ body {
 .main-panel>.content  {
   margin-top:10px;
 }
+
+.alert-dismissible .close {
+  position: relative;
+  top: -2px;
+   right: 0px;
+  color: inherit;
+}

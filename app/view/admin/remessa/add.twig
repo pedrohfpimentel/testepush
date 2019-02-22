@@ -541,6 +541,20 @@ $('#button_adicionar').on("submit",function(){
 
  });
 
+ $('#input_date').on('change', function() {
+   var value = $('#input_date').val();
+   
+   var data = value.split("-");
+   
+   //console.log(data);
+
+   data[0] = data[0].substring(0,4);
+
+   data = data.join("-");
+
+   $('#input_date').val(data);
+ });
+
 </script>
 
 {% endblock %}

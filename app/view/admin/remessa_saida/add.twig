@@ -438,27 +438,33 @@ $('#button_adicionar').on("submit",function(){
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
       type: "GET",
       
-     
       success: function (data) {
        if (data == true) {
         
-
-          console.log(tr);
+        console.log(tr);
           tr.remove();
         }
       },
         error: function (data) {
-
-          
           console.error(data);
         }
-
     });
-
-
-
  });
 
+
+  $('#input_date').on('change', function() {
+    var value = $('#input_date').val();
+    
+    var data = value.split("-");
+    
+    //console.log(data);
+
+    data[0] = data[0].substring(0,4);
+
+    data = data.join("-");
+
+    $('#input_date').val(data);
+  });
 </script>
 
 {% endblock %}

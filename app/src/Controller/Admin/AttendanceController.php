@@ -405,8 +405,10 @@ class AttendanceController extends Controller
         $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
         $attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
         $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
+
        
        //var_dump($attendance_status);
+
        //var_dump($attendance);
        //die;
 

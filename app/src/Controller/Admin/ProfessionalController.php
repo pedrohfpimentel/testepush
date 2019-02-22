@@ -86,6 +86,7 @@ class ProfessionalController extends Controller
 
         $data['password'] = 'Ancora1337';
         $data['role_id'] = 6;
+        $data['end_numero'] = (int) $data['end_numero'];
 
         if ($this->professionalModel->getByEmail($data['email']) != false) {
             $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
@@ -93,6 +94,9 @@ class ProfessionalController extends Controller
         }
 
         $user = $this->entityFactory->createUser($data);
+
+        //var_dump($user);
+        //die;    
 
         $professional['id_user'] = $this->userModel->add($user);
         $professional['id_professional_type'] = $data['id_professional_type'];
@@ -299,6 +303,7 @@ class ProfessionalController extends Controller
     {
 
         $data = $request->getParsedBody();
+        $data['end_numero'] = (int) $data['end_numero'];
 
         $professional['id'] = (int) $data['id'];
         $professional['id_user'] = (int) $data['id_user'];
