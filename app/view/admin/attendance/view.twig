@@ -78,16 +78,21 @@
           <div class="col-sm-6">
               <div class="form-group">
                 <label for="selectStatus">Situação</label>
-                 <select class="form-control" id="selectStatus" name="id_status">
+                 <select class="form-control" id="selectStatus" name="status">
                   {% for status in attendance_status %}
-                  <option value="{{ status.id }}">{{ status.name }}
-                  </option>
+                    {% if status.id == attendance.status %}
+                      <option value="{{ status.id }}" selected>{{ status.name }}
+                      </option>
+                    {% else %}
+                      <option value="{{ status.id }}">{{ status.name }}
+                      </option>
+                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
           </div>
       </div>
-      <a href="{{ base_url }}/admin/attendance/edit?attendance_id={{ attendance.id }}&" class="btn btn-success">Atualizar</a>
+      <a href="{{ base_url }}/admin/attendances/edit/{{ attendance.id }}?attendance_status={{ attendance.status }}" class="btn btn-success" id="submitStatus">Atualizar</a>
   </div>
 </div>
   </div>
@@ -114,6 +119,19 @@ $('#inputCep').mask('00000-000');
     toolbar: false,
 
   });
+</script>
+
+<script type="text/javascript">
+
+$('#selectStatus').on('change', function() {
+
+  var status = $('#selectStatus').val();
+  console.log (status);
+
+  $('#submitStatus').attr('href', `{{ base_url }}/admin/attendances/edit/{{ attendance.id }}?attendance_status=${status}`)
+
+});
+
 </script>
 
 {% endblock %}

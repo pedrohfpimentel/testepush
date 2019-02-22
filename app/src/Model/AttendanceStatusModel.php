@@ -51,7 +51,7 @@ class AttendanceStatusModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $query->execute($parameters);
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, AttendanceStatus::class);
+        //$query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, AttendanceStatus::class);
         return $query->fetch();
     }
 

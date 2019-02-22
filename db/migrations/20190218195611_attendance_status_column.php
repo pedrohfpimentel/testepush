@@ -30,5 +30,18 @@ class AttendanceStatusColumn extends AbstractMigration
         $attendances = $this->table('attendances');
         $attendances->addColumn('status', 'integer');
         $attendances->update();
+    
+
+
+   
+        $event_log_types = [
+            [
+                'id' => 17,
+                'slug' => 'attendance_edit',
+                'name' => 'Edição de Atendimento',
+                'description' => 'Evento de Edição'
+            ]
+        ];
+        $this->insert('event_log_types', $event_log_types);
     }
 }

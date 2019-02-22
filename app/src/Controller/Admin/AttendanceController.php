@@ -103,26 +103,31 @@ class AttendanceController extends Controller
 
     public function add(Request $request, Response $response): Response
     {
+
+
+
         if (empty($request->getParsedBody())) {
 
             $patients       = $this->patientModel->getAll();
             $professionals  = $this->professionalModel->getAll();
             $status = $this->attendanceStatusModel->getAll();
 
-        
-
             return $this->view->render($response, 'admin/attendance/add.twig', [
                 'patients'      => $patients,
                 'professionals' => $professionals,
-                'status' => $status]);
+                'status' => $status
+            ]);
         }
 
-        $data = $request->getParsedBody();
+        $data = $request->getParsedBody();  
 
         $attendance = $this->entityFactory->createAttendance($data);
+          //var_dump($attendance);
+        //die;
 
         $id_attendance = $this->attendanceModel->add($attendance);
-        
+
+
         // create eventLog when add attendance
         if ( ($id_attendance != null) || ($id_attendance != false) )
         {
@@ -159,17 +164,56 @@ class AttendanceController extends Controller
 
     public function edit(Request $request, Response $response, array $args): Response
     {
-        $id = intval($args['id']);
-        $patient = $this->patientModel->get($id);
-        if (!$patient) {
-            $this->flash->addMessage('danger', 'Paciente não encontrado.');
-            return $this->httpRedirect($request, $response, '/admin/patients');
+
+        if (empty($request->getParsedBody())) {
+            //$attendance_status = $this->attendanceStatusModel->getAll();
+           // var_dump($attendance_status);
+           // die;
         }
 
-        $diseases = $this->diseaseModel->getAll();
 
-        return $this->view->render($response, 'admin/patient/edit.twig', ['patient' => $patient, 'diseases' => $diseases]);
+        $data['id'] = $args['id'];
+        $data['status'] = (int) $request->getQueryParams()['attendance_status'];
+
+        $attendance_status = $this->attendanceStatusModel->get($data['status']);
+
+        $attendance = $this->entityFactory->createAttendance($data);
+       
+      
+        $attendance_return = $this->attendanceModel->updateStatus($attendance);
+
+    
+
+       // $eventLog = $this->entityFactory->createEventLog($eventLog);
+
+          //  $this->eventLogModel->add($eventLog);
+
+
+            if ( ($attendance_return != null) || ($attendance_return != false) )
+        {
+
+
+            //$eventLog['id_patient']         = $attendance->id_patient;
+            
+            //$eventLog['id_professional']    = $attendance->id_professional;
+            $eventLog['status']         = $attendance->status;
+
+            
+             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance_edit')->id;
+             
+            $eventLog['description'] = 'Status do atendimento alterado para: ' . $attendance_status->name;
+         // var_dump($attendance_status->name);
+            //die;
+
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+
+            
+
+        $this->flash->addMessage('success', 'Atendimento atualizado com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/attendances/'. $args['id']);
     }
+}
 
 
     //download
@@ -321,12 +365,7 @@ class AttendanceController extends Controller
         // if it's all ok with updates, create event log
         if ( (($patient_return != null) || ($patient_return != false)) && ($user_return != null) || ($user_return != false)  ) {
 
-            $eventLog['id_patient']         = $patient->id;
-            $eventLog['id_event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_patient')->id;
-            $eventLog['description'] = 'Paciente ' . $user->name .' atualizado';
-
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            $this->eventLogModel->add($eventLog);
+            
 
             $this->flash->addMessage('success', 'Paciente atualizado com sucesso.');
             return $this->httpRedirect($request, $response, '/admin/patients');
@@ -366,15 +405,18 @@ class AttendanceController extends Controller
         $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
         $attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
         $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
-       var_dump($attendance);
-       die;
+       
+       //var_dump($attendance_status);
+       //var_dump($attendance);
+       //die;
 
         if (!$attendance) {
             $this->flash->addMessage('danger', 'Atendimento não encontrado.');
             return $this->httpRedirect($request, $response, '/admin/attendances');
         }
+        
 
         return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status]);
-    
+        
     }
 }

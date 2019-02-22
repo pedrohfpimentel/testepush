@@ -403,7 +403,8 @@ class PatientController extends Controller
 
         $patient_return = $this->patientModel->update($patient);
         $user_return = $this->userModel->update($user);
-
+        var_dump($user->name);
+        die;
         // if it's all ok with updates, create event log
         if ( (($patient_return != null) || ($patient_return != false)) && ($user_return != null) || ($user_return != false)  ) {
 

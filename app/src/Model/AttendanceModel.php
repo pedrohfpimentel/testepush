@@ -264,4 +264,23 @@ class AttendanceModel extends Model
         ];
         return $query->execute($parameters);
     }
+
+    public function updateStatus(Attendance $attendances): bool
+    {
+        $sql = "
+            UPDATE
+                attendances
+            SET
+                status          = :status
+                
+            WHERE
+                id = :id
+        ";
+        $query = $this->db->prepare($sql);
+        $parameters = [
+            ':status'           => $attendances->status,
+            ':id'               => $attendances->id
+        ];
+        return $query->execute($parameters);
+    }
 }
