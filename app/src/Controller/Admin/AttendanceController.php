@@ -129,7 +129,7 @@ class AttendanceController extends Controller
 
         $id_attendance = $this->attendanceModel->add($attendance);
 
-
+        $attendance_status = $this->attendanceStatusModel->get((int)$attendance->status);
         // create eventLog when add attendance
         if ( ($id_attendance != null) || ($id_attendance != false) )
         {
@@ -137,7 +137,7 @@ class AttendanceController extends Controller
             $eventLog['id_professional']    = $attendance->id_professional;
             $eventLog['status']         = $attendance->status;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance')->id;
-            $eventLog['description'] = $attendance->status;
+            $eventLog['description'] = 'Atendimento criado com status: ' . $attendance_status->name;
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
