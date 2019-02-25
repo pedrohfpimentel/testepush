@@ -110,6 +110,7 @@
                 <th>Data</th>
                 <th>Profissional</th>
                 <th>Paciente</th>
+                <th>Status</th>
                 <th class="th-button"></th>
 
               </tr>
@@ -123,6 +124,8 @@
                   <td>{{ attendance.attendance_day }} </td>
                   <td>{{ attendance.professional_name }}</td>
                   <td>{{ attendance.patient_name }}</td>
+                  <td>{{ attendance.name_status }}</td>
+                 
                   <td style="width:80px"><a class="btn btn-info" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">
                     Detalhes
                   </a></td>

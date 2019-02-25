@@ -82,6 +82,7 @@ class AttendanceController extends Controller
         foreach ($attendances as $attendance) {
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;
             $attendance->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
+            
             $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
         }
                
@@ -90,7 +91,8 @@ class AttendanceController extends Controller
 
          $today = date('Y-m-d');
 
-
+         //var_dump($attendance);
+         //die;
          
         return $this->view->render($response, 'admin/attendance/index.twig', [
             
@@ -331,35 +333,6 @@ class AttendanceController extends Controller
 
     public function update(Request $request, Response $response): Response
     {
-
-        $data = $request->getParsedBody();
-
-        $patient['id'] = (int) $data['id'];
-        $patient['id_user'] = (int) $data['id_user'];
-        $patient['id_patient_type'] = 1;
-        $patient['id_disease'] = $data['id_disease'];
-
-        $patient = $this->entityFactory->createPatient($patient);
-
-        $user = $data;
-        $user['id'] = $data['id_user'];
-
-        $user = $this->entityFactory->createUser($user);
-
-
-        $patient_return = $this->patientModel->update($patient);
-        $user_return = $this->userModel->update($user);
-
-        // if it's all ok with updates, create event log
-        if ( (($patient_return != null) || ($patient_return != false)) && ($user_return != null) || ($user_return != false)  ) {
-
-            
-
-            $this->flash->addMessage('success', 'Paciente atualizado com sucesso.');
-            return $this->httpRedirect($request, $response, '/admin/patients');
-        }
-
-
     }
 
     public function verifyUserByEmail (Request $request, Response $response) {

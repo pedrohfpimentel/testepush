@@ -74,11 +74,14 @@ class AttendanceModel extends Model
     {
         $sql = "
             SELECT
-                *
+                attendances.*,
+                attendance_status.id as id_status,
+                attendance_status.name as name_status
             FROM
                 attendances
+                LEFT JOIN attendance_status ON attendance_status.id = attendances.status
             ORDER BY
-                attendance_day
+                attendance_day DESC
             LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
