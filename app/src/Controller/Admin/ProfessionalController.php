@@ -156,13 +156,14 @@ class ProfessionalController extends Controller
         $professional = $this->professionalModel->get($id);
 
         $event_logs = $this->eventLogModel->getByProfessional($id);
-
+         //var_dump($event_logs);
+            //die;
         foreach ($event_logs as $event_log) {
-            //var_dump($event_log);
-           // die;
+           //var_dump($event_log);
+
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
         }
-
+   
         return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,'event_logs' => $event_logs]);
     }
 

@@ -128,7 +128,7 @@ $('#selectStatus').on('change', function() {
   var status = $('#selectStatus').val();
   console.log (status);
 
-  $('#submitStatus').attr('href', `{{ base_url }}/admin/attendances/edit/{{ attendance.id }}?attendance_status=${status}`)
+  $('#submitStatus').attr('href', `{{ base_url }}/admin/attendances/edit/{{ attendance.id }}?attendance_status=${status}&id_patient={{ attendance.id_patient }}&id_professional={{ attendance.id_professional }}`)
 
 });
 

@@ -122,7 +122,7 @@ class AttendanceController extends Controller
         $data = $request->getParsedBody();  
 
         $attendance = $this->entityFactory->createAttendance($data);
-          //var_dump($attendance);
+          //var_dump($data);
         //die;
 
         $id_attendance = $this->attendanceModel->add($attendance);
@@ -135,7 +135,7 @@ class AttendanceController extends Controller
             $eventLog['id_professional']    = $attendance->id_professional;
             $eventLog['status']         = $attendance->status;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance')->id;
-            $eventLog['description'] = $attendance->description;
+            $eventLog['description'] = $attendance->status;
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
@@ -164,26 +164,17 @@ class AttendanceController extends Controller
 
     public function edit(Request $request, Response $response, array $args): Response
     {
-
-        if (empty($request->getParsedBody())) {
-            //$attendance_status = $this->attendanceStatusModel->getAll();
-           // var_dump($attendance_status);
-           // die;
-        }
-
-
+        //var_dump($args);
+       // var_dump($request->getQueryParams());
+        //die;
         $data['id'] = $args['id'];
         $data['status'] = (int) $request->getQueryParams()['attendance_status'];
-
+        $data['id_patient'] = (int) $request->getQueryParams()['id_patient'];
+        $data['id_professional'] = (int) $request->getQueryParams()['id_professional'];
+             
         $attendance_status = $this->attendanceStatusModel->get($data['status']);
-
         $attendance = $this->entityFactory->createAttendance($data);
-       
-      
         $attendance_return = $this->attendanceModel->updateStatus($attendance);
-
-    
-
        // $eventLog = $this->entityFactory->createEventLog($eventLog);
 
           //  $this->eventLogModel->add($eventLog);
@@ -193,17 +184,14 @@ class AttendanceController extends Controller
         {
 
 
-            //$eventLog['id_patient']         = $attendance->id_patient;
+            $eventLog['status']             = $attendance->status;
+            $eventLog['id_patient']         = $attendance->id_patient;
+            $eventLog['id_professional']    = $attendance->id_professional;
             
-            //$eventLog['id_professional']    = $attendance->id_professional;
-            $eventLog['status']         = $attendance->status;
-
-            
-             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance_edit')->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance_edit')->id;
              
             $eventLog['description'] = 'Status do atendimento alterado para: ' . $attendance_status->name;
-         // var_dump($attendance_status->name);
-            //die;
+          
 
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
