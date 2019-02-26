@@ -96,12 +96,15 @@ class RemessaController extends Controller
       //var_dump($remessa_type);
       //die;
       foreach ($remessa as $remessas) {
-       // var_dump($remessas);
-        //die;
-            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
-            //var_dump($remessas);
-            //die;
-            // $remessas->product_name = $this->productsModel->get((int)$remessas->id_product)->name;
+       
+
+          if (($remessas->suppliers != NULL ) ||  ($remessas->suppliers != 0 ))
+          {
+
+              $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+
+          }
+            
             $remType = (int)$remessas->remessa_type;
             if ($remType == 6) {
               $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name; 
@@ -203,7 +206,7 @@ class RemessaController extends Controller
 
       $remessa = $request->getParsedBody();
        
-      $remessa['suppliers'] = (int) $remessa['suppliers'];
+      $remessa['suppliers'] =  (int) $remessa['suppliers'];
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['quantity'] = (int) $remessa['quantity'];
@@ -225,6 +228,10 @@ class RemessaController extends Controller
       if ( ($remessa->remessa_type == 1) || ($remessa->remessa_type == 2)) {
         $idRemessa = $this->remessaModel->update($remessa);
       } else if ($remessa->remessa_type == 6) {
+        
+          $remessa->suppliers =  NULL;
+          //var_dump($remessa);
+        //die;
         $idRemessa = $this->remessaModel->updatePatient($remessa);
       }
       
