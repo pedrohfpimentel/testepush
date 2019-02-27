@@ -243,17 +243,21 @@ class RemessaController extends Controller
             $eventLog['id_remessa'] = $idRemessa;
 
             if ($remessa->remessa_type == 1){
-               $eventlog['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+               $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
                $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
                //$eventLog['id_products'] = $remessa->id_product;
-               $eventlog['supplier'] = $remessa->suppliers;
+               $eventLog['supplier'] = $remessa->suppliers;
+
+
+
                $eventLog = $this->entityFactory->createEventLog($eventLog);
+             
                $this->eventLogModel->add($eventLog);
           } elseif 
                  ($remessa->remessa_type == 2){
-                 $eventlog['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+                 $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
                  $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';

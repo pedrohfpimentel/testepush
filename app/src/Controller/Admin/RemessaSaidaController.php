@@ -157,7 +157,7 @@ class RemessaSaidaController extends Controller
         if (empty($request->getParsedBody())) {
           // get products to autocomplete
           $products = $this->productsModel->getAll();
-         
+          $patients = $this->patientModel->getAll();
 
           $this->remessaModel->deleteByRemessaType();
 
@@ -217,19 +217,32 @@ class RemessaSaidaController extends Controller
          
             $eventLog['id_remessa'] = $idRemessa;
 
-            if ($remessa->remessa_type == 1){
-               $eventlog['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+            if ($remessa->remessa_type == 4){
+               $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
-               $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+               $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_doacao')->id;
                $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
                //$eventLog['id_products'] = $remessa->id_product;
                $eventLog = $this->entityFactory->createEventLog($eventLog);
                $this->eventLogModel->add($eventLog);
           } elseif 
-                 ($remessa->remessa_type == 2){
-                 $eventlog['id_remessa_type'] = (int) $eventlog['id_remessa_type'];
+                 ($remessa->remessa_type == 5){
 
-                 $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
+
+                 $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+
+                 $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_emprestimo')->id;
+                 $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
+                 //$eventLog['id_products'] = $remessa->id_product;
+                 $eventLog = $this->entityFactory->createEventLog($eventLog);
+                 $this->eventLogModel->add($eventLog);
+          }elseif 
+                 ($remessa->remessa_type == 6){
+
+                  
+                 $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+
+                 $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_devolucao')->id;
                  $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
                  //$eventLog['id_products'] = $remessa->id_product;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
