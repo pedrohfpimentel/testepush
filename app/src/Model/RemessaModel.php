@@ -269,6 +269,13 @@ class RemessaModel extends Model
                 *
             FROM
                 remessa
+                LEFT JOIN remessa_type ON remessa.remessa_type = remessa_type.id
+            WHERE 
+                remessa.remessa_type =  ?
+                AND (remessa.date BETWEEN ? AND ?)
+                ORDER BY
+                remessa.id ASC
+            LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $type, \PDO::PARAM_INT);

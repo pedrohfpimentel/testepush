@@ -332,6 +332,13 @@ class RemessaController extends Controller
           }
         } else {
             $remessa = $this->remessaModel->getAllByStatus($remessa_type, $remessa_start, $remessa_finish);
+            foreach ($remessa as $remessas) {
+            $remessas->date = date("d/m/Y", strtotime($remessas->date));
+            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name; 
+              //$remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+            }
+           // var_dump($remessa);
+            //die;
         }
 
         //var_dump($remessa);
