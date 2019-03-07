@@ -222,16 +222,33 @@ class RemessaController extends Controller
       }
 
       $remessa = $this->entityFactory->createRemessa($remessa);
-      //var_dump($remessa);
+     //var_dump($remessa);
       //die;
 
       if ( ($remessa->remessa_type == 1) || ($remessa->remessa_type == 2)) {
+                  $eventLog['id_remessa'] = $remessa->id;
+                  $eventLog['suppliers'] =  $remessa->suppliers;
+                  $eventLog['id_patient'] = $remessa->patient_id;
         $idRemessa = $this->remessaModel->update($remessa);
       } else if ($remessa->remessa_type == 6) {
-        
+          
           $remessa->suppliers =  NULL;
-          //var_dump($remessa);
-        //die;
+                  $eventLog['id_remessa'] = $remessa->id;
+                  $eventLog['suppliers'] =  $remessa->suppliers;
+                  $eventLog['id_patient'] = $remessa->patient_id;
+
+                 
+                  $remessa_type = $this->remessaTypeModel->get(6);
+
+                 $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+
+                 $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('devolution')->id;
+                 $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
+                 //$eventLog['id_products'] = $remessa->id_product;
+                 $eventLog = $this->entityFactory->createEventLog($eventLog);
+                 $this->eventLogModel->add($eventLog);
+
+          
         $idRemessa = $this->remessaModel->updatePatient($remessa);
       }
       
@@ -240,32 +257,43 @@ class RemessaController extends Controller
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
          
-            $eventLog['id_remessa'] = $idRemessa;
+           
+
+            //var_dump($eventLog);
+            
 
             if ($remessa->remessa_type == 1){
+               $remessa_type = $this->remessaTypeModel->get(1);
                $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-
+               //$eventLog['suppliers'] = $remessa->suppliers;
+              // $eventLog['patient_id'] = $remessa->patient_id;
                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
-               $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
+               $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
                //$eventLog['id_products'] = $remessa->id_product;
-               $eventLog['supplier'] = $remessa->suppliers;
+               
+               //var_dump($remessa_type);
 
-
+              
 
                $eventLog = $this->entityFactory->createEventLog($eventLog);
-             
+                 //var_dump($eventLog);
+
                $this->eventLogModel->add($eventLog);
+                 //die;
+                
           } elseif 
                  ($remessa->remessa_type == 2){
+                  $remessa_type = $this->remessaTypeModel->get(2);
                  $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
-                 $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
+                 $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
                  //$eventLog['id_products'] = $remessa->id_product;
                  $eventLog['supplier'] = $remessa->suppliers;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);
           }
+
         }
         
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
@@ -286,33 +314,80 @@ class RemessaController extends Controller
         if ($remessa_start == "") {
             $remessa_start = "2000-01-01";
         }
-
         //var_dump($params);
-        //die;
-        
+        //die;   
         $remessa_finish =  $params['remessa_finish'];
-
+      
         if ($remessa_type == 0) {
-
+        
             $remessa = $this->remessaModel->getAllByDate($remessa_start, $remessa_finish);
-
+              
+            foreach ($remessa as $remessas) {
+            //$remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+            $remessas->date = date("d/m/Y", strtotime($remessas->date));
+            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+            
+            //var_dump($remessas);
+            //die;
+          }
         } else {
-            $remessa = $this->remessaModel->getAllByType($remessa_type, $remessa_start, $remessa_finish);
+            $remessa = $this->remessaModel->getAllByStatus($remessa_type, $remessa_start, $remessa_finish);
         }
 
+        //var_dump($remessa);
+        //die;
 
       $html = "
-           
-        ";
-        foreach ($remessa as $remessas) {
-           // var_dump($remessa->name);
-            //die;
+           <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Entrada Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
             
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
             
-            
+                <tr>
+                    <th style='width: 30%; text-align:left;'>Fornecedor/ Paciente</th>
+                    <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
+                    <th style='width: 20%; text-align:left;'>Data</th>
+                </tr>
+        ";  
+
+        
+            foreach ($remessa as $remessas) {   
+
+            if ($remessas->remessa_type == 6) { 
+              $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+              //var_dump($remessas);
+              //die;
             $html .= "
+             <tr>
+                <td style='width: 30%;'>$remessas->patient_name</td>
+                <td style='width: 30%;'>$remessas->remessa_type_name</td>
+                <td style='width: 20%;'>$remessas->date</td>
+                </tr>
                ";
+             }
+
+             else if (($remessas->remessa_type == 1) || ($remessas->remessa_type == 2) || ($remessas->remessa_type == 3)) { 
+              $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+              //var_dump($remessas);
+              //die;
+            $html .= "
+             <tr>
+                <td style='width: 30%;'>$remessas->suppliers_name</td>
+                <td style='width: 30%;'>$remessas->remessa_type_name</td>
+                <td style='width: 20%;'>$remessas->date</td>
+                </tr>
+               ";
+             }
         }
+      
     
     $html .= "</table> </div>";
     try {

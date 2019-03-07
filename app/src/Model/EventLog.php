@@ -6,6 +6,7 @@ class EventLog
     public $id;
     public $event_log_type;
     public $id_patient;
+    public $suppliers;
     public $id_professional;
     public $id_products;
     public $id_remessa;
@@ -25,6 +26,7 @@ class EventLog
         $this->description         = $data['description'] ?? null;
         $this->quantity            = $data['quantity'] ?? null;
         $this->id_patient          = $data['id_patient'] ?? null;
+        $this->suppliers         = $data['suppliers'] ?? null;
         $this->id_products         = $data['id_products'] ?? null;
         $this->id_professional     = $data['id_professional'] ?? null;
         $this->id_remessa          = $data['id_remessa'] ?? null;

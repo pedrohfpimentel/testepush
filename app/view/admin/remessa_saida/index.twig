@@ -14,7 +14,7 @@
   <div class="row">
       <div class="col-xs-12 col-sm-3">
         <a class="btn btn-success" href="{{ base_url() }}/admin/remessa_saida/add">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nova Remessa de Saída
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nova Remessa
         </a>
       </div>
       <div class="col-sm-9">
@@ -37,19 +37,19 @@
             </div>
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="remessa_saida_date">Data Inicial</label>
-                <input id="remessa_saida_start" class="form-control" type="date" name="remessa_saida_start" required>
+                <label for="remessa_date">Data Inicial</label>
+                <input id="remessa_start" class="form-control" type="date" name="remessa_start" required>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="form-group">
-                <label for="remessa_saida_date">Data Final</label>
-                <input id="remessa_saida_finish" class="form-control" type="date" name="remessa_saida_finish" value="{{ today }}"  required>
+                <label for="remessa_date">Data Final</label>
+                <input id="remessa_finish" class="form-control" type="date" name="remessa_finish" value="{{ today }}"  required>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group">
-                <a class="btn btn-default" id="remessa_saida_download" name="remessa_saida_download"  href="{{ base_url() }}/admin/remessa_saida/export" target="_blank">
+                <a class="btn btn-default" id="remessa_download" name="remessa_download"  href="{{ base_url() }}/admin/remessa_saida/export" target="_blank">
                   <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
                   Relatório
                 </a>
@@ -77,8 +77,8 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Paciente</th>
-                <th>Tipo de Saída</th>
+                <th>Fornecedor/Paciente</th>
+                <th>Tipo de Entrada</th>
                 <th>Data</th>
                 
                 <th class="th-button"></th>
@@ -92,9 +92,17 @@
               {% for remessas in remessa %}
                 <tr>
                   <td>{{ remessas.id }}</td>
-                  <td>{{ remessas.patient_name }}</td>
+                  <td>
+                    {% if remessas.remessa_type == 4 %} 
+                      {{remessas.patient_name }}
+                    {% endif %} 
+                    {% if remessas.remessa_type == 5 %} 
+                      {{remessas.patient_name }}
+                    {% endif %} 
+                    
+                  </td>
                   <td>{{ remessas.remessa_type_name }}</td>
-                  <td>{{ remessas.date }}</td>
+                  <td>{{ remessas.date}} </td>
                   
                  {# <td style="width:100px"><a class="btn btn-info" href="{{ base_url() }}/admin/remessa/history/{{ remessa.id }}">
                     Histórico
@@ -141,7 +149,7 @@
        var remessa_type = $('#remessa_type').val();
        
           console.log($('#remessa_download').attr('href'));
-          $("#remessa_download").attr('href',   base_url_hidden +'/admin/remessa/export?remessa_start=' + remessa_start + '&remessa_finish=' + remessa_finish + '&remessa_type=' + remessa_type);
+          $("#remessa_download").attr('href',   base_url_hidden +'/admin/remessa_saida/export?remessa_start=' + remessa_start + '&remessa_finish=' + remessa_finish + '&remessa_type=' + remessa_type);
 });
         </script>
 {% endblock %}

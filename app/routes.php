@@ -125,6 +125,8 @@ $app->group('/admin', function () {
 
     $this->group('/remessa', function () {
         $this->get('[/]', RemessaAdmin::class . ':index');
+        $this->get('/export', RemessaAdmin::class . ':export');
+        $this->get('/export_history', RemessaAdmin::class . ':export_history');
         $this->get('/consulta_produto', RemessaAdmin::class . ':consulta_produto'); 
         $this->get('/consulta_suppliers', RemessaAdmin::class . ':consulta_suppliers'); 
         $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
@@ -132,6 +134,8 @@ $app->group('/admin', function () {
 
     $this->group('/remessa_saida', function () {
         $this->get('[/]', RemessaSaidaAdmin::class . ':index');
+        $this->get('/export', RemessaSaidaAdmin::class . ':export');
+        $this->get('/export_history', RemessaSaidaAdmin::class . ':export_history');
         $this->get('/consulta_produto', RemessaSaidaAdmin::class . ':consulta_produto'); 
         $this->get('/consulta_suppliers', RemessaSaidaAdmin::class . ':consulta_suppliers'); 
         $this->map(['GET', 'POST'], '/add', RemessaSaidaAdmin::class . ':add');

@@ -172,18 +172,18 @@ class RemessaModel extends Model
 
     public function getAllByDate(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
-        $sql = "
-        SELECT
-            event_logs.date,
-            remessa.*
-        FROM
-            remessa,
-            event_logs
+          $sql = "
+            SELECT
+                *
+            FROM
+                remessa
+        
+            
         
         WHERE 
-           event_logs.date BETWEEN :remessa_start AND :remessa_finish
+           remessa.date BETWEEN ? AND ?
 
-        
+        LIMIT ? , ?
     ";
     $query = $this->db->prepare($sql);
     $query->bindValue(1, $start, \PDO::PARAM_STR);
@@ -257,6 +257,35 @@ class RemessaModel extends Model
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetchAll();
     }
+
+
+
+    public function getAllByStatus( int $type = 1, string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+
+    {
+        $sql = "
+            
+            SELECT
+                *
+            FROM
+                remessa
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $type, \PDO::PARAM_INT);
+        $query->bindValue(2, $start, \PDO::PARAM_STR);
+        $query->bindValue(3, $finish, \PDO::PARAM_STR);
+        $query->bindValue(4, $offset, \PDO::PARAM_INT);
+        $query->bindValue(5, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
+        return $query->fetchAll();
+
+
+
+    }
+
+
+   
 
     public function update(Remessa $remessa): bool
     {

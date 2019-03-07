@@ -17,6 +17,7 @@ class EventLogModel extends Model
                 time,
                 description,
                 id_patient,
+                suppliers,
                 id_products,
                 id_professional,
                 id_remessa,
@@ -28,6 +29,7 @@ class EventLogModel extends Model
                 :time,
                 :description,
                 :id_patient,
+                :suppliers,
                 :id_products,
                 :id_professional,
                 :id_remessa,
@@ -41,6 +43,7 @@ class EventLogModel extends Model
             ':time'                 => $eventLog->time,
             ':description'          => $eventLog->description,
             ':id_patient'           => $eventLog->id_patient,
+            ':suppliers'          => $eventLog->suppliers,
             ':id_products'          => $eventLog->id_products,
             ':id_professional'      => $eventLog->id_professional,
             ':id_remessa'           => $eventLog->id_remessa,
@@ -106,6 +109,7 @@ class EventLogModel extends Model
                 event_logs.id as id,
                 event_logs.event_log_type,
                 event_logs.id_patient,
+                event_logs.suppliers,
                 event_logs.id_products,
                 event_logs.id_professional,
                 event_logs.id_remessa,
@@ -126,9 +130,11 @@ class EventLogModel extends Model
                 event_logs
                 LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN patients ON patients.id = event_logs.id_patient
+                LEFT JOIN suppliers ON suppliers.id = event_logs.suppliers
                 LEFT JOIN users ON patients.id_user = users.id
             WHERE
-                id_patient = :id
+                id_patient = :id,
+                suppliers = :id
 
         ";
         
@@ -148,6 +154,7 @@ class EventLogModel extends Model
                 event_logs.id as id,
                 event_logs.event_log_type,
                 event_logs.id_patient,
+                event_logs.suppliers,
                 event_logs.id_products,
                 event_logs.id_professional,
                 event_logs.id_remessa,
@@ -188,6 +195,7 @@ class EventLogModel extends Model
                 event_logs.id as id,
                 event_logs.event_log_type,
                 event_logs.id_patient,
+                event_logs.suppliers,
                 event_logs.id_professional,
                 event_logs.id_remessa,
                 event_logs.id_remessa_saida,
@@ -226,6 +234,7 @@ class EventLogModel extends Model
                 event_logs.id as id,
                 event_logs.event_log_type,
                 event_logs.id_patient,
+                event_logs.suppliers,
                 event_logs.id_products,
                 event_logs.id_professional,
                 event_logs.id_remessa,
@@ -266,6 +275,7 @@ class EventLogModel extends Model
                 event_logs.id as id,
                 event_logs.event_log_type,
                 event_logs.id_patient,
+                event_logs.suppliers,
                 event_logs.id_products,
                 event_logs.id_professional,
                 event_logs.id_remessa,
@@ -311,6 +321,7 @@ class EventLogModel extends Model
                 description         = :description,
                
                 id_patient          = :id_patient,
+                suppliers         = :suppliers,
                 id_products         = :id_products,
                 id_professional     = :id_professional,
                 id_remessa          = :id_remessa,
@@ -326,6 +337,7 @@ class EventLogModel extends Model
             ':description'      => $eventLog->description,
             
             ':id_patient'       => $eventLog->id_patient,
+            ':suppliers'      => $eventLog->suppliers,
             ':id_products'      => $eventLog->id_products,
             ':id_professional'  => $eventLog->id_professional,
             ':id_remessa'       => $eventLog->id_remessa,

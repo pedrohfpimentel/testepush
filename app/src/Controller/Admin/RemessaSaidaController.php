@@ -215,35 +215,41 @@ class RemessaSaidaController extends Controller
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
          
-            $eventLog['id_remessa'] = $idRemessa;
+            $eventLog['id_remessa'] = $remessa->id;
+            $eventLog['suppliers'] =  $remessa->suppliers;
+            $eventLog['id_patient'] = $remessa->patient_id;
 
             if ($remessa->remessa_type == 4){
+               $remessa_type = $this->remessaTypeModel->get(4);
                $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_doacao')->id;
-               $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
+               $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
                //$eventLog['id_products'] = $remessa->id_product;
                $eventLog = $this->entityFactory->createEventLog($eventLog);
+    
+
                $this->eventLogModel->add($eventLog);
+
           } elseif 
                  ($remessa->remessa_type == 5){
-
+                   $remessa_type = $this->remessaTypeModel->get(5);
 
                  $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_emprestimo')->id;
-                 $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
+                 $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
                  //$eventLog['id_products'] = $remessa->id_product;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);
           }elseif 
                  ($remessa->remessa_type == 6){
 
-                  
+                 $remessa_type = $this->remessaTypeModel->get(5);  
                  $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_devolucao')->id;
-                 $eventLog['description'] = 'Remessa ' . $remessa->name .' cadastrado(a)';
+                 $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
                  //$eventLog['id_products'] = $remessa->id_product;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);
@@ -255,6 +261,101 @@ class RemessaSaidaController extends Controller
       return $this->httpRedirect($request, $response, '/admin/remessa_saida');
 
     }
+
+
+
+
+    //download
+    public function export(Request $request, Response $response)
+    {
+
+        $params = $request->getQueryParams();
+
+        $remessa_type =  (int)$params['remessa_type'];
+         
+
+        $remessa_start =   $params['remessa_start'];
+        if ($remessa_start == "") {
+            $remessa_start = "2000-01-01";
+        }
+        //var_dump($params);
+        //die;   
+        $remessa_finish =  $params['remessa_finish'];
+      
+        if ($remessa_type == 0) {
+            
+            $remessa = $this->remessaModel->getAllByDate($remessa_start, $remessa_finish);
+
+            foreach ($remessa as $remessas) {
+            //$remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+            //$remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+             
+            $remessas->date = date("d/m/Y", strtotime($remessas->date));
+            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+            
+            //var_dump($remessas);
+          //die;
+          }
+        } else {
+            $remessa = $this->remessaModel->getAllByType($remessa_type, $remessa_start, $remessa_finish);
+        }
+        //var_dump($remessa);
+       // die;
+
+
+      $html = "
+           <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Saída Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+            
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+                <tr>
+                    <th style='width: 30%; text-align:left;'>Paciente</th>
+                    <th style='width: 30%; text-align:left;'>Tipo de Saída</th>
+                    <th style='width: 20%; text-align:left;'>Data</th>
+                </tr>
+        ";
+        foreach ($remessa as $remessas) {
+            if (($remessas->remessa_type == 4) || ($remessas->remessa_type == 5)) {
+              $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+            $html .= "
+             <tr>
+                <td style='width: 30%;'>$remessas->patient_name</td>
+                <td style='width: 30%;'>$remessas->remessa_type_name</td>
+                <td style='width: 20%;'>$remessas->date</td>
+                </tr>
+               ";
+             }
+        }
+    
+    $html .= "</table> </div>";
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->setFooter('{PAGENO}');
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;        
+    }
+
+
+
+
+
+
 
     public function consulta_produto(Request $request, Response $response): Response
     {
