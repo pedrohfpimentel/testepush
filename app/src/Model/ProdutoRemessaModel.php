@@ -104,6 +104,30 @@ class ProdutoRemessaModel extends Model
     }
 
 
+
+    public function getAllByProduct(int $id_product, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+            SELECT
+                *
+            FROM
+                produto_remessa
+            WHERE 
+                id_product = ?
+            ORDER BY
+                id
+            LIMIT ? , ?
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $id_product, \PDO::PARAM_INT);
+        $query->bindValue(2, $offset, \PDO::PARAM_INT);
+        $query->bindValue(3, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, ProdutoRemessa::class);
+        return $query->fetchAll();
+    }
+
+
      public function getAmount()
     {  
     }

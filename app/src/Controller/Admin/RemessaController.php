@@ -213,7 +213,8 @@ class RemessaController extends Controller
       $remessa['cost'] = (float) $remessa['cost'];
       $remessa['id'] = (int) $remessa['remessa_id'];
       $remessa['patient_id'] = (int) $remessa['patient_id'];
-     
+     //var_dump($remessa);
+     //die;
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
 
       if (count($products_remessa) < 1 ) {
