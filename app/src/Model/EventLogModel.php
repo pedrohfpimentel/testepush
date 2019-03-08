@@ -130,20 +130,17 @@ class EventLogModel extends Model
                 event_logs
                 LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN patients ON patients.id = event_logs.id_patient
-                LEFT JOIN suppliers ON suppliers.id = event_logs.suppliers
+                
                 LEFT JOIN users ON patients.id_user = users.id
             WHERE
-                id_patient = ?,
-                event_logs.suppliers = ?
-           
+                id_patient = :id
+              
 
         ";
         
         $query = $this->db->prepare($sql);
-        
-        $query->bindValue(1, $id, \PDO::PARAM_INT);
-        $query->bindValue(2, $id, \PDO::PARAM_INT);
-        $query->execute();
+        $parameters = [':id' => $id];
+        $query->execute($parameters);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
         return $query->fetchAll();
     }
