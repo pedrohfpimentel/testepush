@@ -419,9 +419,14 @@ class ProductsController extends Controller
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
 
-
+        // retorna todos os eventlogs que tenham produc_id  
         $event_logs = $this->eventLogModel->getByProducts($id);
-        
+
+        //$event_logs_product_list = $this->eventLogModel->getAllByProductList($id);
+
+        //var_dump($event_logs);
+        //die;
+
         foreach ($event_logs as $event_log) {
             //var_dump($event_log);
            // die;
