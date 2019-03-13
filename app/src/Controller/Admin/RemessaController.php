@@ -65,7 +65,8 @@ class RemessaController extends Controller
 
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
-     
+     //var_dump($remessaTypes);
+     //die;
           
           $temp['suppliers'] = 0;
           $temp['quantity'] = 0;
@@ -182,7 +183,8 @@ class RemessaController extends Controller
           $remessaTypes[] = $this->remessaTypeModel->get(2);
           $remessaTypes[] = $this->remessaTypeModel->get(6);
 
-          
+          //var_dump($remessaTypes);
+          //die;
           $temp['id_products'] = 0;
           $temp['quantity'] = 0;
           $temp['cost'] = 0;

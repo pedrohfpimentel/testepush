@@ -24,6 +24,7 @@ class ProductsController extends Controller
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
+    protected $produtoRemessaModel;
 
     public function __construct( View $view, FlashMessages $flash,
         Model $productsModel,
@@ -34,6 +35,7 @@ class ProductsController extends Controller
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
+        Model $produtoRemessaModel,
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
@@ -45,6 +47,7 @@ class ProductsController extends Controller
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
+        $this->produtoRemessaModel  = $produtoRemessaModel;
         $this->entityFactory        = $entityFactory;
     }
 
@@ -64,7 +67,8 @@ class ProductsController extends Controller
         $products = $this->productsModel->getAll($offset, $limit);
         // remessa types
         $remessaTypes = $this->remessaTypeModel->getAll();
-
+        //var_dump($remessaTypes);
+        //die;
         $amountProducts = $this->productsModel->getAmount();
         $amountPages = ceil($amountProducts->amount / $limit);
 
@@ -131,15 +135,15 @@ class ProductsController extends Controller
         // if que verifica se deve renderizar a tela de cadastro.
         if (empty($request->getParsedBody())) {
             $products_type = $this->productsTypeModel->getAll();
+            $remessaTypes = $this->remessaTypeModel->getAll();
             $id_supplier = $this->supplierModel->getAll();
-
-            $this->remessaModel->deleteByRemessaType();
 
             $remessaTypes[] = $this->remessaTypeModel->get(1);
             $remessaTypes[] = $this->remessaTypeModel->get(2);
             $remessaTypes[] = $this->remessaTypeModel->get(3);
             $remessaTypes[] = $this->remessaTypeModel->get(6);
-
+            var_dump($remessaTypes);
+            die;
             $patrimony = 1;
 
             return $this->view->render($response, 'admin/products/add.twig', 
@@ -151,6 +155,8 @@ class ProductsController extends Controller
                     //'patrimony_code' => $patrimony_code
                 ]);
         }
+
+   
 
         // A partir desta linha, segue a lógica para o cadastro do produto.
 
@@ -197,14 +203,6 @@ class ProductsController extends Controller
         $remessa = $request->getParsedBody();
             
         if ($remessa['isRemessaInicial'] == 'true') {
-
-
-            $temp['id_products'] = 0;
-            $temp['quantity'] = 0;
-            $temp['cost'] = 0;
-            $temp['remessa_type'] = 99;
-
-
             $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
             //$remessa['id_product'] = (int) $remessa['id_product'];
             $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
@@ -228,8 +226,8 @@ class ProductsController extends Controller
 
             $lista_produtos =  json_encode($lista_produtos);
            
-        //var_dump($remessa);
-        //die;
+        var_dump($remessa);
+        die;
 
         if (count($products_remessa) < 1 ) {
         $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');

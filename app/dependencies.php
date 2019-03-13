@@ -179,6 +179,7 @@ $container['Farol360\Ancora\Controller\Admin\ProductsController'] = function ($c
         $c['flash'],
         new Farol360\Ancora\Model\ProductsModel($c['db']),
         new Farol360\Ancora\Model\ProductsTypeModel($c['db']),
+        new Farol360\Ancora\Model\ProdutoRemessaModel($c['db']),
         new Farol360\Ancora\Model\RemessaModel($c['db']),
         new Farol360\Ancora\Model\RemessaTypeModel($c['db']),
         new Farol360\Ancora\Model\SupplierModel($c['db']),
