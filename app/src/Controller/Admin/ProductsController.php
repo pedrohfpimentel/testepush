@@ -18,36 +18,39 @@ class ProductsController extends Controller
 
     protected $productsModel;
     protected $productsTypeModel;
+    protected $produtoRemessaModel;
     protected $remessaModel;
     protected $remessaTypeModel;
     protected $supplierModel;
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
-    protected $produtoRemessaModel;
+    
 
     public function __construct( View $view, FlashMessages $flash,
         Model $productsModel,
         Model $productsTypeModel,
+        Model $produtoRemessaModel,
         Model $remessaModel,
         Model $remessaTypeModel,
         Model $supplierModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
-        Model $produtoRemessaModel,
+        
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
         $this->productsModel        = $productsModel;
         $this->productsTypeModel    = $productsTypeModel;
+        $this->produtoRemessaModel  = $produtoRemessaModel;
         $this->remessaModel         = $remessaModel;
         $this->remessaTypeModel     = $remessaTypeModel;
         $this->supplierModel        = $supplierModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
-        $this->produtoRemessaModel  = $produtoRemessaModel;
+        
         $this->entityFactory        = $entityFactory;
     }
 
@@ -67,8 +70,7 @@ class ProductsController extends Controller
         $products = $this->productsModel->getAll($offset, $limit);
         // remessa types
         $remessaTypes = $this->remessaTypeModel->getAll();
-        //var_dump($remessaTypes);
-        //die;
+
         $amountProducts = $this->productsModel->getAmount();
         $amountPages = ceil($amountProducts->amount / $limit);
 
@@ -135,15 +137,14 @@ class ProductsController extends Controller
         // if que verifica se deve renderizar a tela de cadastro.
         if (empty($request->getParsedBody())) {
             $products_type = $this->productsTypeModel->getAll();
-            $remessaTypes = $this->remessaTypeModel->getAll();
+            //$remessaTypes = $this->remessaTypeModel->getAll();
             $id_supplier = $this->supplierModel->getAll();
 
             $remessaTypes[] = $this->remessaTypeModel->get(1);
             $remessaTypes[] = $this->remessaTypeModel->get(2);
             $remessaTypes[] = $this->remessaTypeModel->get(3);
             $remessaTypes[] = $this->remessaTypeModel->get(6);
-            var_dump($remessaTypes);
-            die;
+
             $patrimony = 1;
 
             return $this->view->render($response, 'admin/products/add.twig', 
