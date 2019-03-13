@@ -38,6 +38,7 @@
             <th>Data</th>
             <th>Tipo</th>
             <th>Descrição</th>
+            <th>Fornecedor/ Paciente</th>
           </thead>
           <tbody>
             {% for event_log in event_logs %}
@@ -45,6 +46,7 @@
                 <td>{{ event_log.date }}</td>
                 <td>{{ event_log.event_log_types_name }}</td>
                 <td>{{ event_log.description }}</td>
+                <td>{{ event_log.suppliers }}</td>
               </tr>
             {% else %}
               <div class="alert alert-danger" role="alert">Não foram encontrados eventos para este produto.</div>

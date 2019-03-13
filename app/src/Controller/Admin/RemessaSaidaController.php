@@ -176,7 +176,6 @@ class RemessaSaidaController extends Controller
           
           $id_remessa = $this->remessaModel->add($temp);
 
-
           //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
          // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
           return $this->view->render($response, 'admin/remessa_saida/add.twig',
@@ -200,6 +199,12 @@ class RemessaSaidaController extends Controller
 
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
 
+
+      $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa['id']);
+
+      $lista_produtos =  json_encode($lista_produtos);
+
+
       if (count($products_remessa) < 1 ) {
         $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');
         return $this->httpRedirect($request, $response, '/admin/remessa_saida/add');
@@ -214,6 +219,8 @@ class RemessaSaidaController extends Controller
 
       // aqui trabalhar eventlog
         if ( ($idRemessa != null) || ($idRemessa != false) ) {
+
+            $eventLog['product_list'] = $lista_produtos;
          
             $eventLog['id_remessa'] = $remessa->id;
             $eventLog['suppliers'] =  $remessa->suppliers;
@@ -224,13 +231,14 @@ class RemessaSaidaController extends Controller
                $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_doacao')->id;
-               $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
+               $eventLog['description'] = 'Remessa cadastrada';
                //$eventLog['id_products'] = $remessa->id_product;
                $eventLog = $this->entityFactory->createEventLog($eventLog);
-    
+              //var_dump($eventLog);
+              //die;
 
                $this->eventLogModel->add($eventLog);
-
+               //die;
           } elseif 
                  ($remessa->remessa_type == 5){
                    $remessa_type = $this->remessaTypeModel->get(5);
@@ -238,7 +246,7 @@ class RemessaSaidaController extends Controller
                  $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
 
                  $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_emprestimo')->id;
-                 $eventLog['description'] = 'Remessa ' . $remessa_type->name .' cadastrado(a)';
+                 $eventLog['description'] = 'Remessa cadastrada';
                  //$eventLog['id_products'] = $remessa->id_product;
                  $eventLog = $this->entityFactory->createEventLog($eventLog);
                  $this->eventLogModel->add($eventLog);

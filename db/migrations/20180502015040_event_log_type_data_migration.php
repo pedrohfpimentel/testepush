@@ -79,7 +79,7 @@ class EventLogTypeDataMigration extends AbstractMigration
             [
                 'id' => 9,
                 'slug' => 'devolution',
-                'name' => 'Doação Recebida',
+                'name' => 'Devolução Recebida',
                 'description' => 'Evento de Devolução.'
             ],
             [
@@ -103,8 +103,8 @@ class EventLogTypeDataMigration extends AbstractMigration
              [
                 'id' => 13,
                 'slug' => 'remessa_entrada_compra',
-                'name' => 'Recebimento de Doação',
-                'description' => 'Recebimento de doação de itens diversos.'
+                'name' => 'Compra de Item',
+                'description' => 'Compra de itens diversos.'
             ],
             [
                 'id' => 14,
@@ -116,14 +116,14 @@ class EventLogTypeDataMigration extends AbstractMigration
             [
                 'id' => 15,
                 'slug' => 'saida_doacao',
-                'name' => 'Saida por doação do item',
+                'name' => 'Saída por doação de item',
                 'description' => 'Doação do item.'
             ],
 
             [
                 'id' => 16,
                 'slug' => 'saida_emprestimo',
-                'name' => 'Saida por empréstimo do item',
+                'name' => 'Saída por empréstimo de item',
                 'description' => 'Empréstimo do item.'
             ],
 
