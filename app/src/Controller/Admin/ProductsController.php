@@ -167,9 +167,10 @@ class ProductsController extends Controller
         $products['remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
+
         
       //  if (isset($products['patrimony'])) {
-        //var_dump($products);
+       // var_dump($products);
 
         //$lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($products['id']);
         
@@ -198,42 +199,60 @@ class ProductsController extends Controller
         // 2 - CADASTRO DO PRODUTO
         $idProduct = $this->productsModel->add($products);
 
-        //var_dump($products);
-
+      // var_dump($products);
+    //var_dump($idProduct);
+    //die;
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
-            
+           
+           
         if ($remessa['isRemessaInicial'] == 'true') {
             $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
-            //$remessa['id_product'] = (int) $remessa['id_product'];
             $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
-            $remessa['quantity'] = (int) $remessa['quantity'];
-            $remessa['cost'] =  $remessa['cost'];
-            $remessa['id_product'] = $idProduct;
+            $remessa['id_product'] = (int) $idProduct;
             $remessa['suppliers'] =  (int) $products->id_supplier;
             $remessa['patrimony_code'] = (int) $remessa['patrimony_code'];
-
-            $remessa = $this->entityFactory->createRemessa($remessa);
+            $remessa['cost'] = NULL;
+            $remessa['quantity'] = NULL;
             
+
+                // var_dump($remessa);
+            $remessa = $this->entityFactory->createRemessa($remessa);
+       
             // 4 - Cadastro de remessa
             $idRemessa = $this->remessaModel->add($remessa);
              
-            $remessa->id = $idRemessa;
+            $remessa->id = (int)$remessa->id = $idRemessa;
+            $remessa->id_remessa = (int) $idRemessa;
+           //var_dump($remessa);
+           // die;
+            $data = $request->getQueryParams();
+       
+         
+        
+        $data["id_product"] = (int) $idProduct;
+        $data["id_remessa"] = (int) $idRemessa;
+        $data["patrimony_code"] = $products->patrimony;
+        $data["cost"] = (int) $products->cost;
+        $data["quantity"] = $products->quantity;
+       //
 
-            //var_dump($remessa);
-            $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa->id);
-             //var_dump($products_remessa);
-            $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa->id);
+
+        //var_dump($data);
+        //die;
+
+        //var_dump($data);
+        //die;
+        $data = $this->entityFactory->createProdutoRemessa($data);
+
+        $data->id = $this->produtoRemessaModel->add($data);
+           
+           //  var_dump($products_remessa);
+            $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId((int) $remessa->id);
 
             $lista_produtos =  json_encode($lista_produtos);
+        
            
-        var_dump($remessa);
-        die;
-
-        if (count($products_remessa) < 1 ) {
-        $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');
-        return $this->httpRedirect($request, $response, '/admin/remessa/add');
-        }
     }
         
 

@@ -223,8 +223,9 @@ class RemessaController extends Controller
       $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa['id']);
 
       $lista_produtos =  json_encode($lista_produtos);
-
-
+       //var_dump($remessa);
+     //die;
+      
       
 
       if (count($products_remessa) < 1 ) {
