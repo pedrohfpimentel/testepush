@@ -240,7 +240,7 @@ class AttendanceModel extends Model
     }
 
 
-    public function update(Attendance $attendances): bool
+    public function update(Attendance $attendance): bool
     {
         $sql = "
             UPDATE
@@ -250,8 +250,8 @@ class AttendanceModel extends Model
                 id_professional     = :id_professional,
                 attendance_day      = :attendance_day,
                 attendance_hour     = :attendance_hour,
-                description         = :description,
-                attendance_start    = :attendance_start
+                description         = :description
+                
             WHERE
                 id = :id
         ";
@@ -262,7 +262,6 @@ class AttendanceModel extends Model
             ':attendance_day'   => $eventLog->attendance_day,
             ':attendance_hour'  => $eventLog->attendance_hour,
             ':description'      => $eventLog->description,
-            ':attendance_start' => $eventLog->attendance_start,
             ':id'               => $eventLog->id
         ];
         return $query->execute($parameters);

@@ -65,9 +65,7 @@ class RemessaController extends Controller
 
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
-     //var_dump($remessaTypes);
-     //die;
-          
+
           $temp['suppliers'] = 0;
           $temp['quantity'] = 0;
           $temp['cost'] = 0;
@@ -94,7 +92,6 @@ class RemessaController extends Controller
       $remessa_type[] = $this->remessaTypeModel->get(2);
       $remessa_type[] = $this->remessaTypeModel->get(3);
       $remessa_type[] = $this->remessaTypeModel->get(6);
-      //$product_name = $this->productsModel->getAll();
       //var_dump($remessa_type);
       //die;
       foreach ($remessa as $remessas) {
@@ -216,8 +213,7 @@ class RemessaController extends Controller
       $remessa['cost'] = (float) $remessa['cost'];
       $remessa['id'] = (int) $remessa['remessa_id'];
       $remessa['patient_id'] = (int) $remessa['patient_id'];
-     //var_dump($remessa);
-     //die;
+
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
 
       $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa['id']);
@@ -234,9 +230,6 @@ class RemessaController extends Controller
       }
 
       $remessa = $this->entityFactory->createRemessa($remessa);
-      //var_dump($remessa);
-      //var_dump($lista_produtos);
-      //die;
 
       if ( ($remessa->remessa_type == 1) || ($remessa->remessa_type == 2)) {
         $eventLog['id_remessa'] = $remessa->id;
@@ -249,10 +242,6 @@ class RemessaController extends Controller
         $eventLog['id_remessa'] = $remessa->id;
         $eventLog['suppliers'] =  $remessa->suppliers;
         $eventLog['id_patient'] = $remessa->patient_id;
-
-        
-       
-
           
         $idRemessa = $this->remessaModel->updatePatient($remessa);
       }
@@ -268,8 +257,7 @@ class RemessaController extends Controller
           if ($remessa->remessa_type == 1){
               $remessa_type = $this->remessaTypeModel->get(1);
               $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-              //$eventLog['suppliers'] = $remessa->suppliers;
-            // $eventLog['patient_id'] = $remessa->patient_id;
+             
               $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
               $eventLog['description'] = 'Remessa cadastrada';
               //$eventLog['id_products'] = $remessa->id_product;
@@ -348,14 +336,10 @@ class RemessaController extends Controller
             foreach ($remessa as $remessas) {
             $remessas->date = date("d/m/Y", strtotime($remessas->date));
             $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name; 
-              //$remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
-            }
+          }
            // var_dump($remessa);
             //die;
         }
-
-        //var_dump($remessa);
-        //die;
 
       $html = "
            <div style='width: 24%; float:left;'>

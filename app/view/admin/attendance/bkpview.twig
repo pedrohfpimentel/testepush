@@ -1,0 +1,152 @@
+{% extends "admin/layout.twig" %}
+{% block html_title %}Atendimentos - Administração - {{ parent() }}{% endblock %}
+{% set nav_active = 'attendances' %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+{% endblock %}
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="{{ base_url() }}/admin">Início</a></li>
+  <li><a href="{{ base_url() }}/admin/attendances">Atendimentos</a></li>
+  <li class="active">{{ attendance.id }}</li>
+</ol>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-sm-10">
+    <div class="card">
+  <div class="card-header" data-background-color="blue">
+    <div class="row">
+      <div class="col-xs-12 ">
+        <h3>Atendimento</h3>
+      </div>
+    </div>
+  </div>
+  <div class="card-content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>ID</label>
+              <div>{{ attendance.id }}</div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Data e Hora:</label>
+              <input class="form-control" type="datetime" name="date" value="{{ attendance.attendance_day }}">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3">
+           {# <div class="form-group">
+              <label>Hora:</label>
+              <input class="form-control" type="time" name="time" value="{{ attendance.attendance_hour }}">
+            </div>#}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="selectDisease">Paciente</label>
+              <div>{{ attendance.name_patient }}</div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="selectPatient">Paciente</label>
+            <select class="form-control" id="selectPatient" name="patient">
+              {% for patient in patients %}
+                {% if patient.id == attendance.id_patient %}
+                  <option value="{{ patient.id }}" selected>{{ attendance.name_patient }}</option>
+                {% else %}
+                  <option value="{{ patient.id }}">{{ attendance.name_patient }}</option>
+                {% endif %}
+
+              {% endfor %}
+            </select>
+          </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="selectDisease">Profissional</label>
+              <div>{{ attendance.name_professional }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label>Observações:</label>
+              <div>{{ attendance.description  }}</div>
+            </div>
+          </div>
+        </div>
+       </div>
+
+
+          <div class="col-sm-6">
+              <div class="form-group">
+                <label for="selectStatus">Situação</label>
+                 <select class="form-control" id="selectStatus" name="status">
+                  {% for status in attendance_status %}
+                    {% if status.id == attendance.status %}
+                      <option value="{{ status.id }}" selected>{{ status.name }}
+                      </option>
+                    {% else %}
+                      <option value="{{ status.id }}">{{ status.name }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+          </div>
+      </div>
+      <a href="{{ base_url }}/admin/attendances/edit/{{ attendance.id }}?attendance_status={{ attendance.status }}" class="btn btn-success" id="submitStatus">Atualizar</a>
+  </div>
+</div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+
+<script src="{{ base_url() }}/js/jquery.mask.js"></script>
+
+<script type="text/javascript">
+
+$('#inputCpf').mask('000.000.000-00', {reverse: true});
+$('#inputCep').mask('00000-000');
+</script>
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+  var description = new SimpleMDE({
+    element: $("#description")[0],
+    spellChecker: false,
+    status: false,
+    toolbar: false,
+
+  });
+</script>
+
+<script type="text/javascript">
+
+$('#selectStatus').on('change', function() {
+
+  var status = $('#selectStatus').val();
+  console.log (status);
+
+  $('#submitStatus').attr('href', `{{ base_url }}/admin/attendances/edit/{{ attendance.id }}?attendance_status=${status}&id_patient={{ attendance.id_patient }}&id_professional={{ attendance.id_professional }}&attendance_day={{ attendance.attendance_day}}`)
+
+});
+
+</script>
+
+{% endblock %}
