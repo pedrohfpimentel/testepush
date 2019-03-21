@@ -5,6 +5,7 @@ namespace Farol360\Ancora\Model;
 
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\Remessa;
+use Farol360\Ancora\Model\ProdutoRemessa;
 
 class RemessaModel extends Model
 {
@@ -88,7 +89,23 @@ class RemessaModel extends Model
 
     public function deleteByRemessaType(int $id = 99): bool
     {
-       $sql = "DELETE FROM remessa WHERE remessa_type = :id";
+        // seleciona todas as remessas que tem remessa_type de acordo com o id passado..
+        // retorna uma lista de id
+        $sql = "SELECT id FROM remessa WHERE remessa_type = :id";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        $remessas_id = $query->execute($parameters);
+
+        // para cada $remessas_id delete produto_remessas.
+        foreach( $remessas_id as $remessa_id) {
+            $sql = "DELETE FROM produto_remessa WHERE id_remessa = :id";
+            $query = $this->db->prepare($sql);
+            $parameters = [':id' => $remessa_id];
+            $query->execute($parameters);
+        }
+        
+        // deleta a remessa de acordo com o remessa_type passado
+        $sql = "DELETE FROM remessa WHERE remessa_type = :id";
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         return $query->execute($parameters);
