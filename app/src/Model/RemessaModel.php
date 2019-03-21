@@ -95,12 +95,15 @@ class RemessaModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $remessas_id = $query->execute($parameters);
+        $remessas_id = $query->fetchAll();
 
+        //var_dump($remessas_id);
+        //die;
         // para cada $remessas_id delete produto_remessas.
         foreach( $remessas_id as $remessa_id) {
             $sql = "DELETE FROM produto_remessa WHERE id_remessa = :id";
             $query = $this->db->prepare($sql);
-            $parameters = [':id' => $remessa_id];
+            $parameters = [':id' => $remessa_id->id];
             $query->execute($parameters);
         }
         
