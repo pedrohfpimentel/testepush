@@ -250,19 +250,21 @@ class AttendanceModel extends Model
                 id_professional     = :id_professional,
                 attendance_day      = :attendance_day,
                 attendance_hour     = :attendance_hour,
-                description         = :description
+                description         = :description,
+                status              = :status
                 
             WHERE
                 id = :id
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':id_patient'       => $eventLog->id_patient,
-            ':id_professional'  => $eventLog->id_professional,
-            ':attendance_day'   => $eventLog->attendance_day,
-            ':attendance_hour'  => $eventLog->attendance_hour,
-            ':description'      => $eventLog->description,
-            ':id'               => $eventLog->id
+            ':id_patient'       => $attendance->id_patient,
+            ':id_professional'  => $attendance->id_professional,
+            ':attendance_day'   => $attendance->attendance_day,
+            ':attendance_hour'  => $attendance->attendance_hour,
+            ':description'      => $attendance->description,
+            ':status'           => $attendance->status,
+            ':id'               => $attendance->id
         ];
         return $query->execute($parameters);
     }

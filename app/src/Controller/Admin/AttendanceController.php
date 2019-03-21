@@ -83,7 +83,7 @@ class AttendanceController extends Controller
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;
             $attendance->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
             
-            $attendance->attendance_day = date("d/m/Y h:m", strtotime($attendance->attendance_day));
+            $attendance->attendance_day = date("d/m/Y", strtotime($attendance->attendance_day));
         }
                
         $amountAttendances = $this->attendanceModel->getAmount();
@@ -165,33 +165,33 @@ class AttendanceController extends Controller
 
     public function edit(Request $request, Response $response, array $args): Response
     {
-        $attendance_status = $this->attendanceStatusModel->getAll();
-        $patients = $this->patientModel->getAll();
-         var_dump($patients);
+       // $attendance_status = $this->attendanceStatusModel->getAll();
+        //$patients = $this->patientModel->getAll();
+         //var_dump($patients);
         // die;
 
-        {
-        $id = intval($args['id']);
-        $attendance = $this->attendanceModel->get($id);
+        //{
+        //$id = intval($args['id']);
+        //$attendance = $this->attendanceModel->get($id);
         //var_dump($attendance);
         //die;
-        $id_patient = $attendance->id_patient;
-        $id_professional = $attendance->id_professional;
-        $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
-        $attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
+        //$id_patient = $attendance->id_patient;
+        //$id_professional = $attendance->id_professional;
+        //$attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
+        //$attendance->name_professional = $this->professionalModel->get((int)$attendance->id_professional)->name;
         //$attendance->attendance_day = date("d/m/Y", strtotime($attendance->attendance_day));
         //var_dump($attendance);
         //die;
-        if (!$attendance) {
-            $this->flash->addMessage('danger', 'Atendimento não encontrado.');
-            return $this->httpRedirect($request, $response, '/admin/attendances');
-}
+        //if (!$attendance) {
+          //  $this->flash->addMessage('danger', 'Atendimento não encontrado.');
+            //return $this->httpRedirect($request, $response, '/admin/attendances');
+//}
 
 
-         $attendance_status = $this->attendanceStatusModel->getAll();
-            return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status, 'id_patient' => $id_patient, 'id_professional' => $id_professional,]);
+         //$attendance_status = $this->attendanceStatusModel->getAll();
+           // return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status, 'id_patient' => $id_patient, 'id_professional' => $id_professional,]);
 
-    }
+    //}
 }
 
 
@@ -328,23 +328,28 @@ class AttendanceController extends Controller
     public function update(Request $request, Response $response): Response
     {
 
+        $patients       = $this->patientModel->getAll();
+        $professionals  = $this->professionalModel->getAll();
+        $status = $this->attendanceStatusModel->getAll();
         $data = $request->getParsedBody();
         //var_dump($data);        
-        $attendance['id'] = (int) $data['id'];
-       
-
-        
-        $attendance['id_patient'] = $data['id_patient'];
-        $attendance['id_professional'] = $data['id_professional'];
-        $attendance['status'] = $data['status'];
-        //$attendance['attendance_day'] = $data['attendance_day'];
+        $attendance = $request->getParsedBody();
+        $attendance['id'] = (int) $data['id']; 
+        $attendance['id_patient'] = (int) $data['id_patient'];
+        $attendance['id_professional'] = (int) $data['id_professional'];
+        $attendance['status'] = (int) $data['status'];
+        $attendance['attendance_day'] = $data['attendance_day'];
+        $attendance['attendance_hour'] = $data['attendance_hour'];
         $attendance['description'] = $data['description'];
 
 
-        //var_dump($attendances);
-        $attendance = $this->entityFactory->createAttendance($attendance);
-        $attendance_return = $this->attendanceModel->update($attendance);
         //var_dump($attendance);
+        //die;
+        $attendance = $this->entityFactory->createAttendance($attendance);
+        //var_dump($attendance);
+        //die;
+        $attendance_return = $this->attendanceModel->update($attendance);
+        var_dump($attendance);
         //die;
        
 
@@ -352,13 +357,13 @@ class AttendanceController extends Controller
         if  (($attendance_return != null) || ($attendance_return != false)) {
 
 
-            $eventLog['id_patient'] = $data['id_patient'];
-            $eventLog['id_professional'] = $data['id_professional'];
-            $eventLog['id_attendance']         = $attendance->id;
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance')->id;
-            $eventLog['description'] = 'atualizado'; 
+            $eventLog['id_patient'] = (int) $data['id_patient'];
+            $eventLog['id_professional'] = (int) $data['id_professional'];
+            $eventLog['id_attendance']         = (int) $attendance->id;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance_edit')->id;
+            $eventLog['description'] = 'Atendimento atualizado'; 
             //var_dump($eventLog);
-           //die;
+            //die;
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
 
@@ -386,12 +391,11 @@ class AttendanceController extends Controller
     public function view(Request $request, Response $response, array $args): Response
     {
 
-         $attendance_status = $this->attendanceStatusModel->getAll();
-        $patients = $this->patientModel->getAll();
-         //var_dump($patients);
-        // die;
-
-        {
+        
+        $patients       = $this->patientModel->getAll();
+        $professionals  = $this->professionalModel->getAll();
+        $status = $this->attendanceStatusModel->getAll();
+        
         $id = intval($args['id']);
         $attendance = $this->attendanceModel->get($id);
         //var_dump($attendance);
@@ -411,8 +415,8 @@ class AttendanceController extends Controller
 
 
          $attendance_status = $this->attendanceStatusModel->getAll();
-            return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status, 'id_patient' => $id_patient, 'id_professional' => $id_professional,]);
+            return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status, 'id_patient' => $id_patient, 'id_professional' => $id_professional, 'patients' => $patients, 'professionals' => $professionals,]);
 
     }
-}
+
 }

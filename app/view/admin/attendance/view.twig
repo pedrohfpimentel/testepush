@@ -32,18 +32,34 @@
                  <div class="col-sm-12">
                    <div class="form-group">
                      <label for="name">Paciente:</label>
-                     <div class="ui-widget">
-                       <input id="name_patient" class="form-control" type="text" name="id_patient" placeholder="Descrição" required value="{{ attendance.id_patient }}">
-                     </div>
+                <select class="form-control" id="selectPatient" name="id_patient" required>
+                  {% for patient in patients %}
+                    {% if patient.id == attendance.patients_id %}
+                      <option value="{{ patient.id }}" selected>{{ patient.name }}
+                      </option>
+                    {% else %}
+                      <option value="{{ patient.id }}">{{ patient.name }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
                    </div>
                  </div>
                </div>
 
           <div class="form-group">
             <label for="name_professional">Profissional:</label>
-            <div class="ui-widget">
-                       <input id="name_professional" class="form-control" type="text" name="id_professional" placeholder="Descrição" required value="{{ attendance.id_professional }}">
-                     </div>
+                <select class="form-control" id="selectProfessional" name="id_professional" required>
+                  {% for professional in professionals %}
+                    {% if professional.id == attendance.professionals_id %}
+                      <option value="{{ professional.id }}" selected>{{ professional.user_name }}
+                      </option>
+                    {% else %}
+                      <option value="{{ professional.id }}">{{ professional.user_name }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
           </div>
 
 
@@ -57,7 +73,7 @@
            <div class="col-sm-6">
               <div class="form-group">
                 <label for="selectStatus">Situação</label>
-                 <select class="form-control" id="selectStatus" name="status">
+                <select class="form-control" id="selectStatus" name="status">
                   {% for status in attendance_status %}
                     {% if status.id == attendance.status %}
                       <option value="{{ status.id }}" selected>{{ status.name }}
@@ -72,9 +88,16 @@
 
                 <div class="form-group">
               <label>Data e Hora:</label>
-              <input id="attendance_day" class="form-control" type="text" name="attendance_day" placeholder="Descrição" required value="{{ attendance.attendance_day }}">
+             <input id="attendance_day" class="form-control" type="date" name="attendance_day" required value="{{ attendance.attendance_day }}">
                      </div>
-      
+
+
+
+              <div class="form-group">
+                <label for="attendance_hour">Horário:</label>
+                <input id="attendance_hour" class="form-control" type="time" name="attendance_hour" value="{{ attendance.attendance_hour }}">
+              </div>
+          
        
           
           {# <div class=" col-sm-2 form-group">
