@@ -34,7 +34,7 @@
                      <label for="name">Paciente:</label>
                 <select class="form-control" id="selectPatient" name="id_patient" required>
                   {% for patient in patients %}
-                    {% if patient.id == attendance.patients_id %}
+                    {% if patient.id == attendance.id_patient %}
                       <option value="{{ patient.id }}" selected>{{ patient.name }}
                       </option>
                     {% else %}
@@ -51,7 +51,7 @@
             <label for="name_professional">Profissional:</label>
                 <select class="form-control" id="selectProfessional" name="id_professional" required>
                   {% for professional in professionals %}
-                    {% if professional.id == attendance.professionals_id %}
+                    {% if professional.id == attendance.id_professional %}
                       <option value="{{ professional.id }}" selected>{{ professional.user_name }}
                       </option>
                     {% else %}
