@@ -114,7 +114,15 @@
                <div class="row">
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
-                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" >
+                   <input type="number" min="0" class="form-control" id="quantity" name="quantity" placeholder="" >
+                   <script type="text/javascript">
+                      $('#quantity').on('change', function(){
+                        var qtd = $('#quantity').val();
+                        if (qtd < 0) {
+                          $('#quantity').val(0);
+                        }
+                      });
+                   </script>
                     <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
 

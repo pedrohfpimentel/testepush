@@ -415,7 +415,14 @@ class AttendanceController extends Controller
 
 
          $attendance_status = $this->attendanceStatusModel->getAll();
-            return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status, 'id_patient' => $id_patient, 'id_professional' => $id_professional, 'patients' => $patients, 'professionals' => $professionals,]);
+            return $this->view->render($response, 'admin/attendance/view.twig', [
+                'attendance' => $attendance, 
+                'attendance_status' => $attendance_status, 
+                'id_patient' => $id_patient, 
+                'id_professional' => $id_professional, 
+                'patients' => $patients, 
+                'professionals' => $professionals,
+            ]);
 
     }
 

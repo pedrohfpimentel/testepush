@@ -1,0 +1,72 @@
+{% extends "admin/layout.twig" %}
+{% block html_title %} - Administração - {{ parent() }}{% endblock %}
+{% set nav_active = 'remessa' %}
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="{{ base_url() }}/admin">Início</a></li>
+  <li><a href="{{ base_url() }}/admin/remessa">Remessa</a></li>
+  <li class="active">{{ remessa.id }}</li>
+</ol>
+{% endblock %}
+{% block content %}
+
+
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item">Tipo de Entrada: <strong>{{ remessa.remessa_type_name }}</strong></li>
+      <li class="list-group-item">Fornecedor/ Paciente: <strong>{{ remessa.name_suppliers }} {{ remessa.name_patient }}</strong></li>
+      <li class="list-group-item">Data de Entrada: <strong>{{ remessa.date|date('d/m/Y') }}</strong></li>
+      
+    </ul>
+
+
+
+    <div class="main">
+  <div class="card">
+    <div class="card-content">
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>Lista de Produtos</h4>
+          <table class="table table-striped data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Custo Unitário</th>
+                <th>Código Patrimonial</th>
+                <th class="th-button"></th>
+                <th class="th-button"></th>
+              </tr>
+            </thead>
+
+
+
+            <tbody>
+              {% for product_remessa in products_remessa %}
+                <tr>
+                  <td>{{ product_remessa.name_product }}</td>
+                  <td>{{ product_remessa.quantity }}</td>
+                  <td>{{ product_remessa.cost}} </td>
+                  <td>{{ product_remessa.patrimony_code}} </td>
+                  
+                
+              
+               
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </ul>
+  </div>
+    
+</div>
+
+
+ 
+</div>
+
+{% endblock %}

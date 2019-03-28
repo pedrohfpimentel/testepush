@@ -385,4 +385,54 @@ class RemessaSaidaController extends Controller
     }
 
 
+
+    public function view(Request $request, Response $response, array $args): Response
+    {
+
+        $patients       = $this->patientModel->getAll();
+        $remessa_type = $this->remessaTypeModel->getAll();
+        $products_remessa = $this->produtoRemessaModel->getAll();
+        $products = $this->productsModel->getAll();
+        $id = intval($args['id']);
+        $remessa = $this->remessaModel->get($id);
+      
+
+        $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa->id);
+        //var_dump($products_remessa);
+        //die;
+       
+        foreach ($products_remessa as $product_remessa) {
+
+          $name_product = $product_remessa->id_product;
+          $product_remessa->name_product = $this->productsModel->get((int)$product_remessa->id_product)->name;
+        }
+
+        $patient_id = $remessa->patient_id;
+        $id_suppliers = $remessa->suppliers;
+
+        $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
+
+        $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;       
+      // var_dump($products_remessa[0]->id);
+      //die;
+    
+        if (!$remessa) {
+            $this->flash->addMessage('danger', '.');
+            return $this->httpRedirect($request, $response, '/admin/remessa_saida');
+        }
+
+        $remessa_type = $this->remessaTypeModel->getAll();
+        return $this->view->render($response, 'admin/remessa_saida/view.twig', [
+          'remessa' => $remessa,
+          'remessa_type' => $remessa_type,
+          'patient_id' => $patient_id, 
+          'id_suppliers' => $id_suppliers, 
+          'patients' => $patients, 
+          'products_remessa' => $products_remessa,
+        ]);
+
+
+    }
+
+
 }

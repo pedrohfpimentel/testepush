@@ -159,12 +159,20 @@
                <div class="row">
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
-                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" >
+                   <input type="number" min="0" class="form-control" id="quantity" name="quantity" placeholder="" >
+                   <script type="text/javascript">
+                      $('#quantity').on('change', function(){
+                        var qtd = $('#quantity').val();
+                        if (qtd < 0) {
+                          $('#quantity').val(0);
+                        }
+                      });
+                   </script>
                     <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
 
                  <div class=" col-sm-3 form-group">
-                   <label for="cost">Custo</label>
+                   <label for="cost">Custo Unitário</label>
 
                    <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" />
                    <input type="hidden" name="cost_hidden" id="cost_hidden" value="cost">
@@ -218,6 +226,7 @@
                 <th>Nome</th>
                 <th>Quantidade</th>
                 <th>Custo Unitário</th>
+                <th>Valor Total</th>
                 <th class="th-button"></th>
                 <th class="th-button"></th>
               </tr>
@@ -419,6 +428,7 @@ $('#button_adicionar').on("submit",function(){
     var custo_produto = $('#cost').val();
     var remessa_id = $('#remessa_id').val();
     var patrimony = $('#patrimony').val();
+    var custo_total = quantidade_produto * custo_produto;
 
 
     var products_array = [
@@ -426,7 +436,8 @@ $('#button_adicionar').on("submit",function(){
     quantidade_produto,
     custo_produto,
     remessa_id,
-    patrimony
+    patrimony,
+    custo_total
     ];
 
 
@@ -438,7 +449,7 @@ $('#button_adicionar').on("submit",function(){
 
 
     $.ajax({
-      url:`{{ base_url() }}/admin/produto_remessa/add?nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
+      url:`{{ base_url() }}/admin/produto_remessa/add?nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}&custo_total=${custo_total}`,
       type: "GET",
       
       beforeSend: function (xhr) {
@@ -461,6 +472,7 @@ $('#button_adicionar').on("submit",function(){
       `<tr><td>${nome_produto}</td>
       <td>${quantidade_produto}</td>
       <td>${custo_produto}</td>
+      <td>${custo_total}</td>
       <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
 
 

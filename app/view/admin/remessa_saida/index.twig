@@ -108,7 +108,9 @@
                     Histórico
                   </a></td>#}
                  
-                
+                <td style="width:80px"><a class="btn btn-info" href="{{ base_url() }}/admin/remessa_saida/{{ remessas.id }}">
+                    Detalhes
+                  </a></td>
               {% else %}
                 <div class="alert alert-danger" role="alert">Não existem remessas cadastradas</div>
               {% endfor %}

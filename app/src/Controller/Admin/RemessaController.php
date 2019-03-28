@@ -433,4 +433,70 @@ class RemessaController extends Controller
     }
 
 
+
+
+    public function view(Request $request, Response $response, array $args): Response
+    {
+
+        $patients       = $this->patientModel->getAll();
+        $suppliers  = $this->supplierModel->getAll();
+        $remessa_type = $this->remessaTypeModel->getAll();
+        $products_remessa = $this->produtoRemessaModel->getAll();
+        $products = $this->productsModel->getAll();
+        //var_dump($products);
+        //die;
+        $id = intval($args['id']);
+        $remessa = $this->remessaModel->get($id);
+      
+
+        $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa->id);
+        //var_dump($products_remessa);
+        //die;
+       
+        foreach ($products_remessa as $product_remessa) {
+
+          $name_product = $product_remessa->id_product;
+          $product_remessa->name_product = $this->productsModel->get((int)$product_remessa->id_product)->name;
+        } 
+         //var_dump($product_remessa);
+         //die;
+
+        $patient_id = $remessa->patient_id;
+        $id_suppliers = $remessa->suppliers;
+        
+        if($remessa->remessa_type == 6){
+
+          $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
+        } else {
+          $remessa->name_suppliers = $this->supplierModel->get((int)$remessa->suppliers)->name;     
+      }
+
+      $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;
+        //var_dump($remessa->id);
+        
+      // var_dump($products_remessa[0]->id);
+      //die;
+    
+        if (!$remessa) {
+            $this->flash->addMessage('danger', '.');
+            return $this->httpRedirect($request, $response, '/admin/remessa');
+        }
+
+        //var_dump($remessa);
+        //die;
+        $remessa_type = $this->remessaTypeModel->getAll();
+        return $this->view->render($response, 'admin/remessa/view.twig', [
+          'remessa' => $remessa,
+          'remessa_type' => $remessa_type,
+          'patient_id' => $patient_id, 
+          'id_suppliers' => $id_suppliers, 
+          'patients' => $patients, 
+          'suppliers' => $suppliers,
+          'products_remessa' => $products_remessa,
+        ]);
+
+
+    }
+
+
 }

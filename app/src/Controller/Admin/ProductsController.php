@@ -73,46 +73,110 @@ class ProductsController extends Controller
 
         $amountProducts = $this->productsModel->getAmount();
         $amountPages = ceil($amountProducts->amount / $limit);
-
-      // getRemessasByIdProduct function
-          foreach($products as $product) {
-
-            $cost =  0;
-            $quantity = 0; 
-            $media = 0;              
-            $remessas = $this->productsModel->getRemessasByIdProduct($product->id); 
-            
-                foreach($remessas as $remessa) {
-                 
-                    $quantity = $quantity + (int)$remessa->quantity;
-                    $cost = $cost + (float)$remessa->cost;
-                    $media = $cost / $quantity;
-                    //$cost = $remessa->cost;      
-                }
-
-
-            $product->quantity= $quantity;
-            $product->cost= (float)$cost;
-            $product->media= (float)$media;
-         
           
-
-        }
-
              
         // get quantity from remessas
         foreach ($products as $product) {
+
+            //buscando todos os produto_remessa por id do product
+            $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
+            
+            //armazena quantidade temporaria
+            $quantidade = 0;
+
+            //foreach para incrementar a quantidade dos produto_remessa
+            foreach($produtos_remessa as $produto_remessa) {
+                //variavel armazena remessa por id
+                $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+
+                //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
+            if (isset($remessa->remessa_type)) {
+                if ($remessa->remessa_type == '1'){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                }
+            }
+
+            if (isset($remessa->remessa_type)) {
+                if (isset($remessa->remessa_type) == '2'){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                }
+            }
+
+            if (isset($remessa->remessa_type)) {
+                if (isset($remessa->remessa_type) == '3'){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                }
+            }
+
+            if (isset($remessa->remessa_type)) {
+                if (isset($remessa->remessa_type) == '4'){
+                    $quantidade = $quantidade - $produto_remessa->quantity;
+                }
+            }
+
+            if (isset($remessa->remessa_type)) {
+                if (isset($remessa->remessa_type) == '5'){
+                    $quantidade = $quantidade - $produto_remessa->quantity;
+                }
+            }
+
+            if (isset($remessa->remessa_type)) {
+                if (isset($remessa->remessa_type) == '6'){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                }              
+            }
+
+            }
+
+            //recebe o valor da variavel quantidade
+            $product->quantity = $quantidade;
+            //var_dump($product);
+
+            $custo_medio = 0;
+            $custo_total = 0;
+            $quantidade = 0;
+            $product->cost = $custo_medio; 
+            //foreach para incrementar custo total em cost (esse calculo se faz somente com entrada tipo 2 = compra)
+
+             //var_dump($product);
+        //die;
+            foreach($produtos_remessa as $produto_remessa) {
+                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+            if (isset($remessa->remessa_type)) {
+                 if ($remessa->remessa_type == '2'){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                    $custo_total = $custo_total + ((float) $produto_remessa->cost);
+
+                   
+                    //var_dump($custo_format);
+                    //die;
+                }
+            }
         }
+
+            if ($quantidade == 0) {
+
+                $custo_medio = 0;
+
+            } else {
+
+                $custo_medio = $custo_total / $quantidade;
+                $product->cost = $custo_medio;
+
+            }
+           
+            //var_dump($product);
+
+        }
+        //die;
+
 
 
      
         return $this->view->render($response, 'admin/products/index.twig', 
         [
-            'products' => $products,
-            'media' => $media,
+            'products' => $products,      
             'remessaTypes' => $remessaTypes,
-            'quantity'=> $quantity,
-            'cost'=> $cost,
             'page' => $page,
             'amountPages' => $amountPages
         ]);
