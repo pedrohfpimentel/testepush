@@ -24,17 +24,21 @@
 
 
     <div class="main">
+
   <div class="card">
     <div class="card-content">
       <div class="row">
         <div class="col-xs-12">
           <h4>Lista de Produtos</h4>
+
+          {% if remessa.remessa_type == 2 %}
           <table class="table table-striped data-table">
             <thead>
               <tr>
                 <th>Nome</th>
                 <th>Quantidade</th>
                 <th>Custo Unitário</th>
+                <th>Custo Total</th>
                 <th>Código Patrimonial</th>
                 <th class="th-button"></th>
                 <th class="th-button"></th>
@@ -48,7 +52,8 @@
                 <tr>
                   <td>{{ product_remessa.name_product }}</td>
                   <td>{{ product_remessa.quantity }}</td>
-                  <td>{{ product_remessa.cost}} </td>
+                  <td>{{ product_remessa.cost }} </td>
+                  <td>{{ custo_total }} </td>
                   <td>{{ product_remessa.patrimony_code}} </td>
                   
                 
@@ -57,11 +62,54 @@
               {% endfor %}
             </tbody>
           </table>
+
+
+
+          {% else %}
+
+
+          <table class="table table-striped data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                
+                <th>Código Patrimonial</th>
+                <th class="th-button"></th>
+                <th class="th-button"></th>
+              </tr>
+            </thead>
+
+
+
+            <tbody>
+              {% for product_remessa in products_remessa %}
+                <tr>
+                  <td>{{ product_remessa.name_product }}</td>
+                  <td>{{ product_remessa.quantity }}</td>
+                 
+                  <td>{{ product_remessa.patrimony_code}} </td>
+                  
+                
+              
+               
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+
+
+          {% endif %}
         </div>
       </div>
     </div>
     </ul>
   </div>
+
+
+
+
     
 </div>
 

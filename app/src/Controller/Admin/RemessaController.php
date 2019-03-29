@@ -457,22 +457,23 @@ class RemessaController extends Controller
 
           $name_product = $product_remessa->id_product;
           $product_remessa->name_product = $this->productsModel->get((int)$product_remessa->id_product)->name;
-        } 
-         //var_dump($product_remessa);
-         //die;
+          $product_remessa->cost = str_replace(".","",$product_remessa->cost);
+          $float_cost = floatval(str_replace(',','.',$product_remessa->cost));
+          $custo_total = $float_cost * ((int)$product_remessa->quantity);
 
+        } 
+        
         $patient_id = $remessa->patient_id;
         $id_suppliers = $remessa->suppliers;
-        
+        //var_dump($product_remessa);
+        //die;
         if($remessa->remessa_type == 6){
-
           $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
         } else {
           $remessa->name_suppliers = $this->supplierModel->get((int)$remessa->suppliers)->name;     
-      }
+        }
 
       $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;
-        //var_dump($remessa->id);
         
       // var_dump($products_remessa[0]->id);
       //die;
@@ -493,6 +494,7 @@ class RemessaController extends Controller
           'patients' => $patients, 
           'suppliers' => $suppliers,
           'products_remessa' => $products_remessa,
+          'custo_total' => $custo_total,
         ]);
 
 

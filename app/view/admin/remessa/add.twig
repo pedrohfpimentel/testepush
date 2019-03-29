@@ -414,7 +414,7 @@ $('#button_adicionar').on("submit",function(){
  
   function submitTabela() {
     var corpo_tabela = $('#corpo_tabela').html();
-    console.log(corpo_tabela);
+    //console.log(corpo_tabela);
     return false;
   }
 
@@ -428,7 +428,7 @@ $('#button_adicionar').on("submit",function(){
     var custo_produto = $('#cost').val();
     var remessa_id = $('#remessa_id').val();
     var patrimony = $('#patrimony').val();
-    var custo_total = quantidade_produto * custo_produto;
+    var custo_total = converteMoedaFloat(quantidade_produto) * converteMoedaFloat(custo_produto);
 
 
     var products_array = [
@@ -442,7 +442,9 @@ $('#button_adicionar').on("submit",function(){
 
 
     console.log(products_array);
-    
+    console.log(custo_produto);
+    console.log(quantidade_produto);
+    console.log(custo_total);
 
 
 
@@ -567,6 +569,77 @@ $('#button_adicionar').on("submit",function(){
    $('#input_date').val(data);
  });
 
+</script>
+
+
+
+<script type="text/javascript">
+
+function converteMoedaFloat(valor){
+      
+      if(valor === ""){
+         valor =  0;
+      }else{
+         valor = valor.replace(".","");
+         valor = valor.replace(",",".");
+         valor = parseFloat(valor);
+      }
+      return valor;
+
+   }
+
+
+
+
+/*   @brief Converte um valor em formato float para uma string em formato moeda
+      @param valor(float) - o valor float
+      @return valor(string) - o valor em moeda
+   */
+   function converteFloatMoeda(valor){
+      var inteiro = null, decimal = null, c = null, j = null;
+      var aux = new Array();
+      valor = ""+valor;
+      c = valor.indexOf(".",0);
+      //encontrou o ponto na string
+      if(c > 0){
+         //separa as partes em inteiro e decimal
+         inteiro = valor.substring(0,c);
+         decimal = valor.substring(c+1,valor.length);
+      }else{
+         inteiro = valor;
+      }
+      
+      //pega a parte inteiro de 3 em 3 partes
+      for (j = inteiro.length, c = 0; j > 0; j-=3, c++){
+         aux[c]=inteiro.substring(j-3,j);
+      }
+      
+      //percorre a string acrescentando os pontos
+      inteiro = "";
+      for(c = aux.length-1; c >= 0; c--){
+         inteiro += aux[c]+'.';
+      }
+      //retirando o ultimo ponto e finalizando a parte inteiro
+      
+      inteiro = inteiro.substring(0,inteiro.length-1);
+      
+      decimal = parseInt(decimal);
+      if(isNaN(decimal)){
+         decimal = "00";
+      }else{
+         decimal = ""+decimal;
+         if(decimal.length === 1){
+            decimal = decimal+"0";
+         }
+      }
+      
+      
+      valor = "R$ "+inteiro+","+decimal;
+      
+      
+      return valor;
+
+   }
 </script>
 
 {% endblock %}
