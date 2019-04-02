@@ -63,7 +63,7 @@ class ProdutoRemessaController extends Controller
         $amountProdutoDeRemessa = $this->produtoRemessaModel->getAmount();
         $amountPages = ceil($amountProdutoDeRemessa->amount / $limit);
 
-        return $this->view->render($response, 'admin/attendance/index.twig', [
+        return $this->view->render($response, 'admin/products/index.twig', [
             'produto_remessa' => $produto_remessa,
             'page' => $page,
             'amountPages' => $amountPages

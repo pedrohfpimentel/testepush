@@ -80,15 +80,18 @@ class ProductsController extends Controller
 
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
-            
+            //var_dump($produtos_remessa);    
             //armazena quantidade temporaria
             $quantidade = 0;
-
+            $contador_remessa = 0;
+            $contador_custo = 0;
+            $soma_custo = 0;
+            $multiplica = 0;
             //foreach para incrementar a quantidade dos produto_remessa
             foreach($produtos_remessa as $produto_remessa) {
                 //variavel armazena remessa por id
                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
-
+               //
                 //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
             if (isset($remessa->remessa_type)) {
                 if ($remessa->remessa_type == '1'){
@@ -97,40 +100,52 @@ class ProductsController extends Controller
             }
 
             if (isset($remessa->remessa_type)) {
-                if (isset($remessa->remessa_type) == '2'){
+                if ($remessa->remessa_type == '2'){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                    $contador_remessa = $contador_remessa + 1;
+
+                    $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                    $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+
+                    $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
+
+                    $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
+
+                    //var_dump($float_cost);
+                }
+            }
+
+            if (isset($remessa->remessa_type)) {
+                if ($remessa->remessa_type == '3'){
                     $quantidade = $quantidade + $produto_remessa->quantity;
                 }
             }
 
             if (isset($remessa->remessa_type)) {
-                if (isset($remessa->remessa_type) == '3'){
-                    $quantidade = $quantidade + $produto_remessa->quantity;
-                }
-            }
-
-            if (isset($remessa->remessa_type)) {
-                if (isset($remessa->remessa_type) == '4'){
+                if ($remessa->remessa_type == '4'){
                     $quantidade = $quantidade - $produto_remessa->quantity;
                 }
             }
 
             if (isset($remessa->remessa_type)) {
-                if (isset($remessa->remessa_type) == '5'){
+                if ($remessa->remessa_type == '5'){
                     $quantidade = $quantidade - $produto_remessa->quantity;
                 }
             }
 
             if (isset($remessa->remessa_type)) {
-                if (isset($remessa->remessa_type) == '6'){
+                if ($remessa->remessa_type == '6'){
                     $quantidade = $quantidade + $produto_remessa->quantity;
+
                 }              
             }
 
             }
-
+            //var_dump($contador_remessa);
+            //die;
             //recebe o valor da variavel quantidade
             $product->quantity = $quantidade;
-            //var_dump($product);
+            
 
             $custo_medio = 0;
             $custo_total = 0;
@@ -144,11 +159,16 @@ class ProductsController extends Controller
                  $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
             if (isset($remessa->remessa_type)) {
                  if ($remessa->remessa_type == '2'){
+
+                    $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                    $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                    //$custo_total = $float_cost * ((int)$product_remessa->quantity);
+
                     $quantidade = $quantidade + $produto_remessa->quantity;
-                    $custo_total = $custo_total + ((float) $produto_remessa->cost);
+                    $custo_total = $custo_total + $float_cost;
 
                    
-                    //var_dump($custo_format);
+                    //var_dump($quantidade);
                     //die;
                 }
             }
@@ -160,12 +180,18 @@ class ProductsController extends Controller
 
             } else {
 
-                $custo_medio = $custo_total / $quantidade;
+
+                
+
+                $custo_medio = $multiplica / $quantidade;
+                //var_dump($custo_medio);
+                //die;
+
                 $product->cost = $custo_medio;
 
             }
            
-            //var_dump($product);
+            //var_dump($multiplica);
 
         }
         //die;
