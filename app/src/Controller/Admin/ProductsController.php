@@ -78,6 +78,8 @@ class ProductsController extends Controller
         // get quantity from remessas
         foreach ($products as $product) {
 
+
+
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
             //var_dump($produtos_remessa);    
@@ -356,8 +358,6 @@ class ProductsController extends Controller
                 // 6 - tratamento de event logs 
                 if ($remessa->remessa_type == 1){
 
-                    
-
                     $eventLog1['id_remessa'] = $idRemessa;
                     $eventLog1['suppliers'] =  $products->id_supplier;
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
@@ -378,11 +378,14 @@ class ProductsController extends Controller
                     $this->eventLogModel->add($eventLog1);
                     
                 } elseif ($remessa->remessa_type == 3){
+
+                   //var_dump($remessa);
+                   //die;
                     $eventLog1['id_remessa'] = $idRemessa;
-                    $eventLog['suppliers'] =  $products->id_supplier;
-                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_inicial')->id;
+                    $eventLog1['suppliers'] =  $products->id_supplier;
+                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_inicial')->id;
+
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
-                    $eventLog1['id_products'] = $remessa->id_product;
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
                 }
@@ -404,15 +407,31 @@ class ProductsController extends Controller
     }
 
     public function edit(Request $request, Response $response, array $args): Response
-    {
+    {   
+
+        
+
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
+        $id_supplier = $products->id_supplier;
+        //$products->name_supplier = $this->supplierModel->get((int)$products->id_supplier)->name;
+
+        //var_dump($products);
+        //die;
         if (!$products) {
             $this->flash->addMessage('danger', 'Produto não encontrado.');
             return $this->httpRedirect($request, $response, '/admin/products');
-}
+}        
+         $id_supplier = $this->supplierModel->getAll();
          $products_type = $this->productsTypeModel->getAll();
-            return $this->view->render($response, 'admin/products/edit.twig', ['products' => $products, 'products_type' => $products_type]);
+            return $this->view->render($response, 'admin/products/edit.twig', [
+                'products' => $products, 
+                'products_type' => $products_type,
+                'id_supplier' => $id_supplier,
+                'id_supplier' => $id_supplier,
+
+
+            ]);
 
     }
 
@@ -590,10 +609,14 @@ class ProductsController extends Controller
         $data = $request->getParsedBody();
 
         $products = $request->getParsedBody();
+        //var_dump($products);
+        //die;
         $products['id'] = (int) $data['id'];
         $products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
+        $products['patrimony'] = (int) $products['patrimony'];
+
 
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;
