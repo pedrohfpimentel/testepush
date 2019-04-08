@@ -235,7 +235,7 @@ class ProductsController extends Controller
             $remessaTypes[] = $this->remessaTypeModel->get(1);
             $remessaTypes[] = $this->remessaTypeModel->get(2);
             $remessaTypes[] = $this->remessaTypeModel->get(3);
-            $remessaTypes[] = $this->remessaTypeModel->get(6);
+            //$remessaTypes[] = $this->remessaTypeModel->get(6);
 
             $patrimony = 1;
 
