@@ -235,7 +235,6 @@ class ProductsController extends Controller
             $remessaTypes[] = $this->remessaTypeModel->get(1);
             $remessaTypes[] = $this->remessaTypeModel->get(2);
             $remessaTypes[] = $this->remessaTypeModel->get(3);
-            //$remessaTypes[] = $this->remessaTypeModel->get(6);
 
             $patrimony = 1;
 
@@ -260,8 +259,6 @@ class ProductsController extends Controller
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
 
-        
-      //  if (isset($products['patrimony'])) {
        // var_dump($products);
 
             if (
@@ -275,7 +272,6 @@ class ProductsController extends Controller
 
             }
 
-        //}
 
         
         //var_dump($products);
@@ -365,7 +361,6 @@ class ProductsController extends Controller
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
-                    //var_dump($eventLog);
                     //var_dump($eventLog1);
        
 
@@ -414,7 +409,7 @@ class ProductsController extends Controller
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
         $id_supplier = $products->id_supplier;
-        //$products->name_supplier = $this->supplierModel->get((int)$products->id_supplier)->name;
+        
 
         //var_dump($products);
         //die;
@@ -571,34 +566,25 @@ class ProductsController extends Controller
     {
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
-        $suppliers = $this->supplierModel->getAll();
 
         // retorna todos os eventlogs que tenham produc_id  
         $event_logs = $this->eventLogModel->getByProducts($id);
-       
-        //$event_logs['suppliers_name'] = $this->supplierModel->get((int)$suppliers)->name;
-
-
-        //$event_logs_product_list = $this->eventLogModel->getAllByProductList($id);
-
-        //var_dump($event_logs['suppliers_name'] = $this->supplierModel->get((int)$suppliers)->name);
-        //var_dump($product);
-        //die;
 
         foreach ($event_logs as $event_log) {
 
- 
-
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
-            $event_log->suppliers = $this->supplierModel->get((int)$suppliers)->name;
-           // $event_log->products = $this->productsModel->get((int)$products)->name;
-              //var_dump($event_log);
+            $id_supplier = ((int) $event_log->suppliers);
+            $event_log->name_supplier = $this->supplierModel->get((int)$event_log->suppliers)->name;
+            //var_dump($event_log);
             //die;
+           
+       
         }
-        //var_dump($products);
-        //die;
-        return $this->view->render($response, 'admin/products/history.twig', ['products' => $products,
-            'event_logs' => $event_logs]);
+        
+        return $this->view->render($response, 'admin/products/history.twig', [
+            'products' => $products,
+            'event_logs' => $event_logs
+        ]);
 
     }
 
