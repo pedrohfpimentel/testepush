@@ -101,11 +101,12 @@ class ProfessionalController extends Controller
 
         $user = $this->entityFactory->createUser($data);
 
-        //var_dump($user);
+        //var_dump($data);
         //die;    
 
         $professional['id_user'] = $this->userModel->add($user);
         $professional['id_professional_type'] = $data['id_professional_type'];
+
 
         $professional = $this->entityFactory->createProfessional($professional);
 
@@ -335,7 +336,7 @@ class ProfessionalController extends Controller
             <table>
             
             <tr>
-                <th style='width: 70%; text-align:left;'>Data / Hora</th>
+                <th style='width: 100px; text-align:left;'>Data / Hora</th>
                 <th style='width: 30%; text-align:left;'>Paciente</th>
                 <th style='width: 30%; text-align:left;'>Observações</th>
                 
@@ -359,9 +360,9 @@ class ProfessionalController extends Controller
             //$event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
             $html .="
             <tr>
-                <td style='width: 70%; text-align:left;'>$attendance->attendance_day</td>
-                <td style='width: 70%; text-align:left;'>$attendance->name_patient</td>
-                <td style='width: 70%; text-align:left;'>$attendance->description</td>
+                <td style='width: 100px; text-align:left;'>$attendance->attendance_day</td>
+                <td style='width: 30%; text-align:left;'>$attendance->name_patient</td>
+                <td style='width: 30%; text-align:left;'>$attendance->description</td>
             
             </tr> ";
             

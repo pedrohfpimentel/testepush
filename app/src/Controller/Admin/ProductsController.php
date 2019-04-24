@@ -259,7 +259,7 @@ class ProductsController extends Controller
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
 
-       // var_dump($products);
+       //var_dump($products);
 
             if (
                 $products['patrimony'] == true) {
@@ -274,13 +274,20 @@ class ProductsController extends Controller
 
 
         
-        //var_dump($products);
-       // die;
+       // var_dump($products);
+        //die;
         
         $products = $this->entityFactory->createProducts($products);
         
         // 2 - CADASTRO DO PRODUTO
         $idProduct = $this->productsModel->add($products);
+
+        $lista_produto[0]['id_product'] = $idProduct;
+
+        $lista_produto = json_encode($lista_produto); 
+
+        //var_dump($lista_produto);
+        //die;
 
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
@@ -295,7 +302,8 @@ class ProductsController extends Controller
             $remessa['cost'] = NULL;
             $remessa['quantity'] = NULL;
             
-
+            //var_dump($remessa);
+            //die;
             $remessa = $this->entityFactory->createRemessa($remessa);
        
             // 4 - Cadastro de remessa
@@ -304,7 +312,7 @@ class ProductsController extends Controller
             $remessa->id = (int)$remessa->id = $idRemessa;
             $remessa->id_remessa = (int) $idRemessa;
            //var_dump($remessa);
-           // die;
+            //die;
             $data = $request->getQueryParams();
                 
         
@@ -313,7 +321,7 @@ class ProductsController extends Controller
         $data["patrimony_code"] = $products->patrimony;
         $data["cost"] = (int) $products->cost;
         $data["quantity"] = $products->quantity;
-
+        $data["suppliers"] = (int) $products->id_supplier;
         //var_dump($data);
         //die;
 
@@ -322,10 +330,14 @@ class ProductsController extends Controller
         $data->id = $this->produtoRemessaModel->add($data);
            
            //  var_dump($products_remessa);
+        if ($body['isRemessaInicial'] == 'false') {
 
-        $lista_produto[0]['id_product'] = $idProduct;
+             $lista_produto[0]['id_product'] = $idProduct;
 
-        $lista_produto = json_encode($lista_produto);       
+            $lista_produto = json_encode($lista_produto);
+        } else {
+            
+        }       
     }
         
 
@@ -338,6 +350,7 @@ class ProductsController extends Controller
             
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['suppliers'] =  $products->id_supplier;
+            $eventLog['id_products'] =  $products->id;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
             $eventLog = $this->entityFactory->createEventLog($eventLog);
 
@@ -366,9 +379,13 @@ class ProductsController extends Controller
 
                 } elseif ($remessa->remessa_type == 2){
                     $eventLog1['id_remessa'] = $idRemessa;
+                    $eventLog1['suppliers'] =  $products->id_supplier;
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                     $eventLog1['id_products'] = $remessa->id_product;
+
+                    //var_dump($eventLog1);
+                    //die;
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
                     
