@@ -229,6 +229,8 @@ class RemessaModel extends Model
                 *
             FROM
                 remessa
+                
+            
         ";
 
         // se houver tipos de remessas, então haverá where
@@ -261,7 +263,9 @@ class RemessaModel extends Model
             
 
         
-        $sql .= "LIMIT ?,?";
+        $sql .= "ORDER BY
+                id DESC
+                LIMIT ?,?";
 
         $query = $this->db->prepare($sql);
 

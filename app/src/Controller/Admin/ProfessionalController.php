@@ -24,6 +24,8 @@ class ProfessionalController extends Controller
 
     protected $professionalModel;
     protected $professionalTypeModel;
+    protected $patientModel;
+    protected $attendanceModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
     protected $userModel;
@@ -33,6 +35,8 @@ class ProfessionalController extends Controller
         FlashMessages $flash,
         Model $professionalModel,
         Model $professionalTypeModel,
+        Model $patientModel,
+        Model $attendanceModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
@@ -41,6 +45,8 @@ class ProfessionalController extends Controller
         parent::__construct($view, $flash);
         $this->professionalModel = $professionalModel;
         $this->professionalTypeModel = $professionalTypeModel;
+        $this->patientModel         = $patientModel;
+        $this->attendanceModel      = $attendanceModel;
         $this->userModel    = $userModel;
         $this->eventLogModel = $eventLogModel;
         $this->eventLogTypeModel = $eventLogTypeModel;
@@ -299,6 +305,88 @@ class ProfessionalController extends Controller
 
         return  $response->withHeader('Content-Type', 'application/pdf');
     }
+
+
+    public function export_history_attendance(Request $request, Response $response) {
+        
+        $id = (int)$request->getQueryParams()['id'];
+       //var_dump($id);
+        //die;
+        $attendances = $this->attendanceModel->getByProfessionalAtt($id);
+        $patients = $this->patientModel->getAll();
+        $professional = $this->professionalModel->get($id);
+        $event_logs = $this->eventLogModel->getByProfessional($id);
+
+        //var_dump($attendance);
+         //  die;
+       
+        $html = "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Profissional</h3>
+                <p> <strong>Profissional:</strong> $professional->name </p>
+                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+            
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+            
+            <tr>
+                <th style='width: 70%; text-align:left;'>Data / Hora</th>
+                <th style='width: 30%; text-align:left;'>Paciente</th>
+                <th style='width: 30%; text-align:left;'>Observações</th>
+                
+            </tr>
+        ";
+        foreach ($attendances as $attendance) {
+
+            
+            //if ($event_log->event_log_types_id == 5) {
+                
+            //var_dump($attendance);
+            //die;
+            //$event_log = $this->entityFactory->createEventLog($event_log);
+            $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
+            //var_dump($attendance);
+            //die;
+            //$event_log->description = $this->attendanceModel->get((int)$id)->description;
+            
+            //var_dump($event_log);
+            //die;
+            //$event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+            $html .="
+            <tr>
+                <td style='width: 70%; text-align:left;'>$attendance->attendance_day</td>
+                <td style='width: 70%; text-align:left;'>$attendance->name_patient</td>
+                <td style='width: 70%; text-align:left;'>$attendance->description</td>
+            
+            </tr> ";
+            
+        //}
+
+        
+    }
+        $html .= "</table> </div>";
+        try {
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->setFooter('{PAGENO}');
+            $mpdf->WriteHTML($html);
+            // Other code
+            //header('Content-Type: application/pdf');
+            $mpdf->Output( );
+              
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+            // Process the exception, log, print etc.
+            echo $e->getMessage();
+        }
+
+        return  $response->withHeader('Content-Type', 'application/pdf');
+    }
+
+
 
     public function update(Request $request, Response $response): Response
     {

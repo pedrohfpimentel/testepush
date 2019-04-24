@@ -165,6 +165,25 @@ class AttendanceModel extends Model
     }
 
 
+    public function getByProfessionalAtt(int $id)
+    {
+        $sql = "
+            SELECT
+                attendances.*
+
+            FROM
+                attendances
+                
+            WHERE
+                id_professional = :id
+        ";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        $query->execute($parameters);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
+        return $query->fetchAll();
+    }
+
     public function getAmount()
     {
         $sql = "

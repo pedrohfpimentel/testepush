@@ -223,6 +223,8 @@ $container['Farol360\Ancora\Controller\Admin\ProfessionalController'] = function
         $c['flash'],
         new Farol360\Ancora\Model\ProfessionalModel($c['db']),
         new Farol360\Ancora\Model\ProfessionalTypeModel($c['db']),
+        new Farol360\Ancora\Model\PatientModel($c['db']),
+        new Farol360\Ancora\Model\AttendanceModel($c['db']),
         new Farol360\Ancora\Model\UserModel($c['db']),
         new Farol360\Ancora\Model\EventLogModel($c['db']),
         new Farol360\Ancora\Model\EventLogTypeModel($c['db']),

@@ -18,7 +18,20 @@
       <div class="col-sm-8">
         <h3>Histórico de Profissional - {{ professional.name }}</h3>
       </div>
-       <div class="col-sm-4">
+       <div class="col-sm-2">
+          <p class="pull-right">
+
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+          <a class="btn btn-default" id="professionals_download" name="professionals_download"  href="{{ base_url() }}/admin/professionals/export_history_attendance?id={{ professional.id }}" target="_blank">
+           
+           {# <a class="btn btn-default" href="{{ base_url() }}/admin/professionals/export">
+              <span class="glyphicon glyphicon-export" aria-hidden="true" target="_blank"></span>
+            </a> #}
+          Relatório de Atendimentos
+            </a>
+          </p>
+        </div>
+        <div class="col-sm-2">
           <p class="pull-right">
 
             <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
@@ -27,7 +40,7 @@
            {# <a class="btn btn-default" href="{{ base_url() }}/admin/professionals/export">
               <span class="glyphicon glyphicon-export" aria-hidden="true" target="_blank"></span>
             </a> #}
-          Exportar Relatório
+          Relatório Geral
             </a>
           </p>
         </div>

@@ -106,6 +106,7 @@ $app->group('/admin', function () {
         $this->get('[/]', ProfessionalAdmin::class . ':index');
         $this->get('/export', ProfessionalAdmin::class . ':export');
         $this->get('/export_history', ProfessionalAdmin::class . ':export_history');
+        $this->get('/export_history_attendance', ProfessionalAdmin::class . ':export_history_attendance');
         $this->map(['GET', 'POST'], '/add', ProfessionalAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', ProfessionalAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', ProfessionalAdmin::class . ':edit');

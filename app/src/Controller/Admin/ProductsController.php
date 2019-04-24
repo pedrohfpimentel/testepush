@@ -423,7 +423,7 @@ class ProductsController extends Controller
                 'products' => $products, 
                 'products_type' => $products_type,
                 'id_supplier' => $id_supplier,
-                'id_supplier' => $id_supplier,
+                
 
 
             ]);
@@ -571,7 +571,8 @@ class ProductsController extends Controller
         $event_logs = $this->eventLogModel->getByProducts($id);
 
         foreach ($event_logs as $event_log) {
-
+            //var_dump($event_logs);
+            //die;
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
             $id_supplier = ((int) $event_log->suppliers);
             $event_log->name_supplier = $this->supplierModel->get((int)$event_log->suppliers)->name;
@@ -579,7 +580,7 @@ class ProductsController extends Controller
             //die;
            
        
-        }
+        } //die;
         
         return $this->view->render($response, 'admin/products/history.twig', [
             'products' => $products,
@@ -598,11 +599,11 @@ class ProductsController extends Controller
         //var_dump($products);
         //die;
         $products['id'] = (int) $data['id'];
-        $products['id_products'] = (int) $data['id_products'];
+        //$products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
         $products['patrimony'] = (int) $products['patrimony'];
-
+        //var_dump($products);
 
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;
@@ -618,9 +619,11 @@ class ProductsController extends Controller
 
 
             $eventLog['id_products']         = $products->id;
+            $eventLog['suppliers']         = $products->id_supplier;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
-            $eventLog['description'] = 'Produto ' . $user->name .' atualizado';
-
+            $eventLog['description'] = 'Produto ' . $products->name .' atualizado';
+            //var_dump($eventLog);
+            //die;
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
 
