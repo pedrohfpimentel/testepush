@@ -211,7 +211,7 @@ class RemessaModel extends Model
     $query->bindValue(3, $offset, \PDO::PARAM_INT);
     $query->bindValue(4, $limit, \PDO::PARAM_INT);
     $query->execute();
-    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
     return $query->fetchAll();
 
 

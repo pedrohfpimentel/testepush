@@ -307,104 +307,135 @@ class RemessaController extends Controller
     public function export(Request $request, Response $response)
     {
 
-        $params = $request->getQueryParams();
+      $params = $request->getQueryParams();
 
-        $remessa_type =  (int)$params['remessa_type'];
+      $remessa_type =  (int)$params['remessa_type'];
 
-        $remessa_start =   $params['remessa_start'];
-        if ($remessa_start == "") {
-            $remessa_start = "2000-01-01";
-        }
-        //var_dump($params);
-        //die;   
-        $remessa_finish =  $params['remessa_finish'];
+      $remessa_start =   $params['remessa_start'];
+      if ($remessa_start == "") {
+          $remessa_start = "2000-01-01";
+      }
+      //var_dump($params);
+      //die;   
+      $remessa_finish =  $params['remessa_finish'];
       
-        if ($remessa_type == 0) {
-        
-            $remessa = $this->remessaModel->getAllByDate($remessa_start, $remessa_finish);
-              
-            foreach ($remessa as $remessas) {
-            //$remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
-            $remessas->date = date("d/m/Y", strtotime($remessas->date));
-            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
-            
-            //var_dump($remessas);
-            //die;
-          }
-        } else {
-            $remessa = $this->remessaModel->getAllByStatus($remessa_type, $remessa_start, $remessa_finish);
-            foreach ($remessa as $remessas) {
-            $remessas->date = date("d/m/Y", strtotime($remessas->date));
-            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name; 
-          }
-           // var_dump($remessa);
-            //die;
+      if ($remessa_type == 0) {
+      
+        $remessa = $this->remessaModel->getAllByDate($remessa_start, $remessa_finish);
+          
+        foreach ($remessa as $remessas) {
+          //$remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+          $remessas->date = date("d/m/Y", strtotime($remessas->date));
+          $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+          
+          //var_dump($remessas);
+          //die;
         }
+      } else {
+        $remessa = $this->remessaModel->getAllByStatus($remessa_type, $remessa_start, $remessa_finish);
+        foreach ($remessa as $remessas) {
+          $remessas->date = date("d/m/Y", strtotime($remessas->date));
+          $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name; 
+        }
+          
+      }
+
+      foreach($remessa as $rem) {
+        $produtos_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$rem->id);
+        $rem->produtos_remessa = $produtos_remessa;
+        //var_dump($rem);
+      }
+     
+      //var_dump($remessa);
+      //die;
 
       $html = "
-           <div style='width: 24%; float:left;'>
-                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
-            </div>
-            <div style='width: 75%;'>
-                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
-                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Entrada Cadastrados</h3>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
-            
-            </div>
-            <hr>
-            <div style='width:100%; margin-top: 10px;'>
-            <table>
-            
-                <tr>
-                    <th style='width: 30%; text-align:left;'>Fornecedor/ Paciente</th>
-                    <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
-                    <th style='width: 20%; text-align:left;'>Data</th>
-                </tr>
-        ";  
-
+        <div style='width: 24%; float:left;'>
+            <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+        </div>
+        <div style='width: 75%;'>
+            <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+            <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Entradas</h3>
+            <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
         
-            foreach ($remessa as $remessas) {   
+        </div>
+        <hr>
+        <div style='width:100%; margin-top: 10px;'>
+        <table>
+        
+            <tr>
+              <th style='width: 30%; text-align:left;'>ID</th>
+              <th style='width: 10%; text-align:left;'>Data</th>
+              <th style='width: 20%; text-align:left;'>Produto</th>
+              <th style='width: 5%; text-align:left;'>qtd</th>
+              <th style='width: 10%; text-align:left;'>Preço</th>
+              <th style='width: 30%; text-align:left;'>Fornecedor</th>
+              <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
+              
+            </tr>
+      ";  
 
-            if ($remessas->remessa_type == 6) { 
-              $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
-              //var_dump($remessas);
-              //die;
+      foreach ($remessa as $remessas) {   
+        foreach($remessas->produtos_remessa as $produto_remessa) {
+          
+          if ($remessas->remessa_type == 6) { 
+            $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+            //var_dump($remessas);
+            
             $html .= "
-             <tr>
-                <td style='width: 30%;'>$remessas->patient_name</td>
-                <td style='width: 30%;'>$remessas->remessa_type_name</td>
-                <td style='width: 20%;'>$remessas->date</td>
-                </tr>
-               ";
-             }
-
-             else if (($remessas->remessa_type == 1) || ($remessas->remessa_type == 2) || ($remessas->remessa_type == 3)) { 
-              $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
-              //var_dump($remessas);
-              //die;
+            <tr>
+            <td style='width:5%'>$remessas->id</td>
+            <td style=''>$remessas->date</td>
+            <td style=''>$produto_remessa->name_product</td>
+            <td style=''>$produto_remessa->quantity</td>
+            <td style=''>R$ ";
+            $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
+            $html .= "</td>
+            <td style=''>$remessas->patient_name</td>
+            <td style=''>$remessas->remessa_type_name</td>
+            </tr>
+            ";
+          }else if (
+            ($remessas->remessa_type == 1) || 
+            ($remessas->remessa_type == 2) || 
+            ($remessas->remessa_type == 3)) { 
+            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+            //var_dump($remessas);
+            //die;
             $html .= "
-             <tr>
-                <td style='width: 30%;'>$remessas->suppliers_name</td>
-                <td style='width: 30%;'>$remessas->remessa_type_name</td>
-                <td style='width: 20%;'>$remessas->date</td>
-                </tr>
-               ";
-             }
+            <tr>
+            <td style='width:5%'>$remessas->id</td>
+            <td style=''>$remessas->date</td>
+            <td style=''>$produto_remessa->name_product</td>
+            <td style=''>$produto_remessa->quantity</td>
+            <td style=''>R$ ";
+            $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
+            $html .= "</td>
+            <td style=''>$remessas->suppliers_name</td>
+            <td style=''>$remessas->remessa_type_name</td>
+            
+            
+              </tr>
+              ";
+          } 
         }
+        
+      }
       
-    
-    $html .= "</table> </div>";
-    try {
+      
+      $html .= "</table> </div>";
+
+      try {
         $mpdf = new \Mpdf\Mpdf();
         $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML($html);
         // Other code
         header('Content-Type: application/pdf');
         $mpdf->Output( );
-    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+      } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
         // Process the exception, log, print etc.
         echo $e->getMessage();
-    }
+      }
         die;        
     }
 

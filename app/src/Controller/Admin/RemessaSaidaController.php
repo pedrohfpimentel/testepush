@@ -317,7 +317,11 @@ class RemessaSaidaController extends Controller
         //var_dump($remessa);
        // die;
 
-
+       foreach($remessa as $rem) {
+        $produtos_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$rem->id);
+        $rem->produtos_remessa = $produtos_remessa;
+        //var_dump($rem);
+      }
       $html = "
            <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -332,23 +336,33 @@ class RemessaSaidaController extends Controller
             <div style='width:100%; margin-top: 10px;'>
             <table>
             
-                <tr>
-                    <th style='width: 30%; text-align:left;'>Paciente</th>
-                    <th style='width: 30%; text-align:left;'>Tipo de Saída</th>
-                    <th style='width: 20%; text-align:left;'>Data</th>
-                </tr>
+              <tr>
+                <th style='width: 30%; text-align:left;'>ID</th>
+                <th style='width: 10%; text-align:left;'>Data</th>
+                <th style='width: 20%; text-align:left;'>Produto</th>
+                <th style='width: 5%; text-align:left;'>Qtd</th>
+                <th style='width: 30%; text-align:left;'>Fornecedor</th>
+                <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
+              </tr>
         ";
         foreach ($remessa as $remessas) {
+          foreach($remessas->produtos_remessa as $produto_remessa) {
             if (($remessas->remessa_type == 4) || ($remessas->remessa_type == 5)) {
               $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
-            $html .= "
-             <tr>
-                <td style='width: 30%;'>$remessas->patient_name</td>
-                <td style='width: 30%;'>$remessas->remessa_type_name</td>
-                <td style='width: 20%;'>$remessas->date</td>
-                </tr>
+              $html .= "
+              <tr>
+                <td style='width:5%'>$remessas->id</td>
+                <td style=''>$remessas->date</td>
+                <td style=''>$produto_remessa->name_product</td>
+                <td style=''>$produto_remessa->quantity</td>
+                <td style=''>$remessas->patient_name</td>
+                <td style=''>$remessas->remessa_type_name</td>
+              </tr>
+               
                ";
-             }
+            }
+
+          }
         }
     
     $html .= "</table> </div>";

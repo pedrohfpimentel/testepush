@@ -471,20 +471,18 @@ $('#button_adicionar').on("submit",function(){
       success: function (data) {
         $('#error-adicionar-produto-remessa').html('');
          $('#corpo_tabela').append(
-      `<tr><td>${nome_produto}</td>
-      <td>${quantidade_produto}</td>
-      <td>${custo_produto}</td>
-      <td>${custo_total}</td>
-      <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
-
-
-      );
+        `<tr><td>${nome_produto}</td>
+        <td>${quantidade_produto}</td>
+        <td>${custo_produto}</td>
+        <td>${custo_total}</td>
+        <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+        );
 
         $("#input_id_product").val('');
         $("#quantity").val('');
         $("#cost").val('');
         $("#patrimony").val('');
-
+        $("#campo_login").html('');
         
       },
         error: function (data) {

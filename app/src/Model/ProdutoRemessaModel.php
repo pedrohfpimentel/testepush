@@ -85,13 +85,15 @@ class ProdutoRemessaModel extends Model
     {
         $sql = "
             SELECT
-                *
+                produto_remessa.*,
+                products.name as name_product
             FROM
                 produto_remessa
+                LEFT JOIN products ON produto_remessa.id_product = products.id
             WHERE 
-                id_remessa = ?
+                produto_remessa.id_remessa = ?
             ORDER BY
-                id
+                produto_remessa.id
             LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
