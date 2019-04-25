@@ -101,11 +101,12 @@ class ProfessionalController extends Controller
 
         $user = $this->entityFactory->createUser($data);
 
-        //var_dump($user);
+        //var_dump($data);
         //die;    
 
         $professional['id_user'] = $this->userModel->add($user);
         $professional['id_professional_type'] = $data['id_professional_type'];
+
 
         $professional = $this->entityFactory->createProfessional($professional);
 
@@ -269,7 +270,7 @@ class ProfessionalController extends Controller
             <table>
             
             <tr>
-                <th style='width: 33%; text-align:left;'>Data / Hora</th>
+                <th style='width: 33%; text-align:left;'>Data</th>
                 <th style='width: 33%; text-align:left;'>Tipo</th>
                 <th style='width: 33%; text-align:left;'>Descrição</th>
                 
@@ -279,12 +280,12 @@ class ProfessionalController extends Controller
             //var_dump($event_log);
             //die;
             //$event_log = $this->entityFactory->createEventLog($event_log);
-            $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+            $event_log->date = date("d/m/Y", strtotime($event_log->date));
             $html .="
             <tr>
-                <td style='width: 33%; text-align:left;'>$event_log->date</td>
-                <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
-                <td style='width: 33%; text-align:left;'>$event_log->description</td>
+                <td style='width: 20%; text-align:left;'>$event_log->date</td>
+                <td style='width: 30%; text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='width: 50%; text-align:left;'>$event_log->description</td>
             
             </tr> ";
             
@@ -310,10 +311,24 @@ class ProfessionalController extends Controller
     public function export_history_attendance(Request $request, Response $response) {
         
         $id = (int)$request->getQueryParams()['id'];
-       //var_dump($id);
+        //var_dump($id);
         //die;
-        $attendances = $this->attendanceModel->getByProfessionalAtt($id);
+        $params = $request->getQueryParams();
+        //var_dump($params);
+        //die;    
+        $professional_start =   $params['professional_start'];
+        if ($professional_start == '') {
+            $professional_start = "2000-01-01";
+        }
+
+        
+        $professional_finish =  $params['professional_finish'];
+        //var_dump($params);
+        //die;
         $patients = $this->patientModel->getAll();
+        $attendances = $this->attendanceModel->getAllByDate($professional_start, $professional_finish);
+        //var_dump($attendances);
+        //die;
         $professional = $this->professionalModel->get($id);
         $event_logs = $this->eventLogModel->getByProfessional($id);
 
@@ -335,38 +350,29 @@ class ProfessionalController extends Controller
             <table>
             
             <tr>
-                <th style='width: 70%; text-align:left;'>Data / Hora</th>
+                <th style='width: 100px; text-align:left;'>Data / Hora</th>
                 <th style='width: 30%; text-align:left;'>Paciente</th>
-                <th style='width: 30%; text-align:left;'>Observações</th>
+                <th style='width: 50%; text-align:left;'>Observações</th>
                 
             </tr>
         ";
-        foreach ($attendances as $attendance) {
+        foreach ($attendances as $attendance) {            
+            //var_dump($attendance);
+            if ($attendance->id_professional == (int) $id) {
+              $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
 
-            
-            //if ($event_log->event_log_types_id == 5) {
-                
-            //var_dump($attendance);
-            //die;
-            //$event_log = $this->entityFactory->createEventLog($event_log);
-            $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
-            //var_dump($attendance);
-            //die;
-            //$event_log->description = $this->attendanceModel->get((int)$id)->description;
-            
-            //var_dump($event_log);
-            //die;
-            //$event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+             if ($attendance->attendance_day != "") {
+                $attendance->attendance_day = date('d/m/Y', strtotime($attendance->attendance_day));
+            }
             $html .="
             <tr>
-                <td style='width: 70%; text-align:left;'>$attendance->attendance_day</td>
-                <td style='width: 70%; text-align:left;'>$attendance->name_patient</td>
-                <td style='width: 70%; text-align:left;'>$attendance->description</td>
+                <td style='width: 100px; text-align:left;'>$attendance->attendance_day</td>
+                <td style='width: 30%; text-align:left;'>$attendance->name_patient</td>
+                <td style='width: 30%; text-align:left;'>$attendance->description</td>
             
-            </tr> ";
+            </tr> ";  
+            }
             
-        //}
-
         
     }
         $html .= "</table> </div>";

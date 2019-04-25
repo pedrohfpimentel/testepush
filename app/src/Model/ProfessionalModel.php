@@ -152,6 +152,35 @@ class ProfessionalModel extends Model
     }
 
 
+public function getAllByDateAtt(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+        SELECT 
+            attendances.*
+            
+        FROM `attendances`
+        
+        WHERE 
+           attendances.attendance_day BETWEEN ? AND ?
+        ORDER BY
+            attendances.attendance_day ASC
+        LIMIT ? , ?
+
+        
+    ";
+    $query = $this->db->prepare($sql);
+    $query->bindValue(1, $start, \PDO::PARAM_STR);
+    $query->bindValue(2, $finish, \PDO::PARAM_STR);
+    $query->bindValue(3, $offset, \PDO::PARAM_INT);
+    $query->bindValue(4, $limit, \PDO::PARAM_INT);
+    $query->execute();
+    $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Attendance::class);
+    return $query->fetchAll();
+
+
+
+    }
+
 
       public function getProfessionalsDownload($professionals_start, $professionals_finish)
     {
