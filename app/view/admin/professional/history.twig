@@ -10,6 +10,51 @@
 </ol>
 {% endblock %}
 {% block content %}
+
+  <div class="main">
+  <div class="">
+    <div class="row">
+      <div class="col-xs-12 col-sm-3">
+        
+      </div>
+
+      <div class="col-sm-9">
+        <div class="card">
+          <div class="card-header" data-background-color="purple">
+            Relatório
+          </div>
+          <div class="card-content" style="padding-top:5px;">
+            <div class="col-sm-0  ">
+              
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="professional_start">Data Inicial</label>
+                <input id="professional_start" class="form-control" type="date" name="professional_start" required>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="professional_finish">Data Final</label>
+                <input id="professional_finish" class="form-control" type="date" name="professional_finish" value="{{ today }}"  required>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+          <a class="btn btn-default" id="professionals_download_att" name="professionals_download_att"  href="{{ base_url() }}/admin/professionals/export_history_attendance?id={{ professional.id }}" target="_blank">
+                  Relatório de Atendimentos
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
 <div class="row">
   <div class="col-sm-12">
     <div class="card">
@@ -21,14 +66,7 @@
        <div class="col-sm-2">
           <p class="pull-right">
 
-            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-          <a class="btn btn-default" id="professionals_download" name="professionals_download"  href="{{ base_url() }}/admin/professionals/export_history_attendance?id={{ professional.id }}" target="_blank">
            
-           {# <a class="btn btn-default" href="{{ base_url() }}/admin/professionals/export">
-              <span class="glyphicon glyphicon-export" aria-hidden="true" target="_blank"></span>
-            </a> #}
-          Relatório de Atendimentos
-            </a>
           </p>
         </div>
         <div class="col-sm-2">
@@ -89,4 +127,19 @@ $('#inputCpf').mask('000.000.000-00', {reverse: true});
 $('#inputCep').mask('00000-000');
 </script>
 
+
+
+
+  <script type="text/javascript">
+      $("#professionals_download_att").click(function(){
+       // console.log('teste');
+      var professional_start = $('#professional_start').val()
+       var professional_finish =$('#professional_finish').val()
+       var base_url_hidden =$('#base_url_hidden').val()
+       // console.log($('#professional_finish #professional_start').val());
+       // alert(base_url_hidden);
+          console.log($('#professionals_download_att').attr('href'));
+          $("#professionals_download_att").attr('href',   base_url_hidden +'/admin/professionals/export_history_attendance?id={{ professional.id }}&professional_start=' + professional_start + '&professional_finish=' + professional_finish);
+});
+        </script>
 {% endblock %}
