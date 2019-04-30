@@ -155,7 +155,7 @@ class ProfessionalController extends Controller
         }
 
         $professional_types = $this->professionalTypeModel->getAll();
-            return $this->view->render($response, 'admin/professional/edit.twig', ['professional' => $professional, 'professional_types' => $professional_types]);
+            return $this->view->render($response, 'admin/professional/edit.twig', ['professional' => $professional, 'professional_types' => $professional_types,]);
     }
 
     public function history(Request $request, Response $response, array $args): Response {
@@ -176,9 +176,20 @@ class ProfessionalController extends Controller
 
     //download
     public function export(Request $request, Response $response)
-     {
-            $professionals = $this->professionalModel->getAll();
+     {  
+        $params = $request->getQueryParams();
 
+        $professional_status =  (int)$params['professional_status'];
+        //var_dump($params);
+        //die;
+            if ($professional_status  == 2) {
+                 $professionals = $this->professionalModel->getAll();
+
+                // var_dump($professionals);
+                // die;
+            } else {
+            $professionals = $this->professionalModel->getAllByStatus($professional_status);
+        }
             //var_dump($professionals);
             //die;
 
@@ -211,8 +222,15 @@ class ProfessionalController extends Controller
         ";
 
          foreach ($professionals as $professional) {
-            //var_dump( $professional);
+            //var_dump($professional);
+            //die;
+            if ($professional_status  == 2) {
+                 $professionals = $this->professionalModel->getAll();
+            
             $professional = $this->entityFactory->createProfessional($professional);
+        }
+            //var_dump( $professional);
+            //die;
             $html .= "
             <tr>
             <td style='width: 25%; text-align:left;'>$professional->name</td>
@@ -222,7 +240,8 @@ class ProfessionalController extends Controller
             <td style='width:  5%; text-align:left;'>$professional->tel_area</td>
             <td style='width: 15%; text-align:left;'>$professional->tel_numero</td>
             <td style='width: 10%; text-align:left;'>$professional->end_cep</td>               
-            <td style='width: 20%; text-align:left;'>$professional->professional_type_name</td>
+            <td style='width: 20%; text-align:left;'>$professional->id_professional_type</td>
+
                    
             </tr>";
         }
@@ -399,12 +418,17 @@ class ProfessionalController extends Controller
 
         $data = $request->getParsedBody();
         $data['end_numero'] = (int) $data['end_numero'];
+        $data['professional_status'] = (int) $data['professional_status'];
 
         $professional['id'] = (int) $data['id'];
         $professional['id_user'] = (int) $data['id_user'];
         $professional['id_professional_type'] = (int) $data['id_professional_type'];
+        $professional['professional_status'] = (int) $data['professional_status'];
+        //var_dump($professional);
+        //die;
         $professional = $this->entityFactory->createprofessional($professional);
-
+        //var_dump($professional);
+        //die;
         $user = $data;
         $user['id'] = (int) $data['id_user'];
 
@@ -414,7 +438,8 @@ class ProfessionalController extends Controller
 
         $professional_return = $this->professionalModel->update($professional);
         $user_return = $this->userModel->update($user_new);
-
+        //var_dump($professional);
+        //die;
         // if it's all ok with updates, create event log
         if ( (($professional_return != null) || ($professional_return != false)) && ($user_return != null) || ($user_return != false)  ) {
 

@@ -252,6 +252,30 @@ class PatientModel extends Model
     }
 
 
+
+    public function getPatientsByName($search, int $offset = 0, int $limit = PHP_INT_MAX): array
+        {
+            $sql = "
+                SELECT 
+                    users.*,
+                    patients.* 
+                FROM
+                    patients
+                    LEFT JOIN users ON users.id = patients.id_user
+                WHERE 
+                    users.name LIKE CONCAT('%',?, '%')
+                LIMIT ? , ?
+                    ";
+
+            $query = $this->db->prepare($sql);
+            $query->bindValue(1, $search, \PDO::PARAM_STR);
+            $query->bindValue(2, $offset, \PDO::PARAM_INT);
+            $query->bindValue(3, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        return $query->fetchAll();
+        }
+
+
      public function getPatientsDownload($patients_start, $patients_finish)
     {
         $sql = "

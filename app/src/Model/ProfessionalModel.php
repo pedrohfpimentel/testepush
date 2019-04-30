@@ -181,6 +181,38 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
 
     }
 
+    public function getAllByStatus( int $status = 0, int $offset = 0, int $limit = PHP_INT_MAX): array
+
+    {
+        $sql = "
+            SELECT
+                users.*,
+                professionals.*
+
+            FROM
+                professionals
+                LEFT JOIN users ON users.id = professionals.id_user
+            WHERE 
+                professionals.status =  ?
+                
+            ORDER BY
+                professionals.id ASC
+            LIMIT ? , ?
+
+            
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $status, \PDO::PARAM_INT);
+        $query->bindValue(2, $offset, \PDO::PARAM_INT);
+        $query->bindValue(3, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+        return $query->fetchAll();
+
+
+
+    }
+
 
       public function getProfessionalsDownload($professionals_start, $professionals_finish)
     {
@@ -210,7 +242,8 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
                 professionals
             SET
                 id_user         = :id_user,
-                id_professional_type = :id_professional_type
+                id_professional_type = :id_professional_type,
+                status = :status
             WHERE
                 id = :id
         ";
@@ -218,6 +251,7 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
         $parameters = [
             ':id_user'          => $professional->id_user,
             ':id_professional_type'  => $professional->id_professional_type,
+            ':status' => $professional->status,
             ':id'               => $professional->id
         ];
         return $query->execute($parameters);

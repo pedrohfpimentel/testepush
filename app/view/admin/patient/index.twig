@@ -63,11 +63,21 @@
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-8">
 
           <h4>Pacientes Cadastrados</h4>
         </div>
+
+        <div class="row">
+        <div class="col-sm-4"> 
+          Buscar
+          <input type="search" id="search" name="search" style="border-radius: 5px; color: #444">
+            <i class="material-icons">
+              <a href="" id="search_btn">search</a>
+            </i>
+        </div>
       </div>
+    </div>
 
     </div>
     <div class="card-content">
@@ -149,4 +159,31 @@
           $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status);
 });
         </script>
+
+
+        <script type="text/javascript">
+      $("#search_btn").click(function(){
+      var search = $('#search').val();
+          console.log($('#search_btn').attr('href'));
+          $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search);
+});
+        </script>
+
+
+  <script type="text/javascript">
+
+      $(function() {
+        $('form').submit(function(event){
+          return checkFocus();
+        });
+      });
+     
+    function checkFocus() {
+      if ($('#search').is(':focus')) {
+         return false;
+      }
+      return true;
+     }
+
+  </script>
 {% endblock %}

@@ -38,7 +38,7 @@
               <div class="form-group">
                 <label for="inputEmail">Email</label>
                 <input type="hidden" id="emailOriginal" name="" value="{{ professional.email }}" >
-                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="" value="{{ professional.email }}" required>
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="" value="{{ professional.email }}">
                 <p id="email-error" style="color:red;"></p>
                 <script type="text/javascript">
                   $('#inputEmail').change(function(){
@@ -180,10 +180,8 @@
           </div>
 
 
-          <div class="row">
-
-
-          </div>
+         <div class="row">
+            <div class="col-sm-8">
           <div class="form-group">
             <label for="selectDisease">Cargo Profissional</label>
             <select class="form-control" id="selectDisease" name="id_professional_type">
@@ -196,6 +194,21 @@
 
               {% endfor %}
             </select>
+          </div>
+        </div>
+
+
+             <div class="col-sm-4">
+              <div class="form-group">
+                <label for="id">Status Profissional</label>
+                <select class="form-control" name="professional_status" id="professional_status">
+                  <option value="0">Ativo</option>
+                  
+                    <option value="1" >Inativo</option>
+
+                </select>
+              </div>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-success">Editar</button>

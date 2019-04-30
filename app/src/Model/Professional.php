@@ -15,6 +15,7 @@ class Professional
     public $tel_numero;
     public $end_cep;
     public $professional_type_name;
+    public $status;
 
     public function __construct(array $data = [])
     {
@@ -28,6 +29,7 @@ class Professional
         $this->tel_numero = $data['tel_numero'] ?? null;
         $this->end_cep = $data['end_cep'] ?? null;
         $this->professional_type_name = $data['professional_type_name'] ?? null;
+        $this->status = $data['professional_status'] ?? null;
 
     }
 }
