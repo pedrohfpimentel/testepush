@@ -55,41 +55,49 @@ class PatientController extends Controller
 
         $params = $request->getQueryParams();
 
-
-        if (!empty($params['search'])) {
-            //$page = ($params['search']);
-            //var_dump($page);die;
-            $search = ($params['search']);
-            //var_dump($search);
-            //die;
-            $min_length = 1;
-            
-            if(strlen($search) >= $min_length){
-                $search = htmlspecialchars($search);
-                //$search = mysql_real_escape_string($search);
-                //var_dump($search);
-                //die;
-                $patients = $this->patientModel->getPatientsByName($search);
-                //var_dump($patients);die;
-
-                return $this->view->render($response, 'admin/patient/index.twig', [
-            'patients' => $patients
-            ]);
-        } 
-                
-    }   
-
-
-
         if (!empty($params['page'])) {
             $page = intval($params['page']);
+
+            if (!empty($params['search'])) {
+                //$page = ($params['search']);
+                //var_dump($page);
+                $search = ($params['search']);
+                //var_dump($search);
+                //die;
+                $min_length = 1;
+                
+                if(strlen($search) >= $min_length){
+                    $search = htmlspecialchars($search);
+                    //$search = mysql_real_escape_string($search);
+                    //var_dump($search);
+                    //die;
+                    $limit = 20;
+                    $offset = ($page - 1) * $limit;
+                    $patients = $this->patientModel->getPatientsByName($search, $offset, $limit);
+                    //var_dump($patients);
+                    //die;
+
+                    $amountPatients = $this->patientModel->getAmount();
+                    $amountPages = ceil($amountPatients->amount / $limit);
+                    //var_dump($patients);die;
+                    return $this->view->render($response, 'admin/patient/index.twig', [
+                'page' => $page,
+                'amountPages' => $amountPages,
+                'search' => $search,
+                'patients' => $patients
+                ]);
+            } 
+        }   
+    //}   
+        //if (!empty($params['page'])) {
+            //$page = intval($params['page']);
         } else {
             $page = 1;
         }
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-       
+             
         $patients = $this->patientModel->getAll($offset, $limit);
         $patient_status = $this->patientStatusModel->getAll();
 

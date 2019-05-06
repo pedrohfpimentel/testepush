@@ -187,11 +187,16 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
         $sql = "
             SELECT
                 users.*,
-                professionals.*
+                professionals.*,
+                users.id as id_user,
+                users.name as user_name,
+                users.email as user_email,
+                professional_types.name as professional_type_name
 
             FROM
                 professionals
                 LEFT JOIN users ON users.id = professionals.id_user
+                LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
             WHERE 
                 professionals.status =  ?
                 

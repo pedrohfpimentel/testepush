@@ -67,9 +67,31 @@
   <div class="card">
     <div class="card-header" data-background-color="blue">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-8">
           <h4>Profissionais</h4>
         </div>
+
+        <div class="row">
+        <div class="col-sm-4">
+              <div class="form-group">
+                <label for="id_status" style="color: #ffff">Status Profissional</label>
+                <select name="search" id="search" style="border-radius: 5px; color: #444">
+                  <option value="0">Ativo</option>
+                  
+                    <option value="1" >Inativo</option>
+
+                    <option value="2" >Todos</option>
+
+                </select>
+
+                <i class="material-icons">
+              <a href="" id="search_btn">search</a>
+            </i>
+              </div>
+            </div>
+      </div>
+
+
       </div>
 
     </div>
@@ -115,10 +137,10 @@
         <div class="col-xs-12">
           <ul class="pager">
             <li{% if page == 1 %} class="disabled"{% endif %}>
-              <a{% if page > 1 %} href="{{ base_url() }}/admin/professionals?page={{ page - 1 }}"{% endif %}>Anterior</a>
+              <a{% if page > 1 %} href="{{ base_url() }}/admin/professionals?search={{ search }}&page={{ page - 1 }}"{% endif %}>Anterior</a>
             </li>
             <li{% if page >= amountPages %} class="disabled"{% endif %}>
-              <a{% if page < amountPages %} href="{{ base_url() }}/admin/professionals?page={{ page + 1 }}"{% endif %}>Próximo</a>
+              <a{% if page < amountPages %} href="{{ base_url() }}/admin/professionals?search={{ search }}&page={{ page + 1 }}"{% endif %}>Próximo</a>
             </li>
           </ul>
         </div>
@@ -142,6 +164,16 @@
           console.log($('#professionals_download').attr('href'));
           $("#professionals_download").attr('href',   base_url_hidden +'/admin/professionals/export?professional_status=' + professional_status);
 });
+        </script>
+
+
+        <script type="text/javascript">
+      $("#search_btn").click(function(){
+      var search = $('#search').val();
+          console.log($('#search_btn').attr('href'));
+          $("#search_btn").attr('href',   '{{ base_url() }}/admin/professionals?search=' + search + '&page={{ page }}');
+        });
+
         </script>
   
 {% endblock %}
