@@ -36,11 +36,11 @@
               <div class="form-group">
                 <label for="id">Status Profissional</label>
                 <select name="professional_status" id="professional_status">
-                  <option value="0">Ativo</option>
+                  <option value="1">Ativo</option>
                   
-                    <option value="1" >Inativo</option>
+                    <option value="2" >Inativo</option>
 
-                    <option value="2" >Todos</option>
+                    <option value="0" >Todos</option>
 
                 </select>
               </div>
@@ -76,11 +76,11 @@
               <div class="form-group">
                 <label for="id_status" style="color: #ffff">Status Profissional</label>
                 <select name="search" id="search" style="border-radius: 5px; color: #444">
-                  <option value="0">Ativo</option>
+                  <option value="1">Ativo</option>
                   
-                    <option value="1" >Inativo</option>
+                    <option value="2" >Inativo</option>
 
-                    <option value="2" >Todos</option>
+                    <option value="0" >Todos</option>
 
                 </select>
 
@@ -171,7 +171,7 @@
       $("#search_btn").click(function(){
       var search = $('#search').val();
           console.log($('#search_btn').attr('href'));
-          $("#search_btn").attr('href',   '{{ base_url() }}/admin/professionals?search=' + search + '&page={{ page }}');
+          $("#search_btn").attr('href',   '{{ base_url() }}/admin/professionals?search=' + search + '&page={{ 1 }}');
         });
 
         </script>

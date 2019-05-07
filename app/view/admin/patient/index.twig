@@ -165,7 +165,7 @@
       $("#search_btn").click(function(){
       var search = $('#search').val();
           console.log($('#search_btn').attr('href'));
-          $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search + '&page={{ page }}');
+          $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search + '&page={{ 1 }}');
         });
         </script>
 

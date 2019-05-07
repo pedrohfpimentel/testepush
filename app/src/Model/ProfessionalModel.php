@@ -13,14 +13,16 @@ class ProfessionalModel extends Model
         $sql = "
             INSERT INTO professionals (
                 id_user,
-                id_professional_type
+                id_professional_type,
+                status
                 )
-            VALUES (:id_user, :id_professional_type)
+            VALUES (:id_user, :id_professional_type, :status)
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id_user'          => $professional->id_user,
-            ':id_professional_type' => $professional->id_professional_type
+            ':id_professional_type' => $professional->id_professional_type,
+            ':status' => $professional->status
         ];
         if ($query->execute($parameters)) {
             return $this->db->lastInsertId();

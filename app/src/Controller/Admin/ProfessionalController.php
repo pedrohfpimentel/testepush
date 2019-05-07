@@ -63,52 +63,15 @@ class ProfessionalController extends Controller
 
             if (!empty($params['search'])) {
             $search = (int)$params['search'];
+            
 
-            if ($search  == 2) {
-                $limit = 20;
-                $offset = ($page - 1) * $limit;
-
-                
-                $professionals = $this->professionalModel->getAll($offset, $limit);
-                $professional_types = $this->professionalTypeModel->getAll();
-                       
-                $amountProfessionals = $this->professionalModel->getAmount();
-                $amountPages = ceil($amountProfessionals->amount / $limit);
-
-                return $this->view->render($response, 'admin/professional/index.twig', [
-                    'professionals' => $professionals,
-                    'professional_types' => $professional_types,
-                    'page' => $page,
-                    'amountPages' => $amountPages,
-                    'search' => $search
-                    ]);
-            } 
-
-            if ($search  == 1) {
-                $limit = 20;
-                $offset = ($page - 1) * $limit;
-
-                
-                $professionals = $this->professionalModel->getAll($offset, $limit);
-                $professional_types = $this->professionalTypeModel->getAll();
-                       
-                $amountProfessionals = $this->professionalModel->getAmount();
-                $amountPages = ceil($amountProfessionals->amount / $limit);
-
-                return $this->view->render($response, 'admin/professional/index.twig', [
-                    'professionals' => $professionals,
-                    'professional_types' => $professional_types,
-                    'page' => $page,
-                    'amountPages' => $amountPages,
-                    'search' => $search
-                    ]);
-            } 
             if ($search  == 0) {
                 $limit = 20;
                 $offset = ($page - 1) * $limit;
 
                 
                 $professionals = $this->professionalModel->getAll($offset, $limit);
+
                 $professional_types = $this->professionalTypeModel->getAll();
                        
                 $amountProfessionals = $this->professionalModel->getAmount();
@@ -121,31 +84,37 @@ class ProfessionalController extends Controller
                     'amountPages' => $amountPages,
                     'search' => $search
                     ]);
+            } 
+
+            if ($search  == 1 or 2) {
+                $limit = 20;
+                $offset = ($page - 1) * $limit;
+                
+                
+                $professionals = $this->professionalModel->getAllByStatus($search, $offset, $limit);
+                //foreach ($professionals as $professional) {
+            //$professional->status = $this->professionalModel->get((int)$professional->id)->status;
+            
+                
+                //if ($professional->status == 0 OR 1) {
+                    $professional_types = $this->professionalTypeModel->getAll();
+                       
+                $amountProfessionals = $this->professionalModel->getAmount();
+                $amountPages = ceil($amountProfessionals->amount / $limit);
+                //var_dump($professional->status);die;
+                return $this->view->render($response, 'admin/professional/index.twig', [
+                    'professionals' => $professionals,
+                    'professional_types' => $professional_types,
+                    'page' => $page,
+                    'amountPages' => $amountPages,
+                    'search' => $search
+                    ]);
+                //}
+                
+                
+            //} 
             }
-
-
-        else {
-            $limit = 20;
-            $offset = ($page - 1) * $limit;
-
-            
-            $professionals = $this->professionalModel->getAllByStatus($search, $offset, $limit);
-            $professional_types = $this->professionalTypeModel->getAll();
-                   
-            $amountProfessionals = $this->professionalModel->getAmount();
-            $amountPages = ceil($amountProfessionals->amount / $limit);
-
-            return $this->view->render($response, 'admin/professional/index.twig', [
-                'professionals' => $professionals,
-                'professional_types' => $professional_types,
-                'page' => $page,
-                'amountPages' => $amountPages,
-                'search' => $search
-                ]);
-        } 
-    }
-
-            
+          }  
         } else {
             $page = 1;
         }
@@ -154,6 +123,7 @@ class ProfessionalController extends Controller
 
         
         $professionals = $this->professionalModel->getAll($offset, $limit);
+
         $professional_types = $this->professionalTypeModel->getAll();
                
         $amountProfessionals = $this->professionalModel->getAmount();
@@ -175,10 +145,12 @@ class ProfessionalController extends Controller
         }
 
         $data = $request->getParsedBody();
-
+        //var_dump($data);die;
         $data['password'] = 'Ancora1337';
         $data['role_id'] = 6;
         $data['end_numero'] = (int) $data['end_numero'];
+        $data['professional_status'] = (int)$data['professional_status'];
+          
 
         if ($this->professionalModel->getByEmail($data['email']) != false) {
             $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
@@ -187,15 +159,15 @@ class ProfessionalController extends Controller
 
         $user = $this->entityFactory->createUser($data);
 
-        //var_dump($data);
-        //die;    
+          
 
         $professional['id_user'] = $this->userModel->add($user);
         $professional['id_professional_type'] = $data['id_professional_type'];
+        $professional['professional_status'] = $data['professional_status'];
+
 
 
         $professional = $this->entityFactory->createProfessional($professional);
-
 
         $id_professional = $this->professionalModel->add($professional);
 
@@ -207,7 +179,7 @@ class ProfessionalController extends Controller
             $eventLog = $this->entityFactory->createEventLog($eventLog);
 
             $this->eventLogModel->add($eventLog);
-
+           
            $this->flash->addMessage('success', 'Profissional adicionado com sucesso.');
             return $this->httpRedirect($request, $response, '/admin/professionals');
         }
@@ -268,7 +240,7 @@ class ProfessionalController extends Controller
         $professional_status =  (int)$params['professional_status'];
         //var_dump($params);
         //die;
-            if ($professional_status  == 2) {
+            if ($professional_status  == 0) {
                  $professionals = $this->professionalModel->getAll();
 
                 // var_dump($professionals);
