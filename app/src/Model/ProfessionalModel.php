@@ -119,6 +119,28 @@ class ProfessionalModel extends Model
     }
 
 
+    public function getAmountStatus( $status = 0)
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                professionals
+                WHERE 
+                professionals.status =  ?
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $status, \PDO::PARAM_STR);
+        $query->execute();
+        return $query->fetch();
+    }
+
+
+
+    
+
+
 
     public function getAllByDate( int $offset = 0, int $limit = PHP_INT_MAX): array
     {
@@ -213,7 +235,46 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
         $query->bindValue(2, $offset, \PDO::PARAM_INT);
         $query->bindValue(3, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Patient::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        return $query->fetchAll();
+
+
+
+    }
+
+
+
+    public function getAllByStatus2( int $status = 0, int $offset = 0, int $limit = PHP_INT_MAX): array
+
+    {
+        $sql = "
+            SELECT
+                users.*,
+                professionals.*,
+                users.id as id_user,
+                users.name as user_name,
+                users.email as user_email,
+                professional_types.name as professional_type_name
+
+            FROM
+                professionals
+                LEFT JOIN users ON users.id = professionals.id_user
+                LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
+            WHERE 
+                professionals.status IS NULL OR professionals.status = ?
+                
+            ORDER BY
+                professionals.id ASC
+            LIMIT ? , ?
+
+            
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $status, \PDO::PARAM_INT);
+        $query->bindValue(2, $offset, \PDO::PARAM_INT);
+        $query->bindValue(3, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
         return $query->fetchAll();
 
 

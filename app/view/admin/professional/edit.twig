@@ -179,7 +179,6 @@
             </div>
           </div>
 
-
          <div class="row">
             <div class="col-sm-8">
           <div class="form-group">
@@ -197,15 +196,13 @@
           </div>
         </div>
 
-
              <div class="col-sm-4">
               <div class="form-group">
                 <label for="id">Status Profissional</label>
                 <select class="form-control" name="professional_status" id="professional_status">
-                  <option value="1">Ativo</option>
+                    <option value="1" {% if professional.status == '1' %} selected {% endif %}>Ativo</option>
                   
-                    <option value="2" >Inativo</option>
-
+                    <option value="2" {% if professional.status == '2' %} selected {% endif %}>Inativo</option>
                 </select>
               </div>
             </div>

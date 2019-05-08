@@ -86,35 +86,56 @@ class ProfessionalController extends Controller
                     ]);
             } 
 
-            if ($search  == 1 or 2) {
+            if ($search  == 1) {
                 $limit = 20;
                 $offset = ($page - 1) * $limit;
                 
                 
-                $professionals = $this->professionalModel->getAllByStatus($search, $offset, $limit);
+                $professionals = $this->professionalModel->getAllByStatus2($search, $offset, $limit);
+                //$professionals2 = $this->professionalModel->getAllByStatus($search, $offset, $limit);
+                //var_dump($professionals);die;
                 //foreach ($professionals as $professional) {
             //$professional->status = $this->professionalModel->get((int)$professional->id)->status;
             
                 
                 //if ($professional->status == 0 OR 1) {
-                    $professional_types = $this->professionalTypeModel->getAll();
+                $professional_types = $this->professionalTypeModel->getAll();
                        
-                $amountProfessionals = $this->professionalModel->getAmount();
+                $amountProfessionals = $this->professionalModel->getAmountStatus($search);
                 $amountPages = ceil($amountProfessionals->amount / $limit);
-                //var_dump($professional->status);die;
+                //var_dump($professionals);die;
+                return $this->view->render($response, 'admin/professional/index.twig', [
+                    'professionals' => $professionals,
+                    //'professionals2' => $professionals2,
+                    'professional_types' => $professional_types,
+                    'page' => $page,
+                    'amountPages' => $amountPages,
+                    'search' => $search
+                    ]);     
+        
+            }
+
+            if ($search  == 2) {
+                $limit = 20;
+                $offset = ($page - 1) * $limit;
+                
+                
+                $professionals = $this->professionalModel->getAllByStatus($search, $offset, $limit);
+
+                $professional_types = $this->professionalTypeModel->getAll();
+                       
+                $amountProfessionals = $this->professionalModel->getAmountStatus($search);
+                $amountPages = ceil($amountProfessionals->amount / $limit);
+
                 return $this->view->render($response, 'admin/professional/index.twig', [
                     'professionals' => $professionals,
                     'professional_types' => $professional_types,
                     'page' => $page,
                     'amountPages' => $amountPages,
                     'search' => $search
-                    ]);
-                //}
-                
-                
-            //} 
-            }
-          }  
+                    ]); 
+                }
+            }  
         } else {
             $page = 1;
         }
@@ -240,7 +261,7 @@ class ProfessionalController extends Controller
         $professional_status =  (int)$params['professional_status'];
         //var_dump($params);
         //die;
-            if ($professional_status  == 0) {
+            if ($professional_status  == 1) {
                  $professionals = $this->professionalModel->getAll();
 
                 // var_dump($professionals);
