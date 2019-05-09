@@ -77,7 +77,7 @@ class PatientController extends Controller
                     //var_dump($patients);
                     //die;
 
-                    $amountPatients = $this->patientModel->getAmount();
+                    $amountPatients = $this->patientModel->getAmountName($search);
                     $amountPages = ceil($amountPatients->amount / $limit);
                     //var_dump($patients);die;
                     return $this->view->render($response, 'admin/patient/index.twig', [

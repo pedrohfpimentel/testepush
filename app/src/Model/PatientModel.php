@@ -252,6 +252,26 @@ class PatientModel extends Model
     }
 
 
+    public function getAmountName($search)
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount,
+                users.*
+                
+            FROM
+             users
+                
+            WHERE 
+                users.name LIKE CONCAT('%',?, '%')
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $search, \PDO::PARAM_STR);
+        $query->execute();
+        return $query->fetch();
+    }
+
+
 
     public function getPatientsByName($search, int $offset = 0, int $limit = PHP_INT_MAX): array
         {
