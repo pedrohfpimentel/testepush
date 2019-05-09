@@ -256,7 +256,7 @@ class ProfessionalController extends Controller
     //download
     public function export(Request $request, Response $response)
      {  
-        $params = $request->getQueryParams();
+        /*$params = $request->getQueryParams();
 
         $professional_status =  (int)$params['professional_status'];
         //var_dump($params);
@@ -270,7 +270,13 @@ class ProfessionalController extends Controller
             $professionals = $this->professionalModel->getAllByStatus($professional_status);
         }
             //var_dump($professionals);
+            //die;*/
+
+
+        $professionals = $this->professionalModel->getAll();
+            //var_dump($professionals);
             //die;
+
 
             $dir = getcwd();
             
@@ -300,7 +306,7 @@ class ProfessionalController extends Controller
             </tr>
         ";
 
-         foreach ($professionals as $professional) {
+        /* foreach ($professionals as $professional) {
             //var_dump($professional);
             //die;
             if ($professional_status  == 2) {
@@ -309,7 +315,12 @@ class ProfessionalController extends Controller
             $professional = $this->entityFactory->createProfessional($professional);
         }
             //var_dump( $professional);
-            //die;
+            //die;*/
+
+        foreach ($professionals as $professional) {
+            //var_dump( $professional);
+            $professional = $this->entityFactory->createProfessional($professional);
+            
             $html .= "
             <tr>
             <td style='width: 25%; text-align:left;'>$professional->name</td>
@@ -319,7 +330,7 @@ class ProfessionalController extends Controller
             <td style='width:  5%; text-align:left;'>$professional->tel_area</td>
             <td style='width: 15%; text-align:left;'>$professional->tel_numero</td>
             <td style='width: 10%; text-align:left;'>$professional->end_cep</td>               
-            <td style='width: 20%; text-align:left;'>$professional->id_professional_type</td>
+            <td style='width: 20%; text-align:left;'>$professional->professional_type_name</td>
 
                    
             </tr>";

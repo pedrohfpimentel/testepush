@@ -256,11 +256,13 @@ class PatientModel extends Model
     {
         $sql = "
             SELECT
-                COUNT(id) AS amount,
-                users.*
+                COUNT(id_user) AS amount,
+                users.*,
+                patients.*
                 
             FROM
-             users
+            patients
+            LEFT JOIN users ON users.id = patients.id_user
                 
             WHERE 
                 users.name LIKE CONCAT('%',?, '%')
