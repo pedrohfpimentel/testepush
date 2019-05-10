@@ -65,7 +65,7 @@ class ProfessionalController extends Controller
             $search = (int)$params['search'];
             
 
-            if ($search  == 0) {
+            if ($search  == 3) {
                 $limit = 20;
                 $offset = ($page - 1) * $limit;
 
@@ -143,11 +143,11 @@ class ProfessionalController extends Controller
         $offset = ($page - 1) * $limit;
 
         
-        $professionals = $this->professionalModel->getAll($offset, $limit);
+        $professionals = $this->professionalModel->getAllIndex($offset, $limit);
 
         $professional_types = $this->professionalTypeModel->getAll();
                
-        $amountProfessionals = $this->professionalModel->getAmount();
+        $amountProfessionals = $this->professionalModel->getAmountStatus1();
         $amountPages = ceil($amountProfessionals->amount / $limit);
 
         return $this->view->render($response, 'admin/professional/index.twig', [
@@ -287,7 +287,7 @@ class ProfessionalController extends Controller
       <div style='width: 75%;'>
         <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
         <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Profissionais Cadastrados</h3>
-        <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+        <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
       
       </div>
       <hr>
@@ -320,7 +320,7 @@ class ProfessionalController extends Controller
         foreach ($professionals as $professional) {
             //var_dump( $professional);
             $professional = $this->entityFactory->createProfessional($professional);
-            
+
             $html .= "
             <tr>
             <td style='width: 25%; text-align:left;'>$professional->name</td>
@@ -371,7 +371,7 @@ class ProfessionalController extends Controller
             <div style='width: 75%;'>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Profissional</h3>
                 <p> <strong>Profissional:</strong> $professional->name </p>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>
@@ -451,7 +451,7 @@ class ProfessionalController extends Controller
             <div style='width: 75%;'>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Profissional</h3>
                 <p> <strong>Profissional:</strong> $professional->name </p>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>

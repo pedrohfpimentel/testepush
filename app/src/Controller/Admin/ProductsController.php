@@ -466,7 +466,7 @@ class ProductsController extends Controller
             <div style='width: 75%;'>
                 <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Produtos Cadastrados</h3>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>
@@ -529,7 +529,7 @@ class ProductsController extends Controller
             <div style='width: 75%;'>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Produto</h3>
                 <p> <strong>Produto:</strong> $product->name </p>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>
