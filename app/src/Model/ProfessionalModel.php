@@ -104,6 +104,39 @@ class ProfessionalModel extends Model
     }
 
 
+    public function getAllIndex(int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+            SELECT
+                users.*,
+                professionals.*,
+                users.id as id_user,
+                users.name as user_name,
+                users.email as user_email,
+                professional_types.name as professional_type_name
+
+            FROM
+                professionals
+                LEFT JOIN users ON users.id = professionals.id_user
+                LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
+
+            WHERE 
+            professionals.status IS NULL OR professionals.status = 1
+            
+            ORDER BY
+                users.name ASC
+                LIMIT ? , ?
+
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $offset, \PDO::PARAM_INT);
+        $query->bindValue(2, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        return $query->fetchAll();
+    }
+
+
        public function getAmount()
     {
         $sql = "
@@ -119,6 +152,8 @@ class ProfessionalModel extends Model
     }
 
 
+
+    
     public function getAmountStatus( $status = 0)
     {
         $sql = "
@@ -132,6 +167,26 @@ class ProfessionalModel extends Model
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $status, \PDO::PARAM_STR);
+        $query->execute();
+        return $query->fetch();
+    }
+
+
+
+    
+    public function getAmountStatus1( $status = 0)
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                professionals
+                WHERE 
+                professionals.status IS NULL OR professionals.status = 1
+
+        ";
+        $query = $this->db->prepare($sql);
+        //$query->bindValue(1, $status, \PDO::PARAM_STR);
         $query->execute();
         return $query->fetch();
     }

@@ -271,7 +271,7 @@ class PatientController extends Controller
             <div style='width: 75%;'>
                 <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>
@@ -335,7 +335,7 @@ class PatientController extends Controller
             <div style='width: 75%;'>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Paciente</h3>
                 <p> <strong>Paciente:</strong> $patient->name </p>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>
@@ -390,7 +390,7 @@ class PatientController extends Controller
            // die;
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
         }
-        //$today = date('d-m-Y');
+        //$today = date('d/m/Y');
         //var_dump($event_logs);
         //die;
 

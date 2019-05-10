@@ -329,7 +329,7 @@ class RemessaSaidaController extends Controller
             <div style='width: 75%;'>
                 <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Saída Cadastrados</h3>
-                <p> <strong>Data relatório:</strong>  " . date("d-m-Y") . " </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
             
             </div>
             <hr>
