@@ -74,9 +74,9 @@
           <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
             <label for="id_status" style="color: #ffff">Status Profissional</label>
             <select name="search" id="search" style="border-radius: 5px; color: #444">
-              <option value="1">Ativo</option>
-              <option value="2" >Inativo</option>
-              <option value="3" >Todos</option>
+              <option value="1" {% if search == '1' %} selected {% endif %}>Ativo</option>
+              <option value="2" {% if search == '2' %} selected {% endif %}>Inativo</option>
+              <option value="3" {% if search == '3' %} selected {% endif %}>Todos</option>
             </select>
             
               <a class="btn btn-primary" href="" id="search_btn">
