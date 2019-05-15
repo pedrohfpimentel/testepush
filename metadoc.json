@@ -1,0 +1,251 @@
+    
+{
+	"pages": [
+		{
+			"name" : "Index Profissional", 
+			"description": "Tela para exibir lista de profissionais",
+			"layout" :  "admin/layout.twig",
+			"page_sessions" : [
+				{
+					"name": "Actions Menu",
+					"elements": [
+						{
+							"name" : "Novo Profissional", 
+							"Label" : "Novo Profissional",
+							"description" : "Redireciona para a tela onde é feita a adição de um novo profissional",
+							"type": "link",
+							"route" : "/admin/professionals/add"
+						}
+					]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatórios",
+					"elements" : [
+						{
+							"name" : "Relatório",
+							"Label" : "Relatório",
+							"description" : "Gera um relatório com as informações de todos os profissionais cadastrados em uma nova aba",
+							"type": "link",
+							"route" : "/admin/professionals/export"
+						}
+					]
+				},
+				{
+					"name" : "Lista de Profissionais",
+					"label" : "Profissionais",
+					"elements" : [
+						{
+							"name" : "Status Profissional", 
+							"Label" : "Status Profissional",
+							"description" : "Filtro que exibe a lista de profissionais na mesma página de acordo com status selecionado (ativo/ inativo/ todos). A lista atualiza ao clicar no botão “search”, ao lado",
+							"layout_relative_position" : "header",
+							"type": "form_filter",
+							"form_elements" : [
+								{
+									"name" : "Status Select",
+									"label": "Status Profissional Ativo",
+									"type" : "select"
+								},
+								{
+									"name" : "Button Select",
+									"type" : "submit",
+									"route" : "/admin/professionals",
+									"query_params" : [
+										{
+											"name": "search",
+											"data": {
+												"type" : "enum",
+												"description" : "enums from select field #search"
+											}
+										}
+									],
+									"events" : [
+										{
+											"name" : "search_btn", 
+											"label" : "<i class='material-icons'>search</i>",
+											"type" : "click",
+											"description" : "pega o conteúdo do value do select #search e monta a url do href do search_btn"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name" : "Tabela de Profissionais",
+							"description" : "Tabela exibindo Nome; e-mail e Cargo seguido dos botões de histórico e edição",
+							"layout_relative_position" : "content",
+							"type" : "table",
+							"columns" : [
+								{
+									"name" : "Nome",
+									"description" : "Campo com o nome do Profissional",
+									"type" : "text"
+								},
+								{
+									"name" : "Email",
+									"description" : "email do profissional",
+									"type" : "text"
+								},
+								{
+									"name" : "Cargo",
+									"description" : "cargo do profissional",
+									"type" : "text"
+								},
+								{
+									"name" : "Botão Histórico",
+									"label" : "Histórico",
+									"description" : "Exibe todos os eventos relacionados ao profissional selecionado",
+									"type" : "link",
+									"route" : "/admin/professionals/history/{{ id_professional }}"
+								},
+								{
+									"name" : "Botão de Edição",
+									"label" : "class='glyphicon glyphicon-pencil'",
+									"description" : "Redireciona para a tela onde é possível fazer a edição de todas as informações do profissional desejado",
+									"type" : "link",
+									"route" : "professionals/edit/{{ id_professional }}"
+								}
+							]
+						},
+
+						{
+							"name" : "Botão “Anterior”", 
+							"label" : "Anterior",
+							"description" : "Navega entre as páginas, exibindo a lista de profissionais (com limite de 20 por página)",
+							"layout_relative_position" : "bottom",
+							"type" : "link",
+							"route" : "/admin/professionals" ,
+							"query_params" : [
+								{
+									"name": "page",
+									"data": {
+										"type" : "integer",
+										"description" : "integer que representa a página atual"
+									}
+								}
+							]
+						}
+					]
+				}
+
+			]
+		},
+
+		
+
+
+		"Name Page: Adicionar Profissionais": {
+			"Description": "Tela para adicionar um novo profisisonal",
+			"Elementos": {
+
+				"Campos do Formulário": [
+					"Nome (obrigatório), Email, Data de Nascimento, CPF, DDD, Telefone, CEP, Rua, Número, Complemento, Bairro, Cidade, Estado, Tipo de Profissional (Seleciona entre as categorias cadastradas), Status do Profissional"
+				],
+
+
+				"Name: Adicionar": [
+					"Route: /admin/professionals/",
+					"Description: Submit que salva o novo profissional e suas informações no banco"
+				]
+
+			},
+
+
+			"Scripts - Adicionar Profissionais": {
+				"Name: mask": [
+					"Route: admin/professionals/add'",
+					"Description: Máscara numérica para CPF e CEP"
+				],
+
+				"Name: email-error": [
+					"Route: admin/professionals/edit'",
+					"Description: Confere se email é válido e não é repetido"
+				]
+			}
+
+		},
+
+
+		"Name Page: Editar Profissional": {
+			"Description": "Tela para editar informações de um profisisonal",
+			"Elementos": {
+
+				"Campos do Formulário": [
+					"Nome (obrigatório), Email, Data de Nascimento, CPF, DDD, Telefone, CEP, Rua, Número, Complemento, Bairro, Cidade, Estado, Tipo de Profissional (Seleciona entre as categorias cadastradas), Status do Profissional"
+				],
+
+				"Name: Editar": [
+					"Route: /admin/professionals/",
+					"Description: Submit que salva o novo profissional e suas informações no banco"
+				]
+
+			},
+
+			"Scripts - Editar Profissionais": {
+				"Name: mask": [
+					"Route: admin/professionals/edit'",
+					"Description: Máscara numérica para CPF e CEP"
+				],
+				"Name: email-error": [
+					"Route: admin/professionals/edit'",
+					"Description: Confere se email é válido e não é repetido"
+				]
+			}
+		}
+	}],
+
+
+
+
+
+	"Telas - Paciente": {
+		"Name Page: Index Paciente": {
+			"Description": "Tela para exibir lista de pacientes",
+			"Elementos": {	
+				"Name = +Novo Paciente": [
+					"Route = /admin/patients/add",
+					"Description = Redireciona para a tela onde é feita a adição de um novo paciente"
+				],
+				"Name = Relatório": [
+					"Route = /admin/patients/export?",
+					"Description = Gera um relatório com as informações de todos os patients cadastrados em uma nova aba (de acordo com status e/ ou datas selecionadas)"
+				],
+				"Name = Status Paciente": [
+					"Route = /admin/patients",
+					"Description = Faz a seleção dos pacientes por status para gerar o relatório em pdf"
+				],
+				"Name = Status Paciente": [
+					"Route = /admin/patients",
+					"Description = Faz a seleção dos pacientes por status para gerar o relatório em pdf"
+				],
+				"Name = Data Inicial & Data Final": [
+					"Route = /admin/patients",
+					"Description = Gera o relatório de pacientes cadastrados com a 'data da visita' dentro do intervalo de tempo selecionado (se a data inicial for vazia, a data padrão será 01/01/2001)"
+				],
+				"Name = Relatório": [
+					"Route = /admin/patients/export?",
+					"Description = Gera um relatório com as informações de todos os pacientes cadastrados (de acordo com o status e intervalo de datas) em uma nova aba"
+				],
+				"Name = Buscar Nome": [
+					"Route = /admin/patients?search=' + search + '&page={{ 1 }}'",
+					"Description = Filtro que exibe a lista de pacientes de acordo com nome pesquisado. A lista atualiza ao clicar no botão “search”, ao lado"
+				],
+				"Name = Lista de Pacientes": [
+					"Route = /admin/patients",
+					"Description = Lista de pacientes cadastrados, exibindo Nome; e-mail; CID Versão; CID COD e Cidade seguido dos botões de histórico e edição (organizado por ordem alfabética)"
+				],
+				"Name = Histórico": [
+					"Route = /admin/patients/history/(id_patient)",
+					"Description = Exibe todos os eventos relacionados ao paciente selecionado"
+				],
+				"Name = Botão de Edição": [
+					"Route = patients/edit/(id_patient)",
+					"Description = Redireciona para a tela onde é possível fazer a edição de todas as informações do paciente desejado"
+				],
+				"Name = Botões de paginação “Anterior” e “Próximo”": [
+					"Route = admin/patients?search=&page=",
+					"Description = Navega entre as páginas, exibindo a lista de pacientes (com limite de 20 por página)"
+				]
+	}
+}
