@@ -142,26 +142,22 @@
 
 {% block javascripts %}
 
- <script type="text/javascript">
-      $("#professionals_download").click(function(){
-       // console.log('teste');
+  <script type="text/javascript">
+    $("#professionals_download").click(function(){
+      // console.log('teste');
+
+      var base_url_hidden =$('#base_url_hidden').val();
+      //var professional_status = $('#professional_status').val();
       
-       var base_url_hidden =$('#base_url_hidden').val();
-       //var professional_status = $('#professional_status').val();
-       
-          console.log($('#professionals_download').attr('href'));
-          $("#professionals_download").attr('href',   base_url_hidden +'/admin/professionals/export?');
-});
-        </script>
+      //console.log($('#professionals_download').attr('href'));
+      $("#professionals_download").attr('href',   base_url_hidden +'/admin/professionals/export?');
+    });
 
-
-        <script type="text/javascript">
-      $("#search_btn").click(function(){
+    $("#search_btn").click(function(){
       var search = $('#search').val();
-          console.log($('#search_btn').attr('href'));
-          $("#search_btn").attr('href',   '{{ base_url() }}/admin/professionals?search=' + search + '&page={{ 1 }}');
-        });
+      //console.log($('#search_btn').attr('href'));
+      $("#search_btn").attr('href',   '{{ base_url() }}/admin/professionals?search=' + search + '&page={{ 1 }}');
+    });
+  </script>
 
-        </script>
-  
 {% endblock %}

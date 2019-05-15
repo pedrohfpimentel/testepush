@@ -1,52 +1,137 @@
 {
-	"Telas - Profissional": {
-		"Name Page: Index Profissional": {
-			"Description": "Tela para exibir lista de profissionais",
-			"Elementos": {
+	"pages": [
+		{
+			"name" : "Index Profissional", 
+			"description": "Tela para exibir lista de profissionais",
+			"layout" :  "admin/layout.twig",
+			"page_sessions" : [
+				{
+					"name": "Actions Menu",
+					"elements": [
+						{
+							"name" : "Novo Profissional", 
+							"Label" : "Novo Profissional",
+							"description" : "Redireciona para a tela onde é feita a adição de um novo profissional",
+							"type": "link",
+							"route" : "/admin/professionals/add"
+						}
+					]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatórios",
+					"elements" : [
+						{
+							"name" : "Relatório",
+							"Label" : "Relatório",
+							"description" : "Gera um relatório com as informações de todos os profissionais cadastrados em uma nova aba",
+							"type": "link",
+							"route" : "/admin/professionals/export"
+						}
+					]
+				},
+				{
+					"name" : "Lista de Profissionais",
+					"label" : "Profissionais",
+					"elements" : [
+						{
+							"name" : "Status Profissional", 
+							"Label" : "Status Profissional",
+							"description" : "Filtro que exibe a lista de profissionais na mesma página de acordo com status selecionado (ativo/ inativo/ todos). A lista atualiza ao clicar no botão “search”, ao lado",
+							"layout_relative_position" : "header",
+							"type": "form_filter",
+							"form_elements" : [
+								{
+									"name" : "Status Select",
+									"label": "Status Profissional Ativo",
+									"type" : "select"
+								},
+								{
+									"name" : "Button Select",
+									"type" : "submit",
+									"route" : "/admin/professionals",
+									"query_params" : [
+										{
+											"name": "search",
+											"data": {
+												"type" : "enum",
+												"description" : "enums from select field #search"
+											}
+										}
+									],
+									"events" : [
+										{
+											"name" : "search_btn", 
+											"label" : "<i class='material-icons'>search</i>",
+											"type" : "click",
+											"description" : "pega o conteúdo do value do select #search e monta a url do href do search_btn"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name" : "Tabela de Profissionais",
+							"description" : "Tabela exibindo Nome; e-mail e Cargo seguido dos botões de histórico e edição",
+							"layout_relative_position" : "content",
+							"type" : "table",
+							"columns" : [
+								{
+									"name" : "Nome",
+									"description" : "Campo com o nome do Profissional",
+									"type" : "text"
+								},
+								{
+									"name" : "Email",
+									"description" : "email do profissional",
+									"type" : "text"
+								},
+								{
+									"name" : "Cargo",
+									"description" : "cargo do profissional",
+									"type" : "text"
+								},
+								{
+									"name" : "Botão Histórico",
+									"label" : "Histórico",
+									"description" : "Exibe todos os eventos relacionados ao profissional selecionado",
+									"type" : "link",
+									"route" : "/admin/professionals/history/{{ id_professional }}"
+								},
+								{
+									"name" : "Botão de Edição",
+									"label" : "class='glyphicon glyphicon-pencil'",
+									"description" : "Redireciona para a tela onde é possível fazer a edição de todas as informações do profissional desejado",
+									"type" : "link",
+									"route" : "professionals/edit/{{ id_professional }}"
+								}
+							]
+						},
 
-				"Name = +Novo Profissional": [
-					"Route = /admin/professionals/add",
-					"Description = Redireciona para a tela onde é feita a adição de um novo profissional"
-				],
-				"Name = Relatório": [
-					"Route = /admin/professionals/export?",
-					"Description = Gera um relatório com as informações de todos os profissionais cadastrados em uma nova aba"
-				],
-				"Name = Status Profissional": [
-					"Route = /admin/professionals?search=' + search + '&page={{ 1 }}'",
-					"Description = Filtro que exibe a lista de profissionais de acordo com status selecionado (ativo/ inativo/ todos). A lista atualiza ao clicar no botão “search”, ao lado"
-				],
-				"Name = Lista de Profissionais": [
-					"Route = /admin/professionals",
-					"Description = Lista de profissionais Ativos, exibindo Nome; e-mail e Cargo seguido dos botões de histórico e edição"
-				],
-				"Name = Histórico": [
-					"Route = /admin/professionals/history/(id_professional)",
-					"Description = Exibe todos os eventos relacionados ao profissional selecionado"
-				],
-				"Name = Botão de Edição": [
-					"Route = professionals/edit/(id_professional)",
-					"Description = Redireciona para a tela onde é possível fazer a edição de todas as informações do profissional desejado"
-				],
-				"Name = Botões de paginação “Anterior” e “Próximo”": [
-					"Route = admin/professionals?search=&page=",
-					"Description = Navega entre as páginas, exibindo a lista de profissionais (com limite de 20 por página)"
-				]
-			},
+						{
+							"name" : "Botão “Anterior”", 
+							"label" : "Anterior",
+							"description" : "Navega entre as páginas, exibindo a lista de profissionais (com limite de 20 por página)",
+							"layout_relative_position" : "bottom",
+							"type" : "link",
+							"route" : "/admin/professionals" ,
+							"query_params" : [
+								{
+									"name": "page",
+									"data": {
+										"type" : "integer",
+										"description" : "integer que representa a página atual"
+									}
+								}
+							]
+						}
+					]
+				}
 
-			"Scripts - Index Profissional": {
-				"Name = professionals_download": [
-					"Route = base_url_hidden +'/admin/professionals/export?'",
-					"Description = faz um redirecionamento para gerar/ exportar um arquivo pdf com o relatório de profissionais"
-				],
-				"Name = search_btn": [
-					"Route = base_url() }}/admin/professionals?search=' + search + '&page={{ 1 }}'",
-					"Description = envia o parâmetro (status) para o controller que será usado no filtro de exibição dos profissionais"
-				]
-			}
+			]
 		},
 
-
+		
 
 
 		"Name Page: Adicionar Profissionais": {
@@ -107,7 +192,7 @@
 				]
 			}
 		}
-	},
+	}],
 
 
 
