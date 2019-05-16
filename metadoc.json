@@ -1,129 +1,114 @@
 {
-	"pages": [
-		{
-			"name" : "Index Profissional", 
+	"pages": [{
+			"name": "Index Profissional",
 			"description": "Tela para exibir lista de profissionais",
-			"layout" :  "admin/layout.twig",
-			"page_sessions" : [
-				{
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
 					"name": "Actions Menu",
-					"elements": [
-						{
-							"name" : "Novo Profissional", 
-							"Label" : "Novo Profissional",
-							"description" : "Redireciona para a tela onde é feita a adição de um novo profissional",
-							"type": "link",
-							"route" : "/admin/professionals/add"
-						}
-					]
+					"elements": [{
+						"name": "Novo Profissional",
+						"Label": "Novo Profissional",
+						"description": "Redireciona para a tela onde é feita a adição de um novo profissional",
+						"type": "link",
+						"route": "/admin/professionals/add"
+					}]
 				},
 				{
 					"name": "Menu Relatórios",
 					"label": "Relatórios",
-					"elements" : [
-						{
-							"name" : "Relatório",
-							"Label" : "Relatório",
-							"description" : "Gera um relatório com as informações de todos os profissionais cadastrados em uma nova aba",
-							"type": "link",
-							"route" : "/admin/professionals/export"
-						}
-					]
+					"elements": [{
+						"name": "Relatório",
+						"Label": "Relatório",
+						"description": "Gera um relatório com as informações de todos os profissionais cadastrados em uma nova aba",
+						"type": "link",
+						"route": "/admin/professionals/export"
+					}]
 				},
 				{
-					"name" : "Lista de Profissionais",
-					"label" : "Profissionais",
-					"elements" : [
-						{
-							"name" : "Status Profissional", 
-							"Label" : "Status Profissional",
-							"description" : "Filtro que exibe a lista de profissionais na mesma página de acordo com status selecionado (ativo/ inativo/ todos). A lista atualiza ao clicar no botão “search”, ao lado",
-							"layout_relative_position" : "header",
+					"name": "Lista de Profissionais",
+					"label": "Profissionais",
+					"elements": [{
+							"name": "Status Profissional",
+							"Label": "Status Profissional",
+							"description": "Filtro que exibe a lista de profissionais na mesma página de acordo com status selecionado (ativo/ inativo/ todos). A lista atualiza ao clicar no botão “search”, ao lado",
+							"layout_relative_position": "header",
 							"type": "form_filter",
-							"form_elements" : [
-								{
-									"name" : "Status Select",
+							"form_elements": [{
+									"name": "Status Select",
 									"label": "Status Profissional Ativo",
-									"type" : "select"
+									"type": "select"
 								},
 								{
-									"name" : "Button Select",
-									"type" : "submit",
-									"route" : "/admin/professionals",
-									"query_params" : [
-										{
-											"name": "search",
-											"data": {
-												"type" : "enum",
-												"description" : "enums from select field #search"
-											}
+									"name": "Button Select",
+									"type": "submit",
+									"route": "/admin/professionals",
+									"query_params": [{
+										"name": "search",
+										"data": {
+											"type": "enum",
+											"description": "enums from select field #search"
 										}
-									],
-									"events" : [
-										{
-											"name" : "search_btn", 
-											"label" : "<i class='material-icons'>search</i>",
-											"type" : "click",
-											"description" : "pega o conteúdo do value do select #search e monta a url do href do search_btn"
-										}
-									]
+									}],
+									"events": [{
+										"name": "search_btn",
+										"label": "<i class='material-icons'>search</i>",
+										"type": "click",
+										"description": "pega o conteúdo do value do select #search e monta a url do href do search_btn"
+									}]
 								}
 							]
 						},
 						{
-							"name" : "Tabela de Profissionais",
-							"description" : "Tabela exibindo Nome; e-mail e Cargo seguido dos botões de histórico e edição",
-							"layout_relative_position" : "content",
-							"type" : "table",
-							"columns" : [
-								{
-									"name" : "Nome",
-									"description" : "Campo com o nome do Profissional",
-									"type" : "text"
+							"name": "Tabela de Profissionais",
+							"description": "Tabela exibindo Nome; e-mail e Cargo seguido dos botões de histórico e edição",
+							"layout_relative_position": "content",
+							"type": "table",
+							"columns": [{
+									"name": "Nome",
+									"description": "Campo com o nome do Profissional",
+									"type": "text"
 								},
 								{
-									"name" : "Email",
-									"description" : "email do profissional",
-									"type" : "text"
+									"name": "Email",
+									"description": "email do profissional",
+									"type": "text"
 								},
 								{
-									"name" : "Cargo",
-									"description" : "cargo do profissional",
-									"type" : "text"
+									"name": "Cargo",
+									"description": "cargo do profissional",
+									"type": "text"
 								},
 								{
-									"name" : "Botão Histórico",
-									"label" : "Histórico",
-									"description" : "Exibe todos os eventos relacionados ao profissional selecionado",
-									"type" : "link",
-									"route" : "/admin/professionals/history/{{ id_professional }}"
+									"name": "Botão Histórico",
+									"label": "Histórico",
+									"description": "Exibe todos os eventos relacionados ao profissional selecionado",
+									"type": "link",
+									"route": "/admin/professionals/history/{{ id_professional }}"
 								},
 								{
-									"name" : "Botão de Edição",
-									"label" : "class='glyphicon glyphicon-pencil'",
-									"description" : "Redireciona para a tela onde é possível fazer a edição de todas as informações do profissional desejado",
-									"type" : "link",
-									"route" : "professionals/edit/{{ id_professional }}"
+									"name": "Botão de Edição",
+									"label": "class='glyphicon glyphicon-pencil'",
+									"description": "Redireciona para a tela onde é possível fazer a edição de todas as informações do profissional desejado",
+									"type": "link",
+									"route": "professionals/edit/{{ id_professional }}"
 								}
 							]
 						},
 
 						{
-							"name" : "Botão “Anterior”", 
-							"label" : "Anterior",
-							"description" : "Navega entre as páginas, exibindo a lista de profissionais (com limite de 20 por página)",
-							"layout_relative_position" : "bottom",
-							"type" : "link",
-							"route" : "/admin/professionals" ,
-							"query_params" : [
-								{
-									"name": "page",
-									"data": {
-										"type" : "integer",
-										"description" : "integer que representa a página atual"
-									}
+							"name": "Botão “Anterior”",
+							"label": "Anterior",
+							"description": "Navega entre as páginas, exibindo a lista de profissionais (com limite de 20 por página)",
+							"layout_relative_position": "bottom",
+							"type": "link",
+							"route": "/admin/professionals",
+							"query_params": [{
+								"name": "page",
+								"data": {
+									"type": "integer",
+									"description": "integer que representa a página atual"
 								}
-							]
+							}]
 						}
 					]
 				}
@@ -131,205 +116,269 @@
 			]
 		},
 
-		
+
 
 
 
 
 
 		{
-			"name" : "Adicionar Profissionais", 
+			"name": "Adicionar Profissionais",
 			"description": "Tela para adicionar um novo profisisonal",
-			"layout" :  "admin/layout.twig",
-			"page_sessions" : [
-				{
-					"name" : "Adicionar Profissionais",
-					"description" : "Formulário para preencher com as informações do novo Profissional",
-					"layout_relative_position" : "content",
-					"type" : "form",
-					"inputs" : [
-						{
-							"name" : "Nome",
-							"description" : "Campo para cadastrar o nome do Profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Email",
-							"description" : "email do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Data de Nascimento",
-							"description" : "data de nascimento do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "CPF",
-							"description" : "CPF do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "DDD",
-							"description" : "DDD do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Telefone",
-							"description" : "Telefone do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "CEP",
-							"description" : "CEP do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Rua",
-							"description" : "Rua do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Número",
-							"description" : "Número da casa do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Complemento",
-							"description" : "Complemento do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Bairro",
-							"description" : "Bairro do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Cidade",
-							"description" : "Cidade do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Estado",
-							"description" : "Estado do profissional",
-							"type" : "select"
-						},
-						{
-							"name" : "Tipo de profissional",
-							"description" : "cargo do profissional",
-							"type" : "select"
-						},
-						{
-							"name" : "Status Profissional",
-							"description" : "cargo do profissional",
-							"type" : "select"
-						},
-						{
-							"name" : "Botão Adicionar",
-							"label" : "Adicionar",
-							"description" : "Submeter, para enviar os dados do formulário",
-							"type" : "Submit",
-							"route" : "/admin/professionals"
-						}
-					]
-				}
-			]
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Adicionar Profissionais",
+				"description": "Formulário para preencher com as informações do novo Profissional",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para cadastrar o nome do Profissional",
+						"type": "text"
+					},
+					{
+						"name": "Email",
+						"description": "email do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Data de Nascimento",
+						"description": "data de nascimento do profissional",
+						"type": "text"
+					},
+					{
+						"name": "CPF",
+						"description": "CPF do profissional",
+						"type": "text"
+					},
+					{
+						"name": "DDD",
+						"description": "DDD do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Telefone",
+						"description": "Telefone do profissional",
+						"type": "text"
+					},
+					{
+						"name": "CEP",
+						"description": "CEP do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Rua",
+						"description": "Rua do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Número",
+						"description": "Número da casa do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Complemento",
+						"description": "Complemento do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Bairro",
+						"description": "Bairro do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Cidade",
+						"description": "Cidade do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Estado",
+						"description": "Estado do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Tipo de profissional",
+						"description": "cargo do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Status Profissional",
+						"description": "cargo do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Botão Adicionar",
+						"label": "Adicionar",
+						"description": "Submeter, para enviar os dados do formulário",
+						"type": "Submit",
+						"route": "/admin/professionals"
+					}
+				]
+			}]
 		},
 
 
 
 
 		{
-			"name" : "Editar Profissionais", 
+			"name": "Editar Profissionais",
 			"description": "Tela para editar informações de um profisisonal",
-			"layout" :  "admin/layout.twig",
-			"page_sessions" : [
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Editar Profissionail",
+				"description": "Formulário para alterar as informações do Profissional",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para editar o nome do Profissional",
+						"type": "text"
+					},
+					{
+						"name": "Email",
+						"description": "email do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Data de Nascimento",
+						"description": "data de nascimento do profissional",
+						"type": "text"
+					},
+					{
+						"name": "CPF",
+						"description": "CPF do profissional",
+						"type": "text"
+					},
+					{
+						"name": "DDD",
+						"description": "DDD do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Telefone",
+						"description": "Telefone do profissional",
+						"type": "text"
+					},
+					{
+						"name": "CEP",
+						"description": "CEP do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Rua",
+						"description": "Rua do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Número",
+						"description": "Número da casa do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Complemento",
+						"description": "Complemento do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Bairro",
+						"description": "Bairro do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Cidade",
+						"description": "Cidade do profissional",
+						"type": "text"
+					},
+					{
+						"name": "Estado",
+						"description": "Estado do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Tipo de profissional",
+						"description": "cargo do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Status Profissional",
+						"description": "cargo do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Botão Editar",
+						"label": "Editar",
+						"description": "Submeter, para enviar as alteraçõs do formulário",
+						"type": "Submit",
+						"route": "/admin/professionals"
+					}
+				]
+			}]
+		},
+
+
+
+
+
+
+		{
+			"name": "Histórico de Profissional",
+			"description": "Tela para exibir histórico de ´cada profissional",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Menu Relatórios",
+					"label": "Relatórios",
+					"elements": [{
+						"name": "Data Inicial",
+						"Label": "Data Inicial",
+						"description": "Define a data inicial usada para gerar o relatório de atendimentos",
+						"type": "date",
+						"route": "/admin/professionals"
+					}, {
+						"name": "Data Final",
+						"Label": "Data Final",
+						"description": "Define a data final usada para gerar o relatório de atendimentos",
+						"type": "date",
+						"route": "/admin/professionals"
+					}, {
+						"name": "Relatório de Atendimentos",
+						"Label": "Relatório de Atendimentos",
+						"description": "Gera um relatório com todos os atendimentos deste profisisonal dentro do intervalo de tempo estipulado pela Data Inicial e Data Final",
+						"type": "link",
+						"route": "admin/professionals/export_history_attendance?id=(id_professional)&professional_start=(Data Inicial)&professional_finish=(Data Final)"
+					}]
+				},
 				{
-					"name" : "Editar Profissionail",
-					"description" : "Formulário para alterar as informações do Profissional",
-					"layout_relative_position" : "content",
-					"type" : "form",
-					"inputs" : [
-						{
-							"name" : "Nome",
-							"description" : "Campo para editar o nome do Profissional",
-							"type" : "text"
+					"name": "Menu Relatório Geral",
+					"label": "Relatório Geral",
+					"layout_relative_position": "header",
+					"type": "form_filter",
+					"elements": [{
+						"name": "Relatório Geral",
+						"Label": "Relatório Geral",
+						"description": "Gera um relatório com as informações de histórico do profissional",
+						"type": "link",
+						"route": "admin/professionals/export_history?id=(id_professional)"
+					}]
+				},
+				{
+					"name": "Tabela de Histórico",
+					"description": "Tabela exibindo eventos relacionados ao profissional com Data; Tipo de Evento e Descrição (organizados por Data)",
+					"layout_relative_position": "content",
+					"type": "table",
+					"columns": [{
+							"name": "Data",
+							"description": "Campo com a data em que o evento ocorreu",
+							"type": "text"
 						},
 						{
-							"name" : "Email",
-							"description" : "email do profissional",
-							"type" : "text"
+							"name": "Tipo",
+							"description": "Tipo de Evento",
+							"type": "text"
 						},
 						{
-							"name" : "Data de Nascimento",
-							"description" : "data de nascimento do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "CPF",
-							"description" : "CPF do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "DDD",
-							"description" : "DDD do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Telefone",
-							"description" : "Telefone do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "CEP",
-							"description" : "CEP do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Rua",
-							"description" : "Rua do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Número",
-							"description" : "Número da casa do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Complemento",
-							"description" : "Complemento do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Bairro",
-							"description" : "Bairro do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Cidade",
-							"description" : "Cidade do profissional",
-							"type" : "text"
-						},
-						{
-							"name" : "Estado",
-							"description" : "Estado do profissional",
-							"type" : "select"
-						},
-						{
-							"name" : "Tipo de profissional",
-							"description" : "cargo do profissional",
-							"type" : "select"
-						},
-						{
-							"name" : "Status Profissional",
-							"description" : "cargo do profissional",
-							"type" : "select"
-						},
-						{
-							"name" : "Botão Editar",
-							"label" : "Editar",
-							"description" : "Submeter, para enviar as alteraçõs do formulário",
-							"type" : "Submit",
-							"route" : "/admin/professionals"
+							"name": "Descrição",
+							"description": "Pequena descrição do evento",
+							"type": "text"
 						}
 					]
 				}
@@ -338,84 +387,6 @@
 
 
 
-
-
-
-		{
-			"name" : "Histórico de Profissional", 
-			"description": "Tela para exibir histórico de ´cada profissional",
-			"layout" :  "admin/layout.twig",
-			"page_sessions" : [
-				{
-					"name": "Menu Relatórios",
-					"label": "Relatórios",
-					"elements" : [
-						{
-							"name" : "Data Inicial",
-							"Label" : "Data Inicial",
-							"description" : "Define a data inicial usada para gerar o relatório de atendimentos",
-							"type": "date",
-							"route" : "/admin/professionals"
-						}
-						{
-							"name" : "Data Final",
-							"Label" : "Data Final",
-							"description" : "Define a data final usada para gerar o relatório de atendimentos",
-							"type": "date",
-							"route" : "/admin/professionals"
-						}
-						{
-							"name" : "Relatório de Atendimentos",
-							"Label" : "Relatório de Atendimentos",
-							"description" : "Gera um relatório com todos os atendimentos deste profisisonal dentro do intervalo de tempo estipulado pela Data Inicial e Data Final",
-							"type": "link",
-							"route" : "admin/professionals/export_history_attendance?id=(id_professional)&professional_start=(Data Inicial)&professional_finish=(Data Final)"
-						}
-					]
-				},
-				{
-					"name": "Menu Relatório Geral",
-					"label": "Relatório Geral",
-					"layout_relative_position" : "header",
-					"type": "form_filter",
-					"elements" : [
-						{
-							"name" : "Relatório Geral",
-							"Label" : "Relatório Geral",
-							"description" : "Gera um relatório com as informações de histórico do profissional",
-							"type": "link",
-							"route" : "admin/professionals/export_history?id=(id_professional)"
-						}
-					]
-				},
-				{
-							"name" : "Tabela de Histórico",
-							"description" : "Tabela exibindo eventos relacionados ao profissional com Data; Tipo de Evento e Descrição (organizados por Data)",
-							"layout_relative_position" : "content",
-							"type" : "table",
-							"columns" : [
-								{
-									"name" : "Data",
-									"description" : "Campo com a data em que o evento ocorreu",
-									"type" : "text"
-								},
-								{
-									"name" : "Tipo",
-									"description" : "Tipo de Evento",
-									"type" : "text"
-								},
-								{
-									"name" : "Descrição",
-									"description" : "Pequena descrição do evento",
-									"type" : "text"
-								},
-							]
-						},
-					]
-				}
-
-			]
-		},
 
 
 
