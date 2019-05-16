@@ -1,4 +1,3 @@
-    
 {
 	"pages": [
 		{
@@ -135,117 +134,294 @@
 		
 
 
-		"Name Page: Adicionar Profissionais": {
-			"Description": "Tela para adicionar um novo profisisonal",
-			"Elementos": {
-
-				"Campos do Formulário": [
-					"Nome (obrigatório), Email, Data de Nascimento, CPF, DDD, Telefone, CEP, Rua, Número, Complemento, Bairro, Cidade, Estado, Tipo de Profissional (Seleciona entre as categorias cadastradas), Status do Profissional"
-				],
 
 
-				"Name: Adicionar": [
-					"Route: /admin/professionals/",
-					"Description: Submit que salva o novo profissional e suas informações no banco"
-				]
 
-			},
-
-
-			"Scripts - Adicionar Profissionais": {
-				"Name: mask": [
-					"Route: admin/professionals/add'",
-					"Description: Máscara numérica para CPF e CEP"
-				],
-
-				"Name: email-error": [
-					"Route: admin/professionals/edit'",
-					"Description: Confere se email é válido e não é repetido"
-				]
-			}
-
+		{
+			"name" : "Adicionar Profissionais", 
+			"description": "Tela para adicionar um novo profisisonal",
+			"layout" :  "admin/layout.twig",
+			"page_sessions" : [
+				{
+					"name" : "Adicionar Profissionais",
+					"description" : "Formulário para preencher com as informações do novo Profissional",
+					"layout_relative_position" : "content",
+					"type" : "form",
+					"inputs" : [
+						{
+							"name" : "Nome",
+							"description" : "Campo para cadastrar o nome do Profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Email",
+							"description" : "email do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Data de Nascimento",
+							"description" : "data de nascimento do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "CPF",
+							"description" : "CPF do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "DDD",
+							"description" : "DDD do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Telefone",
+							"description" : "Telefone do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "CEP",
+							"description" : "CEP do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Rua",
+							"description" : "Rua do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Número",
+							"description" : "Número da casa do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Complemento",
+							"description" : "Complemento do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Bairro",
+							"description" : "Bairro do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Cidade",
+							"description" : "Cidade do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Estado",
+							"description" : "Estado do profissional",
+							"type" : "select"
+						},
+						{
+							"name" : "Tipo de profissional",
+							"description" : "cargo do profissional",
+							"type" : "select"
+						},
+						{
+							"name" : "Status Profissional",
+							"description" : "cargo do profissional",
+							"type" : "select"
+						},
+						{
+							"name" : "Botão Adicionar",
+							"label" : "Adicionar",
+							"description" : "Submeter, para enviar os dados do formulário",
+							"type" : "Submit",
+							"route" : "/admin/professionals"
+						}
+					]
+				}
+			]
 		},
 
 
-		"Name Page: Editar Profissional": {
-			"Description": "Tela para editar informações de um profisisonal",
-			"Elementos": {
 
-				"Campos do Formulário": [
-					"Nome (obrigatório), Email, Data de Nascimento, CPF, DDD, Telefone, CEP, Rua, Número, Complemento, Bairro, Cidade, Estado, Tipo de Profissional (Seleciona entre as categorias cadastradas), Status do Profissional"
-				],
 
-				"Name: Editar": [
-					"Route: /admin/professionals/",
-					"Description: Submit que salva o novo profissional e suas informações no banco"
-				]
-
-			},
-
-			"Scripts - Editar Profissionais": {
-				"Name: mask": [
-					"Route: admin/professionals/edit'",
-					"Description: Máscara numérica para CPF e CEP"
-				],
-				"Name: email-error": [
-					"Route: admin/professionals/edit'",
-					"Description: Confere se email é válido e não é repetido"
-				]
-			}
+		{
+			"name" : "Editar Profissionais", 
+			"description": "Tela para editar informações de um profisisonal",
+			"layout" :  "admin/layout.twig",
+			"page_sessions" : [
+				{
+					"name" : "Editar Profissionail",
+					"description" : "Formulário para alterar as informações do Profissional",
+					"layout_relative_position" : "content",
+					"type" : "form",
+					"inputs" : [
+						{
+							"name" : "Nome",
+							"description" : "Campo para editar o nome do Profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Email",
+							"description" : "email do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Data de Nascimento",
+							"description" : "data de nascimento do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "CPF",
+							"description" : "CPF do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "DDD",
+							"description" : "DDD do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Telefone",
+							"description" : "Telefone do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "CEP",
+							"description" : "CEP do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Rua",
+							"description" : "Rua do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Número",
+							"description" : "Número da casa do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Complemento",
+							"description" : "Complemento do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Bairro",
+							"description" : "Bairro do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Cidade",
+							"description" : "Cidade do profissional",
+							"type" : "text"
+						},
+						{
+							"name" : "Estado",
+							"description" : "Estado do profissional",
+							"type" : "select"
+						},
+						{
+							"name" : "Tipo de profissional",
+							"description" : "cargo do profissional",
+							"type" : "select"
+						},
+						{
+							"name" : "Status Profissional",
+							"description" : "cargo do profissional",
+							"type" : "select"
+						},
+						{
+							"name" : "Botão Editar",
+							"label" : "Editar",
+							"description" : "Submeter, para enviar as alteraçõs do formulário",
+							"type" : "Submit",
+							"route" : "/admin/professionals"
+						}
+					]
+				}
+			]
 		}
-	}],
 
 
 
 
 
-	"Telas - Paciente": {
-		"Name Page: Index Paciente": {
-			"Description": "Tela para exibir lista de pacientes",
-			"Elementos": {	
-				"Name = +Novo Paciente": [
-					"Route = /admin/patients/add",
-					"Description = Redireciona para a tela onde é feita a adição de um novo paciente"
-				],
-				"Name = Relatório": [
-					"Route = /admin/patients/export?",
-					"Description = Gera um relatório com as informações de todos os patients cadastrados em uma nova aba (de acordo com status e/ ou datas selecionadas)"
-				],
-				"Name = Status Paciente": [
-					"Route = /admin/patients",
-					"Description = Faz a seleção dos pacientes por status para gerar o relatório em pdf"
-				],
-				"Name = Status Paciente": [
-					"Route = /admin/patients",
-					"Description = Faz a seleção dos pacientes por status para gerar o relatório em pdf"
-				],
-				"Name = Data Inicial & Data Final": [
-					"Route = /admin/patients",
-					"Description = Gera o relatório de pacientes cadastrados com a 'data da visita' dentro do intervalo de tempo selecionado (se a data inicial for vazia, a data padrão será 01/01/2001)"
-				],
-				"Name = Relatório": [
-					"Route = /admin/patients/export?",
-					"Description = Gera um relatório com as informações de todos os pacientes cadastrados (de acordo com o status e intervalo de datas) em uma nova aba"
-				],
-				"Name = Buscar Nome": [
-					"Route = /admin/patients?search=' + search + '&page={{ 1 }}'",
-					"Description = Filtro que exibe a lista de pacientes de acordo com nome pesquisado. A lista atualiza ao clicar no botão “search”, ao lado"
-				],
-				"Name = Lista de Pacientes": [
-					"Route = /admin/patients",
-					"Description = Lista de pacientes cadastrados, exibindo Nome; e-mail; CID Versão; CID COD e Cidade seguido dos botões de histórico e edição (organizado por ordem alfabética)"
-				],
-				"Name = Histórico": [
-					"Route = /admin/patients/history/(id_patient)",
-					"Description = Exibe todos os eventos relacionados ao paciente selecionado"
-				],
-				"Name = Botão de Edição": [
-					"Route = patients/edit/(id_patient)",
-					"Description = Redireciona para a tela onde é possível fazer a edição de todas as informações do paciente desejado"
-				],
-				"Name = Botões de paginação “Anterior” e “Próximo”": [
-					"Route = admin/patients?search=&page=",
-					"Description = Navega entre as páginas, exibindo a lista de pacientes (com limite de 20 por página)"
-				]
-	}
+
+		{
+			"name" : "Histórico de Profissional", 
+			"description": "Tela para exibir histórico de ´cada profissional",
+			"layout" :  "admin/layout.twig",
+			"page_sessions" : [
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatórios",
+					"elements" : [
+						{
+							"name" : "Data Inicial",
+							"Label" : "Data Inicial",
+							"description" : "Define a data inicial usada para gerar o relatório de atendimentos",
+							"type": "date",
+							"route" : "/admin/professionals"
+						}
+						{
+							"name" : "Data Final",
+							"Label" : "Data Final",
+							"description" : "Define a data final usada para gerar o relatório de atendimentos",
+							"type": "date",
+							"route" : "/admin/professionals"
+						}
+						{
+							"name" : "Relatório de Atendimentos",
+							"Label" : "Relatório de Atendimentos",
+							"description" : "Gera um relatório com todos os atendimentos deste profisisonal dentro do intervalo de tempo estipulado pela Data Inicial e Data Final",
+							"type": "link",
+							"route" : "admin/professionals/export_history_attendance?id=(id_professional)&professional_start=(Data Inicial)&professional_finish=(Data Final)"
+						}
+					]
+				},
+				{
+					"name": "Menu Relatório Geral",
+					"label": "Relatório Geral",
+					"layout_relative_position" : "header",
+					"type": "form_filter",
+					"elements" : [
+						{
+							"name" : "Relatório Geral",
+							"Label" : "Relatório Geral",
+							"description" : "Gera um relatório com as informações de histórico do profissional",
+							"type": "link",
+							"route" : "admin/professionals/export_history?id=(id_professional)"
+						}
+					]
+				},
+				{
+							"name" : "Tabela de Histórico",
+							"description" : "Tabela exibindo eventos relacionados ao profissional com Data; Tipo de Evento e Descrição (organizados por Data)",
+							"layout_relative_position" : "content",
+							"type" : "table",
+							"columns" : [
+								{
+									"name" : "Data",
+									"description" : "Campo com a data em que o evento ocorreu",
+									"type" : "text"
+								},
+								{
+									"name" : "Tipo",
+									"description" : "Tipo de Evento",
+									"type" : "text"
+								},
+								{
+									"name" : "Descrição",
+									"description" : "Pequena descrição do evento",
+									"type" : "text"
+								},
+							]
+						},
+					]
+				}
+
+			]
+		},
+
+
+
+
+
+
+
+	]
 }
