@@ -1,0 +1,540 @@
+{
+	"pages patients": [{
+			"name": "Index Paciente",
+			"description": "Tela para exibir lista de pacientes",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Actions Menu",
+					"elements": [{
+						"name": "Novo Paciente",
+						"Label": "Novo Paciente",
+						"description": "Redireciona para a tela onde é feita a adição de um novo paciente",
+						"type": "link",
+						"route": "/admin/patients/add"
+					}]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatórios",
+					"elements": [{
+							"name": "Status Select",
+							"label": "Status Paciente",
+							"type": "select"
+						},
+						{
+							"name": "Data Inicial",
+							"Label": "Data Inicial",
+							"description": "Define a data inicial usada para gerar o relatório de pacientes (baseado na data de visita)",
+							"type": "date",
+							"route": "/admin/patients"
+						},
+						{
+							"name": "Data Final",
+							"Label": "Data Final",
+							"description": "Define a data final usada para gerar o relatório de pacientes (baseado na data de visita)",
+							"type": "date",
+							"route": "/admin/patients"
+						},
+						{
+							"name": "Relatório",
+							"Label": "Relatório",
+							"description": "Gera um relatório com as informações de todos os pacientes cadastrados em uma nova aba",
+							"type": "link",
+							"route": "/admin/patients/export"
+						}
+					]
+				},
+				{
+					"name": "Lista de Pacientes",
+					"label": "Pacientes Cadastrados",
+					"elements": [{
+							"name": "Buscar Paciente por Nome",
+							"Label": "Buscar Nome",
+							"description": "Filtro que exibe a lista de pacientes de acordo com nome pesquisado. A lista atualiza ao clicar no botão “search”, ao lado",
+							"layout_relative_position": "header",
+							"type": "form_filter",
+							"form_elements": [{
+									"name": "Search Name",
+									"label": "Buscar Nome",
+									"type": "text"
+								},
+								{
+									"name": "Button Select",
+									"type": "submit",
+									"route": "/admin/patients",
+									"query_params": [{
+										"name": "search",
+										"data": {
+											"type": "text",
+											"description": "campo de texto para busca de nomes #search"
+										}
+									}],
+									"events": [{
+										"name": "search_btn",
+										"label": "<i class='material-icons'>search</i>",
+										"type": "click",
+										"description": "pega o conteúdo do value do select #search e monta a url do href do search_btn"
+									}]
+								}
+							]
+						},
+						{
+							"name": "Tabela de Pacientes",
+							"description": "Tabela exibindo Nome; e-mail; CID Versão; CID COD e CIdade de cada paciente seguido dos botões de histórico e edição",
+							"layout_relative_position": "content",
+							"type": "table",
+							"columns": [{
+									"name": "Nome",
+									"description": "Campo com o nome do Paciente",
+									"type": "text"
+								},
+								{
+									"name": "Email",
+									"description": "email do Paciente",
+									"type": "text"
+								},
+								{
+									"name": "CID Versão",
+									"description": "campo com a versão do CID (Código Internacional de Doenças)",
+									"type": "text"
+								},
+								{
+									"name": "CID COD",
+									"description": "Campos com CID COD do paciente",
+									"type": "text"
+								},
+								{
+									"name": "Cidade",
+									"description": "Cidade do Paciente",
+									"type": "text"
+								},
+								{
+									"name": "Botão Histórico",
+									"label": "Histórico",
+									"description": "Exibe todos os eventos relacionados ao paciente selecionado",
+									"type": "link",
+									"route": "/admin/patients/history/{{ id_patient }}"
+								},
+								{
+									"name": "Botão de Edição",
+									"label": "class='glyphicon glyphicon-pencil'",
+									"description": "Redireciona para a tela onde é possível fazer a edição de todas as informações do paciente desejado",
+									"type": "link",
+									"route": "patients/edit/{{ id_patient }}"
+								}
+							]
+						},
+
+						{
+							"name": "Botão “Anterior”",
+							"label": "Anterior",
+							"description": "Navega entre as páginas, exibindo a lista de pacientes (com limite de 20 por página)",
+							"layout_relative_position": "bottom",
+							"type": "link",
+							"route": "/admin/patients",
+							"query_params": [{
+								"name": "page",
+								"data": {
+									"type": "integer",
+									"description": "integer que representa a página atual"
+								}
+							}]
+						}
+					]
+				}
+
+			]
+		},
+
+
+
+
+		{
+			"name": "Adicionar Pacientes",
+			"description": "Tela para adicionar um novo paciente",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Adicionar Paciente",
+				"description": "Formulário para preencher com as informações do novo Paciente",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para cadastrar o nome do Paciente",
+						"type": "text"
+					},
+					{
+						"name": "Email",
+						"description": "email do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Data de Nascimento",
+						"description": "data de nascimento do paciente",
+						"type": "date"
+					},
+					{
+						"name": "CPF",
+						"description": "CPF do paciente",
+						"type": "text"
+					},
+					{
+						"name": "RG",
+						"description": "RG do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Cartão do SUS",
+						"description": "Cartão do SUS do paciente",
+						"type": "text"
+					},
+					{
+						"name": "DDD",
+						"description": "DDD do paciente",
+						"type": "number"
+					},
+					{
+						"name": "Telefone",
+						"description": "Telefone do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Observações",
+						"description": "Observações a respeito do Telefone do paciente",
+						"type": "text"
+					},
+					{
+						"name": "DDD-2",
+						"description": "DDD adicional do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Telefone-2",
+						"description": "Telefone adicional do paciente",
+						"type": "text"
+					},
+					{
+						"name": "CEP",
+						"description": "CEP do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Rua",
+						"description": "Rua onde mora o paciente",
+						"type": "text"
+					},
+					{
+						"name": "Número",
+						"description": "Número da casa do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Complemento",
+						"description": "Complemento do endereço do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Bairro",
+						"description": "Bairro do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Cidade",
+						"description": "Cidade do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Estado",
+						"description": "Estado de residência do paciente",
+						"type": "select"
+					},
+					{
+						"name": "Situação",
+						"description": "Situação ao qual o paciente se encontra",
+						"type": "select"
+					},
+					{
+						"name": "Observação",
+						"description": "Observação sobre paciente",
+						"type": "text"
+					},
+					{
+						"name": "CID",
+						"description": "CID do paciente de acordo com o que já existe no cadastro do sistema",
+						"type": "select"
+					},
+					{
+						"name": "Tipo de Câncer?",
+						"description": "Tipo de Câncer do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Há quanto tempo descobriu?",
+						"description": "tempo de descoberta do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Como Descobriu?",
+						"description": "Modo de descoberta do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Quando começou o tratamento?",
+						"description": "Início do tratamento do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Onde se trata?",
+						"description": "Local de tratamento do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Qual o médico?",
+						"description": "Nome do médico do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Qual apoio necessita da fundação?",
+						"description": "Apoio desejado pelo paciente",
+						"type": "text"
+					},
+					{
+						"name": "Data do Comparecimento na Fundação",
+						"description": "Data de visita do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Botão Adicionar",
+						"label": "Adicionar",
+						"description": "Submeter, para enviar os dados do formulário",
+						"type": "Submit",
+						"route": "/admin/patients"
+					}
+				]
+			}]
+		},
+
+
+
+
+
+		{
+			"name": "Editar Paciente",
+			"description": "Tela para editar informações de um paciente",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Editar Paciente",
+				"description": "Formulário para alterar as informações do Paciente",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para editar o nome do Paciente",
+						"type": "text"
+					},
+					{
+						"name": "Email",
+						"description": "email do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Data de Nascimento",
+						"description": "data de nascimento do paciente",
+						"type": "date"
+					},
+					{
+						"name": "CPF",
+						"description": "CPF do paciente",
+						"type": "text"
+					},
+					{
+						"name": "RG",
+						"description": "RG do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Cartão do SUS",
+						"description": "Cartão do SUS do paciente",
+						"type": "text"
+					},
+					{
+						"name": "DDD",
+						"description": "DDD do paciente",
+						"type": "number"
+					},
+					{
+						"name": "Telefone",
+						"description": "Telefone do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Observações",
+						"description": "Observações a respeito do Telefone do paciente",
+						"type": "text"
+					},
+					{
+						"name": "DDD-2",
+						"description": "DDD adicional do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Telefone-2",
+						"description": "Telefone adicional do paciente",
+						"type": "text"
+					},
+					{
+						"name": "CEP",
+						"description": "CEP do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Rua",
+						"description": "Rua onde mora o paciente",
+						"type": "text"
+					},
+					{
+						"name": "Número",
+						"description": "Número da casa do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Complemento",
+						"description": "Complemento do endereço do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Bairro",
+						"description": "Bairro do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Cidade",
+						"description": "Cidade do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Estado",
+						"description": "Estado de residência do paciente",
+						"type": "select"
+					},
+					{
+						"name": "Situação",
+						"description": "Situação ao qual o paciente se encontra",
+						"type": "select"
+					},
+					{
+						"name": "Observação",
+						"description": "Observação sobre paciente",
+						"type": "text"
+					},
+					{
+						"name": "CID",
+						"description": "CID do paciente de acordo com o que já existe no cadastro do sistema",
+						"type": "select"
+					},
+					{
+						"name": "Tipo de Câncer?",
+						"description": "Tipo de Câncer do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Há quanto tempo descobriu?",
+						"description": "tempo de descoberta do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Como Descobriu?",
+						"description": "Modo de descoberta do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Quando começou o tratamento?",
+						"description": "Início do tratamento do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Onde se trata?",
+						"description": "Local de tratamento do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Qual o médico?",
+						"description": "Nome do médico do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Qual apoio necessita da fundação?",
+						"description": "Apoio desejado pelo paciente",
+						"type": "text"
+					},
+					{
+						"name": "Data do Comparecimento na Fundação",
+						"description": "Data de visita do paciente",
+						"type": "text"
+					},
+					{
+						"name": "Botão Editar",
+						"label": "Editar",
+						"description": "Submeter, para enviar as alteraçõs do formulário",
+						"type": "Submit",
+						"route": "/admin/patients"
+					}
+
+
+
+
+
+				]
+			}]
+		},
+
+
+
+
+		{
+			"name": "Histórico de Paciente",
+			"description": "Tela para exibir histórico de cada paciente",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Menu Relatórios",
+				"label": "Relatórios",
+				"elements": [{
+						"name": "Menu Relatório",
+						"label": "Exportar Relatório",
+						"layout_relative_position": "header",
+						"type": "link",
+						"elements": [{
+							"name": "Exportar Relatório",
+							"Label": "Exportar Relatório",
+							"description": "Gera um relatório com as informações de histórico do paciente",
+							"type": "link",
+							"route": "admin/patients/export_history?id=(id_patient)"
+						}]
+					},
+					{
+						"name": "Tabela de Histórico",
+						"description": "Tabela exibindo eventos relacionados ao paciente com Data; Tipo de Evento e Descrição (organizados por Data)",
+						"layout_relative_position": "content",
+						"type": "table",
+						"columns": [{
+								"name": "Data",
+								"description": "Campo com a data em que o evento ocorreu",
+								"type": "text"
+							},
+							{
+								"name": "Tipo",
+								"description": "Tipo de Evento",
+								"type": "text"
+							},
+							{
+								"name": "Descrição",
+								"description": "Pequena descrição do evento",
+								"type": "text"
+							}
+						]
+					}
+				]
+			}]
+		}
+	]
+}

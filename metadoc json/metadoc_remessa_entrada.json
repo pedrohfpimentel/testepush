@@ -1,0 +1,108 @@
+{
+	"pages remessa_entrada": [{
+			"name": "Index Remessa",
+			"description": "Tela para exibir lista de Remessas Cadastradas",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Actions Menu",
+					"elements": [{
+						"name": "Nova Remessa",
+						"Label": "Nova Remessa",
+						"description": "Redireciona para a tela onde é feita a adição de uma nova Remessa de Entrada",
+						"type": "link",
+						"route": "/admin/remessa/add"
+					}]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatório",
+					"elements": [{
+							"name": "Tipo de Remessa",
+							"Label": "Tipo de Remessa",
+							"description": "Seleciona o tipo de remessa que será exibida no relatório de remessas de entrada",
+							"type": "select",
+							"route": "/admin/remessa"
+						},
+						{
+							"name": "Data Inicial",
+							"Label": "Data Inicial",
+							"description": "Define a data inicial usada para gerar o relatório de remessa",
+							"type": "date",
+							"route": "/admin/remessa"
+						},
+						{
+							"name": "Data Final",
+							"Label": "Data Final",
+							"description": "Define a data final usada para gerar o relatório de remessa",
+							"type": "date",
+							"route": "/admin/remessa"
+						},
+						{
+							"name": "Relatório",
+							"Label": "Relatório",
+							"description": "Gera um relatório com as informações de todos as remessas cadastrados (dentro do tipo de remessa e intervalo de datas escolhidas) em uma nova aba",
+							"type": "link",
+							"route": "/admin/attendances/export"
+						},
+
+
+						{
+							"name": "Lista de Remessas",
+							"label": "Remessas Cadastradas",
+							"elements": [{
+									"name": "Tabela de Remessas",
+									"description": "Tabela exibindo ID; Fornecedor/Paciente; Tipo de Entrada e Data de cada remessa seguido do botão de detalhes",
+									"layout_relative_position": "content",
+									"type": "table",
+									"columns": [{
+											"name": "ID",
+											"description": "Campo com o iD de cadadstro da Remessa",
+											"type": "text"
+										},
+										{
+											"name": "Fornecedor/Paciente",
+											"description": "Tipo de entrada da Remessa",
+											"type": "text"
+										}
+										{
+											"name": "Tipo de Entrada",
+											"description": "Tipo de entrada da Remessa",
+											"type": "text"
+										}
+										{
+											"name": "Data",
+											"description": "data de entrada da Remessa",
+											"type": "text"
+										}
+										{
+											"name": "Botão de Detalhes",
+											"label": "class='glyphicon glyphicon-pencil'",
+											"description": "Redireciona para a tela onde é possível ver em detalhes todas as informações da Remessa de Entrada atual",
+											"type": "link",
+											"route": "remessa/{{ id_remessa }}"
+										}
+									]
+								},
+
+								{
+									"name": "Botão “Anterior”",
+									"label": "Anterior",
+									"description": "Navega entre as páginas, exibindo a lista de Remessas (com limite de 20 por página)",
+									"layout_relative_position": "bottom",
+									"type": "link",
+									"route": "/admin/remessa",
+									"query_params": [{
+										"name": "page",
+										"data": {
+											"type": "integer",
+											"description": "integer que representa a página atual"
+										}
+									}]
+								}
+							]
+						}
+
+					]
+				}
+			]
+		}

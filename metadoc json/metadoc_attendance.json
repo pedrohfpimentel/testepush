@@ -1,0 +1,166 @@
+{
+	"pages attendances": [{
+			"name": "Index Atendimentos",
+			"description": "Tela para exibir lista de atendimentos",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Actions Menu",
+					"elements": [{
+						"name": "Novo Atendimento",
+						"Label": "Novo Atendimento",
+						"description": "Redireciona para a tela onde é feita a adição de um novo Atendimento",
+						"type": "link",
+						"route": "/admin/attendances/add"
+					}]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatório",
+					"elements": [{
+							"name": "Data Inicial",
+							"Label": "Data Inicial",
+							"description": "Define a data inicial usada para gerar o relatório de atendimentos",
+							"type": "date",
+							"route": "/admin/attendances"
+						},
+						{
+							"name": "Data Final",
+							"Label": "Data Final",
+							"description": "Define a data final usada para gerar o relatório de atendimentos",
+							"type": "date",
+							"route": "/admin/attendances"
+						},
+						{
+							"name": "Relatório",
+							"Label": "Relatório",
+							"description": "Gera um relatório com as informações de todos os atendimentos cadastrados (dentro do intervalo de datas escolhidas) em uma nova aba",
+							"type": "link",
+							"route": "/admin/attendances/export"
+						},
+
+
+						{
+							"name": "Lista de Atendimentos",
+							"label": "Últimos atendimentos",
+							"elements": [{
+									"name": "Tabela de Atendimentos",
+									"description": "Tabela exibindo ID; Data; Profissional; Paciente e Status de cada atendimento seguido do botão de detalhes",
+									"layout_relative_position": "content",
+									"type": "table",
+									"columns": [{
+											"name": "ID",
+											"description": "Campo com o iD de cadadstro do Atendimento",
+											"type": "text"
+										},
+										{
+											"name": "Data",
+											"description": "data de agendamento do atendimento",
+											"type": "text"
+										},
+										{
+											"name": "Profissional",
+											"description": "campo com Profissional responsável pelo atendimento",
+											"type": "text"
+										},
+										{
+											"name": "Paciente",
+											"description": "Campo com paciente ",
+											"type": "text"
+										},
+										{
+											"name": "Status",
+											"description": "Status em que o atendimento se encontra",
+											"type": "text"
+										},
+										{
+											"name": "Botão de Detalhes",
+											"label": "class='glyphicon glyphicon-pencil'",
+											"description": "Redireciona para a tela onde é possível fazer a edição de todas as informações do atendimento desejado",
+											"type": "link",
+											"route": "attendances/{{ id_attendance }}"
+										}
+									]
+								},
+
+								{
+									"name": "Botão “Anterior”",
+									"label": "Anterior",
+									"description": "Navega entre as páginas, exibindo a lista de atendimentos (com limite de 20 por página)",
+									"layout_relative_position": "bottom",
+									"type": "link",
+									"route": "/admin/attendances",
+									"query_params": [{
+										"name": "page",
+										"data": {
+											"type": "integer",
+											"description": "integer que representa a página atual"
+										}
+									}]
+								}
+							]
+						}
+
+					]
+				}
+			]
+		},
+
+
+
+
+
+
+
+
+
+		{
+			"name": "Adicionar Atendimento",
+			"description": "Tela para adicionar um novo atendimento",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Adicionar Atendimento",
+				"description": "Formulário para preencher com as informações do novo Atendimento",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Paciente",
+						"description": "Campo para selecionar o Paciente",
+						"type": "select"
+					},
+					{
+						"name": "Profissional",
+						"description": "Campo para selecionar o Profissional",
+						"type": "select"
+					},
+					{
+						"name": "Observações",
+						"description": "Observações a respeito do atendimento",
+						"type": "text"
+					},
+					{
+						"name": "Situação",
+						"description": "Situação em que o atendimento se encontra no momento de cadastro",
+						"type": "select"
+					},
+					{
+						"name": "Data",
+						"description": "Dia do atendimento",
+						"type": "select"
+					},
+					{
+						"name": "Horário",
+						"description": "Horário do atendimento",
+						"type": "select"
+					},
+					{
+						"name": "Botão Atualizar",
+						"label": "Atualizar",
+						"description": "Submeter, para atualizar os dados do formulário",
+						"type": "Submit",
+						"route": "/admin/attendances"
+					}
+				]
+			}]
+		}
+	]
+}
