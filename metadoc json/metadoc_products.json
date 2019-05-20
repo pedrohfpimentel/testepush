@@ -1,0 +1,268 @@
+{
+	"pages Produtos": [{
+			"name": "Index Produtos",
+			"description": "Tela para exibir lista de produtos cadastrados",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Actions Menu",
+					"elements": [{
+						"name": "Novo Produto",
+						"Label": "Novo Produto",
+						"description": "Redireciona para a tela onde é feita a adição de um novo produto",
+						"type": "link",
+						"route": "/admin/products/add"
+					}]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatório",
+					"elements": [{
+						"name": "Botão Relatório",
+						"Label": "Relatório",
+						"description": "Gera um relatório com as informações de todos os produtos cadastrados em uma nova aba",
+						"type": "link",
+						"route": "/admin/products/export"
+					}]
+				},
+				{
+					"name": "Lista de Produtos",
+					"label": "Produtos",
+					"elements": [{
+							"name": "Tabela de Produtos",
+							"description": "Tabela exibindo Nome; Descrição; Categoria; Quantidade e Custo seguido dos botões de histórico e edição",
+							"layout_relative_position": "content",
+							"type": "table",
+							"columns": [{
+									"name": "Nome",
+									"description": "Campo com o nome do Produto",
+									"type": "text"
+								},
+								{
+									"name": "Descrição",
+									"description": "Descrição do produto",
+									"type": "text"
+								},
+								{
+									"name": "Categoria",
+									"description": "Categoria do Produto",
+									"type": "text"
+								},
+								{
+									"name": "Quantidade",
+									"description": "Quantidade do Produto",
+									"type": "number"
+								},
+								{
+									"name": "Custo",
+									"description": "Custo do Produto",
+									"type": "text"
+								},
+
+								{
+									"name": "Botão Histórico",
+									"label": "Histórico",
+									"description": "Exibe todos os eventos relacionados ao produto selecionado",
+									"type": "link",
+									"route": "/admin/products/history/{{ id_products }}"
+								},
+								{
+									"name": "Botão de Edição",
+									"label": "class='glyphicon glyphicon-pencil'",
+									"description": "Redireciona para a tela onde é possível fazer a edição de todas as informações do produto desejado",
+									"type": "link",
+									"route": "products/edit/{{ id_products }}"
+								}
+							]
+						},
+
+						{
+							"name": "Botão “Anterior/ Próximo”",
+							"label": "Anterior/ Próximo",
+							"description": "Navega entre as páginas, exibindo a lista de produtos (com limite de 20 por página)",
+							"layout_relative_position": "bottom",
+							"type": "link",
+							"route": "/admin/products",
+							"query_params": [{
+								"name": "page",
+								"data": {
+									"type": "integer",
+									"description": "integer que representa a página atual"
+								}
+							}]
+						}
+					]
+				}
+
+			]
+		},
+
+
+
+
+
+
+
+		{
+			"name": "Adicionar Produtos",
+			"description": "Tela para adicionar um novo produto",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Adicionar Produto",
+				"description": "Formulário para preencher com as informações do novo produto",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para cadastrar o nome do produto",
+						"type": "text"
+					},
+					{
+						"name": "Descrição",
+						"description": "descrição do produto",
+						"type": "text"
+					},
+					{
+						"name": "Categoria do Produto",
+						"description": "Campo para selecionar uma categoria cadastrada",
+						"type": "select"
+					},
+					{
+						"name": "Fornecedor:",
+						"description": "Campo para selecionar uma Fornecedor cadastrada",
+						"type": "select"
+					},
+					{
+						"name": "Remessa Inicial?",
+						"description": "Usado para cadastrar uma remessa inicial junto ao produto (Caso seja verdadeiro, exibe uma série de campos extras para remessa)",
+						"type": "checkbox"
+					},
+					{
+						"name": "Tipo de Entrada:",
+						"description": "Escolha o Tipo de Entrada (doação/ compra/ inicial)",
+						"type": "select"
+					},
+					{
+						"name": "Quantidade",
+						"description": "Quantidade do produto na remessa inicial",
+						"type": "number"
+					},
+					{
+						"name": "Data de Entrada",
+						"description": "Data da Remessa",
+						"type": "date"
+					},
+					{
+						"name": "Patrimônio",
+						"description": "checkbox para cadastrar um código patrimonial na remessa, caso seja necessário",
+						"type": "checkbox"
+					},
+					{
+						"name": "Código Patrimonial",
+						"description": "Código de Patrimônio da remessa",
+						"type": "text"
+					},
+					{
+						"name": "Botão Adicionar",
+						"label": "Adicionar",
+						"description": "Submeter, para enviar os dados do formulário",
+						"type": "Submit",
+						"route": "/admin/products"
+					}
+				]
+			}]
+		},
+
+
+
+
+		{
+			"name": "Editar Produto",
+			"description": "Tela para editar informações de um produto",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Editar Produto",
+				"description": "Formulário para alterar as informações do Produto",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para editar o nome do produto",
+						"type": "text"
+					},
+					{
+						"name": "Descrição",
+						"description": "Descrição do produto",
+						"type": "text"
+					},
+					{
+						"name": "Fornecedor:",
+						"description": "data de nascimento do profissional",
+						"type": "select"
+					},
+					{
+						"name": "Categoria do Produto",
+						"description": "Espaço para selecionar uma categoria",
+						"type": "select"
+					},
+					{
+						"name": "Botão Atualizar",
+						"label": "Atualizar",
+						"description": "Submeter, para enviar as alteraçõs do formulário",
+						"type": "Submit",
+						"route": "/admin/products"
+					}
+				]
+			}]
+		},
+
+
+
+
+
+
+		{
+			"name": "Histórico de Produtos",
+			"description": "Tela para exibir histórico de cada produto",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Menu Relatórios",
+					"label": "Exportar Relatório",
+					"elements": [ {
+						"name": "Relatório",
+						"Label": "Exportar Relatório",
+						"description": "Gera um relatório com todos os eventos relacionados aos produto",
+						"type": "link",
+						"route": "admin/products/export_history?id=(id_product)"
+					}]
+				},
+				{
+					"name": "Tabela de Histórico",
+					"description": "Tabela exibindo eventos relacionados ao produto com Data; Tipo de Evento; Descrição e Fornecedor/Paciente (organizados por Data)",
+					"layout_relative_position": "content",
+					"type": "table",
+					"columns": [{
+							"name": "Data",
+							"description": "Campo com a data em que o evento ocorreu",
+							"type": "text"
+						},
+						{
+							"name": "Tipo",
+							"description": "Tipo de Evento",
+							"type": "text"
+						},
+						{
+							"name": "Descrição",
+							"description": "Pequena descrição do evento",
+							"type": "text"
+						},
+						{
+							"name": "Fornecedor/Paciente",
+							"description": "Nome do Fornecedor ou Paciente que participa do evento",
+							"type": "text"
+						}
+					]
+				}
+			]
+		}
+	]
+}

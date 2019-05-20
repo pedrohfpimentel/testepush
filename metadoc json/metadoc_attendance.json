@@ -83,8 +83,8 @@
 								},
 
 								{
-									"name": "Botão “Anterior”",
-									"label": "Anterior",
+									"name": "Botão “Anterior/ Próximo”",
+									"label": "Anterior/ Próximo",
 									"description": "Navega entre as páginas, exibindo a lista de atendimentos (com limite de 20 por página)",
 									"layout_relative_position": "bottom",
 									"type": "link",

@@ -1,0 +1,193 @@
+{
+	"pages suppliers": [{
+			"name": "Index Supplier",
+			"description": "Tela para exibir lista de Fornecedores",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+					"name": "Actions Menu",
+					"elements": [{
+						"name": "Novo Fornecedor",
+						"Label": "+Novo Fornecedor",
+						"description": "Redireciona para a tela onde é feita a adição de um novo fornecedor",
+						"type": "link",
+						"route": "/admin/suppliers/add"
+					}]
+				},
+				{
+					"name": "Menu Relatórios",
+					"label": "Relatório",
+					"elements": [{
+						"name": "Relatório",
+						"Label": "Relatório",
+						"description": "Gera um relatório com as informações de todos os fonecedores cadastrados em uma nova aba",
+						"type": "link",
+						"route": "/admin/suppliers/export"
+					}]
+				},
+				{
+					"name": "Lista de Fornecedores",
+					"label": "Fornecedores",
+					"elements": [{
+							"name": "Tabela de Fornecedores",
+							"description": "Tabela exibindo Nome; Descrição; e-mail; DDD e Telefone seguido dos botões de e edição",
+							"layout_relative_position": "content",
+							"type": "table",
+							"columns": [{
+									"name": "Nome",
+									"description": "Campo com o nome do Fornecedor",
+									"type": "text"
+								},
+								{
+									"name": "Descrição",
+									"description": "descrição do fornecedor",
+									"type": "text"
+								},
+								{
+									"name": "Email",
+									"description": "email do fornecedor",
+									"type": "text"
+								},
+								{
+									"name": "DDD",
+									"description": "DDD do fornecedor",
+									"type": "text"
+								},
+								{
+									"name": "Telefone",
+									"description": "Telefone do fornecedor",
+									"type": "text"
+								},
+								{
+									"name": "Botão de Edição",
+									"label": "Editar",
+									"description": "Redireciona para a tela onde é possível fazer a edição de todas as informações do fornecedor desejado",
+									"type": "link",
+									"route": "suppliers/edit/{{ id_supplier }}"
+								}
+							]
+						},
+
+						{
+							"name": "Botão “Anterior/ Próximo”",
+							"label": "Anterior/ Próximo",
+							"description": "Navega entre as páginas, exibindo a lista de Fornecedores (com limite de 20 por página)",
+							"layout_relative_position": "bottom",
+							"type": "link",
+							"route": "/admin/suppliers",
+							"query_params": [{
+								"name": "page",
+								"data": {
+									"type": "integer",
+									"description": "integer que representa a página atual"
+								}
+							}]
+						}
+					]
+				}
+
+			]
+		},
+
+
+
+
+
+
+
+		{
+			"name": "Adicionar Fornecedor",
+			"description": "Tela para adicionar um novo fornecedor",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Adicionar Fornecedor",
+				"description": "Formulário para preencher com as informações do novo Fornecedor",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para cadastrar o nome do Fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Descrição",
+						"description": "Campo para cadastrar o nome do Fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Email",
+						"description": "email do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "DDD",
+						"description": "DDD do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Telefone",
+						"description": "Telefone do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Botão Adicionar",
+						"label": "Adicionar",
+						"description": "Submeter, para enviar os dados do formulário",
+						"type": "Submit",
+						"route": "/admin/suppliers"
+					}
+				]
+			}]
+		},
+
+
+
+
+		{
+			"name": "Editar Fornecedor",
+			"description": "Tela para editar informações de um fornecedor",
+			"layout": "admin/layout.twig",
+			"page_sessions": [{
+				"name": "Editar Fornecedor",
+				"description": "Formulário para alterar as informações do Fornecedor",
+				"layout_relative_position": "content",
+				"type": "form",
+				"inputs": [{
+						"name": "Nome",
+						"description": "Campo para editar o nome do Fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Descrição",
+						"description": "email do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Email",
+						"description": "email do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "DDD",
+						"description": "DDD do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Telefone",
+						"description": "Telefone do fornecedor",
+						"type": "text"
+					},
+					{
+						"name": "Botão Atualizar",
+						"label": "Atualizar",
+						"description": "Submeter, para enviar as alteraçõs do formulário",
+						"type": "Submit",
+						"route": "/admin/suppliers"
+					}
+				]
+			}]
+		}
+
+
+
+	]
+}
