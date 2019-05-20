@@ -1,5 +1,5 @@
 {
-	"pages remessa_entrada": [{
+	"pages remessa_saída": [{
 			"name": "Index Remessa",
 			"description": "Tela para exibir lista de Remessas Cadastradas",
 			"layout": "admin/layout.twig",
@@ -8,7 +8,7 @@
 					"elements": [{
 						"name": "Nova Remessa",
 						"Label": "Nova Remessa",
-						"description": "Redireciona para a tela onde é feita a adição de uma nova Remessa de Entrada",
+						"description": "Redireciona para a tela onde é feita a adição de uma nova Remessa de saída",
 						"type": "link",
 						"route": "/admin/remessa/add"
 					}]
@@ -19,7 +19,7 @@
 					"elements": [{
 							"name": "Tipo de Remessa",
 							"Label": "Tipo de Remessa",
-							"description": "Seleciona o tipo de remessa que será exibida no relatório de remessas de entrada",
+							"description": "Seleciona o tipo de remessa que será exibida no relatório de remessas de saída",
 							"type": "select",
 							"route": "/admin/remessa"
 						},
@@ -51,7 +51,7 @@
 							"label": "Remessas Cadastradas",
 							"elements": [{
 									"name": "Tabela de Remessas",
-									"description": "Tabela exibindo ID; Fornecedor/Paciente; Tipo de Entrada e Data de cada remessa seguido do botão de detalhes",
+									"description": "Tabela exibindo ID; Fornecedor/Paciente; Tipo de saída e Data de cada remessa seguido do botão de detalhes",
 									"layout_relative_position": "content",
 									"type": "table",
 									"columns": [{
@@ -61,23 +61,23 @@
 										},
 										{
 											"name": "Fornecedor/Paciente",
-											"description": "Tipo de entrada da Remessa",
+											"description": "Tipo de saída da Remessa",
 											"type": "text"
 										}
 										{
-											"name": "Tipo de Entrada",
-											"description": "Tipo de entrada da Remessa",
+											"name": "Tipo de saída",
+											"description": "Tipo de saída da Remessa",
 											"type": "text"
 										}
 										{
 											"name": "Data",
-											"description": "data de entrada da Remessa",
+											"description": "data de saída da Remessa",
 											"type": "text"
 										}
 										{
 											"name": "Botão de Detalhes",
 											"label": "class='glyphicon glyphicon-pencil'",
-											"description": "Redireciona para a tela onde é possível ver em detalhes todas as informações da Remessa de Entrada atual",
+											"description": "Redireciona para a tela onde é possível ver em detalhes todas as informações da Remessa de saída atual",
 											"type": "link",
 											"route": "remessa/{{ id_remessa }}"
 										}
@@ -117,16 +117,16 @@
 
 		{
 			"name": "Nova Remessa",
-			"description": "Tela para adicionar uma nova remessa de entrada",
+			"description": "Tela para adicionar uma nova remessa de saída",
 			"layout": "admin/layout.twig",
 			"page_sessions": [{
-				"name": "Entrada de Estoque",
+				"name": "saída de Estoque",
 				"description": "Formulário para preencher com as informações da nova Remessa",
 				"layout_relative_position": "content",
 				"type": "form",
 				"inputs": [{
-						"name": "Tipo de Entrada",
-						"description": "Campo para selecionar o Tipo de Entrada (Doação, compra ou devolução)",
+						"name": "Tipo de saída",
+						"description": "Campo para selecionar o Tipo de saída (Doação, compra ou devolução)",
 						"type": "select"
 					},
 					{
@@ -135,7 +135,7 @@
 						"type": "select"
 					},
 					{
-						"name": "Data de Entrada",
+						"name": "Data de saída",
 						"description": "Data da Remessa",
 						"type": "text"
 					}
@@ -213,7 +213,7 @@
 						"type": "text"
 					}
 					{
-						"name": "Botão Adicionar Remessa Entrada",
+						"name": "Botão Adicionar Remessa saída",
 						"label": "Adicionar",
 						"description": "Submeter, para adicionar uma remessa com todos os seus produtos",
 						"type": "Submit",
