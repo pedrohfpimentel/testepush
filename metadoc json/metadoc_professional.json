@@ -42,6 +42,7 @@
 									"name": "Button Select",
 									"type": "submit",
 									"route": "/admin/professionals",
+									"label": "<i class='material-icons'>search</i>",
 									"query_params": [{
 										"name": "search",
 										"data": {
@@ -51,7 +52,6 @@
 									}],
 									"events": [{
 										"name": "search_btn",
-										"label": "<i class='material-icons'>search</i>",
 										"type": "click",
 										"description": "pega o conteúdo do value do select #search e monta a url do href do search_btn"
 									}]

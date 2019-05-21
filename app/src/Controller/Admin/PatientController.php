@@ -5,6 +5,7 @@ namespace Farol360\Ancora\Controller\Admin;
 
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
+use Farol360\Ancora\User;
 use Farol360\Ancora\Model\EntityFactory;
 use Fusonic\SpreadsheetExport\Spreadsheet;
 use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
@@ -88,7 +89,7 @@ class PatientController extends Controller
                 ]);
             } 
         }   
-    //}   
+        //}   
         //if (!empty($params['page'])) {
             //$page = intval($params['page']);
         } else {
@@ -118,14 +119,48 @@ class PatientController extends Controller
     }
 
 
-
+    /*
+        return:
+        data.codigo = 1 - parametro cpf não foi informado.
+        data.codigo = 2 - cpf é inválido. 
+        data.codigo = 3 - usuário encotrado. 
+        data.codigo = 4 - usuário encotrado. 
+    */
     public function validate_cpf(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
-
-        $return = $this->patientModel->getByCPF();
+        $cpf = isset($request->getQueryParams()['cpf']) ? $request->getQueryParams()['cpf'] : null;
  
-        
+        // query param cpf deve ser preenchido
+        if (($cpf === null) || ($cpf == '') ) {
+            $data['codigo'] = 1;
+            $data['mensagem'] = "Parametro CPF não informado.";
+            return $response->withJson($data);
+        }
+
+        // cpf NÃO É válido
+        if (!User::validaCPF($cpf)) {
+            $data['codigo'] = 2;
+            $data['mensagem'] = "O Cpf não é válido.";
+            return $response->withJson($data);
+        }
+
+        // limpa a mascara do input
+        $cpf = preg_replace("/[^0-9]/", "", $cpf);
+
+        // buscar usuário
+        $user = $this->patientModel->getByCpf($cpf);
+
+        // verifica se foi encontrado usuário
+        if ($user !== false) {
+            $data['codigo'] = 3;
+            $data['mensagem'] = "O usuário já existe.";
+            return $response->withJson($data);
+        }
+
+        // retorna que está liberado
+        $data['codigo'] = 4;
+        $data['mensagem'] = "Usuário liberado para cadastro.";
+        return $response->withJson($data);
     }
  
 
@@ -151,6 +186,25 @@ class PatientController extends Controller
         // verify email
         if ($this->patientModel->getByEmail($data['email']) != false) {
             $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
+            return $this->httpRedirect($request, $response, '/admin/patients/add');
+        }
+    
+        // verify cpf null or empty
+        if (!isset($data['cpf']) || $data['cpf'] == '') {
+            $this->flash->addMessage('warning', 'O cpf deve ser informado.');
+            return $this->httpRedirect($request, $response, '/admin/patients/add');
+        }
+
+        // verify cpf valido
+        if (!User::validaCPF($data['cpf'])) {
+            $this->flash->addMessage('warning', 'O cpf é inválido.');
+            return $this->httpRedirect($request, $response, '/admin/patients/add');
+        }
+
+        $user = $this->patientModel->getByCpf($data['cpf']);
+
+        if ($user !== false ) {
+            $this->flash->addMessage('warning', 'O cpf já existe.');
             return $this->httpRedirect($request, $response, '/admin/patients/add');
         }
 

@@ -112,6 +112,7 @@ class PatientModel extends Model
         return $query->fetch();
     }
 
+    
     public function getByEmail(string $email) {
         $sql = "
             SELECT
@@ -127,7 +128,7 @@ class PatientModel extends Model
         return $query->fetch();
     }
 
-
+    // retorna false se não encontrar o resultado
     public function getByCPF(string $cpf) {
         $sql = "
             SELECT
