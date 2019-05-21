@@ -61,8 +61,7 @@ $app->group('/admin', function () {
         $this->post('/update', PatientAdmin::class . ':update');
         $this->map(['GET', 'POST'],'/verifyUserByEmail', PatientAdmin::class . ':verifyUserByEmail
             ');
-        $this->map(['GET', 'POST'],'/validate_cpf', PatientAdmin::class . ':validate_cpf
-            ');
+        $this->map(['GET', 'POST'],'/validate_cpf', PatientAdmin::class . ':validate_cpf');
     });
 
     $this->group('/permission', function () {
