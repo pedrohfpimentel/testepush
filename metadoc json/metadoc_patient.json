@@ -1,5 +1,6 @@
 {
-	"pages patients": [{
+	"pages patients": [
+		{
 			"name": "Index Paciente",
 			"description": "Tela para exibir lista de pacientes",
 			"layout": "admin/layout.twig",
@@ -146,9 +147,6 @@
 			]
 		},
 
-
-
-
 		{
 			"name": "Adicionar Pacientes",
 			"description": "Tela para adicionar um novo paciente",
@@ -166,7 +164,12 @@
 					{
 						"name": "Email",
 						"description": "email do paciente",
-						"type": "text"
+						"type": "email",
+						"events":[{
+							"name": "verify_email",
+							"type": "change",
+							"description": "faz um ajax e consulta se o email já existe no sistema."
+						}]
 					},
 					{
 						"name": "Data de Nascimento",
@@ -176,7 +179,12 @@
 					{
 						"name": "CPF",
 						"description": "CPF do paciente",
-						"type": "text"
+						"type": "text",
+						"events":[{
+							"name": "verify_cpf",
+							"type": "focusout",
+							"description": "faz um ajax e consulta se o cpf já existe no sistema."
+						}]
 					},
 					{
 						"name": "RG",

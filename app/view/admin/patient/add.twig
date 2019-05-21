@@ -22,10 +22,7 @@
   <div class="card-content">
     <div class="row">
       <div class="col-md-12">
-        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/add" method="POST">
-
-
-
+        <form id="patient-form" role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/add" method="POST">
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
@@ -39,45 +36,6 @@
                 <input type="email" class="form-control" id="inputEmail" name="email" placeholder="">
                 <p id="email-error" style="color:red;"></p>
 
-                <script type="text/javascript">
-                  $('#inputEmail').change(function(){
-                    $('#email-error').html('');
-
-                    if ($(this).parent().hasClass('has-error')) {
-
-                      $('#email-error').css('color', 'red');
-                      $('#email-error').html('Utilize um email válido.');
-                    } else {
-                      //var data = "{email: "++"}";
-
-                      $.ajax({
-                        url:'{{ base_url() }}/admin/patients/verifyUserByEmail',
-                        type: "POST",
-                        data: {email: $('#inputEmail').val()},
-                        success: function (data) {
-                          console.log(data);
-
-                          if (data == "true") {
-
-                            $('#email-error').css('color', 'red');
-                            $('#email-error').html('o email já está cadastrado.');
-                          } else if (data == "false") {
-
-                            //$('#email-error').css('color', 'green');
-                            //$('#email-error').html('email liberado para cadastro.');
-                          }
-                        },
-                        error: function (data) {
-                          console.error(data);
-                        }
-
-                      });
-                    }
-
-
-
-                  });
-                </script>
               </div>
             </div>
           </div>
@@ -88,9 +46,10 @@
               <label for="inputNascimento">Data de nascimento</label>
               <input type="date" class="form-control" id="inputNascimento" name="nascimento">
             </div>
-            <div class="col-sm-3 form-group">
-              <label for="inputCpf">CPF</label>
-              <input type="text" class="form-control" id="inputCpf" name="inputCpf" placeholder="" title="Número do CPF com pontos e traço" >
+            <div id="inputCpf-group" class="col-sm-3 form-group">
+              <label for="inputCpf" class="control-label" style="margin-top:9px;">CPF</label>
+              <input type="text" class="form-control" id="inputCpf" name="cpf" placeholder="" title="Número do CPF com pontos e traço" >
+              <div id="inputCpf-feedback"></div>
             </div>
             <div class="col-sm-3 form-group">
               <label for="inputCpf">RG</label>
@@ -245,14 +204,6 @@
 
           </div>
 
-
-
-
-
-
-
-
-
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
@@ -267,7 +218,6 @@
               </div>
             </div>
           </div>
-
 
           <div class="row">
             <div class="col-sm-6">
@@ -313,11 +263,6 @@
               <input type="date" class="form-control" id="visitDate" name="visitDate" required>
             </div>
           </div>
-           
-
-
-
-
           <button type="submit" class="btn btn-success">Adicionar</button>
         </form>
       </div>
@@ -331,10 +276,7 @@
 
 {% endblock %}
 {% block javascripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
-
 <script src="{{ base_url() }}/js/jquery.mask.js"></script>
-
 
 <script type="text/javascript">
 
@@ -342,17 +284,102 @@ $('#inputCpf').mask('000.000.000-00', {reverse: true});
 $('#inputCep').mask('00000-000');
 </script>
 
-
 <script type="text/javascript">
 
-$("#inputCpf").focusout(function(){
-var cpf = $('#inputCpf').val();
+  // requisito 1: email único
+  $('#inputEmail').change(function(){
+    $('#email-error').html('');
 
-  
-console.log(cpf);
-console.log($('#inputCpf').attr('href'));
-$("#inputCpf").attr('href',   '{{ base_url() }}/admin/patients/validate_cpf?CPF=' + cpf);
-});
+    if ($(this).parent().hasClass('has-error')) {
+
+      $('#email-error').css('color', 'red');
+      $('#email-error').html('Utilize um email válido.');
+    } else {
+      //var data = "{email: "++"}";
+
+      $.ajax({
+        url:'{{ base_url() }}/admin/patients/verifyUserByEmail',
+        type: "POST",
+        data: {email: $('#inputEmail').val()},
+        success: function (data) {
+          console.log(data);
+
+          if (data == "true") {
+
+            $('#email-error').css('color', 'red');
+            $('#email-error').html('o email já está cadastrado.');
+          } else if (data == "false") {
+
+            //$('#email-error').css('color', 'green');
+            //$('#email-error').html('email liberado para cadastro.');
+          }
+        },
+        error: function (data) {
+          console.error(data);
+        }
+
+      });
+    }
+  });
+
+  // requisito 2: cpf único
+  $("#inputCpf").focusout(function(){
+    var cpf = $('#inputCpf').val();
+
+    $.ajax(
+      {
+        url: "{{ base_url() }}/admin/patients/validate_cpf?cpf="+cpf,
+
+        beforeSend: function() {
+          $('#inputCpf-group').removeClass('has-success');
+          $('#inputCpf-group').removeClass('has-error');
+          $('#inputCpf').attr('ok', '');
+          $('#inputCpf-feedback').html('');
+        },
+
+        success: function(data) {
+          
+          if (data.codigo == 1) {
+            $('#inputCpf-group').addClass('has-error');
+            $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
+
+          }
+
+          if (data.codigo == 2) {
+            $('#inputCpf-group').addClass('has-error');
+            $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
+
+          }
+
+          if (data.codigo == 3) {
+            $('#inputCpf-group').addClass('has-error');
+            $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
+          }
+
+          if (data.codigo == 4) {
+            $('#inputCpf-group').addClass('has-success');
+            $('#inputCpf-feedback').html('<p style="color:green; position:absolute;">' + data.mensagem + '</p>');
+            $('#inputCpf').attr('ok', 'ok');
+          }
+          
+        },
+
+        error: function(data) {
+          console.log("erro:" + data);
+        }
+    }
+    ); 
+    
+  });
+
+  // validação do formulário
+  $('#patient-form').on('submit', function(){
+
+    if ($('#inputCpf').attr('ok') != 'ok') {
+      $('#inputCpf').focus();
+      return false;
+    }
+  });
 
 </script>
 
