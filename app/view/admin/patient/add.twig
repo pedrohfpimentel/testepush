@@ -90,7 +90,7 @@
             </div>
             <div class="col-sm-3 form-group">
               <label for="inputCpf">CPF</label>
-              <input type="text" class="form-control" id="inputCpf" name="cpf" placeholder="" title="Número do CPF com pontos e traço">
+              <input type="text" class="form-control" id="inputCpf" name="inputCpf" placeholder="" title="Número do CPF com pontos e traço" >
             </div>
             <div class="col-sm-3 form-group">
               <label for="inputCpf">RG</label>
@@ -340,6 +340,20 @@
 
 $('#inputCpf').mask('000.000.000-00', {reverse: true});
 $('#inputCep').mask('00000-000');
+</script>
+
+
+<script type="text/javascript">
+
+$("#inputCpf").focusout(function(){
+var cpf = $('#inputCpf').val();
+
+  
+console.log(cpf);
+console.log($('#inputCpf').attr('href'));
+$("#inputCpf").attr('href',   '{{ base_url() }}/admin/patients/validate_cpf?CPF=' + cpf);
+});
+
 </script>
 
 {% endblock %}

@@ -118,6 +118,15 @@ class PatientController extends Controller
     }
 
 
+
+    public function validate_cpf(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        $return = $this->patientModel->getByCPF();
+ 
+        
+    }
  
 
     public function add(Request $request, Response $response): Response

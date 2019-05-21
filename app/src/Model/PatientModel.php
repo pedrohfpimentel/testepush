@@ -126,6 +126,25 @@ class PatientModel extends Model
         $query->execute($parameters);
         return $query->fetch();
     }
+
+
+    public function getByCPF(string $cpf) {
+        $sql = "
+            SELECT
+                *
+            FROM
+                users
+            WHERE
+                cpf = :cpf
+            LIMIT 1";
+        $query = $this->db->prepare($sql);
+        $parameters = [':cpf' => $cpf];
+        $query->execute($parameters);
+        return $query->fetch();
+    }
+
+
+
     public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "

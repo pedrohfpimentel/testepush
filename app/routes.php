@@ -59,7 +59,10 @@ $app->group('/admin', function () {
         $this->get('/edit/{id:[0-9]+}', PatientAdmin::class . ':edit');
         $this->map(['GET', 'POST'], '/history/{id:[0-9]+}', PatientAdmin::class . ':history');
         $this->post('/update', PatientAdmin::class . ':update');
-        $this->map(['GET', 'POST'],'/verifyUserByEmail', PatientAdmin::class . ':verifyUserByEmail');
+        $this->map(['GET', 'POST'],'/verifyUserByEmail', PatientAdmin::class . ':verifyUserByEmail
+            ');
+        $this->map(['GET', 'POST'],'/validate_cpf', PatientAdmin::class . ':validate_cpf
+            ');
     });
 
     $this->group('/permission', function () {
