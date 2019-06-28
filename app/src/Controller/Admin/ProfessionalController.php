@@ -241,7 +241,7 @@ class ProfessionalController extends Controller
         $id = intval($args['id']);
         $professional = $this->professionalModel->get($id);
 
-        $event_logs = $this->eventLogModel->getByProfessional($id);
+        $event_logs = $this->eventLogModel->getByProfessionalNamePatient($id);
          //var_dump($event_logs);
             //die;
         foreach ($event_logs as $event_log) {
@@ -359,7 +359,8 @@ class ProfessionalController extends Controller
        //var_dump($id);
         //die;
         $professional = $this->professionalModel->get($id);
-        $event_logs = $this->eventLogModel->getByProfessional($id);
+        $event_logs = $this->eventLogModel->getByProfessionalNamePatient($id);
+        $patients = $this->patientModel->getAll();
 
         //var_dump($event_logs);
            // die;
@@ -382,6 +383,7 @@ class ProfessionalController extends Controller
                 <th style='width: 33%; text-align:left;'>Data</th>
                 <th style='width: 33%; text-align:left;'>Tipo</th>
                 <th style='width: 33%; text-align:left;'>Descrição</th>
+                <th style='width: 30%; text-align:left;'>Paciente</th>
                 
             </tr>
         ";
@@ -395,6 +397,7 @@ class ProfessionalController extends Controller
                 <td style='width: 20%; text-align:left;'>$event_log->date</td>
                 <td style='width: 30%; text-align:left;'>$event_log->event_log_types_name</td>
                 <td style='width: 50%; text-align:left;'>$event_log->description</td>
+                <td style='width: 30%; text-align:left;'>$event_log->users_name</td>
             
             </tr> ";
             

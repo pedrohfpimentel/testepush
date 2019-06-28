@@ -91,13 +91,15 @@
           <thead>
             <th>Data</th>
             <th>Tipo</th>
-            <th>Descrição</th>
+            <th>Paciente</th>
+            <th>Descrição</th>    
           </thead>
           <tbody>
             {% for event_log in event_logs %}
               <tr>
                 <td>{{ event_log.date }}</td>
                 <td>{{ event_log.event_log_types_name }}</td>
+                <td>{{ event_log.users_name }}</td>
                 <td>{{ event_log.description }}</td>
               </tr>
             {% else %}
