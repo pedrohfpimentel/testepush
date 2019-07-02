@@ -324,13 +324,10 @@ class RemessaModel extends Model
             UPDATE
                 remessa
             SET
-                suppliers        = :suppliers,
-                remessa_type     = :remessa_type,
-                quantity         = :quantity,
-                cost             = :cost,
-                patrimony_code   = :patrimony_code,
-                date             = :date,
-                time             = :time
+                remessa_type       = :remessa_type,
+                patient_id     = :patient_id,
+                suppliers = :suppliers
+                
 
             WHERE
                 id = :id
@@ -338,17 +335,14 @@ class RemessaModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id'           => $remessa->id,
-            ':suppliers'    => $remessa->suppliers,
-            ':remessa_type' => $remessa->remessa_type,
-            ':quantity'     => $remessa->quantity,
-            ':cost'         => $remessa->cost,
-            'patrimony_code' => $remessa->patrimony_code,
-            ':date'         => $remessa->date,
-            ':time'         => $remessa->time
+            ':remessa_type'   => $remessa->remessa_type,
+            ':patient_id' => $remessa->patient_id,
+            ':suppliers' => $remessa->suppliers
             ];
         return $query->execute($parameters);
     }
 
+    
     public function updatePatient(Remessa $remessa): bool
     {
         $sql = "

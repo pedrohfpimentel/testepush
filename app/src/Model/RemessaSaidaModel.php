@@ -175,13 +175,10 @@ class RemessaSaidaModel extends Model
             UPDATE
                 remessa
             SET
-                id_product       = :id_product,
-                remessa_type     = :remessa_type,
-                quantity         = :quantity,
-                cost             = :cost,
-                patrimony_code   = :patrimony_code,
-                date             = :date,
-                time             = :time
+                remessa_type   = :remessa_type,
+                patient_id     = :patient_id,
+                suppliers      = :suppliers
+                
 
             WHERE
                 id = :id
@@ -189,13 +186,9 @@ class RemessaSaidaModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id'           => $remessa->id,
-            ':id_product'   => $remessa->id_product,
-            ':remessa_type' => $remessa->remessa_type,
-            ':quantity'     => $remessa->quantity,
-            ':cost'         => $remessa->cost,
-            'patrimony_code' => $remessa->patrimony_code,
-            ':date'         => $remessa->date,
-            ':time'         => $remessa->time
+            ':remessa_type'   => $remessa->remessa_type,
+            ':patient_id' => $remessa->patient_id,
+            ':suppliers' => $remessa->suppliers
             ];
         return $query->execute($parameters);
     }

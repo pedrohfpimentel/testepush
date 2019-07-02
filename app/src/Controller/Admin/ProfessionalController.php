@@ -241,7 +241,7 @@ class ProfessionalController extends Controller
         $id = intval($args['id']);
         $professional = $this->professionalModel->get($id);
 
-        $event_logs = $this->eventLogModel->getByProfessionalNamePatient($id);
+        $event_logs = $this->eventLogModel->getByProfessional($id);
          //var_dump($event_logs);
             //die;
         foreach ($event_logs as $event_log) {

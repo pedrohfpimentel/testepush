@@ -134,6 +134,7 @@ $app->group('/admin', function () {
         $this->get('/consulta_produto', RemessaAdmin::class . ':consulta_produto'); 
         $this->get('/consulta_suppliers', RemessaAdmin::class . ':consulta_suppliers'); 
         $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
+        $this->map(['GET', 'POST'], '/update', RemessaAdmin::class . ':update');
         
     });
 
@@ -145,6 +146,7 @@ $app->group('/admin', function () {
         $this->get('/consulta_produto', RemessaSaidaAdmin::class . ':consulta_produto'); 
         $this->get('/consulta_suppliers', RemessaSaidaAdmin::class . ':consulta_suppliers'); 
         $this->map(['GET', 'POST'], '/add', RemessaSaidaAdmin::class . ':add');
+        $this->map(['GET', 'POST'], '/update', RemessaSaidaAdmin::class . ':update');
         
     });
 

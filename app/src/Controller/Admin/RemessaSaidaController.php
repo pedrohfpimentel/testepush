@@ -270,7 +270,41 @@ class RemessaSaidaController extends Controller
 
     }
 
+    public function update(Request $request, Response $response)
+    {
+      $products = $this->productsModel->getAll();
+      $patients = $this->patientModel->getAll();
+      //$remessaTypes[] = $this->remessaTypeModel->get(4);
+      //$remessaTypes[] = $this->remessaTypeModel->get(5);
+      $remessa_type = $this->remessaTypeModel->getAll();
+      $data = $request->getParsedBody();
 
+      $remessa = $request->getParsedBody();
+        $remessa['id'] = (int) $data['id'];
+        $remessa['remessa_type'] = (int) $data['remessa_type']; 
+        $remessa['patient_id'] = (int) $data['patient_id'];
+       //var_dump($data);   
+      $remessa = $this->entityFactory->createRemessa($remessa);
+      $remessa_return = $this->remessaSaidaModel->update($remessa);
+       
+       //var_dump($remessa);die;
+      
+      if  (($remessa_return != null) || ($remessa_return != false)) {
+
+        $eventLog['remessa_type'] = (int) $data['remessa_type'];
+        $eventLog['patient_id'] = (int) $data['patient_id'];
+        $eventLog['id']         = (int) $attendance->id;
+        $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_saida_edit')->id;
+        $eventLog['description'] = 'Remessa atualizada'; 
+
+
+        $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+
+            $this->flash->addMessage('success', 'Remessa atualizado com sucesso.');
+            return $this->httpRedirect($request, $response, '/admin/remessa_saida');
+      }
+    }
 
 
     //download

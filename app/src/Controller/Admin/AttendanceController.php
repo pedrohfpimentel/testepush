@@ -349,7 +349,7 @@ class AttendanceController extends Controller
         //var_dump($attendance);
         //die;
         $attendance_return = $this->attendanceModel->update($attendance);
-        var_dump($attendance);
+        //var_dump($attendance);
         //die;
        
 

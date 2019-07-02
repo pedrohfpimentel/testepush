@@ -14,15 +14,53 @@
 
 <div class="row">
   <div class="col-md-12">
+    <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/update" method="POST">
     <ul class="list-group">
-      <li class="list-group-item">Tipo de Entrada: <strong>{{ remessa.remessa_type_name }}</strong></li>
-      <li class="list-group-item">Fornecedor/ Paciente: <strong>{{ remessa.name_suppliers }} {{ remessa.name_patient }}</strong></li>
-      <li class="list-group-item">Data de Entrada: <strong>{{ remessa.date|date('d/m/Y') }}</strong></li>
-      
+      <li class="list-group-item">Tipo de Entrada: <strong>
+       <select id="selectRemessaType" name="id_remessa_type">
+         {% for remessa_types in remessa_type %}
+          {% if remessa.remessa_type == remessa_types.id %}
+            <option value="{{ remessa.remessa_type }}" selected>{{ remessa_types.name }}
+            </option>
+          {% else %}
+            <option value="{{ remessa.remessa_type }}">{{ remessa_types.name }}
+            </option>
+          {% endif %}
+         {% endfor %}
+       </select>
+                {#{{ remessa.remessa_type_name }}</strong>#}</li>
+      <li class="list-group-item">Fornecedor/ Paciente: <strong>
+        <select id="selectPatientSupplier" name="selectPatientSupplier">
+          {% for remessa_types in remessa_type %}
+            {% if remessa.remessa_type == 6 %}
+              {% for patient in patients %}
+                {% if patient.id == remessa.patient_id %}
+                  <option value="{{ patient.id }}" selected>{{ patient.user_name }}
+                  </option>
+                {% else %}
+                  <option value="{{ patient.id }}">{{ patient.user_name }}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% for supplier in suppliers %}
+                {% if remessa.suppliers == supplier.id %}
+                  <option value="{{ supplier.id }}" selected>{{ supplier.name }}
+                  </option>
+                {% else %}
+                  <option value="{{ supplier.id }}">{{ supplier.name }}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+         {% endfor %}
+
+        </select>
+          
+        </strong></li>
+      <li class="list-group-item">Data de Entrada: <strong>
+        {{ remessa.date|date('d/m/Y') }}</strong></li>
     </ul>
-
-
-
     <div class="main">
 
   <div class="card">
@@ -39,14 +77,9 @@
                 <th>Quantidade</th>
                 <th>Custo Unitário</th>
                 <th>Custo Total</th>
-                <th>Código Patrimonial</th>
-                
-                
+                <th>Código Patrimonial</th>                
               </tr>
             </thead>
-
-
-
             <tbody>
               {% for product_remessa in products_remessa %}
                 <tr>
@@ -55,16 +88,9 @@
                   <td>{{ product_remessa.cost }} </td>
                   <td>{{ custo_total }} </td>
                   <td>{{ product_remessa.patrimony_code}} </td>
-                  
-                
-              
-               
               {% endfor %}
             </tbody>
           </table>
-
-
-
           {% else %}
 
 
@@ -72,16 +98,10 @@
             <thead>
               <tr>
                 <th>Nome</th>
-                <th>Quantidade</th>
-                
-                <th>Código Patrimonial</th>
-                
-                
+                <th>Quantidade</th>               
+                <th>Código Patrimonial</th>                
               </tr>
             </thead>
-
-
-
             <tbody>
               {% for product_remessa in products_remessa %}
                 <tr>
@@ -89,17 +109,10 @@
                   <td>{{ product_remessa.quantity }}</td>
                  
                   <td>{{ product_remessa.patrimony_code}} </td>
-                  
-                
               
-               
               {% endfor %}
             </tbody>
           </table>
-
-
-
-
           {% endif %}
         </div>
       </div>
@@ -108,7 +121,8 @@
   </div>
 
 
-
+<button type="submit" class="btn btn-primary">Atualizar</button>
+      </form>
 
     
 </div>

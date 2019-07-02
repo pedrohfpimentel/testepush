@@ -14,10 +14,36 @@
 
 <div class="row">
   <div class="col-md-12">
+    <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/update" method="POST">
+      <input type="hidden" name="id" value="{{ remessa.id }}">
     <ul class="list-group">
-      <li class="list-group-item">Tipo de Entrada: <strong>{{ remessa.remessa_type_name }}</strong></li>
-      <li class="list-group-item">Paciente: <strong>{{ remessa.name_patient }}</strong></li>
-      <li class="list-group-item">Data de Entrada: <strong>{{ remessa.date }}</strong></li>
+      <li class="list-group-item">Tipo de Entrada: <strong>
+      <select id="selectRemessaType" name="remessa_type">
+         {% for remessa_types in remessa_type %}
+          {% if remessa.remessa_type == remessa_types.id %}
+            <option value="{{ remessa_types.id }}" selected>{{ remessa_types.name }}
+            </option>
+          {% else %}
+            <option value="{{ remessa_types.id }}">{{ remessa_types.name }}
+            </option>
+          {% endif %}
+         {% endfor %}
+       </select>
+     </strong></li>
+      <li class="list-group-item">Paciente: <strong>
+        <select id="selectPatient" name="patient_id">
+            {% for patient in patients %}
+              {% if patient.id == remessa.patient_id %}
+                <option value="{{ patient.id }}" selected>{{ patient.user_name }}
+                </option>
+              {% else %}
+                <option value="{{ patient.id }}">{{ patient.user_name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+        </select>
+     </strong></li>
+      <li class="list-group-item">Data de Entrada: <strong>{{ remessa.date|date('d/m/Y') }}</strong></li>
       
     </ul>
 
@@ -54,6 +80,9 @@
     </ul>
   </div>
 
+
+<button type="submit" class="btn btn-primary">Atualizar</button>
+      </form>
 
  
 </div>

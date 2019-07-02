@@ -152,6 +152,8 @@ class PatientModel extends Model
             SELECT
                 users.*,
                 patients.*,
+                users.id as id_user,
+                users.name as user_name,
                 diseases.id as disease_id,
                 diseases.name as disease_name,
                 diseases.description as disease_description,

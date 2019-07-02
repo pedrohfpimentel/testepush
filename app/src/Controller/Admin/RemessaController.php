@@ -303,6 +303,22 @@ class RemessaController extends Controller
     }
 
 
+
+
+    public function update(Request $request, Response $response): Response
+    {
+        var_dump('teste');die;   
+        $patients       = $this->patientModel->getAll();
+        $professionals  = $this->professionalModel->getAll();
+        $status = $this->attendanceStatusModel->getAll();
+        $data = $request->getParsedBody();
+             
+        
+    }
+
+
+
+
     //download
     public function export(Request $request, Response $response)
     {
@@ -471,9 +487,12 @@ class RemessaController extends Controller
 
         $patients       = $this->patientModel->getAll();
         $suppliers  = $this->supplierModel->getAll();
-        $remessa_type = $this->remessaTypeModel->getAll();
         $products_remessa = $this->produtoRemessaModel->getAll();
         $products = $this->productsModel->getAll();
+
+        $remessa_type[] = $this->remessaTypeModel->get(1);
+        $remessa_type[] = $this->remessaTypeModel->get(2);
+        $remessa_type[] = $this->remessaTypeModel->get(6);
         //var_dump($products);
         //die;
         $id = intval($args['id']);
@@ -525,7 +544,7 @@ class RemessaController extends Controller
           'patients' => $patients, 
           'suppliers' => $suppliers,
           'products_remessa' => $products_remessa,
-          'custo_total' => $custo_total,
+          'custo_total' => $custo_total
         ]);
 
 
