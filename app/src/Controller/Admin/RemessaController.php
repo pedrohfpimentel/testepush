@@ -307,18 +307,59 @@ class RemessaController extends Controller
 
     public function update(Request $request, Response $response): Response
     {
-        var_dump('teste');die;   
-        $patients       = $this->patientModel->getAll();
-        $professionals  = $this->professionalModel->getAll();
-        $status = $this->attendanceStatusModel->getAll();
-        $data = $request->getParsedBody();
-             
+     $products = $this->productsModel->getAll();
+      $patients = $this->patientModel->getAll();
+      $remessa_type[] = $this->remessaTypeModel->get(1);
+      $remessa_type[] = $this->remessaTypeModel->get(2);
+      $remessa_type[] = $this->remessaTypeModel->get(6);
+      //$remessa_type = $this->remessaTypeModel->getAll();
+      $data = $request->getParsedBody();
+
+      $remessa = $request->getParsedBody();
+
+        $remessa['id'] = (int) $data['id'];
+        $remessa['remessa_type'] = (int) $data['remessa_type']; 
         
+        if (($remessa['remessa_type'] == 1) || ($remessa['remessa_type'] == 2)) {
+          $remessa['patient_id'] = NULL;
+          $remessa['suppliers'] = (int) $data['suppliers'];
+          
+        } else if ($remessa['remessa_type'] == 6) {
+          $remessa['suppliers'] = NULL;
+          $remessa['patient_id'] = (int) $data['patient_id'];
+        
+        }
+       //var_dump($remessa);die;
+      $remessa = $this->entityFactory->createRemessa($remessa);
+      $remessa_return = $this->remessaModel->update($remessa);
+       
+      // var_dump($remessa);die;
+      
+      if  (($remessa_return != null) || ($remessa_return != false)) {
+
+        $eventLog['remessa_type'] = (int) $data['remessa_type'];
+        $eventLog['id_patient'] = (int) $data['patient_id'];
+        $eventLog['suppliers'] = (int) $data['suppliers'];
+        $eventLog['id']         = (int) $attendance->id;
+        $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_edit')->id;
+
+        if ($eventLog['remessa_type'] == 1) {
+          $eventLog['description'] = 'Recebimento de Doação atualizada';
+        } else if ($eventLog['remessa_type'] == 2) {
+          $eventLog['description'] = 'Compra atualizada';
+        } else if ($eventLog['remessa_type'] ==  6) {
+          $eventLog['description'] = 'Devolução atualizada';
+        }
+         
+
+
+        $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+
+            $this->flash->addMessage('success', 'Entrada de Estoque atualizada com sucesso.');
+            return $this->httpRedirect($request, $response, '/admin/remessa');
+      }
     }
-
-
-
-
     //download
     public function export(Request $request, Response $response)
     {
@@ -490,9 +531,13 @@ class RemessaController extends Controller
         $products_remessa = $this->produtoRemessaModel->getAll();
         $products = $this->productsModel->getAll();
 
-        $remessa_type[] = $this->remessaTypeModel->get(1);
-        $remessa_type[] = $this->remessaTypeModel->get(2);
-        $remessa_type[] = $this->remessaTypeModel->get(6);
+        //$remessaTypes[] = $this->remessaTypeModel->get(1);
+        //$remessaTypes[] = $this->remessaTypeModel->get(2);
+        //$remessaTypes[] = $this->remessaTypeModel->get(6);
+
+        $remessaTypes[] = $this->remessaTypeModel->get(1);
+        $remessaTypes[] = $this->remessaTypeModel->get(2);
+        $remessaTypes[] = $this->remessaTypeModel->get(6);
         //var_dump($products);
         //die;
         $id = intval($args['id']);
@@ -535,10 +580,11 @@ class RemessaController extends Controller
 
         //var_dump($remessa);
         //die;
-        $remessa_type = $this->remessaTypeModel->getAll();
+        //$remessa_type = $this->remessaTypeModel->getAll();
         return $this->view->render($response, 'admin/remessa/view.twig', [
           'remessa' => $remessa,
           'remessa_type' => $remessa_type,
+          'remessaTypes' => $remessaTypes,
           'patient_id' => $patient_id, 
           'id_suppliers' => $id_suppliers, 
           'patients' => $patients, 

@@ -17,14 +17,14 @@
     <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/update" method="POST">
       <input type="hidden" name="id" value="{{ remessa.id }}">
     <ul class="list-group">
-      <li class="list-group-item">Tipo de Entrada: <strong>
+      <li class="list-group-item">Tipo de Saída: <strong>
       <select id="selectRemessaType" name="remessa_type">
-         {% for remessa_types in remessa_type %}
-          {% if remessa.remessa_type == remessa_types.id %}
-            <option value="{{ remessa_types.id }}" selected>{{ remessa_types.name }}
+         {% for remessaType in remessaTypes %}
+          {% if remessa.remessaTypes == remessaType.id %}
+            <option value="{{ remessaType.id }}" selected>{{ remessaType.name }}
             </option>
           {% else %}
-            <option value="{{ remessa_types.id }}">{{ remessa_types.name }}
+            <option value="{{ remessaType.id }}">{{ remessaType.name }}
             </option>
           {% endif %}
          {% endfor %}

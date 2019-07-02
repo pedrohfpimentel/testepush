@@ -274,9 +274,9 @@ class RemessaSaidaController extends Controller
     {
       $products = $this->productsModel->getAll();
       $patients = $this->patientModel->getAll();
-      //$remessaTypes[] = $this->remessaTypeModel->get(4);
-      //$remessaTypes[] = $this->remessaTypeModel->get(5);
-      $remessa_type = $this->remessaTypeModel->getAll();
+      $remessa_type[] = $this->remessaTypeModel->get(4);
+      $remessa_type[] = $this->remessaTypeModel->get(5);
+      //$remessa_type = $this->remessaTypeModel->getAll();
       $data = $request->getParsedBody();
 
       $remessa = $request->getParsedBody();
@@ -292,16 +292,22 @@ class RemessaSaidaController extends Controller
       if  (($remessa_return != null) || ($remessa_return != false)) {
 
         $eventLog['remessa_type'] = (int) $data['remessa_type'];
-        $eventLog['patient_id'] = (int) $data['patient_id'];
+        $eventLog['id_patient'] = (int) $data['patient_id'];
         $eventLog['id']         = (int) $attendance->id;
         $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_saida_edit')->id;
-        $eventLog['description'] = 'Remessa atualizada'; 
+
+        if ($eventLog['remessa_type'] == 4) {
+          $eventLog['description'] = 'Saída por Doação atualizada';
+        } else if ($eventLog['remessa_type'] == 5) {
+          $eventLog['description'] = 'Saída por Empréstimo atualizada'; 
+        }
+        
 
 
         $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);
 
-            $this->flash->addMessage('success', 'Remessa atualizado com sucesso.');
+            $this->flash->addMessage('success', 'Saída de Estoque atualizada com sucesso.');
             return $this->httpRedirect($request, $response, '/admin/remessa_saida');
       }
     }
@@ -438,7 +444,9 @@ class RemessaSaidaController extends Controller
     {
 
         $patients       = $this->patientModel->getAll();
-        $remessa_type = $this->remessaTypeModel->getAll();
+        //$remessa_type = $this->remessaTypeModel->getAll();
+        $remessaTypes[] = $this->remessaTypeModel->get(4);
+        $remessaTypes[] = $this->remessaTypeModel->get(5);
         $products_remessa = $this->produtoRemessaModel->getAll();
         $products = $this->productsModel->getAll();
         $id = intval($args['id']);
@@ -473,6 +481,7 @@ class RemessaSaidaController extends Controller
         return $this->view->render($response, 'admin/remessa_saida/view.twig', [
           'remessa' => $remessa,
           'remessa_type' => $remessa_type,
+          'remessaTypes' => $remessaTypes,
           'patient_id' => $patient_id, 
           'id_suppliers' => $id_suppliers, 
           'patients' => $patients, 

@@ -15,34 +15,34 @@
 <div class="row">
   <div class="col-md-12">
     <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/update" method="POST">
+      <input type="hidden" name="id" value="{{ remessa.id }}">
     <ul class="list-group">
       <li class="list-group-item">Tipo de Entrada: <strong>
-       <select id="selectRemessaType" name="id_remessa_type">
-         {% for remessa_types in remessa_type %}
-          {% if remessa.remessa_type == remessa_types.id %}
-            <option value="{{ remessa.remessa_type }}" selected>{{ remessa_types.name }}
+       <select id="selectRemessaType" name="remessa_type">
+         {% for remessaType in remessaTypes %}
+          {% if remessa.remessa_type == remessaType.id %}
+            <option value="{{ remessaType.id }}" selected>{{ remessaType.name }}
             </option>
           {% else %}
-            <option value="{{ remessa.remessa_type }}">{{ remessa_types.name }}
+            <option value="{{ remessaType.id }}">{{ remessaType.name }}
             </option>
           {% endif %}
          {% endfor %}
        </select>
-                {#{{ remessa.remessa_type_name }}</strong>#}</li>
-      <li class="list-group-item">Fornecedor/ Paciente: <strong>
-        <select id="selectPatientSupplier" name="selectPatientSupplier">
-          {% for remessa_types in remessa_type %}
-            {% if remessa.remessa_type == 6 %}
-              {% for patient in patients %}
-                {% if patient.id == remessa.patient_id %}
-                  <option value="{{ patient.id }}" selected>{{ patient.user_name }}
-                  </option>
-                {% else %}
-                  <option value="{{ patient.id }}">{{ patient.user_name }}
-                  </option>
-                {% endif %}
-              {% endfor %}
-            {% else %}
+     </strong></li>
+      <li class="list-group-item">Paciente: <strong>
+        <select id="selectPatient" name="patient_id">
+            {% for patient in patients %}
+              {% if patient.id == remessa.patient_id %}
+                <option value="{{ patient.id }}" selected>{{ patient.user_name }}
+                </option>
+              {% else %}
+                <option value="{{ patient.id }}">{{ patient.user_name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+        </select>
+        <select id="suppliers_select" name="suppliers">
               {% for supplier in suppliers %}
                 {% if remessa.suppliers == supplier.id %}
                   <option value="{{ supplier.id }}" selected>{{ supplier.name }}
@@ -52,32 +52,26 @@
                   </option>
                 {% endif %}
               {% endfor %}
-            {% endif %}
-         {% endfor %}
+           
 
         </select>
-          
-        </strong></li>
-      <li class="list-group-item">Data de Entrada: <strong>
-        {{ remessa.date|date('d/m/Y') }}</strong></li>
+     </strong></li>
+      <li class="list-group-item">Data de Entrada: <strong>{{ remessa.date|date('d/m/Y') }}</strong></li>
+      
     </ul>
-    <div class="main">
 
+<div class="main">
   <div class="card">
     <div class="card-content">
       <div class="row">
         <div class="col-xs-12">
           <h4>Lista de Produtos</h4>
-
-          {% if remessa.remessa_type == 2 %}
           <table class="table table-striped data-table">
             <thead>
               <tr>
                 <th>Nome</th>
                 <th>Quantidade</th>
-                <th>Custo Unitário</th>
-                <th>Custo Total</th>
-                <th>Código Patrimonial</th>                
+                <th>Código Patrimonial</th>
               </tr>
             </thead>
             <tbody>
@@ -85,35 +79,14 @@
                 <tr>
                   <td>{{ product_remessa.name_product }}</td>
                   <td>{{ product_remessa.quantity }}</td>
-                  <td>{{ product_remessa.cost }} </td>
-                  <td>{{ custo_total }} </td>
                   <td>{{ product_remessa.patrimony_code}} </td>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% else %}
-
-
-          <table class="table table-striped data-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Quantidade</th>               
-                <th>Código Patrimonial</th>                
-              </tr>
-            </thead>
-            <tbody>
-              {% for product_remessa in products_remessa %}
-                <tr>
-                  <td>{{ product_remessa.name_product }}</td>
-                  <td>{{ product_remessa.quantity }}</td>
-                 
-                  <td>{{ product_remessa.patrimony_code}} </td>
+                  
+                
               
+               
               {% endfor %}
             </tbody>
           </table>
-          {% endif %}
         </div>
       </div>
     </div>
@@ -124,11 +97,48 @@
 <button type="submit" class="btn btn-primary">Atualizar</button>
       </form>
 
-    
-</div>
-
-
  
 </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+
+
+<script type="text/javascript">
+
+
+var tipo = $('#selectRemessaType').val();
+
+  if ( (tipo == 1) || (tipo == 2) ) {
+    $('#suppliers_select').show();
+    $('#selectPatient').hide();
+  }
+
+  if (tipo == 6) {
+    $('#selectPatient').show();
+    $('#suppliers_select').hide();
+  }
+
+$('#selectRemessaType').on('change', function() {
+   //console.log('oi mãe');
+
+  $('#selectPatient').hide();
+  $('#suppliers_select').hide();
+  
+  
+  var tipo = $('#selectRemessaType').val();
+
+  if ( (tipo == 1) || (tipo == 2) ) {
+    $('#suppliers_select').show();
+  }
+
+  if (tipo == 6) {
+    $('#selectPatient').show();
+  }
+
+ });
+ </script>
 
 {% endblock %}
