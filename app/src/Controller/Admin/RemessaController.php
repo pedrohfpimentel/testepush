@@ -583,7 +583,6 @@ class RemessaController extends Controller
         //$remessa_type = $this->remessaTypeModel->getAll();
         return $this->view->render($response, 'admin/remessa/view.twig', [
           'remessa' => $remessa,
-          'remessa_type' => $remessa_type,
           'remessaTypes' => $remessaTypes,
           'patient_id' => $patient_id, 
           'id_suppliers' => $id_suppliers, 
