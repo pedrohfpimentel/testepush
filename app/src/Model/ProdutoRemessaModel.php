@@ -127,19 +127,19 @@ class ProdutoRemessaModel extends Model
         return $query->fetchAll();
     }
 
-
-
     public function getAllByProduct(int $id_product, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
-                *
+                produto_remessa.*,
+                remessa.remessa_type as remessa_type
             FROM
                 produto_remessa
+                LEFT JOIN remessa ON remessa.id = produto_remessa.id_remessa
             WHERE 
-                id_product = ?
+                produto_remessa.id_product = ?
             ORDER BY
-                id
+                produto_remessa.id
             LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);

@@ -65,27 +65,21 @@ class RemessaController extends Controller
 
       // remessa types
       $remessaTypes = $this->remessaTypeModel->getAll();
-
-          $temp['suppliers'] = 0;
-          $temp['quantity'] = 0;
-          $temp['cost'] = 0;
-          $temp['remessa_type'] = 99;
-
-         
-          //var_dump($temp);
-          //die;
+      $temp['suppliers'] = 0;
+      $temp['quantity'] = 0;
+      $temp['cost'] = 0;
+      $temp['remessa_type'] = 99;
+      //var_dump($temp);
+      //die;
       $params = $request->getQueryParams();
-
-        if (!empty($params['page'])) {
-            $page = intval($params['page']);
-        } else {
-            $page = 1;
-        }
-        $limit = 20;
-        $offset = ($page - 1) * $limit;
-
-
-      $remessa = $this->remessaModel->getAllByType([1,2,3,6], $offset, $limit);
+      if (!empty($params['page'])) {
+          $page = intval($params['page']);
+      } else {
+          $page = 1;
+      }
+      $limit = 20;
+      $offset = ($page - 1) * $limit;
+      $remessa = $this->remessaModel->getAllByType([1,2,3,6,7], $offset, $limit);
 
      // $remessa_type = $this->remessaTypeModel->getAll();
       $remessa_type[] = $this->remessaTypeModel->get(1);
@@ -95,55 +89,30 @@ class RemessaController extends Controller
       //var_dump($remessa_type);
       //die;
       foreach ($remessa as $remessas) {
-       
-
-          if (($remessas->suppliers != NULL ) ||  ($remessas->suppliers != 0 ))
-          {
-
-              $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
-
-          }
-            
-            $remType = (int)$remessas->remessa_type;
-            if ($remType == 6) {
-              $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name; 
-            
-            }
-            $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
-            
-           if ($remessas->date == '0000-00-00 00:00:00') {
-            
-              $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
-
-            } else if ($remessas->date == NULL) {
-            
-              $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
-
-            }  
-
-            else {
-              $remessas->date = date("d/m/Y", strtotime($remessas->date));
-          
-            }
-          
-             
-
-        
-       // $date = substr($remessas->date, 0, 10);
-       // $date = strtotime($date);
-       // $remessas->date = date('d/m/Y', $date);
-             
+        if (($remessas->suppliers != NULL ) ||  ($remessas->suppliers != 0 ))
+        {
+          $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
         }
-
-      
-
+        $remType = (int)$remessas->remessa_type;
+        if ($remType == 6) {
+          $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name; 
+        }
+        $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
+        if ($remessas->date == '0000-00-00 00:00:00') {
+          $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
+        } else if ($remessas->date == NULL) {
+          $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
+        }  
+        else {
+          $remessas->date = date("d/m/Y", strtotime($remessas->date));
+        }
+        // $date = substr($remessas->date, 0, 10);
+        // $date = strtotime($date);
+        // $remessas->date = date('d/m/Y', $date);
+      }
       $amountRemessas = $this->remessaModel->getAmount();
-        $amountPages = ceil($amountRemessas->amount / $limit);
-
-        $today = date('Y-m-d');
-        
-
-        
+      $amountPages = ceil($amountRemessas->amount / $limit);
+      $today = date('Y-m-d');
       // var_dump($remessa);
       //die;
      
@@ -156,56 +125,41 @@ class RemessaController extends Controller
         'amountPages' => $amountPages,
         'today' => $today
       ]);
-       
     }
 
     public function sobre(Request $request, Response $response): Response
     {
-        return $this->view->render($response, 'admin/remessa/sobre.twig', ['version' => $this->version]);
+      return $this->view->render($response, 'admin/remessa/sobre.twig', ['version' => $this->version]);
     }
 
     public function add(Request $request, Response $response): Response
     {
-
-        if (empty($request->getParsedBody())) {
-          // get products to autocomplete
-          $products = $this->productsModel->getAll();
-          $suppliers = $this->supplierModel->getAll();
-
-          $this->remessaModel->deleteByRemessaType();
-
-          // remessa types
-          //$remessaTypes = [];
-          $remessaTypes[] = $this->remessaTypeModel->get(1);
-          $remessaTypes[] = $this->remessaTypeModel->get(2);
-          $remessaTypes[] = $this->remessaTypeModel->get(6);
-
-          //var_dump($remessaTypes);
-          //die;
-          $temp['id_products'] = 0;
-          $temp['quantity'] = 0;
-          $temp['cost'] = 0;
-          $temp['remessa_type'] = 99;
-
-          $temp = $this->entityFactory->createRemessa($temp);
-          
-          $id_remessa = $this->remessaModel->add($temp);
-
-          $patients = $this->patientModel->getAll();
-          //$remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(1));
-         // $remessaTypes = array_push($remessaTypes, $this->remessaTypeModel->get(2));
-          return $this->view->render($response, 'admin/remessa/add.twig',
-          [
-            'products' => $products,
-            'suppliers' => $suppliers,
-            'remessaTypes' => $remessaTypes,
-            'id_remessa' => $id_remessa,
-            'patients' => $patients
-          ]);
-        }
-
+      if (empty($request->getParsedBody())) {
+        // get products to autocomplete
+        $products = $this->productsModel->getAll();
+        $suppliers = $this->supplierModel->getAll();
+        $this->remessaModel->deleteByRemessaType();
+        $remessaTypes[] = $this->remessaTypeModel->get(1);
+        $remessaTypes[] = $this->remessaTypeModel->get(2);
+        $remessaTypes[] = $this->remessaTypeModel->get(6);
+        $remessaTypes[] = $this->remessaTypeModel->get(7);
+        $temp['id_products'] = 0;
+        $temp['quantity'] = 0;
+        $temp['cost'] = 0;
+        $temp['remessa_type'] = 99;
+        $temp = $this->entityFactory->createRemessa($temp);
+        $id_remessa = $this->remessaModel->add($temp);
+        $patients = $this->patientModel->getAll();
+        return $this->view->render($response, 'admin/remessa/add.twig',
+        [
+          'products' => $products,
+          'suppliers' => $suppliers,
+          'remessaTypes' => $remessaTypes,
+          'id_remessa' => $id_remessa,
+          'patients' => $patients
+        ]);
+      }
       $remessa = $request->getParsedBody();
-       
       $remessa['suppliers'] =  (int) $remessa['suppliers'];
       $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
       $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
@@ -213,98 +167,78 @@ class RemessaController extends Controller
       $remessa['cost'] = (float) $remessa['cost'];
       $remessa['id'] = (int) $remessa['remessa_id'];
       $remessa['patient_id'] = (int) $remessa['patient_id'];
-
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
-
       $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa['id']);
-
       $lista_produtos =  json_encode($lista_produtos);
-       //var_dump($remessa);
-     //die;
-      
-      
-
       if (count($products_remessa) < 1 ) {
         $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');
         return $this->httpRedirect($request, $response, '/admin/remessa/add');
       }
-
       $remessa = $this->entityFactory->createRemessa($remessa);
-
       if ( ($remessa->remessa_type == 1) || ($remessa->remessa_type == 2)) {
         $eventLog['id_remessa'] = $remessa->id;
         $eventLog['suppliers'] =  $remessa->suppliers;
         $idRemessa = $this->remessaModel->update($remessa);
-        
       } else if ($remessa->remessa_type == 6) {
-          
         $remessa->suppliers =  NULL;
         $eventLog['id_remessa'] = $remessa->id;
         $eventLog['suppliers'] =  $remessa->suppliers;
         $eventLog['id_patient'] = $remessa->patient_id;
-          
         $idRemessa = $this->remessaModel->updatePatient($remessa);
+      } else if ($remessa->remessa_type == 7) {
+        $remessa->suppliers =  NULL;
+        $remessa->patient_id =  NULL;
+        $eventLog['id_remessa'] = $remessa->id;
+        $eventLog['suppliers'] =  null;
+        $eventLog['id_patient'] = null;
+        $idRemessa = $this->remessaModel->update($remessa);
       }
-      
-
-
       // aqui trabalhar eventlog
-        if ( ($idRemessa != null) || ($idRemessa != false) ) {
-         
-          $eventLog['product_list'] = $lista_produtos;
-
+      if ( ($idRemessa != null) || ($idRemessa != false) ) {
+        $eventLog['product_list'] = $lista_produtos;
+        //var_dump($eventLog);
+        if ($remessa->remessa_type == 1){
+          $remessa_type = $this->remessaTypeModel->get(1);
+          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+          $eventLog['description'] = 'Remessa cadastrada';
+          //$eventLog['id_products'] = $remessa->id_product;
+          //var_dump($remessa_type);
+          $eventLog = $this->entityFactory->createEventLog($eventLog);
           //var_dump($eventLog);
-          if ($remessa->remessa_type == 1){
-              $remessa_type = $this->remessaTypeModel->get(1);
-              $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-             
-              $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
-              $eventLog['description'] = 'Remessa cadastrada';
-              //$eventLog['id_products'] = $remessa->id_product;
-              
-              //var_dump($remessa_type);
-
-              $eventLog = $this->entityFactory->createEventLog($eventLog);
-              //var_dump($eventLog);
-              //die;
-              $this->eventLogModel->add($eventLog);
-                //die;
-                
-          } elseif 
-                 ($remessa->remessa_type == 2){
-                  $remessa_type = $this->remessaTypeModel->get(2);
-                 $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-
-                 $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
-                 $eventLog['description'] = 'Remessa cadastrada';
-                 //$eventLog['id_products'] = $remessa->id_product;
-                 $eventLog['supplier'] = $remessa->suppliers;
-                 $eventLog = $this->entityFactory->createEventLog($eventLog);
-                 $this->eventLogModel->add($eventLog);
-          } elseif 
-                 ($remessa->remessa_type == 6){
-                   $remessa_type = $this->remessaTypeModel->get(6);
-
-        $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-
-        $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('devolution')->id;
-        $eventLog['description'] = 'Devolução cadastrada';
-        
-        
-        $eventLog = $this->entityFactory->createEventLog($eventLog);
-        $this->eventLogModel->add($eventLog);
-          }
-
+          //die;
+          $this->eventLogModel->add($eventLog);
+          //die;
+        } elseif  ($remessa->remessa_type == 2){
+          $remessa_type = $this->remessaTypeModel->get(2);
+          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
+          $eventLog['description'] = 'Remessa cadastrada';
+          //$eventLog['id_products'] = $remessa->id_product;
+          $eventLog['supplier'] = $remessa->suppliers;
+          $eventLog = $this->entityFactory->createEventLog($eventLog);
+          $this->eventLogModel->add($eventLog);
+        } elseif  ($remessa->remessa_type == 6){
+          $remessa_type = $this->remessaTypeModel->get(6);
+          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('devolution')->id;
+          $eventLog['description'] = 'Devolução cadastrada';
+          $eventLog = $this->entityFactory->createEventLog($eventLog);
+          $this->eventLogModel->add($eventLog);
+        } elseif  ($remessa->remessa_type == 7){
+          $remessa_type = $this->remessaTypeModel->get(7);
+          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_correcao')->id;
+          $eventLog['description'] = 'Entrada tipo Correção.';
+          $eventLog = $this->entityFactory->createEventLog($eventLog);
+          $this->eventLogModel->add($eventLog);
         }
+      }
         
       $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
       return $this->httpRedirect($request, $response, '/admin/remessa');
-    
     }
-
-
-
-
+    
     public function update(Request $request, Response $response): Response
     {
      $products = $this->productsModel->getAll();
@@ -312,14 +246,12 @@ class RemessaController extends Controller
       $remessa_type[] = $this->remessaTypeModel->get(1);
       $remessa_type[] = $this->remessaTypeModel->get(2);
       $remessa_type[] = $this->remessaTypeModel->get(6);
+      $remessa_type[] = $this->remessaTypeModel->get(7);
       //$remessa_type = $this->remessaTypeModel->getAll();
       $data = $request->getParsedBody();
-
       $remessa = $request->getParsedBody();
-
         $remessa['id'] = (int) $data['id'];
         $remessa['remessa_type'] = (int) $data['remessa_type']; 
-        
         if (($remessa['remessa_type'] == 1) || ($remessa['remessa_type'] == 2)) {
           $remessa['patient_id'] = NULL;
           $remessa['suppliers'] = (int) $data['suppliers'];
@@ -327,7 +259,9 @@ class RemessaController extends Controller
         } else if ($remessa['remessa_type'] == 6) {
           $remessa['suppliers'] = NULL;
           $remessa['patient_id'] = (int) $data['patient_id'];
-        
+        } else if ($remessa['remessa_type'] == 7) {
+          $remessa['suppliers'] = NULL;
+          $remessa['patient_id'] = NULL;
         }
        //var_dump($remessa);die;
       $remessa = $this->entityFactory->createRemessa($remessa);
@@ -349,9 +283,9 @@ class RemessaController extends Controller
           $eventLog['description'] = 'Compra atualizada';
         } else if ($eventLog['remessa_type'] ==  6) {
           $eventLog['description'] = 'Devolução atualizada';
+        } else if ($eventLog['remessa_type'] ==  7) {
+          $eventLog['description'] = 'Correção atualizada';
         }
-         
-
 
         $eventLog = $this->entityFactory->createEventLog($eventLog);
             $this->eventLogModel->add($eventLog);

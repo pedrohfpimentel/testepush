@@ -260,9 +260,6 @@ class RemessaModel extends Model
                 $i++;
             }
         }
-            
-
-        
         $sql .= "ORDER BY
                 id DESC
                 LIMIT ?,?";
@@ -273,22 +270,15 @@ class RemessaModel extends Model
             $query->bindValue($key+1, $value, \PDO::PARAM_INT);
 
         }
-  
         $query->bindValue($i_num_params+1, $offset, \PDO::PARAM_INT);
         $query->bindValue($i_num_params+2, $limit, \PDO::PARAM_INT);
-
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetchAll();
     }
-
-
-
     public function getAllByStatus( int $type = 1, string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
-
     {
         $sql = "
-            
             SELECT
                 *
             FROM
@@ -327,8 +317,6 @@ class RemessaModel extends Model
                 remessa_type       = :remessa_type,
                 patient_id     = :patient_id,
                 suppliers = :suppliers
-                
-
             WHERE
                 id = :id
         ";

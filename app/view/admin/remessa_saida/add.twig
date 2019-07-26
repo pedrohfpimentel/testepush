@@ -60,7 +60,7 @@
                  </div>
                </div>
 
-               <div class="row">
+               <div class="row" id="selectPatientGroup">
                  <div class="col-sm-12">
                    <div class="form-group">
                      <label for="name">Paciente:</label>
@@ -109,8 +109,6 @@
                   </div>
                 </div>
                </div>
-
-               
                <div class="row">
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
@@ -125,16 +123,11 @@
                    </script>
                     <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
-
-
                  <div class=" col-sm-4 form-group">
                    <label for="patrimony">Código Patrimonial</label>
                    <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
                     <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
-                
-
-                 
                  <div class="col-sm-12">
                   <p id="error-adicionar-produto-remessa"></p>
                  </div>
@@ -145,19 +138,13 @@
                     </p>
                 </div>
                </div>
-
-              
-              
            {# </form> #}
-
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
 
 <div class="main">
   <div class="card">
@@ -176,18 +163,13 @@
                 <th class="th-button"></th>
               </tr>
             </thead>
-
-
              {# <script>
                // function soma()
                // {
               //    products.quantity.value = (form.quantity2.value*1) + (form.quantity.value*1)
                // }
             //  </script> #}
-
-
             <tbody id="corpo_tabela">
-              
             </tbody>
           </table>
         </div>
@@ -196,7 +178,6 @@
   </div>
 </div>
 
-
 <input type="hidden" id="remessa_id" name="remessa_id" value="{{ id_remessa }}">
 <button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
 
@@ -204,14 +185,11 @@
 {% endblock %}
 {% block javascripts %}
 
-
-
 <script type="text/javascript">
 
 $('#button_adicionar').on("submit",function(){
    //return false;
 });
-
 
 </script>
 
@@ -227,13 +205,11 @@ $('#button_adicionar').on("submit",function(){
   });
 </script>
 
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script type="text/javascript">
     $(document).ready(function() {
        var availableTags = [];
-
        //autcomplete
        {% for product in products %}
         availableTags.push("{{ product.id }} - {{ product.name }}");
@@ -244,62 +220,43 @@ $('#button_adicionar').on("submit",function(){
       });
     });
 </script>
-
-
 <script type="text/javascript">
     $(document).ready(function() {
        var availableTags = [];
-
        //autcomplete fornecedores
        {% for supplier in suppliers %}
         availableTags.push("{{ supplier.id }} - {{ supplier.name }}");
        {% endfor %}
-
        $( "#input_suppliers" ).autocomplete({
          source: availableTags
       });
     });
 </script>
-
-
-
 <script type="text/javascript">
-
   $('#input_id_product').on('change', function() {
-
     var id_product = $(this).val();
     id_product = id_product.replace(/ .*/,'');
+    $.ajax({
+      url: '{{ base_url() }}/admin/remessa/consulta_produto?id='+ id_product,
 
-    console.log(id_product);
+      beforeSend: function(data) {
+        $("#campo_login").html('');
+      },
 
-    //if (Number.isInteger(id_product)) {
-      $.ajax({
+      success: function(data) {
+        console.log('sucesso' + data);
+        $("#campo_login").html('<p style="color:green;">Produto selecionado!</p>');
+      },
 
-        url: '{{ base_url() }}/admin/remessa/consulta_produto?id='+ id_product,
+      error: function(data) {
+        console.log('error' + data);
+        $("#input_id_product").val('');
+        $("#campo_login").html('<p style="color:red;">Erro. Tente um produto válido!</p>');
+      }
 
-        beforeSend: function(data) {
-          $("#campo_login").html('');
-        },
-
-        success: function(data) {
-          console.log('sucesso' + data);
-          $("#campo_login").html('<p style="color:green;">Produto selecionado!</p>');
-        },
-
-        error: function(data) {
-          console.log('error' + data);
-          $("#input_id_product").val('');
-          $("#campo_login").html('<p style="color:red;">Erro. Tente um produto válido!</p>');
-        }
-
-      });
-
-    //}
-
+    });
   });
-
 </script>
-
 
 <script type="text/javascript">
 
@@ -335,9 +292,7 @@ $('#button_adicionar').on("submit",function(){
     //}
 
   });
-
 </script>
-
 
 <script type="text/javascript">
  
@@ -346,10 +301,7 @@ $('#button_adicionar').on("submit",function(){
     console.log(corpo_tabela);
     return false;
   }
-
   $(document).on('click', '#add_product', function() {
-
-    
     //console.log('TEST');
     var input_suppliers =$('#input_suppliers').val();
     var nome_produto = $('#input_id_product').val();
@@ -357,8 +309,6 @@ $('#button_adicionar').on("submit",function(){
     var custo_produto = $('#cost').val();
     var remessa_id = $('#remessa_id').val();
     var patrimony = $('#patrimony').val();
-
-
     var products_array = [
     nome_produto,
     quantidade_produto,
@@ -366,51 +316,31 @@ $('#button_adicionar').on("submit",function(){
     remessa_id,
     patrimony
     ];
-
-
-    console.log(products_array);
-    
-
-
-
-
-
     $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/add?input_suppliers=${input_suppliers}&nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}`,
       type: "GET",
-      
       beforeSend: function (xhr) {
         if (input_suppliers == '') {
             $('#input_suppliers').focus();
             xhr.abort();
         }
-
         else if (nome_produto == '') {
             $('#input_id_product').focus();
             xhr.abort();
         }
-
         else if (quantidade_produto == '') {
            $('#quantity').focus();
             xhr.abort();
         }
-
-       
-
-        
       },
-
       success: function (data) {
         $('#error-adicionar-produto-remessa').html('');
-         $('#corpo_tabela').append(
-      `<tr><td>${nome_produto}</td>
-      <td>${quantidade_produto}</td>
-      <td>${patrimony}</td>
-      <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
-
-
-      );
-
+        $('#corpo_tabela').append(
+          `<tr><td>${nome_produto}</td>
+          <td>${quantidade_produto}</td>
+          <td>${patrimony}</td>
+          <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+        );
         $("#input_id_product").val('');
         $("#quantity").val('');
         $("#cost").val('');
@@ -423,32 +353,19 @@ $('#button_adicionar').on("submit",function(){
           if (data.responseText == 1) {
             $('#error-adicionar-produto-remessa').html('O produto não pode ser vazio.');
           }
-          
-          console.error(data);
         }
-
     });
-
-
-
 });
-
  $(document).on('click', '.excluir_ajax', function() {
-
-  
   var id_produto_remessa = $(this).attr("id");
   var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
- // console.log(resultado);
-
- var tr = $(this).parent().parent();
-
+  // console.log(resultado);
+  var tr = $(this).parent().parent();
   $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
       type: "GET",
-      
       success: function (data) {
        if (data == true) {
-        
         console.log(tr);
           tr.remove();
         }
@@ -457,21 +374,23 @@ $('#button_adicionar').on("submit",function(){
           console.error(data);
         }
     });
- });
-
+  });
 
   $('#input_date').on('change', function() {
     var value = $('#input_date').val();
-    
     var data = value.split("-");
-    
-    //console.log(data);
-
     data[0] = data[0].substring(0,4);
-
     data = data.join("-");
-
     $('#input_date').val(data);
+  });
+
+  $('#selectRemessaType').on('change', function() {
+    //console.log('oi mãe');
+    $('#selectPatientGroup').hide();
+    var tipo = $('#selectRemessaType').val();
+    if ( (tipo == 4) || (tipo == 5) ) {
+      $('#selectPatientGroup').show();
+    }
   });
 </script>
 

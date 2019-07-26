@@ -15,7 +15,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ProductsController extends Controller
 {
-
     protected $productsModel;
     protected $productsTypeModel;
     protected $produtoRemessaModel;
@@ -25,7 +24,6 @@ class ProductsController extends Controller
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
-    
 
     public function __construct( View $view, FlashMessages $flash,
         Model $productsModel,
@@ -50,15 +48,12 @@ class ProductsController extends Controller
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
-        
         $this->entityFactory        = $entityFactory;
     }
 
     public function index(Request $request, Response $response): Response
     {
-
         $params = $request->getQueryParams();
-
         if (!empty($params['page'])) {
             $page = intval($params['page']);
         } else {
@@ -70,16 +65,10 @@ class ProductsController extends Controller
         $products = $this->productsModel->getAll($offset, $limit);
         // remessa types
         $remessaTypes = $this->remessaTypeModel->getAll();
-
         $amountProducts = $this->productsModel->getAmount();
         $amountPages = ceil($amountProducts->amount / $limit);
-          
-             
         // get quantity from remessas
         foreach ($products as $product) {
-
-
-
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
             //var_dump($produtos_remessa);    
@@ -95,112 +84,78 @@ class ProductsController extends Controller
                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
                //
                 //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
-            if (isset($remessa->remessa_type)) {
-                if ($remessa->remessa_type == '1'){
-                    $quantidade = $quantidade + $produto_remessa->quantity;
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '1'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '2'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                        $contador_remessa = $contador_remessa + 1;
+                        $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                        $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                        $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
+                        $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '3'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '4'){
+                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '5'){
+                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '6'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }              
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '7'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }              
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '8'){
+                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    }              
                 }
             }
-
-            if (isset($remessa->remessa_type)) {
-                if ($remessa->remessa_type == '2'){
-                    $quantidade = $quantidade + $produto_remessa->quantity;
-                    $contador_remessa = $contador_remessa + 1;
-
-                    $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
-                    $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
-
-                    $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
-
-                    $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
-
-                    //var_dump($float_cost);
-                }
-            }
-
-            if (isset($remessa->remessa_type)) {
-                if ($remessa->remessa_type == '3'){
-                    $quantidade = $quantidade + $produto_remessa->quantity;
-                }
-            }
-
-            if (isset($remessa->remessa_type)) {
-                if ($remessa->remessa_type == '4'){
-                    $quantidade = $quantidade - $produto_remessa->quantity;
-                }
-            }
-
-            if (isset($remessa->remessa_type)) {
-                if ($remessa->remessa_type == '5'){
-                    $quantidade = $quantidade - $produto_remessa->quantity;
-                }
-            }
-
-            if (isset($remessa->remessa_type)) {
-                if ($remessa->remessa_type == '6'){
-                    $quantidade = $quantidade + $produto_remessa->quantity;
-
-                }              
-            }
-
-            }
-            //var_dump($contador_remessa);
-            //die;
-            //recebe o valor da variavel quantidade
             $product->quantity = $quantidade;
-            
-
             $custo_medio = 0;
             $custo_total = 0;
             $quantidade = 0;
             $product->cost = $custo_medio; 
-            //foreach para incrementar custo total em cost (esse calculo se faz somente com entrada tipo 2 = compra)
-
-             //var_dump($product);
-        //die;
             foreach($produtos_remessa as $produto_remessa) {
-                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
-            if (isset($remessa->remessa_type)) {
-                 if ($remessa->remessa_type == '2'){
-
-                    $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
-                    $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
-                    //$custo_total = $float_cost * ((int)$product_remessa->quantity);
-
-                    $quantidade = $quantidade + $produto_remessa->quantity;
-                    $custo_total = $custo_total + $float_cost;
-
-                   
-                    //var_dump($quantidade);
-                    //die;
+                $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '2'){
+                        $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                        $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                        $custo_total = $custo_total + $float_cost;
+                    }
                 }
             }
-        }
-
             if ($quantidade == 0) {
-
                 $custo_medio = 0;
-
             } else {
-
-
-                
-
                 $custo_medio = $multiplica / $quantidade;
-                //var_dump($custo_medio);
-                //die;
-
                 $product->cost = $custo_medio;
-
             }
-           
-            //var_dump($multiplica);
-
         }
-        //die;
-
-
-
-     
+        foreach($products as $product) {
+            $product->cost = number_format($product->cost, 2, ',', '.');
+        }
         return $this->view->render($response, 'admin/products/index.twig', 
         [
             'products' => $products,      
@@ -213,15 +168,10 @@ class ProductsController extends Controller
     /*
         A função trata o CADASTRO DE PRODUTOS, CADASTRO DE REMESSA e EVENT LOGS para ambos.
         A lógica segue os seguintes passos:
-
         1 - Recupera e trata as informações da interface pra o CADASTRO DO PRODUTO;
-
         2 - Cadastra o produto;
-
         3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
-
         4 - Cadastro de remessa;
-
         5 - Gera o EVENTO DE CADASTRO DO PRODUTO;
     */
     public function add(Request $request, Response $response): Response
@@ -231,13 +181,10 @@ class ProductsController extends Controller
             $products_type = $this->productsTypeModel->getAll();
             //$remessaTypes = $this->remessaTypeModel->getAll();
             $id_supplier = $this->supplierModel->getAll();
-
             $remessaTypes[] = $this->remessaTypeModel->get(1);
             $remessaTypes[] = $this->remessaTypeModel->get(2);
             $remessaTypes[] = $this->remessaTypeModel->get(3);
-
             $patrimony = 1;
-
             return $this->view->render($response, 'admin/products/add.twig', 
                 [
                     'products_type' => $products_type, 
@@ -247,11 +194,7 @@ class ProductsController extends Controller
                     //'patrimony_code' => $patrimony_code
                 ]);
         }
-
-   
-
         // A partir desta linha, segue a lógica para o cadastro do produto.
-
         // 1 - recupera e trata as informações da interface
         $products = $request->getParsedBody();
         $products['category'] = (int) $products['id_products_type'];
@@ -259,36 +202,20 @@ class ProductsController extends Controller
         $products['id_remessa_type'] = (int) $products['id_remessa_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
         $products['patrimony_code'] = (int) $products['patrimony_code'];
-
-       //var_dump($products);
-
-            if (
-                $products['patrimony'] == true) {
- 
+        if (isset($products['patrimony'])) {
+            if ( $products['patrimony'] == true) {
                 $products['patrimony'] = 1;
-        
             } else {
-
                 $products['patrimony'] = 0;
-
             }
-
+        }
         $products = $this->entityFactory->createProducts($products);
-        
         // 2 - CADASTRO DO PRODUTO
         $idProduct = $this->productsModel->add($products);
-
         $lista_produto[0]['id_product'] = $idProduct;
-
         $lista_produto = json_encode($lista_produto); 
-
-        //var_dump($lista_produto);
-        //die;
-
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
-           
-           
         if ($remessa['isRemessaInicial'] == 'true') {
             $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
             $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
@@ -297,113 +224,71 @@ class ProductsController extends Controller
             //$remessa['patrimony_code'] = (int) $remessa['patrimony_code'];
             $remessa['cost'] = NULL;
             $remessa['quantity'] = NULL;
-            
-            //var_dump($remessa);
-            //die;
             $remessa = $this->entityFactory->createRemessa($remessa);
-       
             // 4 - Cadastro de remessa
             $idRemessa = $this->remessaModel->add($remessa);
-             
             $remessa->id = (int)$remessa->id = $idRemessa;
             $remessa->id_remessa = (int) $idRemessa;
            //var_dump($remessa);
             //die;
             $data = $request->getQueryParams();
-                
-        
-        $data["id_product"] = (int) $idProduct;
-        $data["id_remessa"] = (int) $idRemessa;
-        $data["patrimony_code"] = $products->patrimony;
-        $data["cost"] = (int) $products->cost;
-        $data["quantity"] = $products->quantity;
-        $data["suppliers"] = (int) $products->id_supplier;
-        //var_dump($data);
-        //die;
-
-        $data = $this->entityFactory->createProdutoRemessa($data);
-
-        $data->id = $this->produtoRemessaModel->add($data);
-           
-           //  var_dump($products_remessa);
-        if ($body['isRemessaInicial'] == 'false') {
-
-             $lista_produto[0]['id_product'] = $idProduct;
-
-            $lista_produto = json_encode($lista_produto);
-        } else {
-            
-        }       
-    }
-        
-
+            $data["id_product"] = (int) $idProduct;
+            $data["id_remessa"] = (int) $idRemessa;
+            $data["patrimony_code"] = $products->patrimony;
+            $data["cost"] = (int) $products->cost;
+            $data["quantity"] = $products->quantity;
+            $data["suppliers"] = (int) $products->id_supplier;
+            $data = $this->entityFactory->createProdutoRemessa($data);
+            $data->id = $this->produtoRemessaModel->add($data);
+            if ($body['isRemessaInicial'] == 'false') {
+                $lista_produto[0]['id_product'] = $idProduct;
+                $lista_produto = json_encode($lista_produto);
+            } else {
+            }       
+        }
         // tratamento de eventlogs
         if ( ($idProduct != null) || ($idProduct != false) ) {
-
-             $eventLog['product_list'] = $lista_produto;
+            $eventLog['product_list'] = $lista_produto;
             // 5 - tratamento para criar event log do CADASTRO DO PRODUTO
-           
-            
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
             $eventLog['suppliers'] =  $products->id_supplier;
-            $eventLog['id_products'] =  $products->id;
+            $eventLog['id_products'] =  (int)$idProduct;
             $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
             $eventLog = $this->entityFactory->createEventLog($eventLog);
-
             // 5 - linha que adicona o EVENTO DE CADASTRO DO PRODUTO
             $this->eventLogModel->add($eventLog);
-
             // conteúdo da interface
             $body = $request->getParsedBody();
-            //var_dump($eventLog);
-            //die;
             if ($body['isRemessaInicial'] == 'true') {
-
                 $eventLog1['product_list'] = $lista_produto;
                 // 6 - tratamento de event logs 
                 if ($remessa->remessa_type == 1){
-
                     $eventLog1['id_remessa'] = $idRemessa;
                     $eventLog1['suppliers'] =  $products->id_supplier;
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
-
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
-                    //var_dump($eventLog1);
-       
-
                 } elseif ($remessa->remessa_type == 2){
                     $eventLog1['id_remessa'] = $idRemessa;
                     $eventLog1['suppliers'] =  $products->id_supplier;
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                     $eventLog1['id_products'] = $remessa->id_product;
-
-                    //var_dump($eventLog1);
-                    //die;
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
-                    
                 } elseif ($remessa->remessa_type == 3){
-
-                   //var_dump($remessa);
-                   //die;
                     $eventLog1['id_remessa'] = $idRemessa;
                     $eventLog1['suppliers'] =  $products->id_supplier;
                     $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_inicial')->id;
-
                     $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                     $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                     $this->eventLogModel->add($eventLog1);
                 }
             }
-
-            // die;
         } 
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');
-
     }
 
     public function delete(Request $request, Response $response, array $args): Response
@@ -416,50 +301,117 @@ class ProductsController extends Controller
 
     public function edit(Request $request, Response $response, array $args): Response
     {   
-
-        
-
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
         $id_supplier = $products->id_supplier;
-        
-
         //var_dump($products);
         //die;
         if (!$products) {
             $this->flash->addMessage('danger', 'Produto não encontrado.');
             return $this->httpRedirect($request, $response, '/admin/products');
-}        
+        }        
          $id_supplier = $this->supplierModel->getAll();
          $products_type = $this->productsTypeModel->getAll();
             return $this->view->render($response, 'admin/products/edit.twig', [
                 'products' => $products, 
                 'products_type' => $products_type,
                 'id_supplier' => $id_supplier,
-                
-
-
             ]);
-
     }
-
-
-
-
-
     //download
     public function export(Request $request, Response $response)
     {
-
-            
-        
-
-            $products = $this->productsModel->getAll();
-
-     //var_dump($products);
-            //die;
-
-      $html = "
+        $products = $this->productsModel->getAll();
+        // get quantity from remessas
+        foreach ($products as $product) {
+            //buscando todos os produto_remessa por id do product
+            $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
+            //var_dump($produtos_remessa);    
+            //armazena quantidade temporaria
+            $quantidade = 0;
+            $contador_remessa = 0;
+            $contador_custo = 0;
+            $soma_custo = 0;
+            $multiplica = 0;
+            //foreach para incrementar a quantidade dos produto_remessa
+            foreach($produtos_remessa as $produto_remessa) {
+                //variavel armazena remessa por id
+                $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+               //
+                //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '1'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '2'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                        $contador_remessa = $contador_remessa + 1;
+                        $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                        $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                        $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
+                        $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '3'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '4'){
+                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '5'){
+                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    }
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '6'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }              
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '7'){
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    }              
+                }
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '8'){
+                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    }              
+                }
+            }
+            $product->quantity = $quantidade;
+            $custo_medio = 0;
+            $custo_total = 0;
+            $quantidade = 0;
+            $product->cost = $custo_medio; 
+            foreach($produtos_remessa as $produto_remessa) {
+                $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+                if (isset($remessa->remessa_type)) {
+                    if ($remessa->remessa_type == '2'){
+                        $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                        $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                        $quantidade = $quantidade + $produto_remessa->quantity;
+                        $custo_total = $custo_total + $float_cost;
+                    }
+                }
+            }
+            if ($quantidade == 0) {
+                $custo_medio = 0;
+            } else {
+                $custo_medio = $multiplica / $quantidade;
+                $product->cost = $custo_medio;
+            }
+        }
+        foreach($products as $product) {
+            $product->cost = number_format($product->cost, 2, ',', '.');
+        }
+        $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
@@ -467,95 +419,102 @@ class ProductsController extends Controller
                 <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Produtos Cadastrados</h3>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-            
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
-            <table>
-            
+            <table style='width:100%;'>
                 <tr>
-                    <th style='width: 20%; text-align:left;'>Nome</th>
-                    <th style='width: 20%; text-align:left;'>Descrição</th>
-                    <th style='width: 10%; text-align:left;'>Categoria</th>
-                    
+                    <th style='text-align:left;'>ID</th>
+                    <th style='text-align:left;'>Nome</th>
+                    <th style='text-align:left;'>Descrição</th>
+                    <th style='text-align:left;'>qtd</th>
+                    <th style='text-align:left;'>Custo Médio</th>
                 </tr>
         ";
         foreach ($products as $product){
-            //var_dump($product);
-            //die;
-           
-           
            $html .= "
             <tr>
-                <td style='width: 20%; text-align:left;'>$product->name</td>
-                <td style='width: 20%; text-align:left;'>$product->description</td>
-                <td style='width: 10%; text-align:left;'>$product->products_type_name</td>
-               
+                <td style='text-align:left;'>$product->id</td>
+                <td style='text-align:left;'>$product->name</td>
+                <td style='text-align:left;'>$product->description</td>
+                <td style='text-align:left;'>$product->quantity</td>
+                <td style='text-align:left;'>R$ $product->cost</td>
             </tr>";
-        
         }
-    
-    $html .= "</table> </div>";
-    try {
-        $mpdf = new \Mpdf\Mpdf();
-        $mpdf->setFooter('{PAGENO}');
-        $mpdf->WriteHTML($html);
-        // Other code
-        header('Content-Type: application/pdf');
-        $mpdf->Output( );
-    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
-        // Process the exception, log, print etc.
-        echo $e->getMessage();
-    }
+        $html .= "</table> </div>";
+        try {
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->setFooter('{PAGENO}');
+            $mpdf->WriteHTML($html);
+            // Other code
+            header('Content-Type: application/pdf');
+            $mpdf->Output( );
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+            // Process the exception, log, print etc.
+            echo $e->getMessage();
+        }
         die;        
     }
-
-
-
     public function export_history(Request $request, Response $response) {
-        
         $id = (int)$request->getQueryParams()['id'];
         $product = $this->productsModel->get($id);
-       // var_dump($product);
-       // die;
+        $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
         $event_logs = $this->eventLogModel->getByProducts($id);
-
-        //var_dump($event_logs);
-          //  die;
+        $contador_quantidade_total = 0;
+        foreach($event_logs as $event_log) {
+            foreach($remessa_produtos as $remessa_produto) {
+                if ($event_log->id_remessa == $remessa_produto->id_remessa) {
+                    $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
+                    $type = $remessa_produto->remessa_type;
+                    if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
+                        $event_log->quantity = "+$remessa_produto->quantity";
+                        $contador_quantidade_total = $contador_quantidade_total + $remessa_produto->quantity;
+                    }
+                    if (($type == '4') || ($type == '5') || ($type == '8')) {
+                        $event_log->quantity = "-  $remessa_produto->quantity";
+                        $contador_quantidade_total = $contador_quantidade_total - $remessa_produto->quantity;
+                    }
+                }
+            }
+            if (!isset($event_log->cost)) {
+                $event_log->cost = '---';
+            }
+            if (!isset($event_log->quantity)) {
+                $event_log->quantity = '---';
+            }
+        }
+        
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
             <div style='width: 75%;'>
-                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Produto</h3>
+                <h3 style='margin-top: 0px; margin-bottom: 2px;'>Histórico de Produto</h3>
                 <p> <strong>Produto:</strong> $product->name </p>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-            
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
-            <table>
-            
-            <tr>
-                <th style='width: 33%; text-align:left;'>Data / Hora</th>
-                <th style='width: 33%; text-align:left;'>Tipo</th>
-                <th style='width: 33%; text-align:left;'>Descrição</th>
-                
-            </tr>
-        ";
+            <table style='width:100%;'>
+                <tr>
+                    <th style='text-align:left;'>Data / Hora</th>
+                    <th style='text-align:left;'>Tipo</th>
+                    <th style='text-align:right; '>qtd</th>
+                    <th style='text-align:right; width: 20px;'></th>
+                    <th style='text-align:left;'>Custo</th>
+                </tr>
+            ";
         foreach ($event_logs as $event_log) {
-            //var_dump($event_log);
-            //die;
-           
             $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
             $html .="
             <tr>
-                <td style='width: 33%; text-align:left;'>$event_log->date</td>
-                <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
-                <td style='width: 33%; text-align:left;'>$event_log->description</td>
+                <td style='text-align:left;'>$event_log->date</td>
+                <td style='text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='text-align:right; '>$event_log->quantity</td>
+                <td style='text-align:left;  width: 20px;'></td>
+                <td style='text-align:left;'>R$ $event_log->cost</td>
             
             </tr> ";
-            
         }
         $html .= "</table> </div>";
         try {
@@ -565,43 +524,53 @@ class ProductsController extends Controller
             // Other code
             //header('Content-Type: application/pdf');
             $mpdf->Output( );
-              
         } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
             // Process the exception, log, print etc.
             echo $e->getMessage();
         }
-
         return  $response->withHeader('Content-Type', 'application/pdf');
     }
-
 
     public function history(Request $request, Response $response, array $args)
     {
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
-
         // retorna todos os eventlogs que tenham produc_id  
         $event_logs = $this->eventLogModel->getByProducts($id);
-
+        $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
+        $contador_quantidade_total = 0;
         foreach ($event_logs as $event_log) {
-            //var_dump($event_logs);
-            //die;
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
-            $id_supplier = ((int) $event_log->suppliers);
-            $event_log->name_supplier = $this->supplierModel->get((int)$event_log->suppliers)->name;
-            //var_dump($event_log);
-            //die;
-           
-       
-        } //die;
-        
+            // $id_supplier = (int) $event_log->suppliers;
+            // if (($id_supplier != 0) && ($id_supplier != 0)) {
+            //     $event_log->name_supplier = isset($id_supplier) ? $this->supplierModel->get($id_supplier)->name : null;
+            // }
+            foreach($remessa_produtos as $remessa_produto) {
+                if ($event_log->id_remessa == $remessa_produto->id_remessa) {
+                    $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
+                    $type = $remessa_produto->remessa_type;
+                    if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
+                        $event_log->quantity = "+$remessa_produto->quantity";
+                        $contador_quantidade_total = $contador_quantidade_total + $remessa_produto->quantity;
+                    }
+                    if (($type == '4') || ($type == '5') || ($type == '8')) {
+                        $event_log->quantity = "-  $remessa_produto->quantity";
+                        $contador_quantidade_total = $contador_quantidade_total - $remessa_produto->quantity;
+                    }
+                }
+            }
+            if (!isset($event_log->cost)) {
+                $event_log->cost = '---';
+            }
+            if (!isset($event_log->quantity)) {
+                $event_log->quantity = '---';
+            }
+        }
         return $this->view->render($response, 'admin/products/history.twig', [
             'products' => $products,
             'event_logs' => $event_logs
         ]);
-
     }
-
     public function update(Request $request, Response $response): Response
     {
 

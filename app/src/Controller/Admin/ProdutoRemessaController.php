@@ -52,17 +52,13 @@ class ProdutoRemessaController extends Controller
         }
         $limit = 20;
         $offset = ($page - 1) * $limit;
-
-     
         $produto_remessa = $this->produtoRemessaModel->getAll($offset, $limit);
         foreach ($produto_remessa as $produto_de_remessa) {
             $produto_de_remessa->product_name = $this->productsModel->get((int)$produto_de_remessa->id_products)->name;
             $produto_de_remessa->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
         }
-               
         $amountProdutoDeRemessa = $this->produtoRemessaModel->getAmount();
         $amountPages = ceil($amountProdutoDeRemessa->amount / $limit);
-
         return $this->view->render($response, 'admin/products/index.twig', [
             'produto_remessa' => $produto_remessa,
             'page' => $page,
@@ -70,31 +66,18 @@ class ProdutoRemessaController extends Controller
             ]);
     }
 
-
- 
-
     public function add(Request $request, Response $response): Response
     {
-       
         $data = $request->getQueryParams();
-       
-        
-        
         $data["id_product"] = (int) substr($data["nome_produto"], 0, strpos($data["nome_produto"], ' '));
         $data["id_remessa"] = (int) $data["remessa_id"];
         $data["patrimony_code"] = $data["patrimony"];
         $data["cost"] = $data["custo_produto"];
         $data["quantity"] = $data["quantidade_produto"];
-       //
-
-
-       // var_dump($id_produto);
-        //die;
-
+        // var_dump($id_produto);
         //var_dump($data);
         //die;
         $data = $this->entityFactory->createProdutoRemessa($data);
-
         $data->id = $this->produtoRemessaModel->add($data);
         return $response->withJson($data, 200);
     }
@@ -106,9 +89,6 @@ class ProdutoRemessaController extends Controller
       
         return $response->withJson($var);
     }
-
-   
-
 
     public function history (Request $request, Response $response, array $args)
     {

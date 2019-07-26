@@ -103,7 +103,7 @@
 
 
                   </td>
-                  <td>{{ products.cost|number_format(2, '.', ',') }}</td>
+                  <td>R$ {{ products.cost}}</td>
 
                   <td style="width:100px"><a class="btn btn-info" href="{{ base_url() }}/admin/products/history/{{ products.id }}">
                     Histórico

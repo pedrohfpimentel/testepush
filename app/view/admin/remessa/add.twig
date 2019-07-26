@@ -439,33 +439,18 @@ $('#button_adicionar').on("submit",function(){
     patrimony,
     custo_total
     ];
-
-
-    console.log(products_array);
-    console.log(custo_produto);
-    console.log(quantidade_produto);
-    console.log(custo_total);
-
-
-
-
-
     $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/add?nome_produto=${nome_produto}&quantidade_produto=${quantidade_produto}&custo_produto=${custo_produto}&remessa_id=${remessa_id}&patrimony=${patrimony}&custo_total=${custo_total}`,
       type: "GET",
-      
       beforeSend: function (xhr) {
- 
         if (nome_produto == '') {
             $('#input_id_product').focus();
             xhr.abort();
         }
-
         else if (quantidade_produto == '') {
            $('#quantity').focus();
             xhr.abort();
         }
-
       },
 
       success: function (data) {
@@ -477,93 +462,63 @@ $('#button_adicionar').on("submit",function(){
         <td>${custo_total}</td>
         <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
         );
-
         $("#input_id_product").val('');
         $("#quantity").val('');
         $("#cost").val('');
         $("#patrimony").val('');
         $("#campo_login").html('');
-        
       },
         error: function (data) {
-
           if (data.responseText == 1) {
             $('#error-adicionar-produto-remessa').html('O produto não pode ser vazio.');
           }
-          
-          console.error(data);
         }
-
     });
-
-
-
 });
 
- $(document).on('click', '.excluir_ajax', function() {
+  $(document).on('click', '.excluir_ajax', function() {
+    var id_produto_remessa = $(this).attr("id");
+    var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
+    // console.log(resultado);
 
-  
-  var id_produto_remessa = $(this).attr("id");
-  var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
- // console.log(resultado);
+    var tr = $(this).parent().parent();
 
- var tr = $(this).parent().parent();
-
-  $.ajax({
+    $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
       type: "GET",
       
      
       success: function (data) {
        if (data == true) {
-        
-
           console.log(tr);
           tr.remove();
         }
       },
         error: function (data) {
-
-          
           console.error(data);
         }
-
     });
-
-
-
- });
+  });
 
  $('#selectRemessaType').on('change', function() {
    //console.log('oi mãe');
-
   $('#patients_select').hide();
   $('#suppliers_select').hide();
-  
-  
   var tipo = $('#selectRemessaType').val();
-
   if ( (tipo == 1) || (tipo == 2) ) {
     $('#suppliers_select').show();
   }
-
   if (tipo == 6) {
     $('#patients_select').show();
   }
-
  });
 
  $('#input_date').on('change', function() {
    var value = $('#input_date').val();
-   
    var data = value.split("-");
-   
    //console.log(data);
-
    data[0] = data[0].substring(0,4);
-
    data = data.join("-");
-
    $('#input_date').val(data);
  });
 
