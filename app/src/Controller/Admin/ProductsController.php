@@ -24,6 +24,7 @@ class ProductsController extends Controller
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
+    protected $patientModel;
 
     public function __construct( View $view, FlashMessages $flash,
         Model $productsModel,
@@ -35,7 +36,8 @@ class ProductsController extends Controller
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
-        
+        Model $patientModel,
+
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
@@ -48,6 +50,7 @@ class ProductsController extends Controller
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
+        $this->patientModel         = $patientModel;
         $this->entityFactory        = $entityFactory;
     }
 
@@ -71,7 +74,7 @@ class ProductsController extends Controller
         foreach ($products as $product) {
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
-            //var_dump($produtos_remessa);    
+            //var_dump($produtos_remessa);
             //armazena quantidade temporaria
             $quantidade = 0;
             $contador_remessa = 0;
@@ -117,24 +120,24 @@ class ProductsController extends Controller
                 if (isset($remessa->remessa_type)) {
                     if ($remessa->remessa_type == '6'){
                         $quantidade = $quantidade + $produto_remessa->quantity;
-                    }              
+                    }
                 }
                 if (isset($remessa->remessa_type)) {
                     if ($remessa->remessa_type == '7'){
                         $quantidade = $quantidade + $produto_remessa->quantity;
-                    }              
+                    }
                 }
                 if (isset($remessa->remessa_type)) {
                     if ($remessa->remessa_type == '8'){
                         $quantidade = $quantidade - $produto_remessa->quantity;
-                    }              
+                    }
                 }
             }
             $product->quantity = $quantidade;
             $custo_medio = 0;
             $custo_total = 0;
             $quantidade = 0;
-            $product->cost = $custo_medio; 
+            $product->cost = $custo_medio;
             foreach($produtos_remessa as $produto_remessa) {
                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
                 if (isset($remessa->remessa_type)) {
@@ -156,14 +159,14 @@ class ProductsController extends Controller
         foreach($products as $product) {
             $product->cost = number_format($product->cost, 2, ',', '.');
         }
-        return $this->view->render($response, 'admin/products/index.twig', 
+        return $this->view->render($response, 'admin/products/index.twig',
         [
-            'products' => $products,      
+            'products' => $products,
             'remessaTypes' => $remessaTypes,
             'page' => $page,
             'amountPages' => $amountPages
         ]);
-    }   
+    }
 
     /*
         A função trata o CADASTRO DE PRODUTOS, CADASTRO DE REMESSA e EVENT LOGS para ambos.
@@ -185,9 +188,9 @@ class ProductsController extends Controller
             $remessaTypes[] = $this->remessaTypeModel->get(2);
             $remessaTypes[] = $this->remessaTypeModel->get(3);
             $patrimony = 1;
-            return $this->view->render($response, 'admin/products/add.twig', 
+            return $this->view->render($response, 'admin/products/add.twig',
                 [
-                    'products_type' => $products_type, 
+                    'products_type' => $products_type,
                     'remessaTypes' => $remessaTypes,
                     'id_supplier'    => $id_supplier,
                     'patrimony'    => $patrimony
@@ -213,7 +216,7 @@ class ProductsController extends Controller
         // 2 - CADASTRO DO PRODUTO
         $idProduct = $this->productsModel->add($products);
         $lista_produto[0]['id_product'] = $idProduct;
-        $lista_produto = json_encode($lista_produto); 
+        $lista_produto = json_encode($lista_produto);
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
         if ($remessa['isRemessaInicial'] == 'true') {
@@ -244,7 +247,7 @@ class ProductsController extends Controller
                 $lista_produto[0]['id_product'] = $idProduct;
                 $lista_produto = json_encode($lista_produto);
             } else {
-            }       
+            }
         }
         // tratamento de eventlogs
         if ( ($idProduct != null) || ($idProduct != false) ) {
@@ -261,7 +264,7 @@ class ProductsController extends Controller
             $body = $request->getParsedBody();
             if ($body['isRemessaInicial'] == 'true') {
                 $eventLog1['product_list'] = $lista_produto;
-                // 6 - tratamento de event logs 
+                // 6 - tratamento de event logs
                 if ($remessa->remessa_type == 1){
                     $eventLog1['id_remessa'] = $idRemessa;
                     $eventLog1['suppliers'] =  $products->id_supplier;
@@ -286,7 +289,7 @@ class ProductsController extends Controller
                     $this->eventLogModel->add($eventLog1);
                 }
             }
-        } 
+        }
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');
     }
@@ -300,7 +303,7 @@ class ProductsController extends Controller
     }
 
     public function edit(Request $request, Response $response, array $args): Response
-    {   
+    {
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
         $id_supplier = $products->id_supplier;
@@ -309,11 +312,11 @@ class ProductsController extends Controller
         if (!$products) {
             $this->flash->addMessage('danger', 'Produto não encontrado.');
             return $this->httpRedirect($request, $response, '/admin/products');
-        }        
+        }
          $id_supplier = $this->supplierModel->getAll();
          $products_type = $this->productsTypeModel->getAll();
             return $this->view->render($response, 'admin/products/edit.twig', [
-                'products' => $products, 
+                'products' => $products,
                 'products_type' => $products_type,
                 'id_supplier' => $id_supplier,
             ]);
@@ -326,7 +329,7 @@ class ProductsController extends Controller
         foreach ($products as $product) {
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
-            //var_dump($produtos_remessa);    
+            //var_dump($produtos_remessa);
             //armazena quantidade temporaria
             $quantidade = 0;
             $contador_remessa = 0;
@@ -372,24 +375,24 @@ class ProductsController extends Controller
                 if (isset($remessa->remessa_type)) {
                     if ($remessa->remessa_type == '6'){
                         $quantidade = $quantidade + $produto_remessa->quantity;
-                    }              
+                    }
                 }
                 if (isset($remessa->remessa_type)) {
                     if ($remessa->remessa_type == '7'){
                         $quantidade = $quantidade + $produto_remessa->quantity;
-                    }              
+                    }
                 }
                 if (isset($remessa->remessa_type)) {
                     if ($remessa->remessa_type == '8'){
                         $quantidade = $quantidade - $produto_remessa->quantity;
-                    }              
+                    }
                 }
             }
             $product->quantity = $quantidade;
             $custo_medio = 0;
             $custo_total = 0;
             $quantidade = 0;
-            $product->cost = $custo_medio; 
+            $product->cost = $custo_medio;
             foreach($produtos_remessa as $produto_remessa) {
                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
                 if (isset($remessa->remessa_type)) {
@@ -453,7 +456,7 @@ class ProductsController extends Controller
             // Process the exception, log, print etc.
             echo $e->getMessage();
         }
-        die;        
+        die;
     }
     public function export_history(Request $request, Response $response) {
         $id = (int)$request->getQueryParams()['id'];
@@ -462,7 +465,11 @@ class ProductsController extends Controller
         $event_logs = $this->eventLogModel->getByProducts($id);
         $contador_quantidade_total = 0;
         foreach($event_logs as $event_log) {
+
+
+
             foreach($remessa_produtos as $remessa_produto) {
+
                 if ($event_log->id_remessa == $remessa_produto->id_remessa) {
                     $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
                     $type = $remessa_produto->remessa_type;
@@ -483,7 +490,7 @@ class ProductsController extends Controller
                 $event_log->quantity = '---';
             }
         }
-        
+
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -499,13 +506,17 @@ class ProductsController extends Controller
                 <tr>
                     <th style='text-align:left;'>Data / Hora</th>
                     <th style='text-align:left;'>Tipo</th>
-                    <th style='text-align:right; '>qtd</th>
+                    <th style='text-align:right;'>qtd</th>
                     <th style='text-align:right; width: 20px;'></th>
                     <th style='text-align:left;'>Custo</th>
+                    <th style='text-align:left;'>Fornecedor/Paciente</th>
                 </tr>
             ";
         foreach ($event_logs as $event_log) {
-            $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+            $event_log->date = date("d/m/Y", strtotime($event_log->date));
+            if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
+            $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
+            //var_dump($event_log);die;
             $html .="
             <tr>
                 <td style='text-align:left;'>$event_log->date</td>
@@ -513,8 +524,33 @@ class ProductsController extends Controller
                 <td style='text-align:right; '>$event_log->quantity</td>
                 <td style='text-align:left;  width: 20px;'></td>
                 <td style='text-align:left;'>R$ $event_log->cost</td>
-            
+                <td style='text-align:left;'>R$ $event_log->patient_name</td>
+
             </tr> ";
+            } else if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
+            $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+            $html .="
+            <tr>
+                <td style='text-align:left;'>$event_log->date</td>
+                <td style='text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='text-align:right; '>$event_log->quantity</td>
+                <td style='text-align:left;  width: 20px;'></td>
+                <td style='text-align:left;'>R$ $event_log->cost</td>
+                <td style='text-align:left;'>R$ $event_log->suppliers_name</td>
+
+            </tr> ";
+            } else {
+                $html .="
+            <tr>
+                <td style='text-align:left;'>$event_log->date</td>
+                <td style='text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='text-align:right; '>$event_log->quantity</td>
+                <td style='text-align:left;  width: 20px;'></td>
+                <td style='text-align:left;'>R$ $event_log->cost</td>
+
+            </tr> ";
+            }
+
         }
         $html .= "</table> </div>";
         try {
@@ -535,16 +571,21 @@ class ProductsController extends Controller
     {
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
-        // retorna todos os eventlogs que tenham produc_id  
+        $suppliers = $this->supplierModel->getAll();
+        $patients = $this->patientModel->getAll();
+        // retorna todos os eventlogs que tenham produc_id
         $event_logs = $this->eventLogModel->getByProducts($id);
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
-        $contador_quantidade_total = 0;
+        $contador_quantidade_total = 0;//var_dump($event_logs);die;
         foreach ($event_logs as $event_log) {
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
-            // $id_supplier = (int) $event_log->suppliers;
-            // if (($id_supplier != 0) && ($id_supplier != 0)) {
-            //     $event_log->name_supplier = isset($id_supplier) ? $this->supplierModel->get($id_supplier)->name : null;
-            // }
+            //var_dump($event_logs);die;
+            if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
+            $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+            }
+            if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
+            $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
+            }//var_dump($event_log);die;
             foreach($remessa_produtos as $remessa_produto) {
                 if ($event_log->id_remessa == $remessa_produto->id_remessa) {
                     $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;

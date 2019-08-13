@@ -106,7 +106,7 @@ class RemessaModel extends Model
             $parameters = [':id' => $remessa_id->id];
             $query->execute($parameters);
         }
-        
+
         // deleta a remessa de acordo com o remessa_type passado
         $sql = "DELETE FROM remessa WHERE remessa_type = :id";
         $query = $this->db->prepare($sql);
@@ -170,7 +170,7 @@ class RemessaModel extends Model
     public function getRemessaDownload($remessa_start, $remessa_finish)
     {
         $sql = "
-        SELECT 
+        SELECT
             event_logs.date,
             remessa.*
         FROM
@@ -197,10 +197,10 @@ class RemessaModel extends Model
                 *
             FROM
                 remessa
-        
-            
-        
-        WHERE 
+
+
+
+        WHERE
            remessa.date BETWEEN ? AND ?
 
         LIMIT ? , ?
@@ -229,8 +229,8 @@ class RemessaModel extends Model
                 *
             FROM
                 remessa
-                
-            
+
+
         ";
 
         // se houver tipos de remessas, então haverá where
@@ -254,9 +254,9 @@ class RemessaModel extends Model
 
                     $num_params[$i_num_params] = $id;
                     $i_num_params++;
-                    
+
                 }
-                
+
                 $i++;
             }
         }
@@ -284,7 +284,7 @@ class RemessaModel extends Model
             FROM
                 remessa
                 LEFT JOIN remessa_type ON remessa.remessa_type = remessa_type.id
-            WHERE 
+            WHERE
                 remessa.remessa_type =  ?
                 AND (remessa.date BETWEEN ? AND ?)
                 ORDER BY
@@ -306,7 +306,7 @@ class RemessaModel extends Model
     }
 
 
-   
+
 
     public function update(Remessa $remessa): bool
     {
@@ -314,23 +314,31 @@ class RemessaModel extends Model
             UPDATE
                 remessa
             SET
-                remessa_type       = :remessa_type,
-                patient_id     = :patient_id,
-                suppliers = :suppliers
+                suppliers        = :suppliers,
+                remessa_type     = :remessa_type,
+                quantity         = :quantity,
+                cost             = :cost,
+                patrimony_code   = :patrimony_code,
+                date             = :date,
+                time             = :time
             WHERE
                 id = :id
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
             ':id'           => $remessa->id,
-            ':remessa_type'   => $remessa->remessa_type,
-            ':patient_id' => $remessa->patient_id,
-            ':suppliers' => $remessa->suppliers
+            ':suppliers'    => $remessa->suppliers,
+            ':remessa_type' => $remessa->remessa_type,
+            ':quantity'     => $remessa->quantity,
+            ':cost'         => $remessa->cost,
+            'patrimony_code' => $remessa->patrimony_code,
+            ':date'         => $remessa->date,
+            ':time'         => $remessa->time
             ];
         return $query->execute($parameters);
     }
 
-    
+
     public function updatePatient(Remessa $remessa): bool
     {
         $sql = "

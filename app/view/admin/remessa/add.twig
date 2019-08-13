@@ -116,13 +116,13 @@
                    <input type="date" class="form-control" id="input_date" name="date" placeholder="">
                  </div>
                </div>#}
-               <div class="row"> 
+               <div class="row">
                 <div class=" col-sm-4 form-group">
                   <label for="quantity">Data de Entrada</label>
                   <input type="date" class="form-control" id="input_date" name="date" placeholder="" required>
                 </div>
                </div>
-              
+
            {# </form>#}
 
           </div>
@@ -141,7 +141,7 @@
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
               <h4>Incluir Produtos</h4>
               <input type="hidden" name="id" value="{{ products.id }}">
-              
+
               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
@@ -155,7 +155,7 @@
                 </div>
                </div>
 
-               
+
                <div class="row">
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
@@ -184,7 +184,7 @@
                    <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
                     <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
-                
+
 
                  {#<div class=" col-sm-4 form-group">
                    <label for="quantity">Data de Entrada</label>
@@ -201,8 +201,8 @@
                 </div>
                </div>
 
-              
-              
+
+
            {# </form> #}
 
           </div>
@@ -242,14 +242,14 @@
 
 
             <tbody id="corpo_tabela">
-              
+
             </tbody>
           </table>
         </div>
       </div>
 
 
-     
+
 
 
 
@@ -411,7 +411,7 @@ $('#button_adicionar').on("submit",function(){
 
 
 <script type="text/javascript">
- 
+
   function submitTabela() {
     var corpo_tabela = $('#corpo_tabela').html();
     //console.log(corpo_tabela);
@@ -420,7 +420,7 @@ $('#button_adicionar').on("submit",function(){
 
   $(document).on('click', '#add_product', function() {
 
-    
+
     //console.log('TEST');
     //var input_suppliers =$('#input_suppliers').val();
     var nome_produto = $('#input_id_product').val();
@@ -486,8 +486,8 @@ $('#button_adicionar').on("submit",function(){
     $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
       type: "GET",
-      
-     
+
+
       success: function (data) {
        if (data == true) {
           console.log(tr);
@@ -529,7 +529,7 @@ $('#button_adicionar').on("submit",function(){
 <script type="text/javascript">
 
 function converteMoedaFloat(valor){
-      
+
       if(valor === ""){
          valor =  0;
       }else{
@@ -561,21 +561,21 @@ function converteMoedaFloat(valor){
       }else{
          inteiro = valor;
       }
-      
+
       //pega a parte inteiro de 3 em 3 partes
       for (j = inteiro.length, c = 0; j > 0; j-=3, c++){
          aux[c]=inteiro.substring(j-3,j);
       }
-      
+
       //percorre a string acrescentando os pontos
       inteiro = "";
       for(c = aux.length-1; c >= 0; c--){
          inteiro += aux[c]+'.';
       }
       //retirando o ultimo ponto e finalizando a parte inteiro
-      
+
       inteiro = inteiro.substring(0,inteiro.length-1);
-      
+
       decimal = parseInt(decimal);
       if(isNaN(decimal)){
          decimal = "00";
@@ -585,11 +585,11 @@ function converteMoedaFloat(valor){
             decimal = decimal+"0";
          }
       }
-      
-      
+
+
       valor = "R$ "+inteiro+","+decimal;
-      
-      
+
+
       return valor;
 
    }

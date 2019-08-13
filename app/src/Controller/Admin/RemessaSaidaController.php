@@ -83,13 +83,16 @@ class RemessaSaidaController extends Controller
       //$product_name = $this->productsModel->getAll();
       foreach ($remessa as $remessas) {
         // $remessas->product_name = $this->productsModel->get((int)$remessas->id_product)->name;
-        $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name; 
+        if (($remessas->remessa_type == 4) || ($remessas->remessa_type == 5)) {
+        //var_dump($remessas);die;
+        $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+        }
         $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
         if ($remessas->date == '0000-00-00 00:00:00') {
           $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
         } else if ($remessas->date == NULL) {
           $remessas->date = date("d/m/Y", strtotime($remessas->created_at));
-        }  
+        }
         else {
           $remessas->date = date("d/m/Y", strtotime($remessas->date));
         }
@@ -181,7 +184,7 @@ class RemessaSaidaController extends Controller
           $eventLog = $this->entityFactory->createEventLog($eventLog);
           $this->eventLogModel->add($eventLog);
         }elseif ($remessa->remessa_type == 8){
-          $remessa_type = $this->remessaTypeModel->get(8);  
+          $remessa_type = $this->remessaTypeModel->get(8);
           $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
           $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_correcao')->id;
           $eventLog['description'] = 'Saída tipo correção.';
@@ -207,9 +210,9 @@ class RemessaSaidaController extends Controller
 
       $remessa = $request->getParsedBody();
       $remessa['id'] = (int) $data['id'];
-      $remessa['remessa_type'] = (int) $data['remessa_type']; 
+      $remessa['remessa_type'] = (int) $data['remessa_type'];
       $remessa['patient_id'] = (int) $data['patient_id'];
-      //var_dump($data);   
+      //var_dump($data);
       $remessa = $this->entityFactory->createRemessa($remessa);
       $remessa_return = $this->remessaSaidaModel->update($remessa);
       //var_dump($remessa);die;
@@ -221,9 +224,9 @@ class RemessaSaidaController extends Controller
         if ($eventLog['remessa_type'] == 4) {
           $eventLog['description'] = 'Saída por Doação atualizada';
         } else if ($eventLog['remessa_type'] == 5) {
-          $eventLog['description'] = 'Saída por Empréstimo atualizada'; 
+          $eventLog['description'] = 'Saída por Empréstimo atualizada';
         }else if ($eventLog['remessa_type'] == 8) {
-          $eventLog['description'] = 'Saída por correção atualizada'; 
+          $eventLog['description'] = 'Saída por correção atualizada';
         }
         $eventLog = $this->entityFactory->createEventLog($eventLog);
         $this->eventLogModel->add($eventLog);
@@ -254,7 +257,7 @@ class RemessaSaidaController extends Controller
         $remessa = $this->remessaModel->getAllByStatus($remessa_type, $remessa_start, $remessa_finish);
         foreach ($remessa as $remessas) {
         $remessas->date = date("d/m/Y", strtotime($remessas->date));
-        $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name; 
+        $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
         }
       }
       foreach($remessa as $rem) {
@@ -311,7 +314,7 @@ class RemessaSaidaController extends Controller
       // Process the exception, log, print etc.
       echo $e->getMessage();
     }
-      die;        
+      die;
     }
     public function consulta_produto(Request $request, Response $response): Response
     {
@@ -342,7 +345,7 @@ class RemessaSaidaController extends Controller
       $patient_id = $remessa->patient_id;
       $id_suppliers = $remessa->suppliers;
       $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
-      $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;       
+      $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;
       if (!$remessa) {
         $this->flash->addMessage('danger', '.');
         return $this->httpRedirect($request, $response, '/admin/remessa_saida');
@@ -352,9 +355,9 @@ class RemessaSaidaController extends Controller
         'remessa' => $remessa,
         'remessa_type' => $remessa_type,
         'remessaTypes' => $remessaTypes,
-        'patient_id' => $patient_id, 
-        'id_suppliers' => $id_suppliers, 
-        'patients' => $patients, 
+        'patient_id' => $patient_id,
+        'id_suppliers' => $id_suppliers,
+        'patients' => $patients,
         'products_remessa' => $products_remessa,
       ]);
     }

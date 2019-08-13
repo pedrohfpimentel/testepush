@@ -16,16 +16,16 @@
       <div class="card-header" data-background-color="blue">
         <div class="row">
           <div class="col-sm-8">
-          <h3>Histórico de Produtos - {{ products.name }}</h3> 
+          <h3>Histórico de Produtos - {{ products.name }}</h3>
         </div>
         <div class="col-sm-4">
           <p class="pull-right">
           <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
           <a class="btn btn-default" id="products_download" name="products_download"  href="{{ base_url() }}/admin/products/export_history?id={{ products.id }}"  target="_blank">
-              
+
               Exportar Relatório
             </a>
-         
+
           </p>
         </div>
       </div>
@@ -39,6 +39,7 @@
               <th>Tipo</th>
               <th>qtd</th>
               <th>Custo Unitário</th>
+              <th>Fornecedor/Paciente</th>
             </thead>
             <tbody>
               {% for event_log in event_logs %}
@@ -47,6 +48,26 @@
                   <td>{{ event_log.event_log_types_name }}</td>
                   <td>{{ event_log.quantity }}</td>
                   <td>R$ {{ event_log.cost }}</td>
+                  <td>
+                      {% if event_log.event_log_type == 9 %}
+                          {{event_log.patient_name }}
+                        {% endif %}
+                      {% if event_log.event_log_type == 12 %}
+                        {{event_log.suppliers_name }}
+                      {% endif %}
+                      {% if event_log.event_log_type == 13 %}
+                        {{event_log.suppliers_name }}
+                      {% endif %}
+                      {% if event_log.event_log_type == 14 %}
+                        {{event_log.suppliers_name }}
+                      {% endif %}
+                      {% if event_log.event_log_type == 15 %}
+                        {{event_log.patient_name }}
+                      {% endif %}
+                      {% if event_log.event_log_type == 16 %}
+                        {{event_log.patient_name }}
+                      {% endif %}
+                  </td>
                 </tr>
               {% else %}
                 <div class="alert alert-danger" role="alert">Não foram encontrados eventos para este produto.</div>

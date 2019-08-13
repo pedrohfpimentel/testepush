@@ -126,15 +126,15 @@ class RemessaSaidaModel extends Model
 
                     $num_params[$i_num_params] = $id;
                     $i_num_params++;
-                    
+
                 }
-                
+
                 $i++;
             }
         }
-            
 
-        
+
+
         $sql .= "LIMIT ?,?";
 
         $query = $this->db->prepare($sql);
@@ -143,7 +143,7 @@ class RemessaSaidaModel extends Model
             $query->bindValue($key+1, $value, \PDO::PARAM_INT);
 
         }
-  
+
         $query->bindValue($i_num_params+1, $offset, \PDO::PARAM_INT);
         $query->bindValue($i_num_params+2, $limit, \PDO::PARAM_INT);
 
@@ -168,7 +168,7 @@ class RemessaSaidaModel extends Model
 
 
 
-    
+
     public function update(Remessa $remessa): bool
     {
         $sql = "
@@ -177,8 +177,13 @@ class RemessaSaidaModel extends Model
             SET
                 remessa_type   = :remessa_type,
                 patient_id     = :patient_id,
-                suppliers      = :suppliers
-                
+                suppliers      = :suppliers,
+                quantity         = :quantity,
+                cost             = :cost,
+                patrimony_code   = :patrimony_code,
+                date             = :date,
+                time             = :time
+
 
             WHERE
                 id = :id
@@ -188,7 +193,12 @@ class RemessaSaidaModel extends Model
             ':id'           => $remessa->id,
             ':remessa_type'   => $remessa->remessa_type,
             ':patient_id' => $remessa->patient_id,
-            ':suppliers' => $remessa->suppliers
+            ':suppliers' => $remessa->suppliers,
+            ':quantity'     => $remessa->quantity,
+            ':cost'         => $remessa->cost,
+            'patrimony_code' => $remessa->patrimony_code,
+            ':date'         => $remessa->date,
+            ':time'         => $remessa->time
             ];
         return $query->execute($parameters);
     }
