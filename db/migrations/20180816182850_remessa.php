@@ -32,7 +32,7 @@ class Remessa extends AbstractMigration
         $remessa->addColumn('remessa_type', 'integer');
         $remessa->addColumn('quantity', 'integer', ['null' => true]);
         $remessa->addColumn('cost', 'string', ['null' => true]);
-        $remessa->addColumn('date', 'timestamp', ['null' => true]);
+        $remessa->addColumn('date', 'date', ['null' => true]);
         $remessa->addColumn('time', 'time', ['null' => true]);
         $remessa->addColumn('patrimony_code', 'integer',['null' => true]);
         $remessa->addTimestamps();

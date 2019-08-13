@@ -315,6 +315,7 @@ class RemessaModel extends Model
                 remessa
             SET
                 suppliers        = :suppliers,
+                patient_id       = :patient_id,
                 remessa_type     = :remessa_type,
                 quantity         = :quantity,
                 cost             = :cost,
@@ -328,6 +329,7 @@ class RemessaModel extends Model
         $parameters = [
             ':id'           => $remessa->id,
             ':suppliers'    => $remessa->suppliers,
+            ':patient_id'   => $remessa->patient_id,
             ':remessa_type' => $remessa->remessa_type,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,
