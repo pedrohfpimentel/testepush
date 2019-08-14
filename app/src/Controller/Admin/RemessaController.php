@@ -478,8 +478,8 @@ class RemessaController extends Controller
         //die;
         $id = intval($args['id']);
         $remessa = $this->remessaModel->get($id);
-        $remessa->date = date("d/m/Y");
-
+        $remessa_date = explode(" ", $remessa->date);
+        $remessa->date = $remessa_date[0];
         //var_dump($remessa);die;
         $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa->id);
         //var_dump($products_remessa);

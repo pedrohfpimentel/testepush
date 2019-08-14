@@ -337,6 +337,9 @@ class RemessaSaidaController extends Controller
       $products = $this->productsModel->getAll();
       $id = intval($args['id']);
       $remessa = $this->remessaModel->get($id);
+      $remessa_date = explode(" ", $remessa->date);
+      $remessa->date = $remessa_date[0];
+      //var_dump($remessa);die;
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa->id);
       foreach ($products_remessa as $product_remessa) {
         $name_product = $product_remessa->id_product;
