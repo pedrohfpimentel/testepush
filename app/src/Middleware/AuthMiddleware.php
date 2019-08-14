@@ -27,6 +27,11 @@ class AuthMiddleware
      */
     public function __invoke($request, $response, $next)
     {
+
+        // unset($_SESSION['admin_sisgesp']);
+        // var_dump($_SESSION);
+        // die;
+
         $route = $request->getUri()->getPath();
         $permissions = User::getPermissionsValue();
 
