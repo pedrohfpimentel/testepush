@@ -48,7 +48,9 @@
                 <td>{{ event_log.description }}</td>
 
                 {% if event_log.id_remessa != false %}
-                    <td>{{ event_log.product_name }}</td>
+                    <td style="max-width:250px">{{ event_log.product_name }}</td>
+                    {% else %}
+                      <td>{{ '- - -' }}</td>
                 {% endif %}
               </tr>
             {% else %}
