@@ -16,16 +16,16 @@
   <div class="card-header" data-background-color="blue">
     <div class="row">
         <div class="col-sm-8">
-        <h3>Histórico de Paciente - {{ patient.name }}</h3> 
+        <h3>Histórico de Paciente - {{ patient.name }}</h3>
       </div>
       <div class="col-sm-4">
           <p class="pull-right">
           <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
           <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}"  target="_blank">
-              
+
               Exportar Relatório
             </a>
-         
+
           </p>
         </div>
     </div>
@@ -38,15 +38,18 @@
             <th>Data</th>
             <th>Tipo</th>
             <th>Descrição</th>
+            <th>Produto</th>
           </thead>
           <tbody>
             {% for event_log in event_logs %}
-
-              
               <tr>
                 <td> {{ event_log.date }}</td>
                 <td>{{ event_log.event_log_types_name }}</td>
                 <td>{{ event_log.description }}</td>
+
+                {% if event_log.id_remessa != false %}
+                    <td>{{ event_log.product_name }}</td>
+                {% endif %}
               </tr>
             {% else %}
               <div class="alert alert-danger" role="alert">Não foram encontrados eventos para este usuário.</div>

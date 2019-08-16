@@ -120,6 +120,7 @@ class EventLogModel extends Model
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
+                event_logs.product_list,
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -133,14 +134,14 @@ class EventLogModel extends Model
                 event_logs
                 LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN patients ON patients.id = event_logs.id_patient
-                
+
                 LEFT JOIN users ON patients.id_user = users.id
             WHERE
                 id_patient = :id
-              
+
 
         ";
-        
+
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $query->execute($parameters);
@@ -148,7 +149,7 @@ class EventLogModel extends Model
         return $query->fetchAll();
     }
 
-    
+
 
     public function getByProducts(int $id)
     {
@@ -166,7 +167,7 @@ class EventLogModel extends Model
                 event_logs.time,
                 event_logs.description,
                 event_logs.product_list,
-               
+
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -182,7 +183,7 @@ class EventLogModel extends Model
                # LEFT JOIN products ON products.id = event_logs.products
                # LEFT JOIN users ON products.id = users.id
             WHERE
-                id_products = :id 
+                id_products = :id
                 OR
 
                 event_logs.product_list LIKE CONCAT('%', :id2, '%')
@@ -211,7 +212,7 @@ class EventLogModel extends Model
                 event_logs.time,
                 event_logs.description,
                 event_logs.product_list,
-               
+
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -233,7 +234,7 @@ class EventLogModel extends Model
         $query = $this->db->prepare($sql);
         //$parameters = [':id' => $id];
         $query->bindValue(1, '"'.$id.'"', \PDO::PARAM_STR);
-        
+
         $query->execute();
         //var_dump($query);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
@@ -254,7 +255,7 @@ class EventLogModel extends Model
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
-               
+
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -295,7 +296,7 @@ class EventLogModel extends Model
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
-               
+
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -313,7 +314,7 @@ class EventLogModel extends Model
                 LEFT JOIN professionals ON professionals.id = event_logs.id_professional
                 LEFT JOIN patients ON patients.id = event_logs.id_patient
                 LEFT JOIN users ON patients.id_user = users.id
-                
+
             WHERE
                 id_professional = :id
         ";
@@ -342,7 +343,7 @@ class EventLogModel extends Model
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
-               
+
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -383,7 +384,7 @@ class EventLogModel extends Model
                 event_logs.date,
                 event_logs.time,
                 event_logs.description,
-               
+
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
@@ -419,7 +420,7 @@ class EventLogModel extends Model
                 date                = :date,
                 time                = :time,
                 description         = :description,
-               
+
                 id_patient          = :id_patient,
                 suppliers         = :suppliers,
                 id_products         = :id_products,
@@ -435,7 +436,7 @@ class EventLogModel extends Model
             ':date'             => $eventLog->date,
             ':time'             => $eventLog->time,
             ':description'      => $eventLog->description,
-            
+
             ':id_patient'       => $eventLog->id_patient,
             ':suppliers'      => $eventLog->suppliers,
             ':id_products'      => $eventLog->id_products,

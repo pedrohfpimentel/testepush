@@ -44,7 +44,8 @@
           <div class="row">
             <div class="col-sm-3 form-group">
               <label for="inputNascimento">Data de nascimento</label>
-              <input type="date" class="form-control" id="inputNascimento" name="nascimento">
+              <input type="date" class="form-control" id="inputNascimento" name="nascimento" min="1900-01-01" max="2100-01-01">
+              <span class="validity"></span>
             </div>
             <div id="inputCpf-group" class="col-sm-3 form-group">
               <label for="inputCpf" class="control-label" style="margin-top:9px;">CPF</label>
@@ -210,7 +211,7 @@
                 <label for="obs">Tipo de Câncer?</label>
                  <input type="text" name="cancer_type" class="form-control">
               </div>
-            </div>        
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="obs">Há quanto tempo descobriu?</label>
@@ -225,7 +226,7 @@
                 <label for="obs">Como descobriu?</label>
                  <input type="text" name="discovery_how" class="form-control">
               </div>
-            </div>      
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="obs">Quando começou o tratamento?</label>
@@ -241,7 +242,7 @@
                 <label for="obs">Onde se trata?</label>
                  <input type="text" name="treatment_where" class="form-control">
               </div>
-            </div>        
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="obs">Qual o médico?</label>
@@ -257,10 +258,11 @@
                 <label for="obs">Qual apoio necessita da funcação?</label>
                  <input type="text" name="fundation_need" class="form-control">
               </div>
-            </div>         
+            </div>
             <div class="col-sm-6 form-group">
               <label for="visitDate">Data no Comparecimento na Fundação</label>
-              <input type="date" class="form-control" id="visitDate" name="visitDate" required>
+              <input type="date" class="form-control" id="visitDate" name="visitDate" min="1900-01-01" max="2100-01-01" required>
+              <span class="validity"></span>
             </div>
           </div>
           <button type="submit" class="btn btn-success">Adicionar</button>
@@ -338,7 +340,7 @@ $('#inputCep').mask('00000-000');
         },
 
         success: function(data) {
-          
+
           if (data.codigo == 1) {
             $('#inputCpf-group').addClass('has-error');
             $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
@@ -361,15 +363,15 @@ $('#inputCep').mask('00000-000');
             $('#inputCpf-feedback').html('<p style="color:green; position:absolute;">' + data.mensagem + '</p>');
             $('#inputCpf').attr('ok', 'ok');
           }
-          
+
         },
 
         error: function(data) {
           console.log("erro:" + data);
         }
     }
-    ); 
-    
+    );
+
   });
 
   // validação do formulário

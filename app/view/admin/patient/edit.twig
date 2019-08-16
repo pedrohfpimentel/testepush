@@ -84,7 +84,8 @@
           <div class="row">
             <div class="col-sm-3 form-group">
               <label for="inputNascimento">Data de nascimento</label>
-              <input type="date" class="form-control" id="inputNascimento" name="nascimento" value="{{ patient.nascimento }}">
+              <input type="date" class="form-control" id="inputNascimento" name="nascimento"  min="1900-01-01" max="2100-01-01" value="{{ patient.nascimento }}">
+              <span class="validity"></span>
             </div>
             <div class="col-sm-3 form-group">
               <label for="inputCpf">CPF</label>
@@ -256,7 +257,7 @@
                 <label for="obs">Tipo de Câncer?</label>
                  <input type="text" name="cancer_type" id="cancer_type" class="form-control" value="{{ patient.cancer_type }}">
               </div>
-            </div>        
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="obs">Há quanto tempo descobriu?</label>
@@ -272,7 +273,7 @@
                 <label for="obs">Como descobriu?</label>
                  <input type="text" name="discovery_how" id="discovery_how" class="form-control" value="{{ patient.discovery_how }}">
               </div>
-            </div>      
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="obs">Quando começou o tratamento?</label>
@@ -288,7 +289,7 @@
                 <label for="obs">Onde se trata?</label>
                  <input type="text" name="treatment_where" id="treatment_where" class="form-control" value="{{ patient.treatment_where }}">
               </div>
-            </div>        
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="obs">Qual o médico?</label>
@@ -304,10 +305,11 @@
                 <label for="obs">Qual apoio necessita da funcação?</label>
                  <input type="text" name="fundation_need" id="fundation_need" class="form-control" value="{{ patient.fundation_need }}">
               </div>
-            </div>         
+            </div>
             <div class="col-sm-6 form-group">
               <label for="visitDate">Data no Comparecimento na Fundação</label>
-              <input type="date" class="form-control" id="visitDate" name="visitDate" value="{{ patient.visitDate }}">
+              <input type="date" class="form-control" id="visitDate" name="visitDate" min="1900-01-01" max="2100-01-01" value="{{ patient.visitDate }}">
+              <span class="validity"></span>
             </div>
           </div>
            <hr>

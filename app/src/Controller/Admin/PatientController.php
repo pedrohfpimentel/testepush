@@ -26,6 +26,8 @@ class PatientController extends Controller
     protected $patientModel;
     protected $diseaseModel;
     protected $patientStatusModel;
+    protected $produtoRemessaModel;
+    protected $productsModel;
     protected $userModel;
     protected $eventLogModel;
     protected $eventLogTypeModel;
@@ -36,6 +38,8 @@ class PatientController extends Controller
         Model $patientModel,
         Model $diseaseModel,
         Model $patientStatusModel,
+        Model $produtoRemessaModel,
+        Model $productsModel,
         Model $userModel,
         Model $eventLogModel,
         Model $eventLogTypeModel,
@@ -45,6 +49,8 @@ class PatientController extends Controller
         $this->patientModel         = $patientModel;
         $this->diseaseModel         = $diseaseModel;
         $this->patientStatusModel   = $patientStatusModel;
+        $this->produtoRemessaModel  = $produtoRemessaModel;
+        $this->productsModel        = $productsModel;
         $this->userModel            = $userModel;
         $this->eventLogModel        = $eventLogModel;
         $this->eventLogTypeModel    = $eventLogTypeModel;
@@ -66,7 +72,7 @@ class PatientController extends Controller
                 //var_dump($search);
                 //die;
                 $min_length = 1;
-                
+
                 if(strlen($search) >= $min_length){
                     $search = htmlspecialchars($search);
                     //$search = mysql_real_escape_string($search);
@@ -87,9 +93,9 @@ class PatientController extends Controller
                 'search' => $search,
                 'patients' => $patients
                 ]);
-            } 
-        }   
-        //}   
+            }
+        }
+        //}
         //if (!empty($params['page'])) {
             //$page = intval($params['page']);
         } else {
@@ -98,7 +104,7 @@ class PatientController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-             
+
         $patients = $this->patientModel->getAll($offset, $limit);
         $patient_status = $this->patientStatusModel->getAll();
 
@@ -115,21 +121,21 @@ class PatientController extends Controller
             'today' => $today
             ]);
 
-        
+
     }
 
 
     /*
         return:
         data.codigo = 1 - parametro cpf não foi informado.
-        data.codigo = 2 - cpf é inválido. 
-        data.codigo = 3 - usuário encotrado. 
-        data.codigo = 4 - usuário encotrado. 
+        data.codigo = 2 - cpf é inválido.
+        data.codigo = 3 - usuário encotrado.
+        data.codigo = 4 - usuário encotrado.
     */
     public function validate_cpf(Request $request, Response $response): Response
     {
         $cpf = isset($request->getQueryParams()['cpf']) ? $request->getQueryParams()['cpf'] : null;
- 
+
         // query param cpf deve ser preenchido
         if (($cpf === null) || ($cpf == '') ) {
             $data['codigo'] = 1;
@@ -162,7 +168,7 @@ class PatientController extends Controller
         $data['mensagem'] = "Usuário liberado para cadastro.";
         return $response->withJson($data);
     }
- 
+
 
     public function add(Request $request, Response $response): Response
     {
@@ -188,7 +194,7 @@ class PatientController extends Controller
             $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
             return $this->httpRedirect($request, $response, '/admin/patients/add');
         }
-    
+
         // verify cpf null or empty
         if (!isset($data['cpf']) || $data['cpf'] == '') {
             $this->flash->addMessage('warning', 'O cpf deve ser informado.');
@@ -212,7 +218,7 @@ class PatientController extends Controller
         $data['tel_numero'] = (int) $data['tel_numero'];
         $data['end_numero'] = (int) $data['end_numero'];
         $user = $this->entityFactory->createUser($data);
- 
+
         // add new user
         $patient['id_user'] = $this->userModel->add($user);
 
@@ -335,12 +341,12 @@ class PatientController extends Controller
                 <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-            
+
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
             <table>
-            
+
                 <tr>
                     <th style='width: 20%; text-align:left;'>Nome</th>
                     <th style='width: 10%; text-align:left;'>Entrada</th>
@@ -352,23 +358,23 @@ class PatientController extends Controller
         foreach ($patients as $patient) {
            // var_dump($patient->name);
             //die;
-            
+
             if ($patient->nascimento != "") {
                 $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
             }
-            
+
             $html .= "
                 <tr>
                 <td style='width: 20%;'>$patient->name</td>
                 <td style='width: 10%;'>" . date('d/m/Y', strtotime($patient->visitDate)) . "</td>
                 <td style='width: 10%;'>$patient->nascimento</td>
-                
+
                 <td style='width: 10%;'>($patient->tel_area) $patient->tel_numero</td>
                 <td style='width: 10%;'>$patient->status_name</td>
-                
+
                 </tr>";
         }
-    
+
     $html .= "</table> </div>";
     try {
         $mpdf = new \Mpdf\Mpdf();
@@ -381,16 +387,18 @@ class PatientController extends Controller
         // Process the exception, log, print etc.
         echo $e->getMessage();
     }
-        die;        
+        die;
     }
 
     public function export_history(Request $request, Response $response) {
-        
+
         $id = (int)$request->getQueryParams()['id'];
         //var_dump($id);
         //die;
         $patient = $this->patientModel->get($id);
         $event_logs = $this->eventLogModel->getByPatient($id);
+        $products_remessa = $this->produtoRemessaModel->getAll();
+
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -399,20 +407,36 @@ class PatientController extends Controller
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Paciente</h3>
                 <p> <strong>Paciente:</strong> $patient->name </p>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-            
+
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
             <table>
-            
+
             <tr>
-                <th style='width: 33%; text-align:left;'>Data / Hora</th>
-                <th style='width: 33%; text-align:left;'>Tipo</th>
-                <th style='width: 33%; text-align:left;'>Descrição</th>
-                
+                <th style='width: 20%; text-align:left;'>Data / Hora</th>
+                <th style='width: 25%; text-align:left;'>Tipo</th>
+                <th style='width: 25%; text-align:left;'>Descrição</th>
+                <th style='width: 30%; text-align:right;'>Produto</th>
+
             </tr>
         ";
         foreach ($event_logs as $event_log) {
+            $event_log->product_name = "";
+            if (($event_log->id_remessa) != NULL) {
+
+                $remessa = $event_log->id_remessa;
+
+                $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa);
+                //var_dump($products_remessa);
+                foreach ($products_remessa as $product_remessa) {
+                    $name_product = $product_remessa->name_product;
+                    $event_log->product_name = $event_log->product_name . $name_product . "; ";
+                    //var_dump($event_log);
+                    //var_dump($event_log->product_name);
+                }
+                //die;
+            }
             //var_dump($event_log);
            // die;
             $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
@@ -421,9 +445,9 @@ class PatientController extends Controller
                 <td style='width: 33%; text-align:left;'>$event_log->date</td>
                 <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
                 <td style='width: 33%; text-align:left;'>$event_log->description</td>
-            
+                <td style='width: 33%; text-align:right;'>$event_log->product_name</td>
             </tr> ";
-            
+
         }
         $html .= "</table> </div>";
         try {
@@ -433,7 +457,7 @@ class PatientController extends Controller
             // Other code
             //header('Content-Type: application/pdf');
             $mpdf->Output( );
-              
+
         } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
             // Process the exception, log, print etc.
             echo $e->getMessage();
@@ -446,20 +470,35 @@ class PatientController extends Controller
     {
         $id = intval($args['id']);
         $patient = $this->patientModel->get($id);
-
         $event_logs = $this->eventLogModel->getByPatient($id);
+        $products_remessa = $this->produtoRemessaModel->getAll();
         foreach ($event_logs as $event_log) {
-            //var_dump($event_log);
-           // die;
+            $event_log->product_name = "";
+            if (($event_log->id_remessa) != NULL) {
+
+                $remessa = $event_log->id_remessa;
+
+                $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa);
+                //var_dump($products_remessa);
+                foreach ($products_remessa as $product_remessa) {
+                    $name_product = $product_remessa->name_product;
+                    $event_log->product_name = $event_log->product_name . $name_product . "; ";
+                    //var_dump($event_log);
+                    //var_dump($event_log->product_name);
+                }
+                //die;
+            }
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
         }
-        //$today = date('d/m/Y');
         //var_dump($event_logs);
+        //var_dump($event_log->product_name);
         //die;
 
         return $this->view->render($response, 'admin/patient/history.twig', [
 
             'patient' => $patient,
+            'products_remessa' => $products_remessa,
+            'name_product' => $name_product,
             'event_logs' => $event_logs]);
     }
 

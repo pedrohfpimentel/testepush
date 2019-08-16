@@ -77,15 +77,15 @@ class AttendanceController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-        
+
         $attendances = $this->attendanceModel->getAll($offset, $limit);
         foreach ($attendances as $attendance) {
             $attendance->patient_name = $this->patientModel->get((int)$attendance->id_patient)->name;
             $attendance->professional_name = $this->professionalModel->get((int)$attendance->id_professional)->name;
-            
+
             $attendance->attendance_day = date("d/m/Y", strtotime($attendance->attendance_day));
         }
-               
+
         $amountAttendances = $this->attendanceModel->getAmount();
         $amountPages = ceil($amountAttendances->amount / $limit);
 
@@ -93,9 +93,9 @@ class AttendanceController extends Controller
 
          //var_dump($attendance);
          //die;
-         
+
         return $this->view->render($response, 'admin/attendance/index.twig', [
-            
+
             'attendances' => $attendances,
             'page' => $page,
             'amountPages' => $amountPages,
@@ -113,7 +113,7 @@ class AttendanceController extends Controller
             $patients       = $this->patientModel->getAll();
             $professionals  = $this->professionalModel->getAll();
             $status = $this->attendanceStatusModel->getAll();
-
+            //var_dump($professionals);die;
             return $this->view->render($response, 'admin/attendance/add.twig', [
                 'patients'      => $patients,
                 'professionals' => $professionals,
@@ -121,10 +121,10 @@ class AttendanceController extends Controller
             ]);
         }
 
-        $data = $request->getParsedBody();  
+        $data = $request->getParsedBody();
 
         $attendance = $this->entityFactory->createAttendance($data);
-         
+
 
         $id_attendance = $this->attendanceModel->add($attendance);
 
@@ -205,13 +205,13 @@ class AttendanceController extends Controller
     {
         $params = $request->getQueryParams();
 
-        
+
         $attendance_start =   $params['attendance_start'];
         if ($attendance_start == '') {
             $attendance_start = "2000-01-01";
         }
 
-        
+
         $attendance_finish =  $params['attendance_finish'];
 
        // if ($patients_status == 0) {
@@ -224,7 +224,7 @@ class AttendanceController extends Controller
 
 
         foreach ($attendances as $attendance) {
-            
+
             foreach($professionals as $professional) {
                 if ($professional['id'] == $attendance->id_professional) {
 
@@ -238,8 +238,8 @@ class AttendanceController extends Controller
                 }
             }
         }
-        
- 
+
+
        // } else {
          //   $patients = $this->patientModel->getAllByStatus($patients_status, $attendance_start, $attendance_finish);
         //}
@@ -252,19 +252,19 @@ class AttendanceController extends Controller
         <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
         <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Atendimentos</h3>
         <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-      
+
       </div>
       <hr>
       <div style='width:100%; margin-top: 10px;'>
       <table>
-            
+
             <tr>
                 <th style='width: 10%;'>Data do Atendimento</th>
                 <th style='width: 10%;'>Hora</th>
                 <th style='width: 25%;'>Paciente</th>
                 <th style='width: 25%;'>Profissional</th>
                 <th style='width: 30%;'>Observações</th>
-               
+
             </tr>
         ";
         //var_dump( $attendances);
@@ -274,7 +274,7 @@ class AttendanceController extends Controller
             if ($attendance->attendance_day != "") {
                 $attendance->attendance_day = date('d/m/Y', strtotime($attendance->attendance_day));
             }
-           
+
             $html .= "
             <tr>
             <td style='width: 15%;'>$attendance->attendance_day</td>
@@ -282,11 +282,11 @@ class AttendanceController extends Controller
             <td style='width: 20%;'>$attendance->name_patient</td>
             <td style='width: 20%;'>$attendance->name_professional</td>
             <td style='width: 30%;'>$attendance->description</td>
-           
-            
+
+
             </tr>";
         }
-    
+
         $html .= "</table> </div>";
         //var_dump($html);
         //die;
@@ -300,7 +300,7 @@ class AttendanceController extends Controller
         // Process the exception, log, print etc.
         echo $e->getMessage();
     }
-        die;        
+        die;
     }
 
 
@@ -311,7 +311,7 @@ class AttendanceController extends Controller
 
 
 
-    
+
 
     public function history (Request $request, Response $response, array $args)
     {
@@ -332,9 +332,9 @@ class AttendanceController extends Controller
         $professionals  = $this->professionalModel->getAll();
         $status = $this->attendanceStatusModel->getAll();
         $data = $request->getParsedBody();
-        //var_dump($data);        
+        //var_dump($data);
         $attendance = $request->getParsedBody();
-        $attendance['id'] = (int) $data['id']; 
+        $attendance['id'] = (int) $data['id'];
         $attendance['id_patient'] = (int) $data['id_patient'];
         $attendance['id_professional'] = (int) $data['id_professional'];
         $attendance['status'] = (int) $data['status'];
@@ -351,7 +351,7 @@ class AttendanceController extends Controller
         $attendance_return = $this->attendanceModel->update($attendance);
         //var_dump($attendance);
         //die;
-       
+
 
         // if it's all ok with updates, create event log
         if  (($attendance_return != null) || ($attendance_return != false)) {
@@ -361,7 +361,7 @@ class AttendanceController extends Controller
             $eventLog['id_professional'] = (int) $data['id_professional'];
             $eventLog['id_attendance']         = (int) $attendance->id;
             $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('attendance_edit')->id;
-            $eventLog['description'] = 'Atendimento atualizado'; 
+            $eventLog['description'] = 'Atendimento atualizado';
             //var_dump($eventLog);
             //die;
             $eventLog = $this->entityFactory->createEventLog($eventLog);
@@ -391,11 +391,11 @@ class AttendanceController extends Controller
     public function view(Request $request, Response $response, array $args): Response
     {
 
-        
+
         $patients       = $this->patientModel->getAll();
         $professionals  = $this->professionalModel->getAll();
         $status = $this->attendanceStatusModel->getAll();
-        
+
         $id = intval($args['id']);
         $attendance = $this->attendanceModel->get($id);
         //var_dump($attendance);
@@ -416,11 +416,11 @@ class AttendanceController extends Controller
 
          $attendance_status = $this->attendanceStatusModel->getAll();
             return $this->view->render($response, 'admin/attendance/view.twig', [
-                'attendance' => $attendance, 
-                'attendance_status' => $attendance_status, 
-                'id_patient' => $id_patient, 
-                'id_professional' => $id_professional, 
-                'patients' => $patients, 
+                'attendance' => $attendance,
+                'attendance_status' => $attendance_status,
+                'id_patient' => $id_patient,
+                'id_professional' => $id_professional,
+                'patients' => $patients,
                 'professionals' => $professionals,
             ]);
 

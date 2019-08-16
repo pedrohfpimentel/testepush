@@ -74,10 +74,11 @@
                    </div>
                  </div>
                </div>
-              
+
               <div class=" col-sm-4 form-group">
                 <label for="quantity">Data de Saída</label>
-                <input type="date" class="form-control" id="input_date" name="date" placeholder="" required>
+                <input type="date" class="form-control" id="input_date" name="date" placeholder="" min="1900-01-01" max="2100-01-01" required>
+                <span class="validity"></span>
               </div>
           </div>
         </div>
@@ -88,15 +89,15 @@
 
   <div class="col-sm-12">
     <div class=" card">
-      
+
       <div class="card-content">
         <div class="row">
           <div class="col-md-12">
             <h4>Incluir Produtos</h4>
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
-              
+
               <input type="hidden" name="id" value="{{ products.id }}">
-              
+
               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
@@ -148,7 +149,7 @@
 
 <div class="main">
   <div class="card">
-    
+
     <div class="card-content">
       <div class="row">
         <div class="col-xs-12">
@@ -295,7 +296,7 @@ $('#button_adicionar').on("submit",function(){
 </script>
 
 <script type="text/javascript">
- 
+
   function submitTabela() {
     var corpo_tabela = $('#corpo_tabela').html();
     console.log(corpo_tabela);
@@ -346,7 +347,7 @@ $('#button_adicionar').on("submit",function(){
         $("#cost").val('');
         $("#patrimony").val('');
         $("#campo_login").html('');
-        
+
       },
         error: function (data) {
 
