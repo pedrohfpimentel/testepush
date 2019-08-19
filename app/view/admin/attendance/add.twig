@@ -67,8 +67,8 @@
                 <select class="form-control" id="selectProfessional" name="id_professional" required>
                   {% for professional in professionals %}
                     {% if professional.status != 0 or NULL %}
-                  <option value="{{ professional.id }}"> {{ professional.user_name }}</option>
-                {% endif %}
+                      <option value="{{ professional.id }}"> {{ professional.user_name }}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
