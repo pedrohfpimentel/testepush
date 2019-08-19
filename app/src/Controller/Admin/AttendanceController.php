@@ -113,7 +113,7 @@ class AttendanceController extends Controller
             $patients       = $this->patientModel->getAll();
             $professionals  = $this->professionalModel->getAll();
             $status = $this->attendanceStatusModel->getAll();
-            //var_dump($professionals);die;
+            var_dump($professionals);
             return $this->view->render($response, 'admin/attendance/add.twig', [
                 'patients'      => $patients,
                 'professionals' => $professionals,
