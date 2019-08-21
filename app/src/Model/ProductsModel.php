@@ -74,8 +74,8 @@ class ProductsModel extends Model
                 products
                 LEFT JOIN products_type ON products.category = products_type.id
             ORDER BY
-                id ASC
-                LIMIT ? , ?
+                products.name ASC
+            LIMIT ? , ?
                 
         ";
         $query = $this->db->prepare($sql);

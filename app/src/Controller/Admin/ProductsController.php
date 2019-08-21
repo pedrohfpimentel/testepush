@@ -465,9 +465,6 @@ class ProductsController extends Controller
         $event_logs = $this->eventLogModel->getByProducts($id);
         $contador_quantidade_total = 0;
         foreach($event_logs as $event_log) {
-
-
-
             foreach($remessa_produtos as $remessa_produto) {
 
                 if ($event_log->id_remessa == $remessa_produto->id_remessa) {
@@ -490,7 +487,6 @@ class ProductsController extends Controller
                 $event_log->quantity = '---';
             }
         }
-
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -525,7 +521,6 @@ class ProductsController extends Controller
                 <td style='text-align:left;  width: 20px;'></td>
                 <td style='text-align:left;'>R$ $event_log->cost</td>
                 <td style='text-align:left;'>R$ $event_log->patient_name</td>
-
             </tr> ";
             } else if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
             $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
@@ -537,7 +532,6 @@ class ProductsController extends Controller
                 <td style='text-align:left;  width: 20px;'></td>
                 <td style='text-align:left;'>R$ $event_log->cost</td>
                 <td style='text-align:left;'>R$ $event_log->suppliers_name</td>
-
             </tr> ";
             } else {
                 $html .="
@@ -547,10 +541,8 @@ class ProductsController extends Controller
                 <td style='text-align:right; '>$event_log->quantity</td>
                 <td style='text-align:left;  width: 20px;'></td>
                 <td style='text-align:left;'>R$ $event_log->cost</td>
-
             </tr> ";
             }
-
         }
         $html .= "</table> </div>";
         try {
@@ -614,44 +606,25 @@ class ProductsController extends Controller
     }
     public function update(Request $request, Response $response): Response
     {
-
-
         $data = $request->getParsedBody();
-
         $products = $request->getParsedBody();
-        //var_dump($products);
-        //die;
         $products['id'] = (int) $data['id'];
         //$products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
         $products['patrimony'] = (int) $products['patrimony'];
-        //var_dump($products);
-
         $old_product = $this->productsModel->get($products['id']);
         $products['quantity'] = (int) $old_product->quantity;
         $products['cost'] = (int) $old_product->cost;
-
         $products = $this->entityFactory->createProducts($products);
-
         $this->productsModel->update($products);
-         //$eventLog = $this->entityFactory->createEventLog($eventLog);
-           // $this->eventLogModel->add($eventLog);
-
-        // if it's all ok with updates, create event log
-
-
-            $eventLog['id_products']         = $products->id;
-            $eventLog['suppliers']         = $products->id_supplier;
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
-            $eventLog['description'] = 'Produto ' . $products->name .' atualizado';
-            //var_dump($eventLog);
-            //die;
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            $this->eventLogModel->add($eventLog);
-
+        $eventLog['id_products']         = $products->id;
+        $eventLog['suppliers']         = $products->id_supplier;
+        $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
+        $eventLog['description'] = 'Produto ' . $products->name .' atualizado';
+        $eventLog = $this->entityFactory->createEventLog($eventLog);
+        $this->eventLogModel->add($eventLog);
         $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');
-
     }
 }

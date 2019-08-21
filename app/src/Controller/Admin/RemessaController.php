@@ -299,28 +299,19 @@ class RemessaController extends Controller
     //download
     public function export(Request $request, Response $response)
     {
-
       $params = $request->getQueryParams();
-
       $remessa_type =  (int)$params['remessa_type'];
-
       $remessa_start =   $params['remessa_start'];
       if ($remessa_start == "") {
           $remessa_start = "2000-01-01";
       }
-      //var_dump($params);
-      //die;
       $remessa_finish =  $params['remessa_finish'];
-
       if ($remessa_type == 0) {
-
         $remessa = $this->remessaModel->getAllByDate($remessa_start, $remessa_finish);
-
         foreach ($remessa as $remessas) {
           //$remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
           $remessas->date = date("d/m/Y", strtotime($remessas->date));
           $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
-
           //var_dump($remessas);
           //die;
         }
@@ -330,18 +321,12 @@ class RemessaController extends Controller
           $remessas->date = date("d/m/Y", strtotime($remessas->date));
           $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
         }
-
       }
-
       foreach($remessa as $rem) {
         $produtos_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$rem->id);
         $rem->produtos_remessa = $produtos_remessa;
         //var_dump($rem);
       }
-
-      //var_dump($remessa);
-      //die;
-
       $html = "
         <div style='width: 24%; float:left;'>
             <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -350,12 +335,10 @@ class RemessaController extends Controller
             <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
             <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Entradas</h3>
             <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-
         </div>
         <hr>
         <div style='width:100%; margin-top: 10px;'>
         <table>
-
             <tr>
               <th style='width: 30%; text-align:left;'>ID</th>
               <th style='width: 10%; text-align:left;'>Data</th>
@@ -439,9 +422,7 @@ class RemessaController extends Controller
       if ($product) {
         return $response->withJson((array)$product, 200);
       }
-
       return $response->withJson('erro', 400);
-
     }
 
     public function consulta_suppliers(Request $request, Response $response): Response
@@ -455,82 +436,54 @@ class RemessaController extends Controller
       return $response->withJson('erro', 400);
 
     }
-
-
-
-
     public function view(Request $request, Response $response, array $args): Response
     {
-
-        $patients       = $this->patientModel->getAll();
-        $suppliers  = $this->supplierModel->getAll();
-        $products_remessa = $this->produtoRemessaModel->getAll();
-        $products = $this->productsModel->getAll();
-
-        //$remessaTypes[] = $this->remessaTypeModel->get(1);
-        //$remessaTypes[] = $this->remessaTypeModel->get(2);
-        //$remessaTypes[] = $this->remessaTypeModel->get(6);
-
-        $remessaTypes[] = $this->remessaTypeModel->get(1);
-        $remessaTypes[] = $this->remessaTypeModel->get(2);
-        $remessaTypes[] = $this->remessaTypeModel->get(6);
-        //var_dump($products);
-        //die;
-        $id = intval($args['id']);
-        $remessa = $this->remessaModel->get($id);
-        $remessa_date = explode(" ", $remessa->date);
-        $remessa->date = $remessa_date[0];
-        //var_dump($remessa);die;
-        $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa->id);
-        //var_dump($products_remessa);
-        //die;
-
-        foreach ($products_remessa as $product_remessa) {
-
-          $name_product = $product_remessa->id_product;
-          $product_remessa->name_product = $this->productsModel->get((int)$product_remessa->id_product)->name;
-          $product_remessa->cost = str_replace(".","",$product_remessa->cost);
-          $float_cost = floatval(str_replace(',','.',$product_remessa->cost));
-          $custo_total = $float_cost * ((int)$product_remessa->quantity);
-
-        }
-
-        $patient_id = $remessa->patient_id;
-        $id_suppliers = $remessa->suppliers;
-        //var_dump($product_remessa);
-        //die;
-        if($remessa->remessa_type == 6){
-          $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
-        } else {
-          $remessa->name_suppliers = $this->supplierModel->get((int)$remessa->suppliers)->name;
-        }
-
+      $patients       = $this->patientModel->getAll();
+      $suppliers  = $this->supplierModel->getAll();
+      $products_remessa = $this->produtoRemessaModel->getAll();
+      $products = $this->productsModel->getAll();
+      $remessaTypes[] = $this->remessaTypeModel->get(1);
+      $remessaTypes[] = $this->remessaTypeModel->get(2);
+      $remessaTypes[] = $this->remessaTypeModel->get(6);
+      $id = intval($args['id']);
+      $remessa = $this->remessaModel->get($id);
+      $remessa_date = explode(" ", $remessa->date);
+      $remessa->date = $remessa_date[0];
+      $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa->id);
+      $total_produtos = 0;
+      foreach ($products_remessa as $product_remessa) {
+        $name_product = $product_remessa->id_product;
+        $product_remessa->name_product = $this->productsModel->get((int)$product_remessa->id_product)->name;
+        $product_remessa->cost = str_replace(".","",$product_remessa->cost);
+        $float_cost = floatval(str_replace(',','.',$product_remessa->cost));
+        $custo_total = $float_cost * ((int)$product_remessa->quantity);
+        $product_remessa->custo_total = number_format($custo_total, 2, ',', '.');
+        $total_produtos = $total_produtos + $custo_total;
+      }
+      $total_produtos = 'R$ ' . number_format($total_produtos, 2, ',', '.');
+      $patient_id = $remessa->patient_id;
+      $id_suppliers = $remessa->suppliers;
+      if($remessa->remessa_type == 6){
+        $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
+      } else {
+        $remessa->name_suppliers = $this->supplierModel->get((int)$remessa->suppliers)->name;
+      }
       $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;
-
-      // var_dump($products_remessa[0]->id);
-      //die;
-
-        if (!$remessa) {
-            $this->flash->addMessage('danger', '.');
-            return $this->httpRedirect($request, $response, '/admin/remessa');
-        }
-
-        //var_dump($remessa);
-        //die;
-        //$remessa_type = $this->remessaTypeModel->getAll();
-        return $this->view->render($response, 'admin/remessa/view.twig', [
-          'remessa' => $remessa,
-          'remessaTypes' => $remessaTypes,
-          'patient_id' => $patient_id,
-          'id_suppliers' => $id_suppliers,
-          'patients' => $patients,
-          'suppliers' => $suppliers,
-          'products_remessa' => $products_remessa,
-          'custo_total' => $custo_total
-        ]);
-
-
+      if (!$remessa) {
+        $this->flash->addMessage('danger', '.');
+        return $this->httpRedirect($request, $response, '/admin/remessa');
+      }
+      // var_dump($products_remessa);
+      // die;
+      return $this->view->render($response, 'admin/remessa/view.twig', [
+        'remessa' => $remessa,
+        'remessaTypes' => $remessaTypes,
+        'patient_id' => $patient_id,
+        'id_suppliers' => $id_suppliers,
+        'patients' => $patients,
+        'suppliers' => $suppliers,
+        'products_remessa' => $products_remessa,
+        'total_produtos' => $total_produtos
+      ]);
     }
-
-
 }

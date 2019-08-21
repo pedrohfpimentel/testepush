@@ -53,105 +53,67 @@
 
       </div>
     </div>
-
-
-     {# <div class="col-sm-9">
-        <div class="card">
-          <div class="card-header" data-background-color="purple">
-            Busca
-          </div>
-          <div class="card-content">
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label for="id">ID</label>
-                <input id="id" type="text" name="id" class="form-control">
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="patient_name">Nome Paciente</label>
-                <input id="patient_name" type="text" name="patient_name" class="form-control">
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="professional_name">Nome Profissional</label>
-                <input id="professional_name" type="text" name="professional_name" class="form-control">
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-
-                <button class="btn btn-info">Buscar</button>
-              </div>
-            </div>
+    <div class="card">
+      <div class="card-header" data-background-color="blue">
+        <div class="row">
+          <div class="col-sm-4">
+            <h4>Últimos Atendimentos</h4>
           </div>
         </div>
 
       </div>
-    </div>#}
-  
-  <div class="card">
-    <div class="card-header" data-background-color="blue">
-      <div class="row">
-        <div class="col-sm-4">
-          <h4>Últimos Atendimentos</h4>
-        </div>
-      </div>
-
-    </div>
-    <div class="card-content">
-      <div class="row">
-        <div class="col-xs-12">
-          <table class="table table-striped data-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Data</th>
-                <th>Profissional</th>
-                <th>Paciente</th>
-                <th>Status</th>
-                <th class="th-button"></th>
-
-              </tr>
-            </thead>
-
-            <tbody>
-              {% for attendance in attendances %}
-                
+      <div class="card-content">
+        <div class="row">
+          <div class="col-xs-12">
+            <table class="table table-striped data-table" style="border-collapse:separate">
+              <thead>
                 <tr>
-                  <td>{{ attendance.id }}</td>
-                  <td>{{ attendance.attendance_day }} {{ attendance.attendance_hour }} </td>
-                  <td>{{ attendance.professional_name }}</td>
-                  <td>{{ attendance.patient_name }}</td>
-                  <td>{{ attendance.name_status }}</td>
-                 
-                  <td style="width:80px"><a class="btn btn-info" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">
-                    Detalhes
-                  </a></td>
+                  <th>ID</th>
+                  <th>Data</th>
+                  <th>Profissional</th>
+                  <th>Paciente</th>
+                  <th>Status</th>
+                  <th class="th-button"></th>
 
                 </tr>
-              {% else %}
-                <div class="alert alert-danger" role="alert">Não existem Atendimentos cadastrados</div>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </thead>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <ul class="pager">
-            <li{% if page == 1 %} class="disabled"{% endif %}>
-              <a{% if page > 1 %} href="{{ base_url() }}/admin/attendances?page={{ page - 1 }}"{% endif %}>Anterior</a>
-            </li>
-            <li{% if page >= amountPages %} class="disabled"{% endif %}>
-              <a{% if page < amountPages %} href="{{ base_url() }}/admin/attendances?page={{ page + 1 }}"{% endif %}>Próximo</a>
-            </li>
-          </ul>
+              <tbody>
+                {% for attendance in attendances %}
+                  
+                  <tr>
+                    <td>{{ attendance.id }}</td>
+                    <td>{{ attendance.attendance_day }} {{ attendance.attendance_hour }} </td>
+                    <td>{{ attendance.professional_name }}</td>
+                    <td>{{ attendance.patient_name }}</td>
+                    <td>{{ attendance.name_status }}</td>
+                  
+                    <td style="width:80px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">
+                      Detalhes
+                    </a></td>
+
+                  </tr>
+                {% else %}
+                  <div class="alert alert-danger" role="alert">Não existem Atendimentos cadastrados</div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <ul class="pager">
+              <li{% if page == 1 %} class="disabled"{% endif %}>
+                <a{% if page > 1 %} href="{{ base_url() }}/admin/attendances?page={{ page - 1 }}"{% endif %}>Anterior</a>
+              </li>
+              <li{% if page >= amountPages %} class="disabled"{% endif %}>
+                <a{% if page < amountPages %} href="{{ base_url() }}/admin/attendances?page={{ page + 1 }}"{% endif %}>Próximo</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
   </div>
 </div>
 

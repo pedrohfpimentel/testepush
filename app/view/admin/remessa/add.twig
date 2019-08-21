@@ -2,23 +2,6 @@
 {% block html_title %}Entrada de Estoque - Administração - {{ parent() }}{% endblock %}
 {% set nav_active = 'products' %}
 {% block breadcrumbs %}
-
-
-
-{#<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    var availableTags = ["{{ base_url() }}/admin/products/add"];
-    $( 'products.name' ).autocomplete({
-      source: availableTags
-    });
-  } );
-  </script>
-</head>#}
-
 <ol class="breadcrumb">
   <li><a href="{{ base_url() }}/admin">Início</a></li>
 
@@ -26,7 +9,6 @@
    <li>{{ products.name }}</li>
 </ol>
 {% endblock %}
-
 {% block content %}
   <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
 <div class="row">
@@ -132,8 +114,6 @@
     </div>
 
   </div>
-
-
   <div class="col-sm-12">
     <div class=" card">
       <div class="card-content">
@@ -142,7 +122,6 @@
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
               <h4>Incluir Produtos</h4>
               <input type="hidden" name="id" value="{{ products.id }}">
-
               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
@@ -155,42 +134,22 @@
                   </div>
                 </div>
                </div>
-
-
                <div class="row">
                  <div class=" col-sm-3 form-group">
                    <label for="quantity">Quantidade</label>
                    <input type="number" min="0" class="form-control" id="quantity" name="quantity" placeholder="" >
-                   <script type="text/javascript">
-                      $('#quantity').on('change', function(){
-                        var qtd = $('#quantity').val();
-                        if (qtd < 0) {
-                          $('#quantity').val(0);
-                        }
-                      });
-                   </script>
-                    <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
+                   <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
                  </div>
-
                  <div class=" col-sm-3 form-group">
                    <label for="cost">Custo Unitário</label>
-
                    <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" />
                    <input type="hidden" name="cost_hidden" id="cost_hidden" value="cost">
-
                  </div>
-
                   <div class=" col-sm-4 form-group">
                    <label for="patrimony">Código Patrimonial (opcional)</label>
                    <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
                     <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
-
-
-                 {#<div class=" col-sm-4 form-group">
-                   <label for="quantity">Data de Entrada</label>
-                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
-                 </div>#}
                  <div class="col-sm-12">
                   <p id="error-adicionar-produto-remessa"></p>
                  </div>
@@ -201,19 +160,13 @@
                     </p>
                 </div>
                </div>
-
-
-
            {# </form> #}
-
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
 
 <div class="main">
   <div class="card">
@@ -226,60 +179,41 @@
               <tr>
                 <th>Nome</th>
                 <th>Quantidade</th>
-                <th>Custo Unitário</th>
-                <th>Valor Total</th>
-                <th class="th-button"></th>
-                <th class="th-button"></th>
+                <th style="width:140px;">Custo Un. (R$)</th>
+                <th style="width:140px;">Valor Total (R$)</th>
+                <th class="th-button" style="width:100px;"></th>
+                
               </tr>
             </thead>
-
-
-             {# <script>
-               // function soma()
-               // {
-              //    products.quantity.value = (form.quantity2.value*1) + (form.quantity.value*1)
-               // }
-            //  </script> #}
-
-
             <tbody id="corpo_tabela">
-
+            </tbody>
+            <tbody id="total">
+              <td></td>
+              <td></td>
+              <td style="text-align:right; font-weight:bold;">TOTAL:</td>
+              <td id="valor-total"></td>
+              <td></td>
             </tbody>
           </table>
         </div>
       </div>
-
-
-
-
-
-
     </div>
   </div>
 </div>
-
-
 <input type="hidden" id="remessa_id" name="remessa_id" value="{{ id_remessa }}">
 <button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
-
 </form>
 {% endblock %}
 {% block javascripts %}
-
-
-
 <script type="text/javascript">
-
-$('#button_adicionar').on("submit",function(){
-   //return false;
-});
-
-
+  $('#button_adicionar').on("submit",function(){
+    //return false;
+  });
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
-{#mascara monetaria#}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script type="text/javascript">
   $(function() {
     $('[type=money]').maskMoney({
@@ -288,150 +222,104 @@ $('#button_adicionar').on("submit",function(){
     });
   });
 </script>
-
-
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script type="text/javascript">
-    $(document).ready(function() {
-       var availableTags = [];
-
-       //autcomplete
-       {% for product in products %}
-        availableTags.push("{{ product.id }} - {{ product.name }}");
-       {% endfor %}
-
-       $( "#input_id_product" ).autocomplete({
-         source: availableTags
-      });
+  $(document).ready(function() {
+    var availableTags = [];
+    //autcomplete
+    {% for product in products %}
+    availableTags.push("{{ product.id }} - {{ product.name }}");
+    {% endfor %}
+    $( "#input_id_product" ).autocomplete({
+      source: availableTags
     });
+  });
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#patients_select').hide();
+    $('#suppliers_select').hide();
+    var tipo = $('#selectRemessaType').val();
+    if ( (tipo == 1) || (tipo == 2) ) {
+      $('#suppliers_select').show();
+    }
+    var availableTags = [];
+    //autcomplete fornecedores
+    {% for supplier in suppliers %}
+      availableTags.push("{{ supplier.id }} - {{ supplier.name }}");
+    {% endfor %}
+    $( "#input_suppliers" ).autocomplete({
+        source: availableTags
+    });
+  });
 </script>
 
-
 <script type="text/javascript">
-    $(document).ready(function() {
-
-      $('#patients_select').hide();
-      $('#suppliers_select').hide();
-
-      var tipo = $('#selectRemessaType').val();
-
-      if ( (tipo == 1) || (tipo == 2) ) {
-        $('#suppliers_select').show();
-      }
-
-       var availableTags = [];
-
-       //autcomplete fornecedores
-       {% for supplier in suppliers %}
-        availableTags.push("{{ supplier.id }} - {{ supplier.name }}");
-       {% endfor %}
-
-       $( "#input_suppliers" ).autocomplete({
-         source: availableTags
-      });
-    });
+  $('#quantity').on('change', function(){
+    var qtd = $('#quantity').val();
+    if (qtd < 0) {
+      $('#quantity').val(0);
+    }
+  });
 </script>
 
-
-
 <script type="text/javascript">
-
   $('#input_id_product').on('change', function() {
-
     var id_product = $(this).val();
     id_product = id_product.replace(/ .*/,'');
-
-    console.log(id_product);
-
     //if (Number.isInteger(id_product)) {
       $.ajax({
-
         url: '{{ base_url() }}/admin/remessa/consulta_produto?id='+ id_product,
-
         beforeSend: function(data) {
           $("#campo_login").html('');
         },
-
         success: function(data) {
           console.log('sucesso' + data);
-          $("#campo_login").html('<p style="color:green;">Produto selecionado!</p>');
+          $("#campo_login").html('<p style="color:green; position:absolute;">Produto selecionado!</p>');
         },
-
         error: function(data) {
           console.log('error' + data);
           $("#input_id_product").val('');
-          $("#campo_login").html('<p style="color:red;">Erro. Tente um produto válido!</p>');
+          $("#campo_login").html('<p style="color:red; position:absolute;">Erro. Tente um produto válido!</p>');
         }
-
       });
-
     //}
-
   });
-
 </script>
-
-
 <script type="text/javascript">
-
   $('#input_suppliers').on('change', function() {
-
     var id_suppliers = $(this).val();
     id_suppliers = id_suppliers.replace(/ .*/,'');
-
-    //console.log(id_suppliers);
-
     //if (Number.isInteger(id_suppliers)) {
       $.ajax({
-
         url: '{{ base_url() }}/admin/remessa/consulta_suppliers?id='+ id_suppliers,
-
         beforeSend: function(data) {
           $("#campo_login_fornecedor").html('');
         },
-
         success: function(data) {
-          console.log('sucesso' + data);
           $("#campo_login_fornecedor").html('<p style="color:green;">Fornecedor selecionado!</p>');
         },
-
         error: function(data) {
-          console.log('error' + data);
           $("#input_suppliers").val('');
           $("#campo_login_fornecedor").html('<p style="color:red;">Erro. Tente um fornecedor válido!</p>');
         }
-
       });
-
     //}
-
   });
-
 </script>
 
-
 <script type="text/javascript">
-
   function submitTabela() {
     var corpo_tabela = $('#corpo_tabela').html();
     //console.log(corpo_tabela);
     return false;
   }
-
   $(document).on('click', '#add_product', function() {
-
-
-    //console.log('TEST');
-    //var input_suppliers =$('#input_suppliers').val();
     var nome_produto = $('#input_id_product').val();
     var quantidade_produto = $('#quantity').val();
     var custo_produto = $('#cost').val();
     var remessa_id = $('#remessa_id').val();
     var patrimony = $('#patrimony').val();
     var custo_total = converteMoedaFloat(quantidade_produto) * converteMoedaFloat(custo_produto);
-
-
     var products_array = [
     nome_produto,
     quantidade_produto,
@@ -445,24 +333,31 @@ $('#button_adicionar').on("submit",function(){
       type: "GET",
       beforeSend: function (xhr) {
         if (nome_produto == '') {
-            $('#input_id_product').focus();
-            xhr.abort();
+          $('#input_id_product').focus();
+          xhr.abort();
         }
         else if (quantidade_produto == '') {
-           $('#quantity').focus();
-            xhr.abort();
+          $('#quantity').focus();
+          xhr.abort();
         }
       },
-
       success: function (data) {
         $('#error-adicionar-produto-remessa').html('');
-         $('#corpo_tabela').append(
-        `<tr><td>${nome_produto}</td>
-        <td>${quantidade_produto}</td>
-        <td>${custo_produto}</td>
-        <td>${custo_total}</td>
-        <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+        $('#corpo_tabela').append(
+          `<tr><td>${nome_produto}</td>
+          <td>${quantidade_produto}</td>
+          <td>${custo_produto}</td>
+          <td>${converteFloatMoeda(custo_total.toString())}</td>
+          <td><input type="button" value="Excluir" class="btn btn-danger btn-sm excluir_ajax" style="margin:0px;"  id="${data.id}-excluir"></input></td></tr>`
         );
+        let total = 0;
+        console.log(custo_total);
+        console.log($('#valor-total').html());
+        total = ($('#valor-total').html() != '') ? getMoney($('#valor-total').html()) : 0;
+        console.log(total);
+        total = total + getMoney(custo_total.toString());
+        console.log(total);
+        $('#valor-total').html(`R$ ${formatReal(total)}`);
         $("#input_id_product").val('');
         $("#quantity").val('');
         $("#cost").val('');
@@ -475,29 +370,24 @@ $('#button_adicionar').on("submit",function(){
           }
         }
     });
-});
+  });
 
   $(document).on('click', '.excluir_ajax', function() {
     var id_produto_remessa = $(this).attr("id");
     var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
-    // console.log(resultado);
-
     var tr = $(this).parent().parent();
-
     $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
       type: "GET",
-
-
       success: function (data) {
        if (data == true) {
-          console.log(tr);
-          tr.remove();
+        console.log(tr);
+        tr.remove();
         }
       },
-        error: function (data) {
-          console.error(data);
-        }
+      error: function (data) {
+        console.error(data);
+      }
     });
   });
 
@@ -522,78 +412,67 @@ $('#button_adicionar').on("submit",function(){
    data = data.join("-");
    $('#input_date').val(data);
  });
-
 </script>
-
-
-
 <script type="text/javascript">
-
-function converteMoedaFloat(valor){
-
-      if(valor === ""){
-         valor =  0;
-      }else{
-         valor = valor.replace(".","");
-         valor = valor.replace(",",".");
-         valor = parseFloat(valor);
-      }
-      return valor;
-
+  function converteMoedaFloat(valor) {
+    if(valor === ""){
+        valor =  0;
+    }else{
+        valor = valor.replace(".","");
+        valor = valor.replace(",",".");
+        valor = parseFloat(valor);
+    }
+    return valor;
    }
-
-
-
-
-/*   @brief Converte um valor em formato float para uma string em formato moeda
-      @param valor(float) - o valor float
-      @return valor(string) - o valor em moeda
-   */
-   function converteFloatMoeda(valor){
-      var inteiro = null, decimal = null, c = null, j = null;
-      var aux = new Array();
-      valor = ""+valor;
-      c = valor.indexOf(".",0);
-      //encontrou o ponto na string
-      if(c > 0){
-         //separa as partes em inteiro e decimal
-         inteiro = valor.substring(0,c);
-         decimal = valor.substring(c+1,valor.length);
-      }else{
-         inteiro = valor;
+  function converteFloatMoeda(valor){
+    var inteiro = null, decimal = null, c = null, j = null;
+    var aux = new Array();
+    valor = ""+valor;
+    c = valor.indexOf(".",0);
+    //encontrou o ponto na string
+    if(c > 0){
+        //separa as partes em inteiro e decimal
+        inteiro = valor.substring(0,c);
+        decimal = valor.substring(c+1,valor.length);
+    }else{
+      inteiro = valor;
+    }
+    //pega a parte inteiro de 3 em 3 partes
+    for (j = inteiro.length, c = 0; j > 0; j-=3, c++){
+        aux[c]=inteiro.substring(j-3,j);
+    }
+    //percorre a string acrescentando os pontos
+    inteiro = "";
+    for(c = aux.length-1; c >= 0; c--){
+        inteiro += aux[c]+'.';
+    }
+    //retirando o ultimo ponto e finalizando a parte inteiro
+    inteiro = inteiro.substring(0,inteiro.length-1);
+    decimal = parseInt(decimal);
+    if(isNaN(decimal)){
+      decimal = "00";
+    }else{
+      decimal = ""+decimal;
+      if(decimal.length === 1){
+        decimal = decimal+"0";
       }
+    }
+    valor = inteiro+","+decimal;
+    return valor;
+  }
+  function getMoney( str )
+  {
+    return parseFloat( str.replace(/[\D]+/g,'') );
+  }
+  function formatReal( int )
+  {
+    var tmp = int+'';
+    tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
+    if( tmp.length > 6 )
+      tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+    return tmp;
+  }
 
-      //pega a parte inteiro de 3 em 3 partes
-      for (j = inteiro.length, c = 0; j > 0; j-=3, c++){
-         aux[c]=inteiro.substring(j-3,j);
-      }
-
-      //percorre a string acrescentando os pontos
-      inteiro = "";
-      for(c = aux.length-1; c >= 0; c--){
-         inteiro += aux[c]+'.';
-      }
-      //retirando o ultimo ponto e finalizando a parte inteiro
-
-      inteiro = inteiro.substring(0,inteiro.length-1);
-
-      decimal = parseInt(decimal);
-      if(isNaN(decimal)){
-         decimal = "00";
-      }else{
-         decimal = ""+decimal;
-         if(decimal.length === 1){
-            decimal = decimal+"0";
-         }
-      }
-
-
-      valor = "R$ "+inteiro+","+decimal;
-
-
-      return valor;
-
-   }
 </script>
 
 {% endblock %}

@@ -160,16 +160,9 @@
                 <th>Nome</th>
                 <th>Quantidade</th>
                 <th>Código Patrimonial</th>
-                <th class="th-button"></th>
-                <th class="th-button"></th>
+                <th class="th-button" style="width:100px;"></th>
               </tr>
             </thead>
-             {# <script>
-               // function soma()
-               // {
-              //    products.quantity.value = (form.quantity2.value*1) + (form.quantity.value*1)
-               // }
-            //  </script> #}
             <tbody id="corpo_tabela">
             </tbody>
           </table>
@@ -265,9 +258,6 @@ $('#button_adicionar').on("submit",function(){
 
     var id_suppliers = $(this).val();
     id_suppliers = id_suppliers.replace(/ .*/,'');
-
-    console.log(id_suppliers);
-
     //if (Number.isInteger(id_suppliers)) {
       $.ajax({
 
@@ -279,13 +269,13 @@ $('#button_adicionar').on("submit",function(){
 
         success: function(data) {
           console.log('sucesso' + data);
-          $("#campo_login_fornecedor").html('<p style="color:green;">Fornecedor selecionado!</p>');
+          $("#campo_login_fornecedor").html('<p style="color:green; position:absolute;">Fornecedor selecionado!</p>');
         },
 
         error: function(data) {
           console.log('error' + data);
           $("#input_suppliers").val('');
-          $("#campo_login_fornecedor").html('<p style="color:red;">Erro. Tente um fornecedor válido!</p>');
+          $("#campo_login_fornecedor").html('<p style="color:red; position:absolute;">Erro. Tente um fornecedor válido!</p>');
         }
 
       });
@@ -340,7 +330,7 @@ $('#button_adicionar').on("submit",function(){
           `<tr><td>${nome_produto}</td>
           <td>${quantidade_produto}</td>
           <td>${patrimony}</td>
-          <td><input type="button" value="Excluir" class="btn btn-danger excluir_ajax"  id="${data.id}-excluir"></input></td></tr>`
+          <td><input type="button" value="Excluir" class="btn btn-sm btn-danger excluir_ajax" style="margin:0px;"  id="${data.id}-excluir"></input></td></tr>`
         );
         $("#input_id_product").val('');
         $("#quantity").val('');

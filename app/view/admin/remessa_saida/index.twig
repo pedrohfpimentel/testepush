@@ -73,20 +73,16 @@
     <div class="card-content">
       <div class="row">
         <div class="col-xs-12">
-          <table class="table table-striped data-table">
+          <table class="table table-striped data-table" style="border-collapse:separate">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Fornecedor/Paciente</th>
                 <th>Tipo de Entrada</th>
                 <th>Data</th>
-                
                 <th class="th-button"></th>
-                
-               
               </tr>
             </thead>
-
             <tbody>
               {% for remessas in remessa %}
                 <tr>
@@ -98,12 +94,10 @@
                     {% if remessas.remessa_type == 5 %} 
                       {{remessas.patient_name }}
                     {% endif %} 
-                    
                   </td>
                   <td>{{ remessas.remessa_type_name }}</td>
                   <td>{{ remessas.date}} </td>
-   
-                <td style="width:80px"><a class="btn btn-info" href="{{ base_url() }}/admin/remessa_saida/{{ remessas.id }}">
+                <td style="width:80px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/remessa_saida/{{ remessas.id }}">
                     Detalhes
                   </a></td>
               {% else %}
