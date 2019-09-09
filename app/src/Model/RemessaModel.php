@@ -275,7 +275,7 @@ class RemessaModel extends Model
             }
         }
         $sql .= "ORDER BY
-                id DESC
+                created_at DESC
                 LIMIT ?,?";
 
         $query = $this->db->prepare($sql);

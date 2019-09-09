@@ -73,7 +73,7 @@ class RemessaSaidaController extends Controller
       } else {
           $page = 1;
       }
-      $limit = 2;
+      $limit = 20;
       $offset = ($page - 1) * $limit;
       $remessa = $this->remessaModel->getAllByType([4,5,8], $offset, $limit);
       //$remessa_type = $this->remessaTypeModel->getAll();
