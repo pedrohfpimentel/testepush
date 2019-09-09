@@ -27,7 +27,6 @@ class SupplierModel extends Model
             ':email'         => $supplier->email,
             ':ddd'           => $supplier->ddd,
             ':telefone'      => $supplier->telefone,
-
         ];
         if ($query->execute($parameters)) {
             return $this->db->lastInsertId();

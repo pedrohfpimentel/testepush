@@ -73,7 +73,7 @@ class RemessaSaidaController extends Controller
       } else {
           $page = 1;
       }
-      $limit = 20;
+      $limit = 2;
       $offset = ($page - 1) * $limit;
       $remessa = $this->remessaModel->getAllByType([4,5,8], $offset, $limit);
       //$remessa_type = $this->remessaTypeModel->getAll();
@@ -97,7 +97,7 @@ class RemessaSaidaController extends Controller
           $remessas->date = date("d/m/Y", strtotime($remessas->date));
         }
       }
-      $amountRemessas = $this->remessaModel->getAmount();
+      $amountRemessas = $this->remessaModel->getAmountSaida();
       $amountPages = ceil($amountRemessas->amount / $limit);
       $today = date('Y-m-d');
       return $this->view->render($response, 'admin/remessa_saida/index.twig',[

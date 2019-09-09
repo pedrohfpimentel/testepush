@@ -88,12 +88,12 @@
                 <tr>
                   <td>{{ remessas.id }}</td>
                   <td>
-                    {% if remessas.remessa_type == 4 %} 
+                    {% if remessas.remessa_type == 4 %}
                       {{remessas.patient_name }}
-                    {% endif %} 
-                    {% if remessas.remessa_type == 5 %} 
+                    {% endif %}
+                    {% if remessas.remessa_type == 5 %}
                       {{remessas.patient_name }}
-                    {% endif %} 
+                    {% endif %}
                   </td>
                   <td>{{ remessas.remessa_type_name }}</td>
                   <td>{{ remessas.date}} </td>
@@ -112,10 +112,10 @@
         <div class="col-xs-12">
           <ul class="pager">
             <li{% if page == 1 %} class="disabled"{% endif %}>
-              <a{% if page > 1 %} href="{{ base_url() }}/admin/remessa?page={{ page - 1 }}"{% endif %}>Anterior</a>
+              <a{% if page > 1 %} href="{{ base_url() }}/admin/remessa_saida?page={{ page - 1 }}"{% endif %}>Anterior</a>
             </li>
             <li{% if page >= amountPages %} class="disabled"{% endif %}>
-              <a{% if page < amountPages %} href="{{ base_url() }}/admin/remessa?page={{ page + 1 }}"{% endif %}>Próximo</a>
+              <a{% if page < amountPages %} href="{{ base_url() }}/admin/remessa_saida?page={{ page + 1 }}"{% endif %}>Próximo</a>
             </li>
           </ul>
         </div>
@@ -138,7 +138,7 @@
        var remessa_finish =$('#remessa_finish').val();
        var base_url_hidden =$('#base_url_hidden').val();
        var remessa_type = $('#remessa_type').val();
-       
+
           console.log($('#remessa_download').attr('href'));
           $("#remessa_download").attr('href',   base_url_hidden +'/admin/remessa_saida/export?remessa_start=' + remessa_start + '&remessa_finish=' + remessa_finish + '&remessa_type=' + remessa_type);
 });

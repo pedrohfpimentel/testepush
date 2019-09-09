@@ -159,7 +159,21 @@ class RemessaModel extends Model
                 COUNT(id) AS amount
             FROM
                 remessa
+            WHERE (remessa.remessa_type = 1) OR (remessa.remessa_type = 2) OR (remessa.remessa_type = 3) OR (remessa.remessa_type = 6) OR (remessa.remessa_type = 7)
+        ";
+        $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
 
+    public function getAmountSaida()
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+            FROM
+                remessa
+            WHERE (remessa.remessa_type = 4) OR (remessa.remessa_type = 5) OR (remessa.remessa_type = 8)
         ";
         $query = $this->db->prepare($sql);
         $query->execute();
