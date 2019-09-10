@@ -340,7 +340,6 @@ class RemessaController extends Controller
         <div style='width:100%; margin-top: 10px;'>
         <table>
             <tr>
-              <th style='width: 30%; text-align:left;'>ID</th>
               <th style='width: 10%; text-align:left;'>Data</th>
               <th style='width: 20%; text-align:left;'>Produto</th>
               <th style='width: 5%; text-align:left;'>qtd</th>
@@ -360,7 +359,6 @@ class RemessaController extends Controller
 
             $html .= "
             <tr>
-            <td style='width:5%'>$remessas->id</td>
             <td style=''>$remessas->date</td>
             <td style=''>$produto_remessa->name_product</td>
             <td style=''>$produto_remessa->quantity</td>
@@ -380,7 +378,6 @@ class RemessaController extends Controller
             //die;
             $html .= "
             <tr>
-            <td style='width:5%'>$remessas->id</td>
             <td style=''>$remessas->date</td>
             <td style=''>$produto_remessa->name_product</td>
             <td style=''>$produto_remessa->quantity</td>

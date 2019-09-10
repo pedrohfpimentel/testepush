@@ -76,7 +76,6 @@
           <table class="table table-striped data-table" style="border-collapse:separate">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Fornecedor/Paciente</th>
                 <th>Tipo de Entrada</th>
                 <th>Data</th>
@@ -86,7 +85,6 @@
             <tbody>
               {% for remessas in remessa %}
                 <tr>
-                  <td>{{ remessas.id }}</td>
                   <td>
                     {% if remessas.remessa_type == 4 %}
                       {{remessas.patient_name }}

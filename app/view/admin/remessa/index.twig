@@ -74,7 +74,6 @@
           <table class="table table-striped data-table" style="border-collapse:separate">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Fornecedor/Paciente</th>
                 <th>Tipo de Entrada</th>
                 <th>Data</th>
@@ -84,20 +83,19 @@
             <tbody>
               {% for remessas in remessa %}
                 <tr>
-                  <td>{{ remessas.id }}</td>
                   <td>
-                    {% if remessas.remessa_type == 6 %} 
+                    {% if remessas.remessa_type == 6 %}
                       {{remessas.patient_name }}
-                    {% endif %} 
-                    {% if remessas.remessa_type == 1 %} 
-                      {{remessas.suppliers_name }}
-                    {% endif %} 
-                    {% if remessas.remessa_type == 2 %} 
+                    {% endif %}
+                    {% if remessas.remessa_type == 1 %}
                       {{remessas.suppliers_name }}
                     {% endif %}
-                    {% if remessas.remessa_type == 3 %} 
+                    {% if remessas.remessa_type == 2 %}
                       {{remessas.suppliers_name }}
-                    {% endif %} 
+                    {% endif %}
+                    {% if remessas.remessa_type == 3 %}
+                      {{remessas.suppliers_name }}
+                    {% endif %}
                   </td>
                   <td>{{ remessas.remessa_type_name }}</td>
                   <td>{{ remessas.date}} </td>
@@ -142,7 +140,7 @@
        var remessa_finish =$('#remessa_finish').val();
        var base_url_hidden =$('#base_url_hidden').val();
        var remessa_type = $('#remessa_type').val();
-       
+
           console.log($('#remessa_download').attr('href'));
           $("#remessa_download").attr('href',   base_url_hidden +'/admin/remessa/export?remessa_start=' + remessa_start + '&remessa_finish=' + remessa_finish + '&remessa_type=' + remessa_type);
 });

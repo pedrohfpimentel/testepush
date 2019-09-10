@@ -211,11 +211,10 @@ class RemessaModel extends Model
                 *
             FROM
                 remessa
-
-
-
         WHERE
            remessa.date BETWEEN ? AND ?
+        ORDER BY
+            date DESC
 
         LIMIT ? , ?
     ";
@@ -275,7 +274,7 @@ class RemessaModel extends Model
             }
         }
         $sql .= "ORDER BY
-                created_at DESC
+                date DESC
                 LIMIT ?,?";
 
         $query = $this->db->prepare($sql);
@@ -302,7 +301,7 @@ class RemessaModel extends Model
                 remessa.remessa_type =  ?
                 AND (remessa.date BETWEEN ? AND ?)
                 ORDER BY
-                remessa.id ASC
+                    date DESC
             LIMIT ? , ?
         ";
         $query = $this->db->prepare($sql);
