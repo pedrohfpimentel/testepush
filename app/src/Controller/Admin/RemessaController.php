@@ -312,8 +312,6 @@ class RemessaController extends Controller
           //$remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
           $remessas->date = date("d/m/Y", strtotime($remessas->date));
           $remessas->remessa_type_name = $this->remessaTypeModel->get((int)$remessas->remessa_type)->name;
-          //var_dump($remessas);
-          //die;
         }
       } else {
         $remessa = $this->remessaModel->getAllByStatus($remessa_type, $remessa_start, $remessa_finish);

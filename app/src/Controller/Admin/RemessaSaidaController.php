@@ -285,8 +285,9 @@ class RemessaSaidaController extends Controller
             </tr>
       ";
       foreach ($remessa as $remessas) {
+        //var_dump($remessa);die;
         foreach($remessas->produtos_remessa as $produto_remessa) {
-          if (($remessas->remessa_type == 4) || ($remessas->remessa_type == 5)) {
+          if (($remessas->remessa_type == 5) || ($remessas->remessa_type == 4)) {
             $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
             $html .= "
             <tr>
@@ -296,6 +297,22 @@ class RemessaSaidaController extends Controller
               <td style=''>$remessas->patient_name</td>
               <td style=''>$remessas->remessa_type_name</td>
             </tr>
+              ";
+          } else if ($remessas->remessa_type == 8) {
+            //var_dump($remessas);
+            //die;
+            $html .= "
+            <tr>
+            <td style=''>$remessas->date</td>
+            <td style=''>$produto_remessa->name_product</td>
+            <td style=''>$produto_remessa->quantity</td>
+            <td style=''>R$ ";
+            $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
+            $html .= "</td>
+            <td style=''>$remessas->remessa_type_name</td>
+
+
+              </tr>
               ";
           }
         }

@@ -296,7 +296,6 @@ class RemessaModel extends Model
                 *
             FROM
                 remessa
-                LEFT JOIN remessa_type ON remessa.remessa_type = remessa_type.id
             WHERE
                 remessa.remessa_type =  ?
                 AND (remessa.date BETWEEN ? AND ?)
@@ -310,6 +309,33 @@ class RemessaModel extends Model
         $query->bindValue(3, $finish, \PDO::PARAM_STR);
         $query->bindValue(4, $offset, \PDO::PARAM_INT);
         $query->bindValue(5, $limit, \PDO::PARAM_INT);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
+        return $query->fetchAll();
+
+
+
+    }
+
+    public function getAllByProduct(int $id_product, string $start, string $finish): array
+    {
+        $sql = "
+            SELECT
+                remessa.*,
+                produto_remessa.*
+            FROM
+                remessa,
+                produto_remessa
+            WHERE
+                produto_remessa.id_product =  ?
+                AND (remessa.date BETWEEN ? AND ?)
+                ORDER BY
+                    date DESC
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $id_product, \PDO::PARAM_INT);
+        $query->bindValue(2, $start, \PDO::PARAM_STR);
+        $query->bindValue(3, $finish, \PDO::PARAM_STR);
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetchAll();

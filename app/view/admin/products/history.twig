@@ -10,23 +10,44 @@
 </ol>
 {% endblock %}
 {% block content %}
+<div class="col-sm-9 pull-right">
+  <div class="card">
+    <div class="card-header" data-background-color="purple">
+      Relatório
+    </div>
+    <div class="card-content pull-right" style="padding-top:5px;">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="history_date">Data Inicial</label>
+          <input id="history_start" class="form-control" type="date" name="history_start" required>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="history_date">Data Final</label>
+          <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+          <a class="btn btn-default" id="products_download" name="products_download"  href="{{ base_url() }}/admin/products/export_history?id={{ products.id }}"  target="_blank">
+
+              Exportar Relatório
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 <div class="row">
   <div class="col-sm-12">
     <div class="card">
       <div class="card-header" data-background-color="blue">
         <div class="row">
           <div class="col-sm-8">
-          <h3>Histórico de Produtos - {{ products.name }}</h3>
-        </div>
-        <div class="col-sm-4">
-          <p class="pull-right">
-          <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-          <a class="btn btn-default" id="products_download" name="products_download"  href="{{ base_url() }}/admin/products/export_history?id={{ products.id }}"  target="_blank">
-
-              Exportar Relatório
-            </a>
-
-          </p>
+          <h3>Histórico - {{ products.name }}</h3>
         </div>
       </div>
     </div>
@@ -44,7 +65,7 @@
             <tbody>
               {% for event_log in event_logs %}
                 <tr>
-                  <td>{{ event_log.date }}</td>
+                  <td>{{ event_log.data_remessa }}</td>
                   <td>{{ event_log.event_log_types_name }}</td>
                   <td>{{ event_log.quantity }}</td>
                   <td>R$ {{ event_log.cost }}</td>
@@ -95,5 +116,17 @@
 $('#inputCpf').mask('000.000.000-00', {reverse: true});
 $('#inputCep').mask('00000-000');
 </script>
+
+<script type="text/javascript">
+  $("#products_download").click(function(){
+   // console.log('teste');
+  var history_start = $('#history_start').val();
+   var history_finish =$('#history_finish').val();
+   var base_url_hidden =$('#base_url_hidden').val();
+
+      console.log($('#products_download').attr('href'));
+      $("#products_download").attr('href',   base_url_hidden +'/admin/products/export_history?id={{ products.id }}' + '&history_start=' + history_start + '&history_finish=' + history_finish);
+  });
+  </script>
 
 {% endblock %}

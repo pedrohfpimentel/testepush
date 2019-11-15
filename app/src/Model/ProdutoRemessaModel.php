@@ -17,7 +17,7 @@ class ProdutoRemessaModel extends Model
             patrimony_code,
             cost,
             quantity
-            )  
+            )
         VALUES (:id_product, :id_remessa, :patrimony_code, :cost, :quantity)
         ";
         $query = $this->db->prepare($sql);
@@ -58,10 +58,10 @@ class ProdutoRemessaModel extends Model
         $parameters = [':id' => $id];
         $query->execute($parameters);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, ProdutoRemessa::class);
-        return $query->fetch();   
+        return $query->fetch();
     }
 
-    
+
     public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
@@ -90,7 +90,7 @@ class ProdutoRemessaModel extends Model
             FROM
                 produto_remessa
                 LEFT JOIN products ON produto_remessa.id_product = products.id
-            WHERE 
+            WHERE
                 produto_remessa.id_remessa = ?
             ORDER BY
                 produto_remessa.id
@@ -112,7 +112,7 @@ class ProdutoRemessaModel extends Model
                 produto_remessa.id_product
             FROM
                 produto_remessa
-            WHERE 
+            WHERE
                 id_remessa = ?
             ORDER BY
                 id
@@ -136,7 +136,7 @@ class ProdutoRemessaModel extends Model
             FROM
                 produto_remessa
                 LEFT JOIN remessa ON remessa.id = produto_remessa.id_remessa
-            WHERE 
+            WHERE
                 produto_remessa.id_product = ?
             ORDER BY
                 produto_remessa.id
@@ -151,15 +151,38 @@ class ProdutoRemessaModel extends Model
         return $query->fetchAll();
     }
 
+    public function getAllByProduct2(int $id_product, string $start, string $finish): array
+    {
+        $sql = "
+            SELECT
+                produto_remessa.*,
+                remessa.remessa_type as remessa_type
+            FROM
+                produto_remessa
+                LEFT JOIN remessa ON remessa.id = produto_remessa.id_remessa
+            WHERE
+                (produto_remessa.id_product = ?) AND (remessa.date BETWEEN ? AND ?)
+            ORDER BY
+                produto_remessa.id
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $id_product, \PDO::PARAM_INT);
+        $query->bindValue(2, $start, \PDO::PARAM_STR);
+        $query->bindValue(3, $finish, \PDO::PARAM_STR);
+        $query->execute();
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, ProdutoRemessa::class);
+        return $query->fetchAll();
+    }
+
 
      public function getAmount()
-    {  
+    {
     }
 
 
 
     public function update(ProdutoRemessa $produto_remessa): bool
     {
-        
+
     }
 }

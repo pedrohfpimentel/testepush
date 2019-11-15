@@ -196,6 +196,54 @@ class EventLogModel extends Model
         return $query->fetchAll();
     }
 
+    public function getByProductsExport(int $id, string $start, string $finish)
+    {
+        $sql = "
+            SELECT
+                event_logs.id as id,
+                event_logs.event_log_type,
+                event_logs.id_patient,
+                event_logs.suppliers,
+                event_logs.id_products,
+                event_logs.id_professional,
+                event_logs.id_remessa,
+                event_logs.id_remessa_saida,
+                event_logs.date,
+                event_logs.time,
+                event_logs.description,
+                event_logs.product_list,
+
+                event_log_types.id as event_log_types_id,
+                event_log_types.slug as event_log_types_slug,
+                event_log_types.name as event_log_types_name,
+                event_log_types.description as event_log_types_description,
+                remessa.date as remessa_date
+              #  products.id as products_id
+              #  products.id_user as products_id_user,
+              #  users.name as users_name
+              #  users.email as users_email
+
+            FROM
+                event_logs
+                LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
+                LEFT JOIN remessa ON event_logs.id_remessa = remessa.id
+               # LEFT JOIN products ON products.id = event_logs.products
+               # LEFT JOIN users ON products.id = users.id
+            WHERE
+                (id_products = :id OR event_logs.product_list LIKE CONCAT('%', :id2, '%')) ";
+                if (remessa.date == null) {
+                    $sql .= " AND (event_logs.date BETWEEN :start AND :finish) ";
+                } else {
+                    $sql .= " AND (remessa.date BETWEEN :start AND :finish) ";
+                }
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id, ':id2' => '"'.$id.'"', ':start' => $start, ':finish' => $finish];
+        $query->execute($parameters);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
+        return $query->fetchAll();
+    }
+
+
     public function getAllByProductList($id)
     {
         $sql = "
