@@ -26,6 +26,8 @@ class PatientController extends Controller
     protected $patientModel;
     protected $diseaseModel;
     protected $patientStatusModel;
+    protected $professionalModel;
+    protected $remessaModel;
     protected $produtoRemessaModel;
     protected $productsModel;
     protected $userModel;
@@ -38,6 +40,8 @@ class PatientController extends Controller
         Model $patientModel,
         Model $diseaseModel,
         Model $patientStatusModel,
+        Model $professionalModel,
+        Model $remessaModel,
         Model $produtoRemessaModel,
         Model $productsModel,
         Model $userModel,
@@ -49,6 +53,8 @@ class PatientController extends Controller
         $this->patientModel         = $patientModel;
         $this->diseaseModel         = $diseaseModel;
         $this->patientStatusModel   = $patientStatusModel;
+        $this->professionalModel    = $professionalModel;
+        $this->remessaModel         = $remessaModel;
         $this->produtoRemessaModel  = $produtoRemessaModel;
         $this->productsModel        = $productsModel;
         $this->userModel            = $userModel;
@@ -398,6 +404,7 @@ class PatientController extends Controller
         $patient = $this->patientModel->get($id);
         $event_logs = $this->eventLogModel->getByPatient($id);
         $products_remessa = $this->produtoRemessaModel->getAll();
+        $professionals = $this->professionalModel->getAll();
 
         $html = "
             <div style='width: 24%; float:left;'>
@@ -417,16 +424,14 @@ class PatientController extends Controller
                 <th style='width: 20%; text-align:left;'>Data / Hora</th>
                 <th style='width: 25%; text-align:left;'>Tipo</th>
                 <th style='width: 25%; text-align:left;'>Descrição</th>
-                <th style='width: 30%; text-align:right;'>Produto</th>
+                <th style='width: 30%; text-align:right;'>Produto/Profissional</th>
 
             </tr>
         ";
         foreach ($event_logs as $event_log) {
             $event_log->product_name = "";
             if (($event_log->id_remessa) != NULL) {
-
                 $remessa = $event_log->id_remessa;
-
                 $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa);
                 //var_dump($products_remessa);
                 foreach ($products_remessa as $product_remessa) {
@@ -437,6 +442,12 @@ class PatientController extends Controller
                 }
                 //die;
             }
+            if (($event_log->id_professional) != NULL) {
+                $professional_id = $event_log->id_professional;
+                $professional = $this->professionalModel->get((int)$professional_id);
+                $professional_name = $professional->name;
+                $event_log->professional_name = $professional_name;
+            }
             //var_dump($event_log);
            // die;
             $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
@@ -444,10 +455,15 @@ class PatientController extends Controller
             <tr>
                 <td style='width: 33%; text-align:left;'>$event_log->date</td>
                 <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
-                <td style='width: 33%; text-align:left;'>$event_log->description</td>
-                <td style='width: 33%; text-align:right;'>$event_log->product_name</td>
+                <td style='width: 33%; text-align:left;'>$event_log->description</td>";
+            if (($event_log->id_remessa) != NULL) {
+                $html .=" <td style='width: 33%; text-align:right;'>$event_log->product_name</td>
             </tr> ";
-
+            }
+            if (($event_log->id_professional) != NULL) {
+                $html .=" <td style='width: 33%; text-align:right;'>$event_log->professional_name</td>
+            </tr> ";
+            }
         }
         $html .= "</table> </div>";
         try {
@@ -476,6 +492,10 @@ class PatientController extends Controller
             $event_log->product_name = "";
             if (($event_log->id_remessa) != NULL) {
 
+                $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
+                if ($remessa_atual != null) {
+                    $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
+                }
                 $remessa = $event_log->id_remessa;
 
                 $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa);
@@ -487,8 +507,17 @@ class PatientController extends Controller
                     //var_dump($event_log->product_name);
                 }
                 //die;
+
             }
-            $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
+            if (($event_log->id_professional) != NULL) {
+                $professional_id = $event_log->id_professional;
+                $professional = $this->professionalModel->get((int)$professional_id);
+                $professional_name = $professional->name;
+                $event_log->professional_name = $professional_name;
+
+            }
+
+            $event_log->date = date("d/m/Y", strtotime($event_log->date));
         }
         //var_dump($event_logs);
         //var_dump($event_log->product_name);
@@ -499,6 +528,7 @@ class PatientController extends Controller
             'patient' => $patient,
             'products_remessa' => $products_remessa,
             'name_product' => $name_product,
+            'professional_name' => $professional_name,
             'event_logs' => $event_logs]);
     }
 

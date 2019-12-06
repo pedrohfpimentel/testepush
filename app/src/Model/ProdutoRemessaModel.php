@@ -151,20 +151,35 @@ class ProdutoRemessaModel extends Model
         return $query->fetchAll();
     }
 
-    public function getAllByProduct2(int $id_product, string $start, string $finish): array
+    public function getAllByProduct2(int $id_product, string $start, string $finish, int $search): array
     {
         $sql = "
             SELECT
                 produto_remessa.*,
-                remessa.remessa_type as remessa_type
+                event_logs.*,
+                remessa.*
             FROM
                 produto_remessa
                 LEFT JOIN remessa ON remessa.id = produto_remessa.id_remessa
             WHERE
                 (produto_remessa.id_product = ?) AND (remessa.date BETWEEN ? AND ?)
-            ORDER BY
-                produto_remessa.id
         ";
+        if ($search == 1) {
+                $sql .="ORDER BY
+                produto_remessa.id ASC";
+            }
+            if ($search == 2) {
+                $sql .="ORDER BY
+                produto_remessa.id DESC";
+            }
+            if ($search == 3) {
+                $sql .="ORDER BY
+                produto_remessa.id ASC";
+            }
+            if ($search == 4) {
+                $sql .="ORDER BY
+                produto_remessa.id DESC";
+            }
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $id_product, \PDO::PARAM_INT);
         $query->bindValue(2, $start, \PDO::PARAM_STR);
