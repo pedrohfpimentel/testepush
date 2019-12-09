@@ -125,13 +125,12 @@ class AttendanceController extends Controller
 
         $attendance = $this->entityFactory->createAttendance($data);
 
-
         $id_attendance = $this->attendanceModel->add($attendance);
-
         $attendance_status = $this->attendanceStatusModel->get((int)$attendance->status);
         // create eventLog when add attendance
         if ( ($id_attendance != null) || ($id_attendance != false) )
         {
+            $eventLog['id_attendance']      = (int)$id_attendance;
             $eventLog['id_patient']         = $attendance->id_patient;
             $eventLog['id_professional']    = $attendance->id_professional;
             $eventLog['status']         = $attendance->status;
@@ -327,7 +326,6 @@ class AttendanceController extends Controller
 
     public function update(Request $request, Response $response): Response
     {
-
         $patients       = $this->patientModel->getAll();
         $professionals  = $this->professionalModel->getAll();
         $status = $this->attendanceStatusModel->getAll();
@@ -341,8 +339,6 @@ class AttendanceController extends Controller
         $attendance['attendance_day'] = $data['attendance_day'];
         $attendance['attendance_hour'] = $data['attendance_hour'];
         $attendance['description'] = $data['description'];
-
-
         //var_dump($attendance);
         //die;
         $attendance = $this->entityFactory->createAttendance($attendance);
@@ -351,12 +347,9 @@ class AttendanceController extends Controller
         $attendance_return = $this->attendanceModel->update($attendance);
         //var_dump($attendance);
         //die;
-
-
         // if it's all ok with updates, create event log
         if  (($attendance_return != null) || ($attendance_return != false)) {
-
-
+            $eventLog['id_attendance'] = (int) $data['id'];
             $eventLog['id_patient'] = (int) $data['id_patient'];
             $eventLog['id_professional'] = (int) $data['id_professional'];
             $eventLog['id_attendance']         = (int) $attendance->id;

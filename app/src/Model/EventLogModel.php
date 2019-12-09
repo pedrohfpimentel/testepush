@@ -22,7 +22,8 @@ class EventLogModel extends Model
                 id_professional,
                 id_remessa,
                 id_remessa_saida,
-                product_list
+                product_list,
+                id_attendance
                 )
             VALUES (
                 :event_log_type,
@@ -35,7 +36,8 @@ class EventLogModel extends Model
                 :id_professional,
                 :id_remessa,
                 :id_remessa_saida,
-                :product_list
+                :product_list,
+                :id_attendance
                 )
         ";
         $query = $this->db->prepare($sql);
@@ -50,7 +52,8 @@ class EventLogModel extends Model
             ':id_professional'      => $eventLog->id_professional,
             ':id_remessa'           => $eventLog->id_remessa,
             ':id_remessa_saida'     => $eventLog->id_remessa_saida,
-            ':product_list'          => $eventLog->product_list
+            ':product_list'          => $eventLog->product_list,
+            ':id_attendance'        => $eventLog->id_attendance
 
         ];
         if ($query->execute($parameters)) {
@@ -121,6 +124,7 @@ class EventLogModel extends Model
                 event_logs.time,
                 event_logs.description,
                 event_logs.product_list,
+                event_logs.id_attendance,
                 event_log_types.id as event_log_types_id,
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,

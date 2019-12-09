@@ -16,6 +16,7 @@ class EventLog
     public $description;
     public $quantity;
     public $product_list;
+    public $id_attendance;
 
 
     public function __construct(array $data = [])
@@ -33,6 +34,7 @@ class EventLog
         $this->id_remessa          = $data['id_remessa'] ?? null;
         $this->id_remessa_saida    = $data['id_remessa_saida'] ?? null;
         $this->product_list    = $data['product_list'] ?? null;
+        $this->id_attendance       = $data['id_attendance'] ?? null;
 
     }
 }

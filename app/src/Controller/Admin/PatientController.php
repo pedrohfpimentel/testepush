@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class PatientController extends Controller
 {
-
+    protected $attendanceModel;
     protected $patientModel;
     protected $diseaseModel;
     protected $patientStatusModel;
@@ -37,6 +37,7 @@ class PatientController extends Controller
     public function __construct(
         View $view,
         FlashMessages $flash,
+        Model $attendanceModel,
         Model $patientModel,
         Model $diseaseModel,
         Model $patientStatusModel,
@@ -50,6 +51,7 @@ class PatientController extends Controller
         EntityFactory $entityFactory
     ) {
         parent::__construct($view, $flash);
+        $this->attendanceModel      = $attendanceModel;
         $this->patientModel         = $patientModel;
         $this->diseaseModel         = $diseaseModel;
         $this->patientStatusModel   = $patientStatusModel;
@@ -421,7 +423,8 @@ class PatientController extends Controller
             <table>
 
             <tr>
-                <th style='width: 20%; text-align:left;'>Data / Hora</th>
+                <th style='width: 20%; text-align:left;'>Data Remessa/Atendimento</th>
+                <th style='width: 20%; text-align:center;'>Data de Evento</th>
                 <th style='width: 25%; text-align:left;'>Tipo</th>
                 <th style='width: 25%; text-align:left;'>Descrição</th>
                 <th style='width: 30%; text-align:right;'>Produto/Profissional</th>
@@ -430,8 +433,13 @@ class PatientController extends Controller
         ";
         foreach ($event_logs as $event_log) {
             $event_log->product_name = "";
+            $event_log->attendance_date = "";
             if (($event_log->id_remessa) != NULL) {
                 $remessa = $event_log->id_remessa;
+                $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
+                if ($remessa_atual != null) {
+                    $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
+                }
                 $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa);
                 //var_dump($products_remessa);
                 foreach ($products_remessa as $product_remessa) {
@@ -447,13 +455,29 @@ class PatientController extends Controller
                 $professional = $this->professionalModel->get((int)$professional_id);
                 $professional_name = $professional->name;
                 $event_log->professional_name = $professional_name;
+                $attendance_atual = $this->attendanceModel->get((int)$event_log->id_attendance);
+                if ($attendance_atual != false) {
+                    $event_log->attendance_date = date("d/m/Y", strtotime($attendance_atual->attendance_day));
+                    //var_dump($event_log->attendance_date);die;
+                }
             }
             //var_dump($event_log);
            // die;
-            $event_log->date = date("d/m/Y h:m:s", strtotime($event_log->date));
+            $event_log->date = date("d/m/Y", strtotime($event_log->date));
             $html .="
-            <tr>
-                <td style='width: 33%; text-align:left;'>$event_log->date</td>
+            <tr> ";
+            if (($event_log->id_remessa) != NULL) {
+                $html .=" <td style='width: 33%; text-align:center;'>$event_log->data_remessa</td>
+            </tr> ";
+            } else if (($event_log->id_professional) != NULL) {
+                $html .=" <td style='width: 33%; text-align:center;'>$event_log->attendance_date</td>
+            </tr> ";
+            } else {
+                $html .=" <td style='width: 33%; text-align:center;'>- - - -</td>
+            </tr> ";
+            }
+            $html .="
+                <td style='width: 33%; text-align:center;'>$event_log->date</td>
                 <td style='width: 33%; text-align:left;'>$event_log->event_log_types_name</td>
                 <td style='width: 33%; text-align:left;'>$event_log->description</td>";
             if (($event_log->id_remessa) != NULL) {
@@ -473,12 +497,10 @@ class PatientController extends Controller
             // Other code
             //header('Content-Type: application/pdf');
             $mpdf->Output( );
-
         } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
             // Process the exception, log, print etc.
             echo $e->getMessage();
         }
-
         return  $response->withHeader('Content-Type', 'application/pdf');
     }
 
@@ -491,13 +513,11 @@ class PatientController extends Controller
         foreach ($event_logs as $event_log) {
             $event_log->product_name = "";
             if (($event_log->id_remessa) != NULL) {
-
                 $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
                 if ($remessa_atual != null) {
                     $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
                 }
                 $remessa = $event_log->id_remessa;
-
                 $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessa);
                 //var_dump($products_remessa);
                 foreach ($products_remessa as $product_remessa) {
@@ -507,31 +527,29 @@ class PatientController extends Controller
                     //var_dump($event_log->product_name);
                 }
                 //die;
-
             }
             if (($event_log->id_professional) != NULL) {
                 $professional_id = $event_log->id_professional;
                 $professional = $this->professionalModel->get((int)$professional_id);
                 $professional_name = $professional->name;
                 $event_log->professional_name = $professional_name;
-
+                $attendance_atual = $this->attendanceModel->get((int)$event_log->id_attendance);
+                if ($attendance_atual != false) {
+                    $event_log->attendance_date = $attendance_atual->attendance_day;
+                }
             }
-
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
         }
-        //var_dump($event_logs);
+        //var_dump($attendance_atual->attendance_day);
         //var_dump($event_log->product_name);
         //die;
-
         return $this->view->render($response, 'admin/patient/history.twig', [
-
             'patient' => $patient,
             'products_remessa' => $products_remessa,
             'name_product' => $name_product,
             'professional_name' => $professional_name,
             'event_logs' => $event_logs]);
     }
-
     public function update(Request $request, Response $response): Response
     {
 

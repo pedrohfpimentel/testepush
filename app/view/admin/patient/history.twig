@@ -35,16 +35,22 @@
       <div class="col-md-12">
         <table class="table table-striped data-table">
           <thead>
-            <th>Data de Remessa</th>
-            <th>Data de Evento</th>
+            <th style="padding-left:0px; padding-right:0px; width:185px;">Data Remessa/Atendimento</th>
+            <th style="padding-left:0px; padding-right:0px;">Data de Evento</th>
             <th>Tipo</th>
             <th>Descrição</th>
-            <th>Produto/Profissional</th>
+            <th style="padding-right:0px;">Produto/Profissional</th>
           </thead>
           <tbody>
             {% for event_log in event_logs %}
               <tr>
-                <td>{{ event_log.data_remessa }}</td>
+                {% if event_log.id_remessa != false %}
+                  <td><center>{{ event_log.data_remessa }}</center></td>
+                  {% elseif event_log.id_professional != false%}
+                    <td><center>{{ event_log.attendance_date|date("m/d/Y") }}</center></td>
+                  {% else %}
+                    <td><center>- - - -</center></td>
+                {% endif %}
                 <td>{{ event_log.date }}</td>
                 <td>{{ event_log.event_log_types_name }}</td>
                 <td>{{ event_log.description }}</td>
