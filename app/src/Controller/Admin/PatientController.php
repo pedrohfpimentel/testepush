@@ -424,7 +424,7 @@ class PatientController extends Controller
 
             <tr>
                 <th style='width: 20%; text-align:left;'>Data Remessa/Atendimento</th>
-                <th style='width: 20%; text-align:center;'>Data de Evento</th>
+                <th style='width: 20%; text-align:center;'>Data de Cadastro</th>
                 <th style='width: 25%; text-align:left;'>Tipo</th>
                 <th style='width: 25%; text-align:left;'>Descrição</th>
                 <th style='width: 30%; text-align:right;'>Produto/Profissional</th>
