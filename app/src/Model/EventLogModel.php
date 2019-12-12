@@ -194,19 +194,19 @@ class EventLogModel extends Model
                 event_logs.product_list LIKE CONCAT('%', :id2, '%') ";
             if ($search == 1) {
                 $sql .="ORDER BY
-                event_logs.date ASC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, event_logs.date ASC";
             }
             if ($search == 2) {
                 $sql .="ORDER BY
-                event_logs.date DESC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, event_logs.date DESC";
             }
             if ($search == 3) {
                 $sql .="ORDER BY
-                remessa.date ASC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, remessa.date ASC";
             }
             if ($search == 4) {
                 $sql .="ORDER BY
-                remessa.date DESC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, remessa.date DESC";
             }
 
 
@@ -257,19 +257,19 @@ class EventLogModel extends Model
                 event_logs.product_list LIKE CONCAT('%', :id2, '%') AND (event_logs.date BETWEEN :start AND :finish) ";
             if ($search == 1) {
                 $sql .="ORDER BY
-                event_logs.date ASC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, event_logs.date ASC";
             }
             if ($search == 2) {
                 $sql .="ORDER BY
-                event_logs.date DESC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, event_logs.date DESC";
             }
             if ($search == 3) {
                 $sql .="ORDER BY
-                remessa.date ASC";
+                 CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, remessa.date ASC";
             }
             if ($search == 4) {
                 $sql .="ORDER BY
-                remessa.date DESC";
+                CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, remessa.date DESC";
             }
 
 

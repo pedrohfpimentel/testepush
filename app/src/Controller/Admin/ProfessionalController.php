@@ -55,7 +55,7 @@ class ProfessionalController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-        
+
         $params = $request->getQueryParams();
 
         if (!empty($params['page'])) {
@@ -63,17 +63,17 @@ class ProfessionalController extends Controller
 
             if (!empty($params['search'])) {
             $search = (int)$params['search'];
-            
+
 
             if ($search  == 3) {
                 $limit = 20;
                 $offset = ($page - 1) * $limit;
 
-                
+
                 $professionals = $this->professionalModel->getAll($offset, $limit);
 
                 $professional_types = $this->professionalTypeModel->getAll();
-                       
+
                 $amountProfessionals = $this->professionalModel->getAmount();
                 $amountPages = ceil($amountProfessionals->amount / $limit);
 
@@ -84,23 +84,23 @@ class ProfessionalController extends Controller
                     'amountPages' => $amountPages,
                     'search' => $search
                     ]);
-            } 
+            }
 
             if ($search  == 1) {
                 $limit = 20;
                 $offset = ($page - 1) * $limit;
-                
-                
+
+
                 $professionals = $this->professionalModel->getAllByStatus2($search, $offset, $limit);
                 //$professionals2 = $this->professionalModel->getAllByStatus($search, $offset, $limit);
                 //var_dump($professionals);die;
                 //foreach ($professionals as $professional) {
             //$professional->status = $this->professionalModel->get((int)$professional->id)->status;
-            
-                
+
+
                 //if ($professional->status == 0 OR 1) {
                 $professional_types = $this->professionalTypeModel->getAll();
-                       
+
                 $amountProfessionals = $this->professionalModel->getAmountStatus($search);
                 $amountPages = ceil($amountProfessionals->amount / $limit);
                 //var_dump($professionals);die;
@@ -111,19 +111,19 @@ class ProfessionalController extends Controller
                     'page' => $page,
                     'amountPages' => $amountPages,
                     'search' => $search
-                    ]);     
-        
+                    ]);
+
             }
 
             if ($search  == 2) {
                 $limit = 20;
                 $offset = ($page - 1) * $limit;
-                
-                
+
+
                 $professionals = $this->professionalModel->getAllByStatus($search, $offset, $limit);
 
                 $professional_types = $this->professionalTypeModel->getAll();
-                       
+
                 $amountProfessionals = $this->professionalModel->getAmountStatus($search);
                 $amountPages = ceil($amountProfessionals->amount / $limit);
 
@@ -133,20 +133,20 @@ class ProfessionalController extends Controller
                     'page' => $page,
                     'amountPages' => $amountPages,
                     'search' => $search
-                    ]); 
+                    ]);
                 }
-            }  
+            }
         } else {
             $page = 1;
         }
         $limit = 20;
         $offset = ($page - 1) * $limit;
 
-        
+
         $professionals = $this->professionalModel->getAllIndex($offset, $limit);
 
         $professional_types = $this->professionalTypeModel->getAll();
-               
+
         $amountProfessionals = $this->professionalModel->getAmountStatus1();
         $amountPages = ceil($amountProfessionals->amount / $limit);
 
@@ -155,7 +155,7 @@ class ProfessionalController extends Controller
             'professional_types' => $professional_types,
             'page' => $page,
             'amountPages' => $amountPages
-            ]);     
+            ]);
     }
 
     public function add(Request $request, Response $response): Response
@@ -171,7 +171,7 @@ class ProfessionalController extends Controller
         $data['role_id'] = 6;
         $data['end_numero'] = (int) $data['end_numero'];
         $data['professional_status'] = (int)$data['professional_status'];
-          
+
 
         if ($this->professionalModel->getByEmail($data['email']) != false) {
             $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
@@ -180,7 +180,7 @@ class ProfessionalController extends Controller
 
         $user = $this->entityFactory->createUser($data);
 
-          
+
 
         $professional['id_user'] = $this->userModel->add($user);
         $professional['id_professional_type'] = $data['id_professional_type'];
@@ -200,7 +200,7 @@ class ProfessionalController extends Controller
             $eventLog = $this->entityFactory->createEventLog($eventLog);
 
             $this->eventLogModel->add($eventLog);
-           
+
            $this->flash->addMessage('success', 'Profissional adicionado com sucesso.');
             return $this->httpRedirect($request, $response, '/admin/professionals');
         }
@@ -242,20 +242,27 @@ class ProfessionalController extends Controller
         $professional = $this->professionalModel->get($id);
 
         $event_logs = $this->eventLogModel->getByProfessional($id);
-         //var_dump($event_logs);
-            //die;
+        ///var_dump($event_logs);
+        //die;
         foreach ($event_logs as $event_log) {
+            if (($event_log->id_patient)!= null) {
+                $patient = $this->patientModel->get((int)$event_log->id_patient);
+                $event_log->patient_name = $patient->name;
+                //var_dump($patient->name);die;
+            } else {
+                $event_log->patient_name = "- - - -";
+            }
            //var_dump($event_log);
 
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
         }
-   
+
         return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,'event_logs' => $event_logs]);
     }
 
     //download
     public function export(Request $request, Response $response)
-     {  
+     {
         /*$params = $request->getQueryParams();
 
         $professional_status =  (int)$params['professional_status'];
@@ -279,7 +286,7 @@ class ProfessionalController extends Controller
 
 
             $dir = getcwd();
-            
+
       $html = "
       <div style='width: 24%; float:left;'>
         <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -288,20 +295,20 @@ class ProfessionalController extends Controller
         <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
         <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Profissionais Cadastrados</h3>
         <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-      
+
       </div>
       <hr>
       <div style='width:100%; margin-top: 10px;'>
       <table>
-            
+
             <tr>
                 <th style='width: 25%; text-align:left;'>Nome</th>
                 <th style='width: 25%; text-align:left;'>Email</th>
-               
-               
+
+
                 <th style='width:  5%; text-align:left;'>DDD</th>
                 <th style='width: 10%; text-align:left;'>Telefone</th>
-                <th style='width: 10%; text-align:left;'>CEP</th>               
+                <th style='width: 10%; text-align:left;'>CEP</th>
                 <th style='width: 20%; text-align:left;'>Categoria</th>
             </tr>
         ";
@@ -311,7 +318,7 @@ class ProfessionalController extends Controller
             //die;
             if ($professional_status  == 2) {
                  $professionals = $this->professionalModel->getAll();
-            
+
             $professional = $this->entityFactory->createProfessional($professional);
         }
             //var_dump( $professional);
@@ -325,18 +332,18 @@ class ProfessionalController extends Controller
             <tr>
             <td style='width: 25%; text-align:left;'>$professional->name</td>
             <td style='width: 25%; text-align:left;'>$professional->email</td>
-            
-           
+
+
             <td style='width:  5%; text-align:left;'>$professional->tel_area</td>
             <td style='width: 15%; text-align:left;'>$professional->tel_numero</td>
-            <td style='width: 10%; text-align:left;'>$professional->end_cep</td>               
+            <td style='width: 10%; text-align:left;'>$professional->end_cep</td>
             <td style='width: 20%; text-align:left;'>$professional->professional_type_name</td>
 
-                   
+
             </tr>";
         }
         //die;
-    
+
         $html .= "</table> </div>";
     try {
         $mpdf = new \Mpdf\Mpdf();
@@ -349,22 +356,18 @@ class ProfessionalController extends Controller
         // Process the exception, log, print etc.
         echo $e->getMessage();
     }
-        die;        
+        die;
     }
 
 
     public function export_history(Request $request, Response $response) {
-        
         $id = (int)$request->getQueryParams()['id'];
-       //var_dump($id);
-        //die;
         $professional = $this->professionalModel->get($id);
         $event_logs = $this->eventLogModel->getByProfessionalNamePatient($id);
         $patients = $this->patientModel->getAll();
-
         //var_dump($event_logs);
-           // die;
-       
+        //die;
+
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -373,21 +376,27 @@ class ProfessionalController extends Controller
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Profissional</h3>
                 <p> <strong>Profissional:</strong> $professional->name </p>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-            
+
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
             <table>
-            
+
             <tr>
                 <th style='width: 33%; text-align:left;'>Data</th>
                 <th style='width: 33%; text-align:left;'>Tipo</th>
                 <th style='width: 33%; text-align:left;'>Descrição</th>
                 <th style='width: 30%; text-align:left;'>Paciente</th>
-                
+
             </tr>
         ";
         foreach ($event_logs as $event_log) {
+            if (($event_log->id_patient != null)) {
+                $patient = $this->patientModel->get((int)$event_log->id_patient);
+                $event_log->patient_name = $patient->name;
+            } else {
+                $event_log->patient_name = " - - - - ";
+            }
             //var_dump($event_log);
             //die;
             //$event_log = $this->entityFactory->createEventLog($event_log);
@@ -397,10 +406,10 @@ class ProfessionalController extends Controller
                 <td style='width: 20%; text-align:left;'>$event_log->date</td>
                 <td style='width: 30%; text-align:left;'>$event_log->event_log_types_name</td>
                 <td style='width: 50%; text-align:left;'>$event_log->description</td>
-                <td style='width: 30%; text-align:left;'>$event_log->users_name</td>
-            
+                <td style='width: 30%; text-align:left;'>$event_log->patient_name</td>
+
             </tr> ";
-            
+
         }
         $html .= "</table> </div>";
         try {
@@ -410,7 +419,7 @@ class ProfessionalController extends Controller
             // Other code
             //header('Content-Type: application/pdf');
             $mpdf->Output( );
-              
+
         } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
             // Process the exception, log, print etc.
             echo $e->getMessage();
@@ -421,19 +430,19 @@ class ProfessionalController extends Controller
 
 
     public function export_history_attendance(Request $request, Response $response) {
-        
+
         $id = (int)$request->getQueryParams()['id'];
         //var_dump($id);
         //die;
         $params = $request->getQueryParams();
         //var_dump($params);
-        //die;    
+        //die;
         $professional_start =   $params['professional_start'];
         if ($professional_start == '') {
             $professional_start = "2000-01-01";
         }
 
-        
+
         $professional_finish =  $params['professional_finish'];
         //var_dump($params);
         //die;
@@ -446,7 +455,7 @@ class ProfessionalController extends Controller
 
         //var_dump($attendance);
          //  die;
-       
+
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -455,20 +464,20 @@ class ProfessionalController extends Controller
                 <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Profissional</h3>
                 <p> <strong>Profissional:</strong> $professional->name </p>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-            
+
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
             <table>
-            
+
             <tr>
                 <th style='width: 100px; text-align:left;'>Data / Hora</th>
                 <th style='width: 30%; text-align:left;'>Paciente</th>
                 <th style='width: 50%; text-align:left;'>Observações</th>
-                
+
             </tr>
         ";
-        foreach ($attendances as $attendance) {            
+        foreach ($attendances as $attendance) {
             //var_dump($attendance);
             if ($attendance->id_professional == (int) $id) {
               $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
@@ -481,11 +490,11 @@ class ProfessionalController extends Controller
                 <td style='width: 100px; text-align:left;'>$attendance->attendance_day</td>
                 <td style='width: 30%; text-align:left;'>$attendance->name_patient</td>
                 <td style='width: 30%; text-align:left;'>$attendance->description</td>
-            
-            </tr> ";  
+
+            </tr> ";
             }
-            
-        
+
+
     }
         $html .= "</table> </div>";
         try {
@@ -495,7 +504,7 @@ class ProfessionalController extends Controller
             // Other code
             //header('Content-Type: application/pdf');
             $mpdf->Output( );
-              
+
         } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
             // Process the exception, log, print etc.
             echo $e->getMessage();

@@ -15,7 +15,7 @@
   <div class="">
     <div class="row">
       <div class="col-xs-12 col-sm-3">
-        
+
       </div>
 
       <div class="col-sm-9">
@@ -25,7 +25,7 @@
           </div>
           <div class="card-content" style="padding-top:5px;">
             <div class="col-sm-0  ">
-              
+
             </div>
             <div class="col-sm-4">
               <div class="form-group">
@@ -66,7 +66,7 @@
        <div class="col-sm-2">
           <p class="pull-right">
 
-           
+
           </p>
         </div>
         <div class="col-sm-2">
@@ -74,7 +74,7 @@
 
             <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
           <a class="btn btn-default" id="professionals_download" name="professionals_download"  href="{{ base_url() }}/admin/professionals/export_history?id={{ professional.id }}" target="_blank">
-           
+
            {# <a class="btn btn-default" href="{{ base_url() }}/admin/professionals/export">
               <span class="glyphicon glyphicon-export" aria-hidden="true" target="_blank"></span>
             </a> #}
@@ -92,14 +92,14 @@
             <th>Data</th>
             <th>Tipo</th>
             <th>Paciente</th>
-            <th>Descrição</th>    
+            <th>Descrição</th>
           </thead>
           <tbody>
             {% for event_log in event_logs %}
               <tr>
                 <td>{{ event_log.date }}</td>
                 <td>{{ event_log.event_log_types_name }}</td>
-                <td>{{ event_log.users_name }}</td>
+                <td>{{ event_log.patient_name }}</td>
                 <td>{{ event_log.description }}</td>
               </tr>
             {% else %}

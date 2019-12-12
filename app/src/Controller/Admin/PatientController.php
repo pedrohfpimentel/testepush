@@ -462,7 +462,7 @@ class PatientController extends Controller
                 }
             }
             //var_dump($event_log);
-           // die;
+            // die;
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
             $html .="
             <tr> ";

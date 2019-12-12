@@ -468,7 +468,8 @@ class ProductsController extends Controller
         }
         $history_finish =  $params['history_finish'];
         if ($history_finish == "") {
-            $history_finish = date("Y-m-d");
+            $history_finish = date("Y-m-d",strtotime("+1 day"));
+            //var_dump($history_finish);die;
         }
         $product = $this->productsModel->get($id);
         $suppliers = $this->supplierModel->getAll();
@@ -479,7 +480,6 @@ class ProductsController extends Controller
         $contador_quantidade_total = 0;
         $event_logs = $this->eventLogModel->getByProducts2($id, $history_start, $history_finish, (int)$search);
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
-
         $html = "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -493,8 +493,8 @@ class ProductsController extends Controller
             <div style='width:100%; margin-top: 10px;'>
             <table style='width:100%;'>
                 <tr>
-                    <th style='text-align:left;'>Data de Remessa</th>
-                    <th style='text-align:left;'>Data de Cadastro</th>
+                    <th style='text-align:left;width:100px;'>Data de Remessa</th>
+                    <th style='text-align:left;width:100px;'>Data de Cadastro</th>
                     <th style='text-align:left;'>Tipo</th>
                     <th style='text-align:right;'>qtd</th>
                     <th style='text-align:left;'>Custo</th>
@@ -502,12 +502,14 @@ class ProductsController extends Controller
                 </tr>
             ";
             foreach ($event_logs as $event_log) {
+            $event_log->suppliers_name ="";
             $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
             if ($remessa_atual != null) {
                 $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
             } else {
-                $event_log->data_remessa = date("d/m/Y", strtotime($event_log->date));
+                $event_log->data_remessa = "- - - -";
             }
+            //var_dump($event_log->data_remessa);
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
             if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
             $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
@@ -553,13 +555,16 @@ class ProductsController extends Controller
                 }
                 if (($event_log->remessa_type == '4') OR ($event_log->remessa_type == '5') OR ($event_log->remessa_type == '8')) {
                     $html .="<td style='text-align:left;'>$event_log->patient_name</td>";
-                } else {
+                } else if (($event_log->remessa_type == '1') OR ($event_log->remessa_type == '2') OR ($event_log->remessa_type == '3') OR ($event_log->remessa_type == '6') OR ($event_log->remessa_type == '7')) {
                     $html .="<td style='text-align:left;'>$event_log->suppliers_name
+                    </td>";
+                } else {
+                    $html .= "<td style='text-align:left;'> - - - -
                     </td>";
                 }
             $html .= "
             </tr> ";
-        }
+        }//die;
         $html .= "</table> </div>";
         try {
             $mpdf = new \Mpdf\Mpdf();
@@ -594,8 +599,6 @@ class ProductsController extends Controller
             //var_dump($remessa_atual);die;
             if ($remessa_atual != null) {
                 $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
-            } else {
-                $event_log->data_remessa = date("d/m/Y", strtotime($event_log->date));
             }
 
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
