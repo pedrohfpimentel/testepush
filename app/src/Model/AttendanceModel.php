@@ -173,7 +173,7 @@ class AttendanceModel extends Model
 
             FROM
                 attendances
-                
+
             WHERE
                 id_professional = :id
         ";
@@ -189,7 +189,7 @@ class AttendanceModel extends Model
         $sql = "
             SELECT
                 COUNT(id) AS amount
-               
+
             FROM
                 attendances
         ";
@@ -198,21 +198,21 @@ class AttendanceModel extends Model
         return $query->fetch();
     }
 
-    
+
 
     public function getAttendancesDownload($attendance_start, $attendance_finish)
     {
         $sql = "
-        SELECT 
+        SELECT
             attendances.*,
-            (SELECT users.name 
-            FROM users 
-            LEFT JOIN 
+            (SELECT users.name
+            FROM users
+            LEFT JOIN
                 patients ON patients.id_user = users.id
             WHERE users.id = patients.id_user) AS patient_name,
-            (SELECT users.name 
-            FROM users 
-            LEFT JOIN 
+            (SELECT users.name
+            FROM users
+            LEFT JOIN
                 professionals ON professionals.id_user = users.id
             WHERE users.id = professionals.id_user) AS professional_name
         FROM `attendances`
@@ -229,22 +229,28 @@ class AttendanceModel extends Model
 
 
 
-    public function getAllByDate(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getAllByDate(string $start, string $finish, $search, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
-        SELECT 
+        SELECT
             attendances.*
-            
-        FROM `attendances`
-        
-        WHERE 
-           attendances.attendance_day BETWEEN ? AND ?
-        ORDER BY
-            attendances.attendance_day ASC
-        LIMIT ? , ?
 
-        
-    ";
+        FROM `attendances`
+
+        WHERE
+           attendances.attendance_day BETWEEN ? AND ? ";
+
+        if ($search == 1) {
+                $sql .="ORDER BY
+                    attendances.attendance_day ASC
+                LIMIT ? , ?";
+            }
+        if ($search == 2) {
+            $sql .="ORDER BY
+                        attendances.attendance_day DESC
+                    LIMIT ? , ?";
+        }
+
     $query = $this->db->prepare($sql);
     $query->bindValue(1, $start, \PDO::PARAM_STR);
     $query->bindValue(2, $finish, \PDO::PARAM_STR);
@@ -271,7 +277,7 @@ class AttendanceModel extends Model
                 attendance_hour     = :attendance_hour,
                 description         = :description,
                 status              = :status
-                
+
             WHERE
                 id = :id
         ";
@@ -295,7 +301,7 @@ class AttendanceModel extends Model
                 attendances
             SET
                 status          = :status
-                
+
             WHERE
                 id = :id
         ";

@@ -108,7 +108,7 @@ class EventLogModel extends Model
         return $query->fetchAll();
     }
 
-    public function getByPatient(int $id)
+    public function getByPatientExport(int $id, string $start, string $finish, int $search)
     {
         $sql = "
             SELECT
@@ -141,11 +141,62 @@ class EventLogModel extends Model
 
                 LEFT JOIN users ON patients.id_user = users.id
             WHERE
-                id_patient = :id
+                id_patient = :id AND (event_logs.date BETWEEN :start AND :finish) ";
+            if ($search == 1) {
+                $sql .="ORDER BY event_logs.date ASC";
+            }
+            if ($search == 2) {
+                $sql .="ORDER BY event_logs.date DESC";
+            }
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id, ':start' => $start, ':finish' => $finish];
+        $query->execute($parameters);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
+        return $query->fetchAll();
+    }
 
+    public function getByPatient(int $id, int $search)
+    {
+        $sql = "
+            SELECT
+                event_logs.id as id,
+                event_logs.event_log_type,
+                event_logs.id_patient,
+                event_logs.suppliers,
+                event_logs.id_products,
+                event_logs.id_professional,
+                event_logs.id_remessa,
+                event_logs.id_remessa_saida,
+                event_logs.date,
+                event_logs.time,
+                event_logs.description,
+                event_logs.product_list,
+                event_logs.id_attendance,
+                event_log_types.id as event_log_types_id,
+                event_log_types.slug as event_log_types_slug,
+                event_log_types.name as event_log_types_name,
+                event_log_types.description as event_log_types_description,
+                patients.id as patients_id,
+                patients.id_user as patients_id_user,
+                users.name as users_name,
+                users.email as users_email
 
-        ";
+            FROM
+                event_logs
+                LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
+                LEFT JOIN patients ON patients.id = event_logs.id_patient
 
+                LEFT JOIN users ON patients.id_user = users.id
+            WHERE
+                id_patient = :id ";
+            if ($search == 1) {
+                $sql .="ORDER BY
+                 event_logs.date ASC";
+            }
+            if ($search == 2) {
+                $sql .="ORDER BY
+                 event_logs.date DESC";
+            }
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $query->execute($parameters);
@@ -373,7 +424,7 @@ class EventLogModel extends Model
         return $query->fetchAll();
     }
 
-    public function getByProfessional(int $id)
+    public function getByProfessional(int $id, int $search)
     {
        $sql = "
             SELECT
@@ -403,8 +454,16 @@ class EventLogModel extends Model
                 LEFT JOIN professionals ON professionals.id = event_logs.id_professional
                 LEFT JOIN users ON professionals.id_user = users.id
             WHERE
-                id_professional = :id
-        ";
+                id_professional = :id ";
+                if ($search == 1) {
+                $sql .="ORDER BY
+                 event_logs.date ASC";
+            }
+            if ($search == 2) {
+                $sql .="ORDER BY
+                 event_logs.date DESC";
+            }
+
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $query->execute($parameters);
@@ -414,7 +473,7 @@ class EventLogModel extends Model
 
 
 
-    public function getByProfessionalNamePatient(int $id)
+    public function getByProfessionalNamePatient(int $id, string $start, string $finish, int $search)
     {
        $sql = "
             SELECT
@@ -448,10 +507,16 @@ class EventLogModel extends Model
                 LEFT JOIN users ON patients.id_user = users.id
 
             WHERE
-                id_professional = :id
+                id_professional = :id AND (event_logs.date BETWEEN :start AND :finish)
         ";
+        if ($search == 1) {
+                $sql .="ORDER BY event_logs.date ASC";
+            }
+            if ($search == 2) {
+                $sql .="ORDER BY event_logs.date DESC";
+            }
         $query = $this->db->prepare($sql);
-        $parameters = [':id' => $id];
+        $parameters = [':id' => $id, ':start' => $start, ':finish' => $finish];
         $query->execute($parameters);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
         return $query->fetchAll();

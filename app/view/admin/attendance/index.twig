@@ -19,33 +19,31 @@
         </a>
       </div>
 
-      <div class="col-sm-9">
+      <div class="col-sm-9 pull-right">
         <div class="card">
           <div class="card-header" data-background-color="purple">
-            Relatório
+            Relatórios
           </div>
           <div class="card-content" style="padding-top:5px;">
-            <div class="col-sm-2">
-              
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3" style="padding-left:0px;">
               <div class="form-group">
                 <label for="attendance_name">Data Inicial</label>
                 <input id="attendance_start" class="form-control" type="date" name="attendance_start" required>
               </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3"  style="padding-left:0px;">
               <div class="form-group">
                 <label for="attendance_name">Data Final</label>
                 <input id="attendance_finish" class="form-control" type="date" name="attendance_finish" value="{{ today }}"  required>
               </div>
             </div>
-            <div class="col-sm-2">
-              <div class="form-group">
+            <div class="col-sm-6"  style="padding-left:0px;">
+              <div class="form-group pull-right">
                 <a class="btn btn-default" id="attendance_download" name="attendance_download"  href="{{ base_url() }}/admin/attendances/export" target="_blank">
                   <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-                  Relatório
+                  Exportar Relatório
                 </a>
+
               </div>
             </div>
           </div>
@@ -80,14 +78,14 @@
 
               <tbody>
                 {% for attendance in attendances %}
-                  
+
                   <tr>
                     <td>{{ attendance.id }}</td>
                     <td>{{ attendance.attendance_day }} {{ attendance.attendance_hour }} </td>
                     <td>{{ attendance.professional_name }}</td>
                     <td>{{ attendance.patient_name }}</td>
                     <td>{{ attendance.name_status }}</td>
-                  
+
                     <td style="width:80px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">
                       Detalhes
                     </a></td>

@@ -34,6 +34,7 @@ $app->group('/admin', function () {
     $this->group('/attendances', function() {
         $this->get('[/]', AttendanceAdmin::class . ':index');
          $this->get('/export', AttendanceAdmin::class . ':export');
+         $this->get('/export_data', AttendanceAdmin::class . ':export_data');
          $this->get('/export_history', AttendanceAdmin::class . ':export_history');
         $this->get('/{id:[0-9]+}', AttendanceAdmin::class . ':view');
         $this->map(['GET', 'POST'], '/add', AttendanceAdmin::class . ':add');
@@ -54,6 +55,7 @@ $app->group('/admin', function () {
         $this->get('[/]', PatientAdmin::class . ':index');
         $this->get('/export', PatientAdmin::class . ':export');
         $this->get('/export_history', PatientAdmin::class . ':export_history');
+        $this->get('/export_history_attendance', PatientAdmin::class . ':export_history_attendance');
         $this->map(['GET', 'POST'], '/add', PatientAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', PatientAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', PatientAdmin::class . ':edit');
@@ -76,6 +78,7 @@ $app->group('/admin', function () {
         $this->get('[/]', ProductsAdmin::class . ':index');
         $this->get('/export', ProductsAdmin::class . ':export');
         $this->get('/export_history', ProductsAdmin::class . ':export_history');
+        $this->get('/export_history_remessa', ProductsAdmin::class . ':export_history_remessa');
         $this->map(['GET', 'POST'], '/add', ProductsAdmin::class . ':add');
         $this->get('/remove/{id:[0-9]+}', ProductsAdmin::class . ':delete');
         $this->get('/edit/{id:[0-9]+}', ProductsAdmin::class . ':edit');
@@ -131,11 +134,11 @@ $app->group('/admin', function () {
         $this->get('/export', RemessaAdmin::class . ':export');
         $this->get('/export_history', RemessaAdmin::class . ':export_history');
         $this->get('/{id:[0-9]+}', RemessaAdmin::class . ':view');
-        $this->get('/consulta_produto', RemessaAdmin::class . ':consulta_produto'); 
-        $this->get('/consulta_suppliers', RemessaAdmin::class . ':consulta_suppliers'); 
+        $this->get('/consulta_produto', RemessaAdmin::class . ':consulta_produto');
+        $this->get('/consulta_suppliers', RemessaAdmin::class . ':consulta_suppliers');
         $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
         $this->map(['GET', 'POST'], '/update', RemessaAdmin::class . ':update');
-        
+
     });
 
     $this->group('/remessa_saida', function () {
@@ -143,11 +146,11 @@ $app->group('/admin', function () {
         $this->get('/export', RemessaSaidaAdmin::class . ':export');
         $this->get('/export_history', RemessaSaidaAdmin::class . ':export_history');
         $this->get('/{id:[0-9]+}', RemessaSaidaAdmin::class . ':view');
-        $this->get('/consulta_produto', RemessaSaidaAdmin::class . ':consulta_produto'); 
-        $this->get('/consulta_suppliers', RemessaSaidaAdmin::class . ':consulta_suppliers'); 
+        $this->get('/consulta_produto', RemessaSaidaAdmin::class . ':consulta_produto');
+        $this->get('/consulta_suppliers', RemessaSaidaAdmin::class . ':consulta_suppliers');
         $this->map(['GET', 'POST'], '/add', RemessaSaidaAdmin::class . ':add');
         $this->map(['GET', 'POST'], '/update', RemessaSaidaAdmin::class . ':update');
-        
+
     });
 
 

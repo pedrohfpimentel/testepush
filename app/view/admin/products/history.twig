@@ -10,36 +10,42 @@
 </ol>
 {% endblock %}
 {% block content %}
-<div class="col-sm-9 pull-right">
-  <div class="card">
-    <div class="card-header" data-background-color="purple">
-      Relatório
-    </div>
-    <div class="card-content pull-right" style="padding-top:5px;">
-      <div class="col-sm-4">
-        <div class="form-group">
-          <label for="history_date">Data Inicial</label>
-          <input id="history_start" class="form-control" type="date" name="history_start" required>
-        </div>
+<div class="row">
+  <div class="col-xs-12 col-sm-2">
+  </div>
+  <div class="col-sm-10">
+    <div class="card">
+      <div class="card-header" data-background-color="purple">
+        Relatórios
       </div>
-      <div class="col-sm-4">
-        <div class="form-group">
-          <label for="history_date">Data Final</label>
-          <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
+      <div class="card-content" style="padding-top:5px;">
+        <div class="col-sm-3" style="padding-left:0px;">
+          <div class="form-group">
+            <label for="history_date">Data Inicial</label>
+            <input id="history_start" class="form-control" type="date" name="history_start" required>
+          </div>
         </div>
-      </div>
-      <div class="col-sm-3">
-        <div class="form-group">
-          <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-          <a class="btn btn-default" id="products_download" name="products_download"  href="{{ base_url() }}/admin/products/export_history?id={{ products.id }}"  target="_blank">
-
-              Exportar Relatório
-            </a>
+        <div class="col-sm-3" style="padding-left:0px;">
+          <div class="form-group">
+            <label for="history_date">Data Final</label>
+            <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
+          </div>
+        </div>
+        <div class="col-sm-6" style="padding:0px;">
+          <div class="form-group pull-right">
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            <a class="btn btn-default" id="products_download_remessa" name="products_download_remessa"  href="{{ base_url() }}/admin/products/export_history_remessa?id={{ products.id }}"  target="_blank">
+                Relatório Remessa
+              </a>
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            <a class="btn btn-default" id="products_download" name="products_download"  href="{{ base_url() }}/admin/products/export_history?id={{ products.id }}"  target="_blank">
+                Relatório Geral
+              </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 <div class="row">
   <div class="col-sm-12">
@@ -64,7 +70,7 @@
                 </a>
 
             </div>
-          </div>
+        </div>
       </div>
     </div>
     <div class="card-content">
@@ -119,16 +125,10 @@
     </div>
   </div>
 </div>
-
-
-
 {% endblock %}
 {% block javascripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
-
 <script src="{{ base_url() }}/js/jquery.mask.js"></script>
-
-
 <script type="text/javascript">
 
 $('#inputCpf').mask('000.000.000-00', {reverse: true});
@@ -145,6 +145,17 @@ $('#inputCep').mask('00000-000');
 
       console.log($('#products_download').attr('href'));
       $("#products_download").attr('href',   base_url_hidden +'/admin/products/export_history?id={{ products.id }}' + '&history_start=' + history_start + '&history_finish=' + history_finish +'&search=' + search);
+  });
+
+  $("#products_download_remessa").click(function(){
+   // console.log('teste');
+  var history_start = $('#history_start').val();
+  var history_finish =$('#history_finish').val();
+  var base_url_hidden =$('#base_url_hidden').val();
+  var search = $('#search').val();
+
+      console.log($('#products_download_remessa').attr('href'));
+      $("#products_download_remessa").attr('href',   base_url_hidden +'/admin/products/export_history_remessa?id={{ products.id }}' + '&history_start=' + history_start + '&history_finish=' + history_finish +'&search=' + search);
   });
 
   $("#search_btn").click(function(){

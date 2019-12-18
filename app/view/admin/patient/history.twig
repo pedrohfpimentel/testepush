@@ -10,24 +10,64 @@
 </ol>
 {% endblock %}
 {% block content %}
+<div class="col-sm-10 pull-right">
+  <div class="card">
+    <div class="card-header" data-background-color="purple">
+      Relatórios
+    </div>
+    <div class="card-content" style="padding-top:5px;">
+      <div class="col-sm-3" style="padding-left:0px;">
+        <div class="form-group">
+          <label for="history_date">Data Inicial</label>
+          <input id="history_start" class="form-control" type="date" name="history_start" required>
+        </div>
+      </div>
+      <div class="col-sm-3" style="padding-left:0px;">
+        <div class="form-group">
+          <label for="history_date">Data Final</label>
+          <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
+        </div>
+      </div>
+      <div class="col-sm-6" style="padding:0px;">
+          <p class="form-group">
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            <a class="btn btn-default" id="patients_download_att" name="patients_download_att"  href="{{ base_url() }}/admin/patients/export_history_attendance"  target="_blank">
+
+              Relatório de Atendimentos
+            </a>
+
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}"  target="_blank">
+
+                Relatório Geral
+            </a>
+          </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-sm-12">
     <div class="card">
   <div class="card-header" data-background-color="blue">
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-7">
         <h3>Histórico de Paciente - {{ patient.name }}</h3>
       </div>
-      <div class="col-sm-4">
-          <p class="pull-right">
-          <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-          <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}"  target="_blank">
-
-              Exportar Relatório
+      <div class="col-sm-5">
+        <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
+          <label for="id_status" style="color: #ffff">Ordenar</label>
+          <select name="search" id="search" style="border-radius: 5px; color: #444">
+            <option value="1" {% if search == '1' %} selected {% endif %}>Cadastro - Crescente</option>
+            <option value="2" {% if search == '2' %} selected {% endif %}>Cadastro - Descrescente</option>
+          </select>
+            <a class="btn btn-primary" href="" id="search_btn">
+              <i class="material-icons">search</i>
             </a>
-
-          </p>
         </div>
+      </div>
     </div>
   </div>
   <div class="card-content">
@@ -47,7 +87,7 @@
                 {% if event_log.id_remessa != false %}
                   <td><center>{{ event_log.data_remessa }}</center></td>
                   {% elseif event_log.id_professional != false%}
-                    <td><center>{{ event_log.attendance_date|date("m/d/Y") }}</center></td>
+                    <td><center>{{ event_log.attendance_date|date("d/m/Y") }}</center></td>
                   {% else %}
                     <td><center>- - - -</center></td>
                 {% endif %}
@@ -74,9 +114,6 @@
 </div>
   </div>
 </div>
-
-
-
 {% endblock %}
 {% block javascripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
@@ -89,5 +126,35 @@
 $('#inputCpf').mask('000.000.000-00', {reverse: true});
 $('#inputCep').mask('00000-000');
 </script>
+
+<script type="text/javascript">
+  $("#patients_download").click(function(){
+   // console.log('teste');
+  var history_start = $('#history_start').val();
+  var history_finish =$('#history_finish').val();
+  var base_url_hidden =$('#base_url_hidden').val();
+  var search = $('#search').val();
+
+      console.log($('#patients_download').attr('href'));
+      $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export_history?id={{ patient.patient_id }}' + '&history_start=' + history_start + '&history_finish=' + history_finish +'&search=' + search);
+  });
+
+  $("#patients_download_att").click(function(){
+   // console.log('teste');
+  var history_start = $('#history_start').val();
+  var history_finish =$('#history_finish').val();
+  var base_url_hidden =$('#base_url_hidden').val();
+  var search = $('#search').val();
+
+      $("#patients_download_att").attr('href',   base_url_hidden +'/admin/patients/export_history_attendance?id={{ patient.patient_id }}' + '&history_start=' + history_start + '&history_finish=' + history_finish +'&search=' + search);
+  });
+
+  $("#search_btn").click(function(){
+      var search = $('#search').val();
+      $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients/history/{{ patient.patient_id }}?search=' + search);
+    });
+
+
+  </script>
 
 {% endblock %}

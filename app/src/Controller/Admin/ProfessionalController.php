@@ -239,9 +239,10 @@ class ProfessionalController extends Controller
 
     public function history(Request $request, Response $response, array $args): Response {
         $id = intval($args['id']);
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
         $professional = $this->professionalModel->get($id);
 
-        $event_logs = $this->eventLogModel->getByProfessional($id);
+        $event_logs = $this->eventLogModel->getByProfessional((int)$id,(int)$search);
         ///var_dump($event_logs);
         //die;
         foreach ($event_logs as $event_log) {
@@ -257,7 +258,7 @@ class ProfessionalController extends Controller
             $event_log->date = date("d/m/Y h:m", strtotime($event_log->date));
         }
 
-        return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,'event_logs' => $event_logs]);
+        return $this->view->render($response, 'admin/professional/history.twig', ['professional' => $professional,'event_logs' => $event_logs, 'search' => $search]);
     }
 
     //download
@@ -278,15 +279,9 @@ class ProfessionalController extends Controller
         }
             //var_dump($professionals);
             //die;*/
-
-
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
         $professionals = $this->professionalModel->getAll();
-            //var_dump($professionals);
-            //die;
-
-
             $dir = getcwd();
-
       $html = "
       <div style='width: 24%; float:left;'>
         <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -295,12 +290,10 @@ class ProfessionalController extends Controller
         <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
         <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Profissionais Cadastrados</h3>
         <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-
       </div>
       <hr>
       <div style='width:100%; margin-top: 10px;'>
       <table>
-
             <tr>
                 <th style='width: 25%; text-align:left;'>Nome</th>
                 <th style='width: 25%; text-align:left;'>Email</th>
@@ -312,7 +305,6 @@ class ProfessionalController extends Controller
                 <th style='width: 20%; text-align:left;'>Categoria</th>
             </tr>
         ";
-
         /* foreach ($professionals as $professional) {
             //var_dump($professional);
             //die;
@@ -323,23 +315,17 @@ class ProfessionalController extends Controller
         }
             //var_dump( $professional);
             //die;*/
-
         foreach ($professionals as $professional) {
             //var_dump( $professional);
             $professional = $this->entityFactory->createProfessional($professional);
-
             $html .= "
             <tr>
             <td style='width: 25%; text-align:left;'>$professional->name</td>
             <td style='width: 25%; text-align:left;'>$professional->email</td>
-
-
             <td style='width:  5%; text-align:left;'>$professional->tel_area</td>
             <td style='width: 15%; text-align:left;'>$professional->tel_numero</td>
             <td style='width: 10%; text-align:left;'>$professional->end_cep</td>
             <td style='width: 20%; text-align:left;'>$professional->professional_type_name</td>
-
-
             </tr>";
         }
         //die;
@@ -362,10 +348,21 @@ class ProfessionalController extends Controller
 
     public function export_history(Request $request, Response $response) {
         $id = (int)$request->getQueryParams()['id'];
+        $params = $request->getQueryParams();
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+        $history_start =   $params['professional_start'];
+        if ($history_start == "") {
+          $history_start = "2000-01-01";
+        }
+        $history_finish =  $params['professional_finish'];
+        if ($history_finish == "") {
+            $history_finish = date("Y-m-d",strtotime("+1 day"));
+            //var_dump($history_finish);die;
+        }
         $professional = $this->professionalModel->get($id);
-        $event_logs = $this->eventLogModel->getByProfessionalNamePatient($id);
+        $event_logs = $this->eventLogModel->getByProfessionalNamePatient((int)$id, $history_start, $history_finish,  (int)$search);
         $patients = $this->patientModel->getAll();
-        //var_dump($event_logs);
+        //var_dump($params);
         //die;
 
         $html = "
@@ -432,27 +429,26 @@ class ProfessionalController extends Controller
     public function export_history_attendance(Request $request, Response $response) {
 
         $id = (int)$request->getQueryParams()['id'];
-        //var_dump($id);
-        //die;
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+
         $params = $request->getQueryParams();
-        //var_dump($params);
-        //die;
+
         $professional_start =   $params['professional_start'];
         if ($professional_start == '') {
             $professional_start = "2000-01-01";
         }
 
-
         $professional_finish =  $params['professional_finish'];
-        //var_dump($params);
-        //die;
+        if ($professional_finish == "") {
+            $professional_finish = date("Y-m-d",strtotime("+1 day"));
+        }
         $patients = $this->patientModel->getAll();
-        $attendances = $this->attendanceModel->getAllByDate($professional_start, $professional_finish);
+        $attendances = $this->attendanceModel->getAllByDate($professional_start, $professional_finish, $search);
         //var_dump($attendances);
         //die;
         $professional = $this->professionalModel->get($id);
-        $event_logs = $this->eventLogModel->getByProfessional($id);
-
+        $event_logs = $this->eventLogModel->getByProfessional((int)$id, (int)$search);
+        //var_dump($event_logs);die;
         //var_dump($attendance);
          //  die;
 
@@ -461,7 +457,7 @@ class ProfessionalController extends Controller
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
             <div style='width: 75%;'>
-                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro do Profissional</h3>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro de Atendimentos do Profissional</h3>
                 <p> <strong>Profissional:</strong> $professional->name </p>
                 <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
 

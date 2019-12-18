@@ -193,56 +193,31 @@ class AttendanceController extends Controller
     //}
 }
 
-
-
-
-
-
-
     //download
     public function export(Request $request, Response $response)
     {
         $params = $request->getQueryParams();
-
-
         $attendance_start =   $params['attendance_start'];
         if ($attendance_start == '') {
             $attendance_start = "2000-01-01";
         }
-
-
         $attendance_finish =  $params['attendance_finish'];
-
        // if ($patients_status == 0) {
-
-        $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish);
-
+        $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish, 1);
         $professionals = $this->professionalModel->getAll();
-
         $patients = $this->patientModel->getAll();
-
-
         foreach ($attendances as $attendance) {
-
             foreach($professionals as $professional) {
                 if ($professional['id'] == $attendance->id_professional) {
-
                     $attendance->name_professional = $professional['name'];
                 }
             }
-
             foreach ($patients as $patient) {
                 if ($patient->id == $attendance->id_patient) {
                     $attendance->name_patient = $patient->name;
                 }
             }
         }
-
-
-       // } else {
-         //   $patients = $this->patientModel->getAllByStatus($patients_status, $attendance_start, $attendance_finish);
-        //}
-
       $html = "
       <div style='width: 24%; float:left;'>
         <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
@@ -251,7 +226,6 @@ class AttendanceController extends Controller
         <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
         <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Atendimentos</h3>
         <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-
       </div>
       <hr>
       <div style='width:100%; margin-top: 10px;'>
@@ -281,8 +255,6 @@ class AttendanceController extends Controller
             <td style='width: 20%;'>$attendance->name_patient</td>
             <td style='width: 20%;'>$attendance->name_professional</td>
             <td style='width: 30%;'>$attendance->description</td>
-
-
             </tr>";
         }
 
@@ -302,15 +274,86 @@ class AttendanceController extends Controller
         die;
     }
 
+    //download
+    public function export_data(Request $request, Response $response)
+    {
+        $params = $request->getQueryParams();
+        $attendance_start =   $params['attendance_start'];
+        if ($attendance_start == '') {
+            $attendance_start = "2000-01-01";
+        }
+        $attendance_finish =  $params['attendance_finish'];
+       // if ($patients_status == 0) {
+        $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish, 1);
+        $professionals = $this->professionalModel->getAll();
+        $patients = $this->patientModel->getAll();
+        foreach ($attendances as $attendance) {
+            foreach($professionals as $professional) {
+                if ($professional['id'] == $attendance->id_professional) {
+                    $attendance->name_professional = $professional['name'];
+                }
+            }
+            foreach ($patients as $patient) {
+                if ($patient->id == $attendance->id_patient) {
+                    $attendance->name_patient = $patient->name;
+                }
+            }
+        }
+      $html = "
+      <div style='width: 24%; float:left;'>
+        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+      </div>
+      <div style='width: 75%;'>
+        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Atendimentos</h3>
+        <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
+      </div>
+      <hr>
+      <div style='width:100%; margin-top: 10px;'>
+      <table>
 
+            <tr>
+                <th style='width: 10%;'>Data do Atendimento</th>
+                <th style='width: 10%;'>Hora</th>
+                <th style='width: 25%;'>Paciente</th>
+                <th style='width: 25%;'>Profissional</th>
+                <th style='width: 30%;'>Observações</th>
 
+            </tr>
+        ";
+        //var_dump( $attendances);
+         //   die;
+         foreach ($attendances as $attendance) {
 
+            if ($attendance->attendance_day != "") {
+                $attendance->attendance_day = date('d/m/Y', strtotime($attendance->attendance_day));
+            }
 
+            $html .= "
+            <tr>
+            <td style='width: 15%;'>$attendance->attendance_day</td>
+            <td style='width: 15%;'>$attendance->attendance_hour</td>
+            <td style='width: 20%;'>$attendance->name_patient</td>
+            <td style='width: 20%;'>$attendance->name_professional</td>
+            <td style='width: 30%;'>$attendance->description</td>
+            </tr>";
+        }
 
-
-
-
-
+        $html .= "</table> </div>";
+        //var_dump($html);
+        //die;
+    try {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;
+    }
 
     public function history (Request $request, Response $response, array $args)
     {

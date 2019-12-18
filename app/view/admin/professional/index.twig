@@ -27,9 +27,9 @@
         </div>
         <div class="card-content" style="padding-top:5px;">
           <div class="col-sm-10">
-            <div class="form-group">              
+            <div class="form-group">
             </div>
-          </div>           
+          </div>
           <div class="col-sm-2">
             <div class="form-group">
               <a class="btn btn-default" id="professionals_download" name="professionals_download"  href="{{ base_url() }}/admin/professionals/export" target="_blank">
@@ -58,11 +58,11 @@
                 <option value="2" {% if search == '2' %} selected {% endif %}>Inativo</option>
                 <option value="3" {% if search == '3' %} selected {% endif %}>Todos</option>
               </select>
-              
+
                 <a class="btn btn-primary" href="" id="search_btn">
                   <i class="material-icons">search</i>
                 </a>
-              
+
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
             </ul>
           </div>
         </div>
-        
+
       </div>
     </div>
 </div>
@@ -132,7 +132,7 @@
 
       var base_url_hidden =$('#base_url_hidden').val();
       //var professional_status = $('#professional_status').val();
-      
+
       //console.log($('#professionals_download').attr('href'));
       $("#professionals_download").attr('href',   base_url_hidden +'/admin/professionals/export?');
     });

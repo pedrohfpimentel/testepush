@@ -401,10 +401,25 @@ class PatientController extends Controller
     public function export_history(Request $request, Response $response) {
 
         $id = (int)$request->getQueryParams()['id'];
-        //var_dump($id);
+        $params = $request->getQueryParams();
+        //var_dump($params);die;
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+
+        $history_start =   $params['history_start'];
+        if ($history_start == "") {
+          $history_start = "2000-01-01";
+        }
+        $history_finish =  $params['history_finish'];
+        if ($history_finish == "") {
+            $history_finish = date("Y-m-d",strtotime("+1 day"));
+            //var_dump($history_finish);die;
+        }
+        //var_dump($params);
         //die;
         $patient = $this->patientModel->get($id);
-        $event_logs = $this->eventLogModel->getByPatient($id);
+        $event_logs = $this->eventLogModel->getByPatientExport((int)$id, $history_start, $history_finish, (int)$search);
+        //var_dump($event_logs);
+        //die;
         $products_remessa = $this->produtoRemessaModel->getAll();
         $professionals = $this->professionalModel->getAll();
 
@@ -484,8 +499,12 @@ class PatientController extends Controller
                 $html .=" <td style='width: 33%; text-align:right;'>$event_log->product_name</td>
             </tr> ";
             }
-            if (($event_log->id_professional) != NULL) {
+            else if (($event_log->id_professional) != NULL) {
                 $html .=" <td style='width: 33%; text-align:right;'>$event_log->professional_name</td>
+            </tr> ";
+            }
+            else {
+                $html .=" <td style='width: 33%; text-align:right;'>- - - -
             </tr> ";
             }
         }
@@ -504,12 +523,92 @@ class PatientController extends Controller
         return  $response->withHeader('Content-Type', 'application/pdf');
     }
 
+
+    public function export_history_attendance(Request $request, Response $response) {
+        $id = (int)$request->getQueryParams()['id'];
+        $params = $request->getQueryParams();
+        //var_dump($params);die;
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+
+        $history_start =   $params['history_start'];
+        if ($history_start == "") {
+          $history_start = "2000-01-01";
+        }
+        $history_finish =  $params['history_finish'];
+        if ($history_finish == "") {
+            $history_finish = date("Y-m-d",strtotime("+1 day"));
+        }
+
+        $professionals = $this->professionalModel->getAll();
+        $attendances = $this->attendanceModel->getAllByDate($history_start, $history_finish, $search);
+        $patient = $this->patientModel->get($id);
+        $event_logs = $this->eventLogModel->getByPatient((int)$id, (int)$search);
+
+        $html = "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Registro de Atendimentos do Paciente</h3>
+                <p> <strong>Paciente:</strong> $patient->name </p>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
+
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            <table>
+
+            <tr>
+                <th style='width: 20%; text-align:left;'>Data de Atendimento</th>
+                <th style='width: 25%; text-align:left;'>Profissional</th>
+                <th style='width: 25%; text-align:left;'>Descrição</th>
+
+            </tr>
+        ";
+
+        foreach ($attendances as $attendance) {
+            //var_dump($attendance);die;
+            if ($attendance->id_patient == ((int) $id)) {
+              $attendance->name_professional =  $this->professionalModel->get((int)$attendance->id_professional)->name;
+
+             if ($attendance->attendance_day != "") {
+                $attendance->attendance_day = date('d/m/Y', strtotime($attendance->attendance_day));
+            }
+            //var_dump($attendances);die;
+            $html .="
+            <tr>
+                <td style='width: 100px; text-align:left;'>$attendance->attendance_day</td>
+                <td style='width: 30%; text-align:left;'>$attendance->name_professional</td>
+                <td style='width: 30%; text-align:left;'>$attendance->description</td>
+
+            </tr> ";
+            }
+        }
+
+        $html .= "</table> </div>";
+        try {
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->setFooter('{PAGENO}');
+            $mpdf->WriteHTML($html);
+            // Other code
+            //header('Content-Type: application/pdf');
+            $mpdf->Output( );
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+            // Process the exception, log, print etc.
+            echo $e->getMessage();
+        }
+        return  $response->withHeader('Content-Type', 'application/pdf');
+    }
+
     public function history (Request $request, Response $response, array $args)
     {
         $id = intval($args['id']);
+        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
         $patient = $this->patientModel->get($id);
-        $event_logs = $this->eventLogModel->getByPatient($id);
+        $event_logs = $this->eventLogModel->getByPatient($id,(int)$search);
         $products_remessa = $this->produtoRemessaModel->getAll();
+        $name_product = "";
+        $professional_name = "";
         foreach ($event_logs as $event_log) {
             $event_log->product_name = "";
             if (($event_log->id_remessa) != NULL) {
@@ -548,7 +647,9 @@ class PatientController extends Controller
             'products_remessa' => $products_remessa,
             'name_product' => $name_product,
             'professional_name' => $professional_name,
-            'event_logs' => $event_logs]);
+            'event_logs' => $event_logs,
+            'search' => $search
+        ]);
     }
     public function update(Request $request, Response $response): Response
     {
