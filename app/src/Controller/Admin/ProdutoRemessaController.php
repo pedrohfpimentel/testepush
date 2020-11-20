@@ -84,9 +84,9 @@ class ProdutoRemessaController extends Controller
 
     public function delete(Request $request, Response $response, array $args): Response
     {
-         $id = intval($args['id']);
+        $id = intval($args['id']);
         $var = $this->produtoRemessaModel->delete($id);
-      
+        
         return $response->withJson($var);
     }
 

@@ -84,13 +84,22 @@
             </thead>
             <tbody>
               {% for remessas in remessa %}
-                <tr>
+                {% if remessas.removido == '1' %}
+                  <tr style="color:red">
+                {% else %}
+                  <tr>
+                {% endif %}
                   <td>
+                    
                     {% if remessas.remessa_type == 4 %}
                       {{remessas.patient_name }}
                     {% endif %}
                     {% if remessas.remessa_type == 5 %}
                       {{remessas.patient_name }}
+                    {% endif %}
+                    {% if remessas.removido == '1' %}
+                      </br>(Remessa removida)
+                    {% else %}
                     {% endif %}
                   </td>
                   <td>{{ remessas.remessa_type_name }}</td>

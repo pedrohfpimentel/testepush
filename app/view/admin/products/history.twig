@@ -53,26 +53,24 @@
       <div class="card-header" data-background-color="blue">
         <div class="row">
           <div class="col-sm-7">
-          <h3>Histórico - {{ products.name }}</h3>
-        </div>
-        <div class="col-sm-5">
-            <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
-              <label for="id_status" style="color: #ffff">Ordenar</label>
-              <select name="search" id="search" style="border-radius: 5px; color: #444">
-                <option value="1" {% if search == '1' %} selected {% endif %}>Cadastro - Crescente</option>
-                <option value="2" {% if search == '2' %} selected {% endif %}>Cadastro - Descrescente</option>
-                <option value="3" {% if search == '3' %} selected {% endif %}>Remessa - Crescente</option>
-                <option value="4" {% if search == '4' %} selected {% endif %}>Remessa - Descrescente</option>
-              </select>
-
-                <a class="btn btn-primary" href="" id="search_btn">
-                  <i class="material-icons">search</i>
-                </a>
-
-            </div>
+            <h3>Histórico - {{ products.name }}</h3>
+          </div>
+          <div class="col-sm-5">
+              <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
+                <label for="id_status" style="color: #ffff">Ordenar</label>
+                <select name="search" id="search" style="border-radius: 5px; color: #444">
+                  <option value="1" {% if search == '1' %} selected {% endif %}>Cadastro - Crescente</option>
+                  <option value="2" {% if search == '2' %} selected {% endif %}>Cadastro - Descrescente</option>
+                  <option value="3" {% if search == '3' %} selected {% endif %}>Remessa - Crescente</option>
+                  <option value="4" {% if search == '4' %} selected {% endif %}>Remessa - Descrescente</option>
+                </select>
+                  <a class="btn btn-primary" href="" id="search_btn">
+                    <i class="material-icons">search</i>
+                  </a>
+              </div>
+          </div>
         </div>
       </div>
-    </div>
     <div class="card-content">
       <div class="row">
         <div class="col-md-12">
@@ -87,11 +85,24 @@
             </thead>
             <tbody>
               {% for event_log in event_logs %}
+              
+                {% if (event_log.id_remessa != false) and (event_log.removido == '1') %}
+                <tr style="color:red">
+                {% else %}
                 <tr>
-                  {% if event_log.id_remessa != false %}
-                  <td><center>{{ event_log.data_remessa }}</center></td>{% else %}
-                    <td><center>- - - -</center></td>
                 {% endif %}
+                  {% if event_log.id_remessa != false %}
+                    <td>
+                      <center>
+                        {{ event_log.data_remessa }}
+                        {% if event_log.removido == '1' %}
+                          </br>(Remessa removida)
+                        {% else %}
+                        {% endif %}
+                      </center>
+                    </td>{% else %}
+                    <td><center>- - - -</center></td>
+                  {% endif %}
                   <td>{{ event_log.date }}</td>
                   <td>{{ event_log.event_log_types_name }}</td>
                   <td>{{ event_log.quantity }}</td>
@@ -137,7 +148,6 @@ $('#inputCep').mask('00000-000');
 
 <script type="text/javascript">
   $("#products_download").click(function(){
-   // console.log('teste');
   var history_start = $('#history_start').val();
   var history_finish =$('#history_finish').val();
   var base_url_hidden =$('#base_url_hidden').val();
@@ -148,7 +158,6 @@ $('#inputCep').mask('00000-000');
   });
 
   $("#products_download_remessa").click(function(){
-   // console.log('teste');
   var history_start = $('#history_start').val();
   var history_finish =$('#history_finish').val();
   var base_url_hidden =$('#base_url_hidden').val();
@@ -163,5 +172,4 @@ $('#inputCep').mask('00000-000');
       $("#search_btn").attr('href',   '{{ base_url() }}/admin/products/history/{{ products.id }}?search=' + search);
     });
   </script>
-
 {% endblock %}

@@ -89,9 +89,12 @@ class RemessaController extends Controller
       //var_dump($remessa_type);
       //die;
       foreach ($remessa as $remessas) {//var_dump($remessa);die;
-        if (($remessas->suppliers != NULL ) ||  ($remessas->suppliers != 0 ))
+        //die;
+        if (($remessas->suppliers != NULL ) &&  ($remessas->suppliers != 0 ))
         {
           $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+        } else {
+          $remessas->suppliers_name = "- - - - -";
         }
         $remType = (int)$remessas->remessa_type;
         if ($remType == 6) {
@@ -167,6 +170,7 @@ class RemessaController extends Controller
       $remessa['cost'] = (float) $remessa['cost'];
       $remessa['id'] = (int) $remessa['remessa_id'];
       $remessa['patient_id'] = (int) $remessa['patient_id'];
+      $remessa['removido'] = '0';
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
       $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa['id']);
       $lista_produtos =  json_encode($lista_produtos);
@@ -174,6 +178,7 @@ class RemessaController extends Controller
         $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');
         return $this->httpRedirect($request, $response, '/admin/remessa/add');
       }
+      //var_dump($remessa);die;
       $remessa = $this->entityFactory->createRemessa($remessa);
       if ( ($remessa->remessa_type == 1) || ($remessa->remessa_type == 2)) {
         $eventLog['id_remessa'] = $remessa->id;
@@ -349,49 +354,56 @@ class RemessaController extends Controller
       ";
 
       foreach ($remessa as $remessas) {
+        
         foreach($remessas->produtos_remessa as $produto_remessa) {
+          //var_dump($remessas);//die;
+          if($remessas->removido != '1'){
+            if ($remessas->remessa_type == 6) {
+              $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+              //var_dump($remessas);
 
-          if ($remessas->remessa_type == 6) {
-            $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
-            //var_dump($remessas);
-
-            $html .= "
-            <tr>
-            <td style=''>$remessas->date</td>
-            <td style=''>$produto_remessa->name_product</td>
-            <td style=''>$produto_remessa->quantity</td>
-            <td style=''>R$ ";
-            $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
-            $html .= "</td>
-            <td style=''>$remessas->patient_name</td>
-            <td style=''>$remessas->remessa_type_name</td>
-            </tr>
-            ";
-          }else if (
-            ($remessas->remessa_type == 1) ||
-            ($remessas->remessa_type == 2) ||
-            ($remessas->remessa_type == 3)) {
-            $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
-            //var_dump($remessas);
-            //die;
-            $html .= "
-            <tr>
-            <td style=''>$remessas->date</td>
-            <td style=''>$produto_remessa->name_product</td>
-            <td style=''>$produto_remessa->quantity</td>
-            <td style=''>R$ ";
-            $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
-            $html .= "</td>
-            <td style=''>$remessas->suppliers_name</td>
-            <td style=''>$remessas->remessa_type_name</td>
-
-
+              $html .= "
+              <tr>
+              <td style=''>$remessas->date</td>
+              <td style=''>$produto_remessa->name_product</td>
+              <td style=''>$produto_remessa->quantity</td>
+              <td style=''>R$ ";
+              $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
+              $html .= "</td>
+              <td style=''>$remessas->patient_name</td>
+              <td style=''>$remessas->remessa_type_name</td>
               </tr>
               ";
-          }
-        }
+            }else if (
+              ($remessas->remessa_type == 1) ||
+              ($remessas->remessa_type == 2) ||
+              ($remessas->remessa_type == 3)) {
+                if (($remessas->suppliers != NULL ) &&  ($remessas->suppliers != 0 ))
+                {
+                  $remessas->suppliers_name = $this->supplierModel->get((int)$remessas->suppliers)->name;
+                } else {
+                  $remessas->suppliers_name = "- - - - -";
+                }
+              //var_dump($remessas);
+              //die;
+              $html .= "
+              <tr>
+              <td style=''>$remessas->date</td>
+              <td style=''>$produto_remessa->name_product</td>
+              <td style=''>$produto_remessa->quantity</td>
+              <td style=''>R$ ";
+              $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
+              $html .= "</td>
+              <td style=''>$remessas->suppliers_name</td>
+              <td style=''>$remessas->remessa_type_name</td>
 
-      }
+
+                </tr>
+                ";
+            }
+          }//die;
+        }
+      }//die;
 
 
       $html .= "</table> </div>";
@@ -461,7 +473,14 @@ class RemessaController extends Controller
       if($remessa->remessa_type == 6){
         $remessa->name_patient = $this->patientModel->get((int)$remessa->patient_id)->name;
       } else {
-        $remessa->name_suppliers = $this->supplierModel->get((int)$remessa->suppliers)->name;
+        if(($remessa->suppliers != NULL) && ($remessa->suppliers != '0')){
+          
+          $remessa->name_suppliers = $this->supplierModel->get((int)$remessa->suppliers)->name;
+        } else {
+          
+        $remessa->name_suppliers = '- - - - - ';
+        }
+        //var_dump($remessa);die;
       }
       $remessa->remessa_type_name = $this->remessaTypeModel->get((int)$remessa->remessa_type)->name;
       if (!$remessa) {
@@ -470,6 +489,7 @@ class RemessaController extends Controller
       }
       // var_dump($products_remessa);
       // die;
+      //var_dump($remessa);die;
       return $this->view->render($response, 'admin/remessa/view.twig', [
         'remessa' => $remessa,
         'remessaTypes' => $remessaTypes,
@@ -480,5 +500,17 @@ class RemessaController extends Controller
         'products_remessa' => $products_remessa,
         'total_produtos' => $total_produtos
       ]);
+    }
+
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+      //$body = $request->getParsedBody();
+      $body = $args['id'];
+      //var_dump($body);die;
+      $remessa = $this->remessaModel->get((int)$body);
+      $this->remessaModel->remove((int)$body);
+      $this->flash->addMessage('success', 'Saída de estoque removida com sucesso.');
+      return $this->httpRedirect($request, $response, '/admin/remessa');
+      //var_dump($remessa);die;
     }
 }

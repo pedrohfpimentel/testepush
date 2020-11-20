@@ -11,84 +11,142 @@
 {% block content %}
 
 
-
-<div class="row">
-  <div class="col-md-12">
-    <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/update" method="POST">
-      <input type="hidden" name="id" value="{{ remessa.id }}">
-    <ul class="list-group">
-      <li class="list-group-item">Tipo de Saída: <strong>
-      <select id="selectRemessaType" name="remessa_type">
-         {% for remessaType in remessaTypes %}
-          {% if remessa.remessaTypes == remessaType.id %}
-            <option value="{{ remessaType.id }}" selected>{{ remessaType.name }}
-            </option>
-          {% else %}
-            <option value="{{ remessaType.id }}">{{ remessaType.name }}
-            </option>
-          {% endif %}
-         {% endfor %}
-       </select>
-     </strong></li>
-      <li class="list-group-item">Paciente: <strong>
-        <select id="selectPatient" name="patient_id">
-            {% for patient in patients %}
-              {% if patient.id == remessa.patient_id %}
-                <option value="{{ patient.id }}" selected>{{ patient.user_name }}
-                </option>
-              {% else %}
-                <option value="{{ patient.id }}">{{ patient.user_name }}
-                </option>
-              {% endif %}
-            {% endfor %}
-        </select>
-     </strong></li>
-      <li class="list-group-item">Data de Saída: <strong>
-        <input type="date" id="date" name="date" min="1900-01-01" max="2100-01-01" value="{{ remessa.date }}">
-        <span class="validity"></span>
-      </strong>
-      </li>
-
-    </ul>
-
-<div class="main">
-  <div class="card">
-    <div class="card-content">
-      <div class="row">
-        <div class="col-xs-12">
-          <h4>Lista de Produtos</h4>
-          <table class="table table-striped data-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Quantidade</th>
-                <th>Código Patrimonial</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for product_remessa in products_remessa %}
-                <tr>
-                  <td>{{ product_remessa.name_product }}</td>
-                  <td>{{ product_remessa.quantity }}</td>
-                  <td>{{ product_remessa.patrimony_code}} </td>
-
-
-
-
+{% if remessa.removido != 1 %}
+  <div class="row">
+    <div class="col-md-12">
+      <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/update" method="POST">
+        <input type="hidden" name="id" value="{{ remessa.id }}">
+        <ul class="list-group">
+          <li class="list-group-item">Tipo de Saída: <strong>
+            <select id="selectRemessaType" name="remessa_type">
+              {% for remessaType in remessaTypes %}
+                {% if remessa.remessa_type == remessaType.id %}
+                  <option value="{{ remessaType.id }}" selected>{{ remessaType.name }}
+                  </option>
+                {% else %}
+                  <option value="{{ remessaType.id }}">{{ remessaType.name }}
+                  </option>
+                {% endif %}
               {% endfor %}
-            </tbody>
-          </table>
+            </select>
+          </strong></li>
+            <li class="list-group-item">Paciente: <strong>
+              <select id="selectPatient" name="patient_id">
+                  {% for patient in patients %}
+                    {% if patient.id == remessa.patient_id %}
+                      <option value="{{ patient.id }}" selected>{{ patient.user_name }}
+                      </option>
+                    {% else %}
+                      <option value="{{ patient.id }}">{{ patient.user_name }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+          </strong></li>
+            <li class="list-group-item">Data de Saída: <strong>
+              <input type="date" id="date" name="date" min="1900-01-01" max="2100-01-01" value="{{ remessa.date }}">
+              <span class="validity"></span>
+            </strong>
+          </li>
+
+        </ul>
+
+        <div class="main">
+          <div class="card">
+            <div class="card-content">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Lista de Produtos</h4>
+                  <table class="table table-striped data-table">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>Quantidade</th>
+                        <th>Código Patrimonial</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for product_remessa in products_remessa %}
+                        <tr>
+                          <td>{{ product_remessa.name_product }}</td>
+                          <td>{{ product_remessa.quantity }}</td>
+                          <td>{{ product_remessa.patrimony_code}} </td>
+
+
+
+
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    </ul>
-  </div>
 
-
-<button type="submit" class="btn btn-primary">Atualizar</button>
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+        {#<form  class="col-sm-2 pull-right" role="form" style="padding-right:0px" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/remove/{{ remessa.id }}" method="POST">
+        <input type="hidden" name="id" value="{{ remessa.id }}">#}
+        <a href="{{ base_url() }}/admin/remessa_saida/remove/{{ remessa.id }}" type="submit" class="btn btn-danger pull-right"  method="POST">
+          Remover
+        </a>
+      {#</form>#}
       </form>
+      
+    </div>
+  </div>
+{% else %}
+  <div class="row">
+    <div class="col-md-12">
+        <p style="color:red;">Remessa removida</p>
+        <ul class="list-group">
+          <li class="list-group-item">Tipo de Saída: <strong>
+            {{ remessa.remessa_type_name }}
+        </strong></li>
+          <li class="list-group-item">Paciente: <strong>
+            {{ remessa.name_patient }}
+        </strong></li>
+          <li class="list-group-item">Data de Saída: <strong>
+            {{ (remessa.date)|date("d/m/Y") }}
+          </strong>
+          </li>
+
+        </ul>
+
+        <div class="main">
+          <div class="card">
+            <div class="card-content">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Lista de Produtos</h4>
+                  <table class="table table-striped data-table">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>Quantidade</th>
+                        <th>Código Patrimonial</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for product_remessa in products_remessa %}
+                        <tr>
+                          <td>{{ product_remessa.name_product }}</td>
+                          <td>{{ product_remessa.quantity }}</td>
+                          <td>{{ product_remessa.patrimony_code}} </td>
 
 
-</div>
+
+
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            </ul>
+          </div>
+
+  </div>
+{% endif %}
 
 {% endblock %}

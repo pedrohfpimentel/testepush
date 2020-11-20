@@ -16,6 +16,7 @@ class Remessa
     public $time;
     public $patrimony_code;
     public $patient_id;
+    public $removido;
 
 
     public function __construct(array $data = [])
@@ -31,6 +32,7 @@ class Remessa
         $this->time = $data['time'] ?? null;
         $this->patrimony_code = $data['patrimony_code'] ?? null;
         $this->patient_id = $data['patient_id'] ?? null;
+        $this->removido = $data['removido'] ?? null;
 
      }
 }

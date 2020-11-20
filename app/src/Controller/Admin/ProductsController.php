@@ -74,7 +74,7 @@ class ProductsController extends Controller
         foreach ($products as $product) {
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
-            //var_dump($produtos_remessa);
+            //var_dump($produtos_remessa);die;
             //armazena quantidade temporaria
             $quantidade = 0;
             $contador_remessa = 0;
@@ -84,55 +84,58 @@ class ProductsController extends Controller
             //foreach para incrementar a quantidade dos produto_remessa
             foreach($produtos_remessa as $produto_remessa) {
                 //variavel armazena remessa por id
-                $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
-               //
+                $remessa = $this->remessaModel->getRemovido((int) $produto_remessa->id_remessa);
+                //die;
                 //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '1'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
+                if ($remessa->removido != '1'){
+                    //var_dump($remessa);
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '1'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '2'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                            $contador_remessa = $contador_remessa + 1;
+                            $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                            $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                            $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
+                            $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '3'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '4'){
+                            $quantidade = $quantidade - $produto_remessa->quantity;
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '5'){
+                            $quantidade = $quantidade - $produto_remessa->quantity;
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '6'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '7'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
+                    }
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '8'){
+                            $quantidade = $quantidade - $produto_remessa->quantity;
+                        }
                     }
                 }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '2'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
-                        $contador_remessa = $contador_remessa + 1;
-                        $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
-                        $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
-                        $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
-                        $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
-                    }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '3'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
-                    }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '4'){
-                        $quantidade = $quantidade - $produto_remessa->quantity;
-                    }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '5'){
-                        $quantidade = $quantidade - $produto_remessa->quantity;
-                    }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '6'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
-                    }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '7'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
-                    }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '8'){
-                        $quantidade = $quantidade - $produto_remessa->quantity;
-                    }
-                }
-            }
+            }//die;
             $product->quantity = $quantidade;
             $custo_medio = 0;
             $custo_total = 0;
@@ -341,50 +344,53 @@ class ProductsController extends Controller
                 //variavel armazena remessa por id
                 $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
                //
+                //var_dump($remessa->removido);die;
                 //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '1'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
+                if ($remessa->removido != '1'){
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '1'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '2'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
-                        $contador_remessa = $contador_remessa + 1;
-                        $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
-                        $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
-                        $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
-                        $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '2'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                            $contador_remessa = $contador_remessa + 1;
+                            $produto_remessa->cost = str_replace(".","",$produto_remessa->cost);
+                            $float_cost = floatval(str_replace(',','.',$produto_remessa->cost));
+                            $soma_custo = $soma_custo + ((int)$produto_remessa->cost);
+                            $multiplica = $multiplica + ($produto_remessa->quantity * $float_cost);
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '3'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '3'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '4'){
-                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '4'){
+                            $quantidade = $quantidade - $produto_remessa->quantity;
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '5'){
-                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '5'){
+                            $quantidade = $quantidade - $produto_remessa->quantity;
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '6'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '6'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '7'){
-                        $quantidade = $quantidade + $produto_remessa->quantity;
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '7'){
+                            $quantidade = $quantidade + $produto_remessa->quantity;
+                        }
                     }
-                }
-                if (isset($remessa->remessa_type)) {
-                    if ($remessa->remessa_type == '8'){
-                        $quantidade = $quantidade - $produto_remessa->quantity;
+                    if (isset($remessa->remessa_type)) {
+                        if ($remessa->remessa_type == '8'){
+                            $quantidade = $quantidade - $produto_remessa->quantity;
+                        }
                     }
                 }
             }
@@ -503,69 +509,87 @@ class ProductsController extends Controller
                 </tr>
             ";
             foreach ($event_logs as $event_log) {
-            $event_log->suppliers_name ="";
-            $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
-            if ($remessa_atual != null) {
-                $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
-            } else {
-                $event_log->data_remessa = "- - - -";
-            }
-            //var_dump($event_log->data_remessa);
-            $event_log->date = date("d/m/Y", strtotime($event_log->date));
-            if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
-            $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
-            }
-            if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
-            $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
-            }
-            foreach($remessa_produtos as $remessa_produto) {
-                if ($event_log->id_remessa == $remessa_produto->id_remessa) {
-
-                    $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
-                    $type = $remessa_produto->remessa_type;
-                    if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
-                        $event_log->quantity = "+$remessa_produto->quantity";
-                        $contador_quantidade_total = $contador_quantidade_total + $remessa_produto->quantity;
-                    }
-                    if (($type == '4') || ($type == '5') || ($type == '8')) {
-                        $event_log->quantity = "-  $remessa_produto->quantity";
-                        $contador_quantidade_total = $contador_quantidade_total - $remessa_produto->quantity;
-                    }
-                }
-            }
-            if (!isset($event_log->cost)) {
-                $event_log->cost = '---';
-            }
-            if (!isset($event_log->quantity)) {
-                $event_log->quantity = '---';
-            }
-            $html .="
-            <tr>
-                <td style='text-align:left;'>$event_log->data_remessa</td>
-                <td style='text-align:left;'>$event_log->date</td>
-                <td style='text-align:left;'>$event_log->event_log_types_name</td>
-                <td style='text-align:right;'>";
-                    $html .="$event_log->quantity</td>
-                <td style='text-align:left;'>R$";
-                if ($event_log->cost == '0') {
-                    $html .= '-----';
-                } elseif ($event_log->cost == null) {
-                    $html .= '-----';
+                //var_dump($event_log);
+                $event_log->suppliers_name ="";
+                $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
+                if ($remessa_atual != null) {
+                    $event_log->removido = $remessa_atual->removido;
+                    $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
                 } else {
-                    $html .= "$event_log->cost";
+                    $event_log->removido = '0';
+                    $event_log->data_remessa = "- - - -";
+                }
+                //var_dump($event_log);
+                $event_log->date = date("d/m/Y", strtotime($event_log->date));
+                if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
+                if(($event_log->suppliers != NULL) && ($event_log->suppliers != '0')){
+                    $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+                } else {
+                    $event_log->suppliers_name = '- - - - - ';
+                }
+                //$event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
                 }
                 if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
-                    $html .="<td style='text-align:left;'>$event_log->patient_name</td>";
-                } else if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
-                    $html .="<td style='text-align:left;'>$event_log->suppliers_name
-                    </td>";
-                } else {
-                    $html .= "<td style='text-align:left;'> - - - -
-                    </td>";
+                $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
                 }
-            $html .= "
-            </tr> ";
-        }//die;
+                foreach($remessa_produtos as $remessa_produto) {
+                    if ($event_log->id_remessa == $remessa_produto->id_remessa) {
+
+                        $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
+                        $type = $remessa_produto->remessa_type;
+                        if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
+                            $event_log->quantity = "+$remessa_produto->quantity";
+                            $contador_quantidade_total = $contador_quantidade_total + $remessa_produto->quantity;
+                        }
+                        if (($type == '4') || ($type == '5') || ($type == '8')) {
+                            $event_log->quantity = "-  $remessa_produto->quantity";
+                            $contador_quantidade_total = $contador_quantidade_total - $remessa_produto->quantity;
+                        }
+                    }
+                }
+                if (!isset($event_log->cost)) {
+                    $event_log->cost = '---';
+                }
+                if (!isset($event_log->quantity)) {
+                    $event_log->quantity = '---';
+                }
+                
+                if($event_log->removido !='1'){
+                    $html .="
+                    <tr>
+                        <td style='text-align:left;'>$event_log->data_remessa </td>
+                        <td style='text-align:left;'>$event_log->date</td>
+                        <td style='text-align:left;'>$event_log->event_log_types_name</td>
+                        <td style='text-align:right;'>";
+                            $html .="$event_log->quantity</td>
+                        <td style='text-align:left;'>R$";
+                        if ($event_log->cost == '0') {
+                            $html .= '-----';
+                        } elseif ($event_log->cost == null) {
+                            $html .= '-----';
+                        } else {
+                            $html .= "$event_log->cost";
+                        }
+                        if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
+                            $html .="<td style='text-align:left;'>$event_log->patient_name</td>";
+                        } else if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
+                            if(($event_log->suppliers != NULL) && ($event_log->suppliers != '0')){
+          
+                                $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+                            } else {
+                            
+                                $event_log->suppliers_name = '- - - - - ';
+                            }
+                            $html .="<td style='text-align:left;'>$event_log->suppliers_name
+                            </td>";
+                        } else {
+                            $html .= "<td style='text-align:left;'> - - - -
+                            </td>";
+                        }
+                    $html .= "
+                    </tr> ";
+                }
+            }//die;
         $html .= "</table> </div>";
         try {
             $mpdf = new \Mpdf\Mpdf();
@@ -625,66 +649,81 @@ class ProductsController extends Controller
                     <th style='text-align:left;'>Fornecedor/Paciente</th>
                 </tr>
             ";
-            foreach ($event_logs as $event_log) {
+            foreach ($event_logs as $event_log) {//var_dump($event_log);
             $event_log->suppliers_name ="";
             $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
-            if ($remessa_atual != null) {
+            //var_dump($remessa_atual);die;
+            if (($remessa_atual != null) && ($remessa_atual->removido !='1')) {
+                $event_log->removido = $remessa_atual->removido;
                 $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
                 //var_dump($event_log->data_remessa);
-            $event_log->date = date("d/m/Y", strtotime($event_log->date));
-            if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
-            $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
-            }
-            if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
-            $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
-            }
-            foreach($remessa_produtos as $remessa_produto) {
-                if ($event_log->id_remessa == $remessa_produto->id_remessa) {
-
-                    $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
-                    $type = $remessa_produto->remessa_type;
-                    if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
-                        $event_log->quantity = "+$remessa_produto->quantity";
-                        $contador_quantidade_total = $contador_quantidade_total + $remessa_produto->quantity;
+                $event_log->date = date("d/m/Y", strtotime($event_log->date));
+                if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
+                    if(($event_log->suppliers != NULL) && ($event_log->suppliers != '0')){
+          
+                        $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+                    } else {
+                    
+                        $event_log->suppliers_name = '- - - - - ';
                     }
-                    if (($type == '4') || ($type == '5') || ($type == '8')) {
-                        $event_log->quantity = "-  $remessa_produto->quantity";
-                        $contador_quantidade_total = $contador_quantidade_total - $remessa_produto->quantity;
-                    }
-                }
-            }
-            if (!isset($event_log->cost)) {
-                $event_log->cost = '---';
-            }
-            if (!isset($event_log->quantity)) {
-                $event_log->quantity = '---';
-            }
-            $html .="
-            <tr>
-                <td style='text-align:left;'>$event_log->data_remessa</td>
-                <td style='text-align:left;'>$event_log->date</td>
-                <td style='text-align:left;'>$event_log->event_log_types_name</td>
-                <td style='text-align:right;'>";
-                    $html .="$event_log->quantity</td>
-                <td style='text-align:left;'>R$";
-                if ($event_log->cost == '0') {
-                    $html .= '-----';
-                } elseif ($event_log->cost == null) {
-                    $html .= '-----';
-                } else {
-                    $html .= "$event_log->cost";
                 }
                 if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
-                    $html .="<td style='text-align:left;'>$event_log->patient_name</td>";
-                } else if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
-                    $html .="<td style='text-align:left;'>$event_log->suppliers_name
-                    </td>";
+                    $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
                 }
-            }
+                foreach($remessa_produtos as $remessa_produto) {
+                    if ($event_log->id_remessa == $remessa_produto->id_remessa) {
 
-            $html .= "
-            </tr> ";
-        }//die;
+                        $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
+                        $type = $remessa_produto->remessa_type;
+                        if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
+                            $event_log->quantity = "+$remessa_produto->quantity";
+                            $contador_quantidade_total = $contador_quantidade_total + $remessa_produto->quantity;
+                        }
+                        if (($type == '4') || ($type == '5') || ($type == '8')) {
+                            $event_log->quantity = "-  $remessa_produto->quantity";
+                            $contador_quantidade_total = $contador_quantidade_total - $remessa_produto->quantity;
+                        }
+                    }
+                }
+                if (!isset($event_log->cost)) {
+                    $event_log->cost = '---';
+                }
+                if (!isset($event_log->quantity)) {
+                    $event_log->quantity = '---';
+                }
+                $html .="
+                <tr>
+                    <td style='text-align:left;'>$event_log->data_remessa</td>
+                    <td style='text-align:left;'>$event_log->date</td>
+                    <td style='text-align:left;'>$event_log->event_log_types_name</td>
+                    <td style='text-align:right;'>";
+                        $html .="$event_log->quantity</td>
+                    <td style='text-align:left;'>R$";
+                    if ($event_log->cost == '0') {
+                        $html .= '-----';
+                    } elseif ($event_log->cost == null) {
+                        $html .= '-----';
+                    } else {
+                        $html .= "$event_log->cost";
+                    }
+                    if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
+                        $html .="<td style='text-align:left;'>$event_log->patient_name</td>";
+                    } else if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
+                        if(($event_log->suppliers != NULL) && ($event_log->suppliers != '0')){
+          
+                            $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+                        } else {
+                        
+                            $event_log->suppliers_name = '- - - - - ';
+                        }
+                        $html .="<td style='text-align:left;'>$event_log->suppliers_name
+                        </td>";
+                    }
+                }
+
+                $html .= "
+                </tr> ";
+            }//die;
         $html .= "</table> </div>";
         try {
             $mpdf = new \Mpdf\Mpdf();
@@ -719,13 +758,21 @@ class ProductsController extends Controller
             $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
             //var_dump($remessa_atual);die;
             if ($remessa_atual != null) {
+                $event_log->removido = $remessa_atual->removido;
                 $event_log->data_remessa = date("d/m/Y", strtotime($remessa_atual->date));
             }
 
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
             //var_dump($event_log);die;
             if (($event_log->event_log_type == 12) || ($event_log->event_log_type == 13)  || ($event_log->event_log_type == 14)) {
-            $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+                if(($event_log->suppliers != NULL) && ($event_log->suppliers != '0')){
+          
+                    
+                    $event_log->suppliers_name = $this->supplierModel->get((int)$event_log->suppliers)->name;
+                  } else {
+                    
+                  $event_log->suppliers_name = '- - - - - ';
+                  }
             }
             if (($event_log->event_log_type == 15) || ($event_log->event_log_type == 16) || ($event_log->event_log_type == 9)) {
             $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;

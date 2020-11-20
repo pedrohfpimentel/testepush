@@ -149,6 +149,7 @@ class RemessaSaidaController extends Controller
       $remessa['quantity'] = (int) $remessa['quantity'];
       $remessa['id'] = (int) $remessa['remessa_id'];
       $remessa['patient_id'] = (int) $remessa['patient_id'];
+      $remessa['removido'] = '0';
       $products_remessa = $this->produtoRemessaModel->getAllByRemessa($remessa['id']);
       $lista_produtos = $this->produtoRemessaModel->getAllByRemessaId($remessa['id']);
       $lista_produtos =  json_encode($lista_produtos);
@@ -156,6 +157,7 @@ class RemessaSaidaController extends Controller
         $this->flash->addMessage('danger', 'Não é permitido remessa sem produtos.');
         return $this->httpRedirect($request, $response, '/admin/remessa_saida/add');
       }
+      //var_dump($remessa);die;
       $remessa = $this->entityFactory->createRemessa($remessa);
       if ($remessa->id_remessa_type == 8) {
         $remessa->patient_id = null;
@@ -235,6 +237,7 @@ class RemessaSaidaController extends Controller
       }
     }
 
+
     //download
     public function export(Request $request, Response $response)
     {
@@ -286,34 +289,36 @@ class RemessaSaidaController extends Controller
       ";
       foreach ($remessa as $remessas) {
         //var_dump($remessa);die;
-        foreach($remessas->produtos_remessa as $produto_remessa) {
-          if (($remessas->remessa_type == 5) || ($remessas->remessa_type == 4)) {
-            $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
-            $html .= "
-            <tr>
+        if($remessas->removido != '1'){
+          foreach($remessas->produtos_remessa as $produto_remessa) {
+            if (($remessas->remessa_type == 5) || ($remessas->remessa_type == 4)) {
+              $remessas->patient_name = $this->patientModel->get((int) $remessas->patient_id)->name;
+              $html .= "
+              <tr>
+                <td style=''>$remessas->date</td>
+                <td style=''>$produto_remessa->name_product</td>
+                <td style=''>$produto_remessa->quantity</td>
+                <td style=''>$remessas->patient_name</td>
+                <td style=''>$remessas->remessa_type_name</td>
+              </tr>
+                ";
+            } else if ($remessas->remessa_type == 8) {
+              //var_dump($remessas);
+              //die;
+              $html .= "
+              <tr>
               <td style=''>$remessas->date</td>
               <td style=''>$produto_remessa->name_product</td>
               <td style=''>$produto_remessa->quantity</td>
-              <td style=''>$remessas->patient_name</td>
+              <td style=''>R$ ";
+              $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
+              $html .= "</td>
               <td style=''>$remessas->remessa_type_name</td>
-            </tr>
-              ";
-          } else if ($remessas->remessa_type == 8) {
-            //var_dump($remessas);
-            //die;
-            $html .= "
-            <tr>
-            <td style=''>$remessas->date</td>
-            <td style=''>$produto_remessa->name_product</td>
-            <td style=''>$produto_remessa->quantity</td>
-            <td style=''>R$ ";
-            $html .= ($produto_remessa->cost != '') ? "$produto_remessa->cost" : '-----';
-            $html .= "</td>
-            <td style=''>$remessas->remessa_type_name</td>
 
 
-              </tr>
-              ";
+                </tr>
+                ";
+            }
           }
         }
       }
@@ -378,5 +383,18 @@ class RemessaSaidaController extends Controller
         'patients' => $patients,
         'products_remessa' => $products_remessa,
       ]);
+    }
+
+    public function delete(Request $request, Response $response, array $args): Response
+    {
+      
+      //$body = $request->getParsedBody();
+      $body = $args['id'];
+      //var_dump($body);die;
+      $remessa = $this->remessaSaidaModel->get((int)$body);
+      $this->remessaSaidaModel->remove((int)$body);
+      $this->flash->addMessage('success', 'Saída de estoque removida com sucesso.');
+      return $this->httpRedirect($request, $response, '/admin/remessa_saida');
+      //var_dump($remessa);die;
     }
 }

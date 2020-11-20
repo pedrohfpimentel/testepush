@@ -177,6 +177,7 @@ class RemessaSaidaModel extends Model
             SET
                 remessa_type   = :remessa_type,
                 patient_id     = :patient_id,
+                removido     = :removido,
                 suppliers      = :suppliers,
                 quantity         = :quantity,
                 cost             = :cost,
@@ -193,6 +194,7 @@ class RemessaSaidaModel extends Model
             ':id'           => $remessa->id,
             ':remessa_type'   => $remessa->remessa_type,
             ':patient_id' => $remessa->patient_id,
+            ':removido' => $remessa->removido,
             ':suppliers' => $remessa->suppliers,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,
@@ -201,5 +203,21 @@ class RemessaSaidaModel extends Model
             ':time'         => $remessa->time
             ];
         return $query->execute($parameters);
+    }
+
+    public function remove(int $remessa)
+    {
+        $sql = "
+            UPDATE
+                remessa
+            SET
+                removido = 1
+            WHERE
+                id = :id
+        ";
+        $parameters =
+        [':id'   => (int)$remessa];
+        $stmt = $this->db->prepare($sql);
+        $exec = $stmt->execute($parameters);
     }
 }

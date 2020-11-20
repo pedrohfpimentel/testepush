@@ -120,9 +120,9 @@ class ProfessionalModel extends Model
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
 
-            WHERE 
+            WHERE
             professionals.status IS NULL OR professionals.status = 1
-            
+
             ORDER BY
                 users.name ASC
                 LIMIT ? , ?
@@ -153,7 +153,7 @@ class ProfessionalModel extends Model
 
 
 
-    
+
     public function getAmountStatus( $status = 0)
     {
         $sql = "
@@ -161,7 +161,7 @@ class ProfessionalModel extends Model
                 COUNT(id) AS amount
             FROM
                 professionals
-                WHERE 
+                WHERE
                 professionals.status =  ?
 
         ";
@@ -173,7 +173,7 @@ class ProfessionalModel extends Model
 
 
 
-    
+
     public function getAmountStatus1( $status = 0)
     {
         $sql = "
@@ -181,7 +181,7 @@ class ProfessionalModel extends Model
                 COUNT(id) AS amount
             FROM
                 professionals
-                WHERE 
+                WHERE
                 professionals.status IS NULL OR professionals.status = 1
 
         ";
@@ -193,7 +193,7 @@ class ProfessionalModel extends Model
 
 
 
-    
+
 
 
 
@@ -212,10 +212,10 @@ class ProfessionalModel extends Model
                 professionals
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
-            WHERE 
+            WHERE
         professionals.id BETWEEN ? AND ?
-       
-            
+
+
             ORDER BY
                 professionals.id ASC
 
@@ -234,18 +234,18 @@ class ProfessionalModel extends Model
 public function getAllByDateAtt(string $start, string $finish, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
-        SELECT 
+        SELECT
             attendances.*
-            
+
         FROM `attendances`
-        
-        WHERE 
+
+        WHERE
            attendances.attendance_day BETWEEN ? AND ?
         ORDER BY
             attendances.attendance_day ASC
         LIMIT ? , ?
 
-        
+
     ";
     $query = $this->db->prepare($sql);
     $query->bindValue(1, $start, \PDO::PARAM_STR);
@@ -276,14 +276,14 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
                 professionals
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
-            WHERE 
+            WHERE
                 professionals.status =  ?
-                
+
             ORDER BY
                 professionals.id ASC
             LIMIT ? , ?
 
-            
+
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $status, \PDO::PARAM_INT);
@@ -315,14 +315,14 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
                 professionals
                 LEFT JOIN users ON users.id = professionals.id_user
                 LEFT JOIN professional_types ON professional_types.id = professionals.id_professional_type
-            WHERE 
+            WHERE
                 professionals.status IS NULL OR professionals.status = ?
-                
+
             ORDER BY
                 professionals.id ASC
             LIMIT ? , ?
 
-            
+
         ";
         $query = $this->db->prepare($sql);
         $query->bindValue(1, $status, \PDO::PARAM_INT);
@@ -340,7 +340,7 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
       public function getProfessionalsDownload($professionals_start, $professionals_finish)
     {
         $sql = "
-        SELECT 
+        SELECT
             event_logs.date,
             professionals.*
         FROM

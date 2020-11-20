@@ -138,6 +138,7 @@ $app->group('/admin', function () {
         $this->get('/consulta_suppliers', RemessaAdmin::class . ':consulta_suppliers');
         $this->map(['GET', 'POST'], '/add', RemessaAdmin::class . ':add');
         $this->map(['GET', 'POST'], '/update', RemessaAdmin::class . ':update');
+        $this->map(['GET', 'POST'], '/remove/{id:[0-9]+}', RemessaAdmin::class . ':delete');
 
     });
 
@@ -150,6 +151,7 @@ $app->group('/admin', function () {
         $this->get('/consulta_suppliers', RemessaSaidaAdmin::class . ':consulta_suppliers');
         $this->map(['GET', 'POST'], '/add', RemessaSaidaAdmin::class . ':add');
         $this->map(['GET', 'POST'], '/update', RemessaSaidaAdmin::class . ':update');
+        $this->map(['GET', 'POST'], '/remove/{id:[0-9]+}', RemessaSaidaAdmin::class . ':delete');
 
     });
 

@@ -131,6 +131,24 @@ class RemessaModel extends Model
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
         return $query->fetch();
     }
+    public function getRemovido(int $id)
+    {
+        $sql = "
+            SELECT
+                *
+            FROM
+                remessa
+            WHERE
+                id = :id
+            LIMIT 1
+        ";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        $query->execute($parameters);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Remessa::class);
+        return $query->fetch();
+    }
+
 
     public function getAll(int $offset = 0, int $limit = PHP_INT_MAX): array
     {
@@ -355,6 +373,7 @@ class RemessaModel extends Model
             SET
                 suppliers        = :suppliers,
                 patient_id       = :patient_id,
+                removido         = :removido,
                 remessa_type     = :remessa_type,
                 quantity         = :quantity,
                 cost             = :cost,
@@ -369,6 +388,7 @@ class RemessaModel extends Model
             ':id'           => $remessa->id,
             ':suppliers'    => $remessa->suppliers,
             ':patient_id'   => $remessa->patient_id,
+            ':removido'     => $remessa->removido,
             ':remessa_type' => $remessa->remessa_type,
             ':quantity'     => $remessa->quantity,
             ':cost'         => $remessa->cost,
@@ -392,6 +412,7 @@ class RemessaModel extends Model
                 cost             = :cost,
                 patrimony_code   = :patrimony_code,
                 patient_id       = :patient_id,
+                removido         = :removido,
                 date             = :date,
                 time             = :time
 
@@ -407,9 +428,28 @@ class RemessaModel extends Model
             ':cost'         => $remessa->cost,
             'patrimony_code' => $remessa->patrimony_code,
             'patient_id'    => $remessa->patient_id,
+            'removido'    => $remessa->removido,
             ':date'         => $remessa->date,
             ':time'         => $remessa->time
             ];
         return $query->execute($parameters);
     }
+
+
+    public function remove(int $remessa)
+    {
+        $sql = "
+            UPDATE
+                remessa
+            SET
+                removido = 1
+            WHERE
+                id = :id
+        ";
+        $parameters =
+        [':id'   => (int)$remessa];
+        $stmt = $this->db->prepare($sql);
+        $exec = $stmt->execute($parameters);
+    }
+    
 }
