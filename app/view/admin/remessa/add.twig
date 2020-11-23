@@ -190,8 +190,8 @@
             <tbody id="total">
               <td></td>
               <td></td>
-              <td style="text-align:right; font-weight:bold;">TOTAL:</td>
-              <td id="valor-total"></td>
+              <td style="text-align:right;"><b>TOTAL:</b> R$</td>
+              <td id="valor-total">0,00</td>
               <td></td>
             </tbody>
           </table>
@@ -319,7 +319,9 @@
     var custo_produto = $('#cost').val();
     var remessa_id = $('#remessa_id').val();
     var patrimony = $('#patrimony').val();
-    var custo_total = converteMoedaFloat(quantidade_produto) * converteMoedaFloat(custo_produto);
+    var custo_total = parseInt(quantidade_produto) * converteMoedaFloat(custo_produto);
+    custo_total = (custo_total).toFixed(2);
+    //custo_total = custo_total.replace(".",",");
     var products_array = [
     nome_produto,
     quantidade_produto,
@@ -342,22 +344,37 @@
         }
       },
       success: function (data) {
+        
+        custo_total = custo_total.replace(".",",");
         $('#error-adicionar-produto-remessa').html('');
         $('#corpo_tabela').append(
           `<tr><td>${nome_produto}</td>
           <td>${quantidade_produto}</td>
           <td>${custo_produto}</td>
-          <td>${converteFloatMoeda(custo_total.toString())}</td>
-          <td><input type="button" value="Excluir" class="btn btn-danger btn-sm excluir_ajax" style="margin:0px;"  id="${data.id}-excluir"></input></td></tr>`
+          <td>${custo_total}</td>
+          <td><input type="button" value="Excluir" class="btn btn-danger btn-sm excluir_ajax" style="margin:0px;"  id="${data.id}-excluir" valor_produto="${custo_total}"></input></td></tr>`
         );
-        let total = 0;
-        console.log(custo_total);
-        console.log($('#valor-total').html());
-        total = ($('#valor-total').html() != '') ? getMoney($('#valor-total').html()) : 0;
+        //let total = 0;
+        //var total = 0;
+        //console.log(custo_total);
+        //console.log($('#valor-total').html());
+        if ($('#valor-total').html() != ''){
+          total = $('#valor-total').html();
+          total = total.replace(",",".");
+        } else {
+          total = 0;
+        }
+        //total = ($('#valor-total').html() != '') ? ($('#valor-total').html()) : 0;
         console.log(total);
-        total = total + getMoney(custo_total.toString());
-        console.log(total);
-        $('#valor-total').html(`R$ ${formatReal(total)}`);
+        //console.log(custo_total);
+        //console.log(parseFloat(total) + parseFloat(custo_total));
+        custo_total = custo_total.replace(",",".");
+        total = parseFloat(total) + parseFloat(custo_total);
+        total = (total).toFixed(2);
+        //console.log(custo_total);
+        //console.log(total);
+        total = total.replace(".",",");
+        $('#valor-total').html(`${total}`);
         $("#input_id_product").val('');
         $("#quantity").val('');
         $("#cost").val('');
@@ -375,27 +392,29 @@
   $(document).on('click', '.excluir_ajax', function() {
     var id_produto_remessa = $(this).attr("id");
     var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
+    var valor_produto = $(this).attr("valor_produto");
+    valor_produto = valor_produto.replace(",",".");
+    //console.log(valor_produto);
+    
+    total = total.replace(",",".");
+    total = parseFloat(total) - parseFloat(valor_produto);
+    total = (total).toFixed(2);
+    //console.log(total);
     var tr = $(this).parent().parent();
     $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
       type: "GET",
       success: function (data) {
        if (data == true) {
-         
-        let total = 0;
-        console.log(custo_total);
-        console.log($('#valor-total').html());
-        total = ($('#valor-total').html() != '') ? getMoney($('#valor-total').html()) : 0;
-        console.log(total);
-        total = total + getMoney(custo_total.toString());
-        console.log(total);
-        $('#valor-total').html(`R$ ${formatReal(total)}`);
-        console.log(tr);
+        //console.log(tr);
         tr.remove();
+        
+        total = total.replace(".",",");
+        $('#valor-total').html(`${total}`);
         }
       },
       error: function (data) {
-        console.error(data);
+        //console.error(data);
       }
     });
   });
@@ -428,6 +447,16 @@
     }else{
         valor = valor.replace(".","");
         valor = valor.replace(",",".");
+        valor = parseFloat(valor);
+    }
+    return valor;
+   }
+   function converteMoedaFloatTotal(valor) {
+    if(valor === ""){
+        valor =  0;
+    }else{
+        //valor = valor.replace(".","");
+        //valor = valor.replace(",",".");
         valor = parseFloat(valor);
     }
     return valor;

@@ -74,12 +74,22 @@ class ProdutoRemessaController extends Controller
         $data["patrimony_code"] = $data["patrimony"];
         $data["cost"] = $data["custo_produto"];
         $data["quantity"] = $data["quantidade_produto"];
+        $data['custo_produto'] = str_replace(',','.', $data['custo_produto']);
+        $data['total_produto'] = ((int)$data['quantity']) * ((float)$data['custo_produto']);
+        
+        $data['total_produto'] = number_format((float)$data['total_produto'], 2, '.', '');
         // var_dump($id_produto);
         //var_dump($data);
         //die;
         $data = $this->entityFactory->createProdutoRemessa($data);
         $data->id = $this->produtoRemessaModel->add($data);
         return $response->withJson($data, 200);
+        /*return $response->withJson((array(
+            'result' => true,
+            'cost' => $data->cost,
+            'quantity' => $data->quantity,
+            'total_produto' => $data->total_produto,
+          )));*/
     }
 
     public function delete(Request $request, Response $response, array $args): Response
@@ -95,9 +105,10 @@ class ProdutoRemessaController extends Controller
         
     }
 
-    public function update(Request $request, Response $response): Response
+    public function update(Request $request, Response $response, $args): Response
     {
-
+        
+        
     }
 
 }
