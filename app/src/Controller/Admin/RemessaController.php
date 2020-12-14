@@ -88,7 +88,26 @@ class RemessaController extends Controller
       $remessa_type[] = $this->remessaTypeModel->get(6);
       //var_dump($remessa_type);
       //die;
-      foreach ($remessa as $remessas) {//var_dump($remessa);die;
+      
+      foreach ($remessa as $remessas) {
+        //var_dump($remessas);die;
+        //die;
+        $remessas->quantidade_produto = 0;
+        $remessas->total_produtos = 0;
+        $remessas->total_geral = 0;
+        $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessas->id);
+        foreach ($products_remessa as $product_remessa) {
+          $product_remessa->cost = str_replace(".","",$product_remessa->cost);
+          $float_cost = floatval(str_replace(',','.',$product_remessa->cost));
+          $custo_total = $float_cost * ((int)$product_remessa->quantity);
+          $product_remessa->custo_total = number_format($custo_total, 2, ',', '.');
+          $remessas->total_produtos = $remessas->total_produtos + $custo_total;
+          $remessas->quantidade_produto = $remessas->quantidade_produto + (float)$product_remessa->quantity;
+          //var_dump($remessas->total_produtos);//die;
+          $remessas->total_geral = $remessas->total_produtos;
+        }
+        $remessas->total_geral = 'R$ ' . number_format($remessas->total_geral, 2, ',', '.');
+        //var_dump($remessas->total_geral);
         //die;
         if (($remessas->suppliers != NULL ) &&  ($remessas->suppliers != 0 ))
         {
@@ -116,8 +135,8 @@ class RemessaController extends Controller
       $amountRemessas = $this->remessaModel->getAmount();
       $amountPages = ceil($amountRemessas->amount / $limit);
       $today = date('Y-m-d');
-        //var_dump($remessa);
-        //die;
+      //var_dump($remessa);
+      //die;
 
       return $this->view->render($response, 'admin/remessa/index.twig',[
         //'date' => $date,
