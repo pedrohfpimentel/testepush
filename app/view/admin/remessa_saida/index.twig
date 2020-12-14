@@ -79,6 +79,7 @@
                 <th>Fornecedor/Paciente</th>
                 <th>Tipo de Saída</th>
                 <th>Data</th>
+                <th>Total Itens</th>
                 <th class="th-button"></th>
               </tr>
             </thead>
@@ -104,6 +105,14 @@
                   </td>
                   <td>{{ remessas.remessa_type_name }}</td>
                   <td>{{ remessas.date}} </td>
+                  <td>
+                    {{ remessas.quantidade_produto}} 
+                    {% if remessas.quantidade_produto == 1 %}
+                      unidade
+                    {% else %}
+                      unidades
+                    {% endif %}
+                  </td>
                 <td style="width:80px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/remessa_saida/{{ remessas.id }}">
                     Detalhes
                   </a></td>

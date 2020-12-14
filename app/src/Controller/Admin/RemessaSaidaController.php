@@ -82,6 +82,20 @@ class RemessaSaidaController extends Controller
       $remessa_type[] = $this->remessaTypeModel->get(8);
       //$product_name = $this->productsModel->getAll();
       foreach ($remessa as $remessas) {
+        $remessas->quantidade_produto = 0;
+        $remessas->total_produtos = 0;
+        $remessas->total_geral = 0;
+        $products_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$remessas->id);
+        foreach ($products_remessa as $product_remessa) {
+          $product_remessa->cost = str_replace(".","",$product_remessa->cost);
+          $float_cost = floatval(str_replace(',','.',$product_remessa->cost));
+          $custo_total = $float_cost * ((int)$product_remessa->quantity);
+          $product_remessa->custo_total = number_format($custo_total, 2, ',', '.');
+          $remessas->total_produtos = $remessas->total_produtos + $custo_total;
+          $remessas->quantidade_produto = $remessas->quantidade_produto + (float)$product_remessa->quantity;
+          //var_dump($remessas->total_produtos);//die;
+          $remessas->total_geral = $remessas->total_produtos;
+        }
         // $remessas->product_name = $this->productsModel->get((int)$remessas->id_product)->name;
         if (($remessas->remessa_type == 4) || ($remessas->remessa_type == 5)) {
         //var_dump($remessas);die;
