@@ -130,7 +130,7 @@
                     <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
                  </div>
                  <div class="col-sm-12">
-                  <p id="error-adicionar-produto-remessa"></p>
+                  <p id="error-adicionar-produto-remessa" style="color:red"></p>
                  </div>
                   <div class="col-sm-12">
                     <p class="pull-right" style="padding-top: 25px;">
@@ -203,6 +203,7 @@ $('#button_adicionar').on("submit",function(){
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 <script type="text/javascript">
     $(document).ready(function() {
+      sessionStorage.clear();
        var availableTags = [];
        //autcomplete
        {% for product in products %}
@@ -228,18 +229,35 @@ $('#button_adicionar').on("submit",function(){
 </script>
 <script type="text/javascript">
   $('#input_id_product').on('change', function() {
+
+    $('#error-adicionar-produto-remessa').html('');
     var id_product = $(this).val();
     id_product = id_product.replace(/ .*/,'');
     $.ajax({
-      url: '{{ base_url() }}/admin/remessa/consulta_produto?id='+ id_product,
+      url: '{{ base_url() }}/admin/remessa_saida/consulta_produto?id='+ id_product,
 
       beforeSend: function(data) {
         $("#campo_login").html('');
       },
 
       success: function(data) {
-        console.log('sucesso' + data);
-        $("#campo_login").html('<p style="color:green;">Produto selecionado!</p>');
+        //console.log('sucesso' + data);
+        $("#campo_login").html('<p style="color:green;">Produto selecionado! Quantidade em estoque: '+ data.quantity +'</p>');
+        $("#quantity").val('');
+        $("#quantity").attr('max',data.quantity);
+        
+        // salvar novo produto dentro do sessionStorage
+        window.sessionStorage.setItem("product_id",data.id);
+
+        //window.sessionStorage.setItem('products', data.id);
+        $('#quantity').on('change', function() {
+          //console.log(data.quantity);
+          if($("#quantity").val() > data.quantity) {
+            $("#add_product").prop('disabled', true);
+          } else {
+            $("#add_product").prop('disabled', false);
+          }
+        });
       },
 
       error: function(data) {
@@ -289,7 +307,7 @@ $('#button_adicionar').on("submit",function(){
 
   function submitTabela() {
     var corpo_tabela = $('#corpo_tabela').html();
-    console.log(corpo_tabela);
+    //console.log(corpo_tabela);
     return false;
   }
   $(document).on('click', '#add_product', function() {
@@ -326,21 +344,73 @@ $('#button_adicionar').on("submit",function(){
       },
       success: function (data) {
         $('#error-adicionar-produto-remessa').html('');
-        $('#corpo_tabela').append(
-          `<tr><td>${nome_produto}</td>
-          <td>${quantidade_produto}</td>
-          <td>${patrimony}</td>
-          <td><input type="button" value="Excluir" class="btn btn-sm btn-danger excluir_ajax" style="margin:0px;"  id="${data.id}-excluir"></input></td></tr>`
-        );
-        $("#input_id_product").val('');
-        $("#quantity").val('');
-        $("#cost").val('');
-        $("#patrimony").val('');
-        $("#campo_login").html('');
 
+        // funcao para bloquear produto repetido aqui
+        var product_id = window.sessionStorage.getItem("product_id")
+        var products_list = (window.sessionStorage.getItem("products_list"));
+        
+        if((products_list != 'null') && (products_list != null)) {
+          
+          var products_list = JSON.parse(products_list);
+          var exists = false;
+          
+          if (products_list.length >= 0) {
+            $.each( products_list, function( key, value ) {
+              if (product_id == value) {
+                exists = true;
+              }
+            });
+          }
+          
+          if (exists == false) {
+            
+            products_list.push(product_id);
+            
+            products_list = JSON.stringify(products_list);
+            
+            // salvar nova lista dentro do sessionStorage
+            window.sessionStorage.setItem("products_list",products_list);
+
+            $('#corpo_tabela').append(
+              `<tr><td>${nome_produto}</td>
+              <td>${quantidade_produto}</td>
+              <td>${patrimony}</td>
+              <td><input type="button" value="Excluir" class="btn btn-sm btn-danger excluir_ajax" style="margin:0px;" name="${nome_produto}" id="${data.id}-excluir"></input></td></tr>`
+            );
+            $("#input_id_product").val('');
+            $("#quantity").val('');
+            $("#cost").val('');
+            $("#patrimony").val('');
+            $("#campo_login").html('');
+          } else {
+            $('#error-adicionar-produto-remessa').html('Produto já adicionado.');
+          }
+        } else {
+          $('#corpo_tabela').append(
+              `<tr><td>${nome_produto}</td>
+              <td>${quantidade_produto}</td>
+              <td>${patrimony}</td>
+              <td><input type="button" value="Excluir" class="btn btn-sm btn-danger excluir_ajax" style="margin:0px;" name="${nome_produto}" id="${data.id}-excluir"></input></td></tr>`
+            );
+            $("#input_id_product").val('');
+            $("#quantity").val('');
+            $("#cost").val('');
+            $("#patrimony").val('');
+            $("#campo_login").html('');
+
+          products_list = [];
+          products_list.push(product_id);
+          products_list = JSON.stringify(products_list);
+          window.sessionStorage.setItem("products_list",products_list);
+        }
+        //
+
+
+        
+
+        
       },
         error: function (data) {
-
           if (data.responseText == 1) {
             $('#error-adicionar-produto-remessa').html('O produto não pode ser vazio.');
           }
@@ -348,9 +418,26 @@ $('#button_adicionar').on("submit",function(){
     });
 });
  $(document).on('click', '.excluir_ajax', function() {
+  $('#error-adicionar-produto-remessa').html('');
   var id_produto_remessa = $(this).attr("id");
   var resultado = id_produto_remessa.substring(0, id_produto_remessa.indexOf("-"));
+
+  var id_produto_delete = $(this).attr("name");
+  id_produto_delete = id_produto_delete.substring(0, id_produto_delete.indexOf("-"));
+  id_produto_delete = id_produto_delete.trim();
+  
+  //remover produto do session storage
+    var products_list = (window.sessionStorage.getItem("products_list"));
+    var products_array = JSON.parse(products_list);
+    
+    var products_array = $.grep(products_array, function(product) {
+      return product != id_produto_delete;  
+    });
+    products_array = JSON.stringify(products_array);
+    window.sessionStorage.setItem("products_list",products_array);
+    //
   // console.log(resultado);
+ 
   var tr = $(this).parent().parent();
   $.ajax({
       url:`{{ base_url() }}/admin/produto_remessa/remove/${resultado}`,
@@ -360,6 +447,7 @@ $('#button_adicionar').on("submit",function(){
         console.log(tr);
           tr.remove();
         }
+        
       },
         error: function (data) {
           console.error(data);

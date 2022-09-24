@@ -134,6 +134,49 @@ class RemessaSaidaController extends Controller
       if (empty($request->getParsedBody())) {
         // get products to autocomplete
         $products = $this->productsModel->getAll();
+        foreach ($products as $key => $product) {
+          //buscando todos os produto_remessa por id do product
+          $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
+          
+          //armazena quantidade temporaria
+          $quantidade = 0;
+          $contador_remessa = 0;
+          //foreach para incrementar a quantidade dos produto_remessa
+          foreach($produtos_remessa as $produto_remessa) {
+            //variavel armazena remessa por id
+            $remessa = $this->remessaModel->getRemovido((int) $produto_remessa->id_remessa);
+            //die;
+            //ifs para verificar tipo de entrada e faz soma/ subtracao na variavel quantidade
+            if ($remessa->removido != '1'){
+              //var_dump($remessa);
+              if (isset($remessa->remessa_type)) {
+                if (($remessa->remessa_type == '1')|| ($remessa->remessa_type == '2') || ($remessa->remessa_type == '3')|| ($remessa->remessa_type == '6') || ($remessa->remessa_type == '7')){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                }
+              }
+              if (isset($remessa->remessa_type)) {
+                  if (($remessa->remessa_type == '4') || ($remessa->remessa_type == '5') || ($remessa->remessa_type == '8')){
+                      $quantidade = $quantidade - $produto_remessa->quantity;
+                  }
+              }
+            }
+          }//die;
+          $product->quantity = $quantidade;
+          $quantidade = 0;
+          foreach($produtos_remessa as $produto_remessa) {
+            $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+            if (isset($remessa->remessa_type)) {
+              if ($remessa->remessa_type == '2'){
+                $quantidade = $quantidade + $produto_remessa->quantity;
+              }
+            }
+          }
+          
+          if($product->quantity <= 0) {
+            unset($products[$key]);
+          }
+        }
+        
         $patients = $this->patientModel->getAll();
         $this->remessaModel->deleteByRemessaType();
         // remessa types
@@ -355,6 +398,39 @@ class RemessaSaidaController extends Controller
       $idProduct = $request->getQueryParams()['id'];
       $product = $this->productsModel->get((int) $idProduct);
       if ($product) {
+        //buscando todos os produto_remessa por id do product
+        $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
+        
+        //armazena quantidade temporaria
+        $quantidade = 0;
+        $contador_remessa = 0;
+        //foreach para incrementar a quantidade dos produto_remessa
+        foreach($produtos_remessa as $produto_remessa) {
+          $remessa = $this->remessaModel->getRemovido((int) $produto_remessa->id_remessa);
+          if ($remessa->removido != '1'){
+            if (isset($remessa->remessa_type)) {
+                if (($remessa->remessa_type == '1')|| ($remessa->remessa_type == '2') || ($remessa->remessa_type == '3')|| ($remessa->remessa_type == '6') || ($remessa->remessa_type == '7')){
+                    $quantidade = $quantidade + $produto_remessa->quantity;
+                }
+            }
+            if (isset($remessa->remessa_type)) {
+                if (($remessa->remessa_type == '4') || ($remessa->remessa_type == '5') || ($remessa->remessa_type == '8')){
+                    $quantidade = $quantidade - $produto_remessa->quantity;
+                }
+            }
+          }
+        }//die;
+        $product->quantity = $quantidade;
+        $quantidade = 0;
+        foreach($produtos_remessa as $produto_remessa) {
+          $remessa = $this->remessaModel->get((int) $produto_remessa->id_remessa);
+          if (isset($remessa->remessa_type)) {
+            if ($remessa->remessa_type == '2'){
+              $quantidade = $quantidade + $produto_remessa->quantity;
+            }
+          }
+        }
+        
         return $response->withJson((array)$product, 200);
       }
 

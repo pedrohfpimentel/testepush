@@ -31,7 +31,7 @@ class RemessaModel extends Model
             ':remessa_type'      => $remessa->remessa_type,
             ':quantity'          => $remessa->quantity,
             ':cost'              => $remessa->cost,
-            ':patrimony_code'    => $remessa->patrimony_code,
+            ':patrimony_code'    => (int)$remessa->patrimony_code,
             ':date'              => $remessa->date,
             ':time'              => $remessa->time
 

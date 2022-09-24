@@ -154,6 +154,10 @@ $container['Farol360\Ancora\Controller\Admin\IndexController'] = function ($c) {
     return new Farol360\Ancora\Controller\Admin\IndexController(
         $c['view'],
         $c['flash'],
+        new Farol360\Ancora\Model\AttendanceModel($c['db']),
+        new Farol360\Ancora\Model\PatientModel($c['db']),
+        new Farol360\Ancora\Model\ProductsModel($c['db']),
+        new Farol360\Ancora\Model\ProfessionalModel($c['db']),
         $c['version']
     );
 };

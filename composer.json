@@ -12,6 +12,7 @@
         "ext-zip": "*",
         "slim/slim": "^3.8",
         "slim/twig-view": "^2.2",
+        "twig/twig": "^2.0",
         "slim/flash": "^0.2.0",
         "monolog/monolog": "^1.23",
         "vlucas/phpdotenv": "^2.4",

@@ -13,6 +13,61 @@
 <div class="main">
   
 
+  <h3>Controle de Paciêntes, Profissionais e Atendimentos.</h3>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="card card-stats">
+            <div class="card-header" data-background-color="orange">
+              <i class="material-icons">accessibility</i>
+            </div>
+            <div class="card-content">
+              <p class="category">Pacientes Cadastrados</p>
+              <h3 class="title">{{ amountPatients }}/<small> Total</small></h3>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <a href="{{ base_url }}/admin/patients">Ver Pacientes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card card-stats">
+            <div class="card-header" data-background-color="orange">
+              <i class="material-icons">portrait</i>
+            </div>
+            <div class="card-content">
+              <p class="category">Profissionais</p>
+              <h3 class="title">{{ amountProfessionals }}/<small> Total</small></h3>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <a href="{{ base_url }}/admin/professionals">Ver Profissionais</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card card-stats">
+            <div class="card-header" data-background-color="green">
+              <i class="material-icons">shopping_basket</i>
+            </div>
+            <div class="card-content">
+              <p class="category">Produtos</p>
+              <h3 class="title">{{ amountProducts }}<small> Total</small></h3>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <a href="{{ base_url }}/admin/products">Ver Produtos</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   {#
   <h3>Controle de Paciêntes, Profissionais e Atendimentos.</h3>
   <div class="row">
