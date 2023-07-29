@@ -4,18 +4,18 @@
 {% block breadcrumbs %}
 <ol class="breadcrumb">
   <li><a href="{{ base_url() }}/admin">Início</a></li>
-  <li><a href="{{ base_url() }}/admin/user">Usuários</a></li>
+  <li><a href="{{ base_url() }}/admin/user/all">Usuários</a></li>
   <li><a href="{{ base_url() }}/admin/user/{{ user.id }}">{{ user.name }}</a></li>
   <li class="active">Editar</li>
 </ol>
 {% endblock %}
 {% block content %}
 
-<div class="card">
-  <div class="card-header" data-background-color="blue">
-    <h3>Editar usuário</h3>
+<div class="panel panel-default">
+  <div class="panel-heading" style="">
+    <p class="panel-title">Editar um usuário</p>
   </div>
-  <div class="card-content">
+  <div class="panel-body">
     <div class="row">
       <div class="col-xs-12">
         <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/user/update" method="POST">

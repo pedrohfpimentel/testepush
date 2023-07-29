@@ -1,6 +1,6 @@
 {% extends "admin/layout.twig" %}
 {% block html_title %}Saída de Estoque - Administração - {{ parent() }}{% endblock %}
-{% set nav_active = 'products' %}
+{% set nav_active = 'remessa_saida' %}
 {% block breadcrumbs %}
 
 
@@ -31,15 +31,15 @@
   <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
 <div class="row">
   <div class="col-sm-12">
-    <div class=" card">
-      <div class="card-header" data-background-color="blue">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="">
         <div class="row">
           <div class="col-xs-12">
-            <h3>Saída de Estoque</h3>
+            <p class="panel-title">Saída de Estoque</p>
           </div>
         </div>
       </div>
-      <div class="card-content">
+      <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
            {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}

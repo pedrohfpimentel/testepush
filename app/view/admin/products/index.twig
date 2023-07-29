@@ -13,60 +13,44 @@
 
 
 {#padrao#}
+
 <div class="main">
   <div class="row">
-      <div class="col-xs-12 col-sm-3">
-        <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Produto
-        </a>
-      </div>
-      <div class="col-sm-9">
-        <div class="card">
-          <div class="card-header" data-background-color="purple">
-            Relatório
-          </div>
-          <div class="card-content" style="padding-top:5px;">
-            <div class="col-sm-10">
-              <div class="form-group">              
-              </div>
-            </div>           
-          
-            <div class="col-sm-2">
-              <div class="form-group">
-                <a class="btn btn-default" id="products_download" name="products_download"  href="{{ base_url() }}/admin/products/export" target="_blank">
-                  <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-                  Relatório
-                </a>
-              </div>
+    <div class="col-xs-12 col-sm-6">
+      <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Produto
+      </a>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading" style="">
+          <div class="row">
+            <div class="col-sm-6">
+              Relatório
+            </div>
+            <div class="col-sm-6">
+              <a class="btn btn-default btn-sm pull-right"  id="products_download" name="products_download" style="margin:0px 5px" href="{{ base_url() }}/admin/products/export" target="_blank">
+                <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+                Relatório
+              </a>
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  
-
-
-
-
-<div class="main">
-  <div class="card">
-    <div class="card-header" data-background-color="blue">
+  </div>
+ 
+  <div class="panel panel-default">
+    <div class="panel-heading" style="">
       <div class="row">
         <div class="col-sm-8">
-          <h3>Produtos</h3>
+          <p class="panel-title">Produtos</p>
         </div>
-        {#<div class="col-sm-4">
-          <p class="pull-right">
-            <a class="btn btn-success" href="{{ base_url() }}/admin/products/add">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </a>
-          </p>
-        </div>#}
+        
       </div>
 
     </div>
-    <div class="card-content">
+    <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
           <table class="table table-striped data-table" style="border-collapse:separate;">

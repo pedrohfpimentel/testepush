@@ -24,6 +24,7 @@ class Patient
     public $doctor_name;
     public $fundation_need;
     public $visitDate;
+    public $registration_date;
 
     public function __construct(array $data = [])
     {
@@ -46,5 +47,6 @@ class Patient
         $this->doctor_name = $data['doctor_name'] ?? null;
         $this->fundation_need = $data['fundation_need'] ?? null;
         $this->visitDate = $data['visitDate'] ?? null;
+        $this->registration_date = $data['registration_date'] ?? null;
     }
 }

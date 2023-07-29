@@ -8,7 +8,6 @@ class User
     public $id;
     public $email;
     public $name;
-    public $password;
     public $nascimento;
     public $cpf;
     public $tel_area;
@@ -29,13 +28,13 @@ class User
     public $deleted_at;
     public $created_at;
     public $updated_at;
+    public $password;
 
     public function __construct(array $data = [])
     {
         $this->id = $data['id'] ?? null;
         $this->email = !empty($data['email']) ? strtolower($data['email']) : null;
         $this->name = $data['name'] ?? null;
-        $this->password = !empty($data['password']) ? password_hash($data['password'], PASSWORD_DEFAULT) : null;
         $this->nascimento = !empty($data['nascimento']) ? date('Y-m-d', strtotime($data['nascimento'])) : null;
         $this->cpf = $data['cpf'] ?? null;
         $this->tel_area = $data['tel_area'] ?? null;
@@ -56,5 +55,6 @@ class User
         $this->deleted_at = $data['deleted_at'] ?? null;
         $this->created_at = $data['created_at'] ?? null;
         $this->updated_at = $data['updated_at'] ?? null;
+        $this->password = $data['password'] ?? null;
     }
 }

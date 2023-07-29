@@ -13,7 +13,7 @@
 <div class="main">
   
 
-  <h3>Controle de Paciêntes, Profissionais e Atendimentos.</h3>
+  {# <h3>Controle de Paciêntes, Profissionais e Atendimentos.</h3> #}
   <div class="row">
     <div class="col-sm-12">
       <div class="row">
@@ -61,6 +61,22 @@
             <div class="card-footer">
               <div class="stats">
                 <a href="{{ base_url }}/admin/products">Ver Produtos</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card card-stats">
+            <div class="card-header" data-background-color="green">
+              <i class="material-icons">accessibility</i>
+            </div>
+            <div class="card-content">
+              <p class="category">Pacientes Ativos</p>
+              <h3 class="title">{{ amountPatientsAtivos }}/<small> Total</small></h3>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <a href="{{ base_url }}/admin/patients?patients_status=1">Ver Pacientes Ativos</a>
               </div>
             </div>
           </div>

@@ -1,0 +1,216 @@
+{% extends "admin/layout.twig" %}
+{% block html_title %}Voluntários - Administração - {{ parent() }}{% endblock %}
+{% set nav_active = 'voluntarios' %}
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li><a href="{{ base_url() }}/admin">Início</a></li>
+  <li><a href="{{ base_url() }}/admin/profissionals">voluntários</a></li>
+  <li class="active">Edit</li>
+  <li >{{ profissional.name }}</li>
+</ol>
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="">
+    <div class="row">
+      <div class="col-xs-12 ">
+        <p class="panel-title">Editar Voluntário</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/voluntarios/update" method="POST">
+
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="form-group">
+                <input type="hidden" name="id" value="{{ volunteer.id }}">
+                <label for="inputName">Nome</label>
+                <input type="text" class="form-control" id="inputName" name="name" placeholder="" value="{{ volunteer.name }}" required>
+              </div>
+            </div>
+            <div class="col-sm-2 form-group">
+              <label for="inputCpf">CPF</label>
+              <input type="text" class="form-control" id="inputCpf" name="cpf" placeholder="" title="Número do CPF com pontos e traço" value="{{ volunteer.cpf }}">
+            </div>
+            <div class="col-sm-2 form-group">
+              <label for="inputNascimento">Data de nascimento</label>
+              <input type="date" class="form-control" id="inputNascimento" name="nascimento" min="1900-01-01" max="2100-01-01" value="{{ volunteer.nascimento }}">
+              <span class="validity"></span>
+            </div>
+            
+          </div>
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="inputEmail">Email</label>
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="" value="{{ volunteer.email }}">
+                <p id="email-error" style="color:red;"></p>
+                <script type="text/javascript">
+                  $('#inputEmail').change(function(){
+                    if ($(this).parent().hasClass('has-error')) {
+
+                      $('#email-error').css('color', 'red');
+                      $('#email-error').html('Utilize um email válido.');
+                    } else {
+                      //var data = "{email: "++"}";
+                      $.ajax({
+                        url:'{{ base_url() }}/admin/voluntarios/verifyUserByEmail',
+                        type: "POST",
+                        data: {email: $('#inputEmail').val()},
+                        success: function (data) {
+                          console.log(data);
+
+                          if (data == "true") {
+
+                            $('#email-error').css('color', 'red');
+                            $('#email-error').html('o email já está cadastrado.');
+                          } else if (data == "false") {
+
+                            $('#email-error').css('color', 'green');
+                            $('#email-error').html('email liberado para cadastro.');
+                          }
+                        },
+                        error: function (data) {
+                          console.error(data);
+                        }
+
+                      });
+                    }
+                  });
+                </script>
+              </div>
+            </div>
+            <div class="col-sm-2 ">
+              <div class="form-group">
+                <label for="inputTelArea">DDD</label>
+                <input type="number" class="form-control" id="inputTelArea" name="tel_area" placeholder="" value="{{ volunteer.tel_area }}">
+              </div>
+            </div>
+            <div class=" col-sm-4 form-group">
+              <label for="inputTelefone">Telefone</label>
+              <input type="number" class="form-control" id="inputTelefone" name="tel_numero" placeholder="" max="999999999" value="{{ volunteer.tel_numero }}">
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="inputCep">CEP</label>
+                <input type="text" class="form-control" id="inputCep" name="end_cep" placeholder="" pattern="^([0-9]){5}-([0-9]){3}$" title="Código do CEP com traço" value="{{ volunteer.end_cep }}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="inputRua">Rua</label>
+                <input type="text" class="form-control" id="inputRua" name="end_rua" placeholder="" value="{{ volunteer.end_rua }}">
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="inputNumero">Número</label>
+                <input type="text" class="form-control" id="inputNumero" name="end_numero" placeholder="" value="{{ volunteer.end_numero }}">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="inputComplemento">Complemento</label>
+                <input type="text" class="form-control" id="inputComplemento" name="end_complemento" placeholder="" value="{{ volunteer.end_complemento }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="inputBairro">Bairro</label>
+                <input type="text" class="form-control" id="inputBairro" name="end_bairro" placeholder="" value="{{ volunteer.end_bairro }}">
+              </div>
+            </div>
+            <div class="col-sm-4 form-group">
+              <label for="inputCidade">Cidade</label>
+              <input type="text" class="form-control" id="inputCidade" name="end_cidade" placeholder="" value="{{ volunteer.end_cidade }}">
+            </div>
+            <div class="col-sm-2 form-group">
+              <label for="selectEstado">Estado</label>
+              <select class="form-control" id="selectEstado" name="end_estado" value="{{ volunteer.end_estado }}">
+                <option value="AC" {% if volunteer.end_estado == 'AC' %} selected {% endif %}>Acre</option>
+                <option value="AL" {% if volunteer.end_estado == 'AL' %} selected {% endif %}>Alagoas</option>
+                <option value="AP" {% if volunteer.end_estado == 'AP' %} selected {% endif %}>Amapá</option>
+                <option value="AM" {% if volunteer.end_estado == 'AM' %} selected {% endif %}>Amazonas</option>
+                <option value="BA" {% if volunteer.end_estado == 'BA' %} selected {% endif %}>Bahia</option>
+                <option value="CE" {% if volunteer.end_estado == 'CE' %} selected {% endif %}>Ceará</option>
+                <option value="DF" {% if volunteer.end_estado == 'DF' %} selected {% endif %}>Distrito Federal</option>
+                <option value="ES" {% if volunteer.end_estado == 'ES' %} selected {% endif %}>Espírito Santo</option>
+                <option value="GO" {% if volunteer.end_estado == 'GO' %} selected {% endif %}>Goiás</option>
+                <option value="MA" {% if volunteer.end_estado == 'MA' %} selected {% endif %}>Maranhão</option>
+                <option value="MT" {% if volunteer.end_estado == 'MT' %} selected {% endif %}>Mato Grosso</option>
+                <option value="MS" {% if volunteer.end_estado == 'MS' %} selected {% endif %}>Mato Grosso do Sul</option>
+                <option value="MG" {% if volunteer.end_estado == 'MG' %} selected {% endif %}>Minas Gerais</option>
+                <option value="PA" {% if volunteer.end_estado == 'PA' %} selected {% endif %}>Pará</option>
+                <option value="PB" {% if volunteer.end_estado == 'PB' %} selected {% endif %}>Paraíba</option>
+                <option value="PR" {% if volunteer.end_estado == 'PR' %} selected {% endif %}>Paraná</option>
+                <option value="PE" {% if volunteer.end_estado == 'PE' %} selected {% endif %}>Pernambuco</option>
+                <option value="PI" {% if volunteer.end_estado == 'PI' %} selected {% endif %}>Piauí</option>
+                <option value="RJ" {% if volunteer.end_estado == 'RJ' %} selected {% endif %}>Rio de Janeiro</option>
+                <option value="RN" {% if volunteer.end_estado == 'RN' %} selected {% endif %}>Rio Grande do Norte</option>
+                <option value="RS" {% if volunteer.end_estado == 'RS' %} selected {% endif %}>Rio Grande do Sul</option>
+                <option value="RO" {% if volunteer.end_estado == 'RO' %} selected {% endif %}>Rondônia</option>
+                <option value="RR" {% if volunteer.end_estado == 'RR' %} selected {% endif %}>Roraima</option>
+                <option value="SC" {% if volunteer.end_estado == 'SC' %} selected {% endif %}>Santa Catarina</option>
+                <option value="SP" {% if volunteer.end_estado == 'SP' %} selected {% endif %}>São Paulo</option>
+                <option value="SE" {% if volunteer.end_estado == 'SE' %} selected {% endif %}>Sergipe</option>
+                <option value="TO" {% if volunteer.end_estado == 'TO' %} selected {% endif %}>Tocantins</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="form-group">
+                <label>Observações:</label>
+                <textarea rows="3" class="form-control" id="obs" name="obs">{{ volunteer.obs }}</textarea>
+              </div>
+            </div>
+            <div class="col-sm-4 form-group">
+              <label for="id">Status </label>
+              <select class="form-control" name="status" id="status">
+                <option value="1" {% if volunteer.status == '1' %} selected {% endif %}>Ativo</option>
+
+                <option value="2" {% if volunteer.status == '2' %} selected {% endif %}>Inativo</option>
+              </select>
+            </div>
+            
+          </div>
+
+          <button type="submit" class="btn btn-success">Editar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+
+<script src="{{ base_url() }}/js/jquery.mask.js"></script>
+
+
+<script type="text/javascript">
+
+$('#inputCpf').mask('000.000.000-00', {reverse: true});
+$('#inputCep').mask('00000-000');
+</script>
+
+{% endblock %}

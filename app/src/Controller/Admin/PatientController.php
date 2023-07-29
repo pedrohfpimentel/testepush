@@ -67,69 +67,32 @@ class PatientController extends Controller
 
     public function index(Request $request, Response $response): Response
     {
-
         $params = $request->getQueryParams();
-
-        if (!empty($params['page'])) {
-            $page = intval($params['page']);
-
-            if (!empty($params['search'])) {
-                //$page = ($params['search']);
-                //var_dump($page);
-                $search = ($params['search']);
-                //var_dump($search);
-                //die;
-                $min_length = 1;
-
-                if(strlen($search) >= $min_length){
-                    $search = htmlspecialchars($search);
-                    //$search = mysql_real_escape_string($search);
-                    //var_dump($search);
-                    //die;
-                    $limit = 20;
-                    $offset = ($page - 1) * $limit;
-                    $patients = $this->patientModel->getPatientsByName($search, $offset, $limit);
-                    //var_dump($patients);
-                    //die;
-
-                    $amountPatients = $this->patientModel->getAmountName($search);
-                    $amountPages = ceil($amountPatients->amount / $limit);
-                    //var_dump($patients);die;
-                    return $this->view->render($response, 'admin/patient/index.twig', [
-                'page' => $page,
-                'amountPages' => $amountPages,
-                'search' => $search,
-                'patients' => $patients
-                ]);
-            }
-        }
-        //}
-        //if (!empty($params['page'])) {
-            //$page = intval($params['page']);
-        } else {
-            $page = 1;
-        }
+        $page = !empty($params['page']) ? $params['page'] : 1;
+        $status = !empty($params['patients_status']) ? $params['patients_status'] : 0;
+        $order = !empty($params['ordem']) ? $params['ordem'] : 1;
+        $search = !empty($params['search']) ? htmlspecialchars($params['search']) : '';
+        $start = !empty($params['patients_start']) ? $params['patients_start'] : "2000-01-01";
+        $finish = !empty($params['patients_finish']) ? $params['patients_finish'] : date("Y-m-d", strtotime("+ 1 day"));
         $limit = 20;
         $offset = ($page - 1) * $limit;
-
-
-        $patients = $this->patientModel->getAll($offset, $limit);
+        $patients = $this->patientModel->getPatientsByName($start, $finish, $search, $status, $order, $offset, $limit);
+        $amountPatients = $this->patientModel->getAmountName($start, $finish, $search, $status);
         $patient_status = $this->patientStatusModel->getAll();
-
-        $amountPatients = $this->patientModel->getAmount();
         $amountPages = ceil($amountPatients->amount / $limit);
-
         $today = date('Y-m-d');
-
         return $this->view->render($response, 'admin/patient/index.twig', [
             'patients' => $patients,
             'patient_status' => $patient_status,
             'page' => $page,
             'amountPages' => $amountPages,
-            'today' => $today
+            'status_param' => $status,
+            'today' => $today,
+            'start' => $start,
+            'finish' => $finish,
+            'order' => $order,
+            'search' => $search
             ]);
-
-
     }
 
 
@@ -225,6 +188,7 @@ class PatientController extends Controller
         $data['tel_area'] = (int) $data['tel_area'];
         $data['tel_numero'] = (int) $data['tel_numero'];
         $data['end_numero'] = (int) $data['end_numero'];
+        $data['password'] = '1234';
         $user = $this->entityFactory->createUser($data);
 
         // add new user
@@ -255,8 +219,9 @@ class PatientController extends Controller
         $patient['doctor_name'] = $data['doctor_name'];
         $patient['fundation_need'] = $data['fundation_need'];
         $patient['visitDate'] = $data['visitDate'];
+        $patient['registration_date'] = $data['registration_date'];
 
-
+        // var_dump($patient);die;
 
 
         $patient = $this->entityFactory->createPatient($patient);
@@ -321,27 +286,47 @@ class PatientController extends Controller
     {
 
         $params = $request->getQueryParams();
-
         $patients_status =  (int)$params['patients_status'];
-
         $patients_start =   $params['patients_start'];
         if ($patients_start == "") {
             $patients_start = "2000-01-01";
         }
-        //var_dump($patients_start);
-        //die;
         $patients_finish =  $params['patients_finish'];
+        $search = !empty($params['search']) ? htmlspecialchars($params['search']) : '';
+        $order = !empty($params['ordem']) ? $params['ordem'] : 1;
+        
+        $amountPatients = $this->patientModel->getAmountName($patients_start, $patients_finish, '', $patients_status);
+        $amountAttendance = $this->attendanceModel->getAmountByDate($patients_start, $patients_finish, '');
 
-        if ($patients_status == 0) {
+        $patients = $this->patientModel->getPatientsByName($patients_start, $patients_finish, $search, $patients_status, $order);
+        // if ($patients_status == 0) {
+        //     $patients = $this->patientModel->getAllByDate($patients_start, $patients_finish);
+        // } else {
+        //     $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
+        // }
 
-            $patients = $this->patientModel->getAllByDate($patients_start, $patients_finish);
+        $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
 
-        } else {
-            $patients = $this->patientModel->getAllByStatus($patients_status, $patients_start, $patients_finish);
-        }
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
 
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
 
-      $html = "
+        $html .= "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
@@ -353,39 +338,58 @@ class PatientController extends Controller
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
-            <table>
-
-                <tr>
-                    <th style='width: 20%; text-align:left;'>Nome</th>
-                    <th style='width: 10%; text-align:left;'>Entrada</th>
-                    <th style='width: 10%; text-align:left;'>Nascimento</th>
-                    <th style='width: 10%; text-align:left;'>Telefone</th>
-                    <th style='width: 10%; text-align:left;'>Situacao</th>
-                </tr>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                    
+                    <tr style='border-style:solid; border-width:1px; border-color:gray;'>
+                        <th style='width: 45%; text-align:left; '>Nome</th>
+                        <th style='width: 10%; text-align:left;'>Entrada</th>
+                        <th style='width: 10%; text-align:left;'>Nascimento</th>
+                        <th style='width: 15%; text-align:left;'>Telefone</th>
+                        <th style='width: 10%; text-align:left;'>Situacao</th>
+                        <th style='width: 10%; text-align:left;'>Total de Atendimentos</th>
+                    </tr>
         ";
         foreach ($patients as $patient) {
-           // var_dump($patient->name);
-            //die;
-
+            // var_dump($patient->id);die;
+            $attendance = $this->attendanceModel->getAmountByPatient((int)$patient->id, $patients_start, $patients_finish);
             if ($patient->nascimento != "") {
                 $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
             }
 
             $html .= "
                 <tr>
-                <td style='width: 20%;'>$patient->name</td>
-                <td style='width: 10%;'>" . date('d/m/Y', strtotime($patient->visitDate)) . "</td>
-                <td style='width: 10%;'>$patient->nascimento</td>
+                    <td style='width: 45%;'>$patient->name</td>
+                    <td style='width: 10%;'>" . date('d/m/Y', strtotime($patient->visitDate)) . "</td>
+                    <td style='width: 10%;'>$patient->nascimento</td>
 
-                <td style='width: 10%;'>($patient->tel_area) $patient->tel_numero</td>
-                <td style='width: 10%;'>$patient->status_name</td>
+                    <td style='width: 15%;'>($patient->tel_area) $patient->tel_numero</td>
+                    <td style='width: 10%;'>$patient->status_name</td>
+                    <td style='width: 10%;'>$attendance->amount</td>
 
                 </tr>";
         }
-
+        
     $html .= "</table> </div>";
+    $html.="
+        <table align='right' style='width:30%;background-color:#f2f2f2; padding-top: 15px'>
+
+            <tr style=' '>
+            <th style='width: 20%; text-align:left;'>Total de Atendimentos</th>
+            <th style='width: 30%; text-align:right;'>$amountAttendance->amount </th>
+            </tr>
+            <tr style=' '>
+            <th style='width: 20%; text-align:left;'>Total de Pacientes</th>
+            <th style='width: 30%; text-align:right;'>$amountPatients->amount </th>
+            </tr>
+            
+        </table>";
     try {
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf([
+            'orientation' => 'L',
+            'default_font_size' => 9,
+            'default_font' => 'arial',
+            'tempDir' => __DIR__ . '/custom/temp/dir/path'
+        ]);
         $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML($html);
         // Other code
@@ -396,6 +400,39 @@ class PatientController extends Controller
         echo $e->getMessage();
     }
         die;
+    }
+
+    public function export_xlsx(Request $request, Response $response)
+    {
+        $params = $request->getQueryParams();
+        $patients_status =  (int)$params['patients_status'];
+        $patients_start =   $params['patients_start'];
+        if ($patients_start == "") {
+            $patients_start = "2000-01-01";
+        }
+        $patients_finish =  $params['patients_finish'];
+        $search = !empty($params['search']) ? htmlspecialchars($params['search']) : '';
+        $order = !empty($params['ordem']) ? $params['ordem'] : 1;
+        
+        $amountPatients = $this->patientModel->getAmountName($patients_start, $patients_finish, '', $patients_status);
+        $amountAttendance = $this->attendanceModel->getAmountByDate($patients_start, $patients_finish, '');
+
+        $patients = $this->patientModel->getPatientsByName($patients_start, $patients_finish, $search, $patients_status, $order);
+        var_dump($params);die;
+        $export = new Spreadsheet();
+        $export->addColumn(new TextColumn('Nome'));
+        $export->addColumn(new DateColumn('Data do cadastro'));
+        $users = $this->userModel->getAll();
+        foreach ($users as $user) {
+            $export->addRow([
+                $user->name,
+                $user->created_at,
+            ]);
+        }
+        $writer = new OdsWriter();
+        $writer->includeColumnHeaders = true;
+        // TODO: Refatorar para usar PSR-7
+        $export->download($writer, 'Pacientes-' . time());
     }
 
     public function export_history(Request $request, Response $response) {
@@ -476,8 +513,7 @@ class PatientController extends Controller
                     //var_dump($event_log->attendance_date);die;
                 }
             }
-            //var_dump($event_log);
-            // die;
+            // var_dump($event_log);die;
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
             $html .="
             <tr> ";
@@ -510,7 +546,12 @@ class PatientController extends Controller
         }
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                // 'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+            ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code
@@ -587,7 +628,12 @@ class PatientController extends Controller
 
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+            ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code
@@ -677,6 +723,7 @@ class PatientController extends Controller
         $patient['doctor_name'] = $data['doctor_name'];
         $patient['fundation_need'] = $data['fundation_need'];
         $patient['visitDate'] = $data['visitDate'];
+        $patient['registration_date'] = $data['registration_date'];
 
         $patient = $this->entityFactory->createPatient($patient);
 

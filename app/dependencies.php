@@ -326,6 +326,19 @@ $container['Farol360\Ancora\Controller\Admin\UserController'] = function ($c) {
     );
 };
 
+$container['Farol360\Ancora\Controller\Admin\VolunteerController'] = function ($c) {
+    return new Farol360\Ancora\Controller\Admin\VolunteerController(
+        $c['view'],
+        $c['flash'],
+        new Farol360\Ancora\Model\VolunteerModel($c['db']),
+        new Farol360\Ancora\Model\UserModel($c['db']),
+        new Farol360\Ancora\Model\EventLogModel($c['db']),
+        new Farol360\Ancora\Model\EventLogTypeModel($c['db']),
+        new Farol360\Ancora\Model\EntityFactory()
+    );
+};
+
+
 $container['Farol360\Ancora\Controller\PageController'] = function ($c) {
     return new Farol360\Ancora\Controller\PageController(
         $c['view'],

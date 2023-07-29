@@ -39,13 +39,21 @@
   <body>
 
     <div class="wrapper">
-      <div class="sidebar" data-color="purple" {# data-image="{{ base_url() }}/img/sidebar-1.jpg" #}>
+      <div class="sidebar" style="background-color: #242d37;" data-color="blue-menu" {# data-image="{{ base_url() }}/img/sidebar-1.jpg" #}>
         <div class="logo">
-          <a href="{{ base_url() }}/admin" class="simple-text">
+          <a href="{{ base_url() }}/admin" class="simple-text" style="color:#FFF">
             F.A.P. Gestão
           </a>
         </div>
         <div class="sidebar-wrapper">
+          <div style="color:white; background-color: #3c4858;">
+            <p style="padding: 15px 15px 10px 15px;
+              margin-bottom: 0px;
+              text-align:center;
+              border-bottom-color: #b3cbdd;
+              /* border-bottom-style: solid; */
+              border-width: 1px;">MENU PRINCIPAL</p>
+          </div>
           <ul class="nav">
             <li {% if nav_active == "dashboard" %} class="active" {% endif %}>
               <a href="{{ base_url }}/admin">
@@ -71,6 +79,15 @@
                   portrait
                 </i>
                 <p>Profissionais</p>
+              </a>
+            </li>
+
+            <li {% if nav_active == "voluntarios" %} class="active" {% endif %}>
+              <a href="{{ base_url }}/admin/voluntarios">
+                <i class="material-icons">
+                  diversity_3
+                </i>
+                <p>Voluntários</p>
               </a>
             </li>
 

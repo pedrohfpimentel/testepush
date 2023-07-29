@@ -324,26 +324,48 @@ class RemessaSaidaController extends Controller
       $produtos_remessa = $this->produtoRemessaModel->getAllByRemessa((int)$rem->id);
       $rem->produtos_remessa = $produtos_remessa;
     }
-    $html = "
-          <div style='width: 24%; float:left;'>
-            <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
-          </div>
-          <div style='width: 75%;'>
-            <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
-            <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Saída Cadastrados</h3>
-            <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-          </div>
-          <hr>
-          <div style='width:100%; margin-top: 10px;'>
-          <table>
-            <tr>
-              <th style='width: 10%; text-align:left;'>Data</th>
-              <th style='width: 20%; text-align:left;'>Produto</th>
-              <th style='width: 5%; text-align:left;'>Qtd</th>
-              <th style='width: 30%; text-align:left;'>Fornecedor</th>
-              <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
-            </tr>
+    $html .= "
+      <style>
+          table {
+          border-collapse: collapse;
+          border-spacing: 0;
+          width: 100%;
+          border: 1px solid #ddd;
+          }
+
+          th, td {
+          text-align: left;
+          padding: 5px;
+          line-height: 100%;
+          }
+
+          tr:nth-child(even) {
+          background-color: #f2f2f2;
+          }
+      </style>
       ";
+    $html .= "
+      <div style='width: 24%; float:left;'>
+        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+      </div>
+      <div style='width: 75%;'>
+        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Saída Cadastrados</h3>
+        <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
+      </div>
+      <hr>
+      <div style='width:100%; margin-top: 10px;'>
+      
+        <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                  
+          <tr style='border-style:solid; border-width:1px; border-color:gray;'>
+            <th style='width: 10%; text-align:left;'>Data</th>
+            <th style='width: 20%; text-align:left;'>Produto</th>
+            <th style='width: 5%; text-align:left;'>Qtd</th>
+            <th style='width: 35%; text-align:left;'>Fornecedor</th>
+            <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
+          </tr>
+    ";
       foreach ($remessa as $remessas) {
         //var_dump($remessa);die;
         if($remessas->removido != '1'){
@@ -381,7 +403,12 @@ class RemessaSaidaController extends Controller
       }
     $html .= "</table> </div>";
     try {
-      $mpdf = new \Mpdf\Mpdf();
+      $mpdf = new \Mpdf\Mpdf([
+        // 'orientation' => 'L',
+        'default_font_size' => 9,
+        'default_font' => 'arial',
+        'tempDir' => __DIR__ . '/custom/temp/dir/path'
+      ]);
       $mpdf->setFooter('{PAGENO}');
       $mpdf->WriteHTML($html);
       // Other code

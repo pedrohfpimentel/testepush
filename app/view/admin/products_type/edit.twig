@@ -4,22 +4,22 @@
 {% block breadcrumbs %}
 <ol class="breadcrumb">
   <li><a href="{{ base_url() }}/admin">Início</a></li>
-  <li><a href="{{ base_url() }}/admin/products_type">Cargos</a></li>
+  <li><a href="{{ base_url() }}/admin/products_type">Categorias de Produtos</a></li>
   <li class="active">{{ products_type.name }}</li>
 
 </ol>
 {% endblock %}
 {% block content %}
 
-<div class="card">
-  <div class="card-header" data-background-color="blue">
+<div class="panel panel-default">
+  <div class="panel-heading" style="">
     <div class="row">
       <div class="col-xs-12">
-        <h3>Editar Cargo</h3>
+        <p class="panel-title">Editar Categoria</p>
       </div>
     </div>
   </div>
-  <div class="card-content">
+  <div class="panel-body">
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/products_type/update" method="POST">

@@ -12,70 +12,110 @@
 
 <div class="main">
   <div class="row">
-      <div class="col-xs-12 col-sm-3">
+      <div class="col-xs-12 col-sm-4">
         <a class="btn btn-success" href="{{ base_url() }}/admin/patients/add">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Paciente
         </a>
       </div>
-      <div class="col-sm-9">
-        <div class="card">
-          <div class="card-header" data-background-color="purple">
-            Relatório
-          </div>
-          <div class="card-content" style="padding-top:5px;">
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label for="id">Status Paciente</label>
-                <select name="patients_status" id="patients_status">
-                  <option value="0">Todos</option>
-                  {% for status in patient_status %}
-                    <option value="{{ status.id }}" >{{ status.name }}</option>
-
-                  {% endfor %}
-                </select>
+      <div class="col-sm-6 col-sm-offset-2">
+        <div class="panel panel-default">
+          <div class="panel-heading" style="">
+            <div class="row">
+              <div class="col-sm-6">
+                Opções
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="patient_name">Data Inicial</label>
-                <input id="patients_start" class="form-control" type="date" name="patients_start" required>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="patient_name">Data Final</label>
-                <input id="patients_finish" class="form-control" type="date" name="patients_finish" value="{{ today }}"  required>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                <a class="btn btn-default" id="patients_download" name="patients_download"  href="{{ base_url() }}/admin/patients/export" target="_blank">
+              <div class="col-sm-6">
+                <a class="btn btn-primary btn-sm pull-right" href="" style="margin:0px" id="search_btn">
+                  <i class="material-icons" >search</i>
+                </a>
+                <a class="btn btn-default btn-sm " id="patients_download" name="patients_download" style="margin:0px 5px" href="{{ base_url() }}/admin/patients/export" target="_blank">
                   <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-                  Relatório
+                  Relatório PDF
+                </a>
+                <a class="btn btn-default btn-sm " id="patients_download_xlsx" name="patients_download_xlsx" style="margin:0px 5px;" href="{{ base_url() }}/admin/patients/export_xlsx" target="_blank">
+                  {# <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden"> #}
+                  Relatório XLSX
                 </a>
               </div>
             </div>
+          </div>
+          
+          <div class="panel-body" style="padding-top:5px;">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group"> 
+                  <label for="search">Buscar Nome</label>
+                  <input type="search" id="search" name="search" style="border-radius: 5px; color: #444; width: 100%" value="{{ search }}">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="patient_name">Data Inicial</label>
+                  <input id="patients_start" class="form-control" type="date" name="patients_start" {% if start != '2000-01-01' %} value="{{ start }}" {% endif %} required>
+                </div>
+              </div>
+              
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="patient_name">Data Final</label>
+                  <input id="patients_finish" class="form-control" type="date" name="patients_finish" value="{{ today }}"  required>
+                </div>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-sm-3 ">
+                <div class="form-group" style="margin-top:0px">
+                  <label for="id" >Ordernar Por:</label>
+                  <div>
+                    <select name="order" id="order" style="padding: 0px 10px">
+                      <option value="1" {% if order == 1 %} selected {% endif %}>Data de Cadastro</option>
+                      <option value="2" {% if order == 2 %} selected {% endif %}>Nome do Paciente</option>
+                      <option value="3" {% if order == 3 %} selected {% endif %}>Situação do Paciente</option>
+                      
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group" style="margin-top:0px">
+                  <label for="id">Status Paciente</label>
+                  <div>
+                    <select name="patients_status" id="patients_status" style="padding: 0px 10px">
+                      <option value="0">Todos</option>
+                      {% for status in patient_status %}
+                        <option value="{{ status.id }}" {% if status_param == status.id %} selected {% endif %}>{{ status.name }}</option>
+
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+            
+            
           </div>
         </div>
 
       </div>
     </div>
-  <div class="card">
-    <div class="card-header" data-background-color="blue">
+  <div class="panel panel-default">
+    <div class="panel-heading" >
       <div class="row">
         <div class="col-sm-7">
-          <h4>Pacientes Cadastrados</h4>
+          <p  class="panel-title">Pacientes Cadastrados</p>
         </div>
-        <div class="col-sm-5"> 
+        {# <div class="col-sm-5"> 
           Buscar Nome
           <input type="search" id="search" name="search" style="border-radius: 5px; color: #444" value="{{ search }}">
             <a class="btn btn-primary" href="" id="search_btn">
               <i class="material-icons" >search</i>
             </a>
-        </div>
+        </div> #}
       </div>
     </div>
-    <div class="card-content">
+    <div class="panel-body">
       <div class="row">
         <div class="col-xs-12">
           <table class="table table-striped data-table" style="border-collapse:separate">
@@ -141,26 +181,46 @@
 
 
   <script type="text/javascript">
-      $("#patients_download").click(function(){
-       // console.log('teste');
-      var patients_start = $('#patients_start').val();
-       var patients_finish =$('#patients_finish').val();
-       var base_url_hidden =$('#base_url_hidden').val();
-       var patients_status = $('#patients_status').val();
-       
-          console.log($('#patients_download').attr('href'));
-          $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status);
-});
-        </script>
-
-
-        <script type="text/javascript">
-      $("#search_btn").click(function(){
+    $("#patients_download").click(function(){
+        // console.log('teste');
       var search = $('#search').val();
-          console.log($('#search_btn').attr('href'));
-          $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search + '&page={{ 1 }}');
-        });
-        </script>
+      var patients_start = $('#patients_start').val();
+      var patients_finish = $('#patients_finish').val();
+      var base_url_hidden = $('#base_url_hidden').val();
+      var patients_status = $('#patients_status').val();
+      var ordem = $('#order').val();
+        
+      console.log($('#patients_download').attr('href'));
+      $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?search=' + search +'&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem);
+    });
+
+    $("#patients_download_xlsx").click(function(){
+        // console.log('teste');
+      var search = $('#search').val();
+      var patients_start = $('#patients_start').val();
+      var patients_finish = $('#patients_finish').val();
+      var base_url_hidden = $('#base_url_hidden').val();
+      var patients_status = $('#patients_status').val();
+      var ordem = $('#order').val();
+        
+      console.log($('#patients_download').attr('href'));
+      $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export_xlsx?search=' + search +'&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem);
+    });
+  </script>
+
+
+  <script type="text/javascript">
+    $("#search_btn").click(function(){
+      var search = $('#search').val();
+      var patients_start = $('#patients_start').val();
+      var patients_finish = $('#patients_finish').val();
+      var base_url_hidden = $('#base_url_hidden').val();
+      var patients_status = $('#patients_status').val();
+      var ordem = $('#order').val();
+      console.log($('#search_btn').attr('href'));
+      $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search + '&page={{ 1 }}&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem);
+    });
+  </script>
 
 
   <script type="text/javascript">

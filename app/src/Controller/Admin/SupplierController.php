@@ -108,12 +108,32 @@ class SupplierController extends Controller
             
         
 
-            $suppliers = $this->supplierModel->getAll();
+        $suppliers = $this->supplierModel->getAll();
 
-     //var_dump($suppliers);
-            //die;
+        //var_dump($suppliers);
+        //die;
 
-      $html = "
+        $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
+
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
+
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
+        $html .= "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
@@ -125,12 +145,12 @@ class SupplierController extends Controller
             </div>
             <hr>
             <div style='width:100%; margin-top: 10px;'>
-            <table>
-            
-                <tr>
-                    <th style='width: 20%; text-align:left;'>Nome</th>
+            <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                    
+                <tr style='border-style:solid; border-width:1px; border-color:gray;'>
+                    <th style='width: 30%; text-align:left;'>Nome</th>
                     <th style='width: 20%; text-align:left;'>Email</th>
-                    <th style='width: 20%; text-align:left;'>Descrição</th>
+                    <th style='width: 30%; text-align:left;'>Descrição</th>
                     <th style='width: 10%; text-align:left;'>DDD</th>
                     <th style='width: 10%; text-align:left;'>Telefone</th>
                     
@@ -143,9 +163,9 @@ class SupplierController extends Controller
            
            $html .= "
             <tr>
-                <td style='width: 20%; text-align:left;'>$supplier->name</td>
+                <td style='width: 30%; text-align:left;'>$supplier->name</td>
                 <td style='width: 20%; text-align:left;'>$supplier->email</td>
-                <td style='width: 20%; text-align:left;'>$supplier->description</td>
+                <td style='width: 30%; text-align:left;'>$supplier->description</td>
                 <td style='width: 10%; text-align:left;'>$supplier->ddd</td>
                 <td style='width: 10%; text-align:left;'>$supplier->telefone</td>
                
@@ -154,7 +174,12 @@ class SupplierController extends Controller
     
     $html .= "</table> </div>";
     try {
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf([
+            // 'orientation' => 'L',
+            'default_font_size' => 9,
+            'default_font' => 'arial',
+            'tempDir' => __DIR__ . '/custom/temp/dir/path'
+        ]);
         $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML($html);
         // Other code

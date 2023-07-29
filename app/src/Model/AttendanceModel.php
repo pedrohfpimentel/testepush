@@ -96,36 +96,16 @@ class AttendanceModel extends Model
     {
         $sql = "
             SELECT
-                event_logs.id as id,
-                event_logs.id_event_log_type,
-                event_logs.id_patient,
-                event_logs.id_professional,
-                event_logs.attendance_day,
-                event_logs.description,
-                event_logs.attendance_start,
-                event_log_types.id as event_log_types_id,
-                event_log_types.slug as event_log_types_slug,
-                event_log_types.name as event_log_types_name,
-                event_log_types.description as event_log_types_description,
-                event_log_types.attendance_start as event_log_types_attendance_start,
-                patients.id as patients_id,
-                patients.id_user as patients_id_user,
-                users.name as users_name,
-                users.email as users_email
-
+                attendances.*
             FROM
-                event_logs
-                LEFT JOIN event_log_types ON event_logs.id_event_log_type = event_log_types.id
-                LEFT JOIN patients ON patients.id = event_logs.id_patient
-                LEFT JOIN users ON patients.id_user = users.id
+                attendances
             WHERE
                 id_patient = :id
-
         ";
         $query = $this->db->prepare($sql);
         $parameters = [':id' => $id];
         $query->execute($parameters);
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Attendance::class);
         return $query->fetchAll();
     }
 
@@ -194,6 +174,45 @@ class AttendanceModel extends Model
                 attendances
         ";
         $query = $this->db->prepare($sql);
+        $query->execute();
+        return $query->fetch();
+    }
+
+    public function getAmountByPatient(int $id, $start, $finish)
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+
+            FROM
+                attendances
+            WHERE
+                id_patient = ?
+            AND 
+                attendances.attendance_day BETWEEN ? AND ? 
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $id, \PDO::PARAM_INT);
+        $query->bindValue(2, $start, \PDO::PARAM_STR);
+        $query->bindValue(3, $finish, \PDO::PARAM_STR);
+        $query->execute();
+        return $query->fetch();
+    }
+
+    public function getAmountByDate(string $start, string $finish, $search)
+    {
+        $sql = "
+            SELECT
+                COUNT(id) AS amount
+
+            FROM
+                attendances
+            WHERE
+                attendances.attendance_day BETWEEN ? AND ? 
+        ";
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $start, \PDO::PARAM_STR);
+        $query->bindValue(2, $finish, \PDO::PARAM_STR);
         $query->execute();
         return $query->fetch();
     }

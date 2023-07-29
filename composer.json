@@ -7,12 +7,17 @@
             "Farol360\\Ancora\\": "app/src/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.3.12",
+            "ext-gd": "1"
+        }
+    },
     "require": {
-        "php": "^7.0",
+        "php": "7.3.12",
         "ext-zip": "*",
         "slim/slim": "^3.8",
-        "slim/twig-view": "^2.2",
-        "twig/twig": "^2.0",
+        "slim/twig-view": "2.5.0",
         "slim/flash": "^0.2.0",
         "monolog/monolog": "^1.23",
         "vlucas/phpdotenv": "^2.4",
@@ -24,7 +29,6 @@
         "phpmailer/phpmailer": "^5.2",
         "mpratt/embera": "^1.9",
         "akrabat/rka-slim-session-middleware": "^2.0",
-        "mpdf/mpdf": "^7.1"
+        "mpdf/mpdf": "^8.0"
     }
-
 }

@@ -10,12 +10,12 @@
 </ol>
 {% endblock %}
 {% block content %}
-<div class="col-sm-10 pull-right">
-  <div class="card">
-    <div class="card-header" data-background-color="purple">
+{# <div class="col-sm-10 pull-right">
+  <div class="panel panel-default">
+    <div class="panel-heading" style="">
       Relatórios
     </div>
-    <div class="card-content" style="padding-top:5px;">
+    <div class="panel-body" style="padding-top:5px;">
       <div class="col-sm-3" style="padding-left:0px;">
         <div class="form-group">
           <label for="history_date">Data Inicial</label>
@@ -46,54 +46,95 @@
       </div>
     </div>
   </div>
-</div>
+</div> #}
 
+<div class="col-sm-6  col-sm-offset-6">
+  <div class="panel panel-default">
+    <div class="panel-heading" style="">
+      <div class="row">
+        <div class="col-sm-4">
+          Relatório
+        </div>
+        <div class="col-sm-8">
+          <a class="btn btn-default btn-sm pull-right" id="attendance_download" name="attendance_download" style="margin:0px 5px" href="{{ base_url() }}/admin/attendances/export" target="_blank">
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            Relatório de Atendimentos
+          </a>
+          <a class="btn btn-default btn-sm pull-right" id="attendance_download" name="attendance_download" style="margin:0px 5px" href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}" target="_blank">
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            Relatório de Geral
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body" style="padding-top:5px;">
+      <div class="col-sm-4" style="padding-left:0px;">
+        <div class="form-group">
+          <label for="attendance_name">Data Inicial</label>
+          <input id="history_start" class="form-control" type="date" name="history_start" required>
+        </div>
+      </div>
+      <div class="col-sm-4"  style="padding-left:0px;">
+        <div class="form-group">
+          <label for="attendance_name">Data Final</label>
+          <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
+        </div>
+      </div>
+      <div class="col-sm-4"  style="padding-left:0px;">
+        <div class="form-group pull-right">
+          
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 <div class="row">
   <div class="col-sm-12">
-    <div class="card">
-  <div class="card-header" data-background-color="blue">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="">
     <div class="row">
         <div class="col-sm-7">
-        <h3>Histórico de Paciente - {{ patient.name }}</h3>
+        <p  class="panel-title">Histórico de Paciente - {{ patient.name }}</p>
       </div>
       <div class="col-sm-5">
         <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
-          <label for="id_status" style="color: #ffff">Ordenar</label>
-          <select name="search" id="search" style="border-radius: 5px; color: #444">
+          <select name="search" id="search" style="border-radius: 5px; color: #444; padding:0px 5px">
             <option value="1" {% if search == '1' %} selected {% endif %}>Cadastro - Crescente</option>
             <option value="2" {% if search == '2' %} selected {% endif %}>Cadastro - Descrescente</option>
           </select>
-            <a class="btn btn-primary" href="" id="search_btn">
+            <a class="btn btn-primary btn-sm" href="" id="search_btn" style="margin:0px">
               <i class="material-icons">search</i>
             </a>
         </div>
       </div>
     </div>
   </div>
-  <div class="card-content">
+  <div class="panel-body">
     <div class="row">
       <div class="col-md-12">
         <table class="table table-striped data-table">
           <thead>
-            <th style="padding-left:0px; padding-right:0px; width:185px;">Data Remessa/Atendimento</th>
-            <th style="padding-left:0px; padding-right:0px;">Data de Cadastro</th>
-            <th>Tipo</th>
-            <th>Descrição</th>
-            <th style="padding-right:0px;">Produto/Profissional</th>
+            <th style="width: 10%">Data de Cadastro</th>
+            <th style="width: 15%;">Data Remessa/Atendimento</th>
+            <th style="width: 10%">Tipo</th>
+            <th style="width: 30%;">Produto/Profissional</th>
+            <th style="width: 35%">Descrição</th>
           </thead>
           <tbody>
             {% for event_log in event_logs %}
               <tr>
-                {% if event_log.id_remessa != false %}
-                  <td><center>{{ event_log.data_remessa }}</center></td>
-                  {% elseif event_log.id_professional != false%}
-                    <td><center>{{ event_log.attendance_date|date("d/m/Y") }}</center></td>
-                  {% else %}
-                    <td><center>- - - -</center></td>
-                {% endif %}
                 <td>{{ event_log.date }}</td>
+                {% if event_log.id_remessa != false %}
+                  <td>{{ event_log.data_remessa }}</td>
+                  {% elseif event_log.id_professional != false%}
+                    <td>{{ event_log.attendance_date|date("d/m/Y") }}</td>
+                  {% else %}
+                    <td>- - - -</td>
+                {% endif %}
                 <td>{{ event_log.event_log_types_name }}</td>
-                <td>{{ event_log.description }}</td>
+                
 
                 {% if event_log.id_remessa != false %}
                     <td style="max-width:250px">{{ event_log.product_name }}</td>
@@ -102,6 +143,7 @@
                     {% else %}
                       <td>{{ '- - -' }}</td>
                 {% endif %}
+                <td>{{ event_log.description }}</td>
               </tr>
             {% else %}
               <div class="alert alert-danger" role="alert">Não foram encontrados eventos para este usuário.</div>

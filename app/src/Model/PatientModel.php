@@ -29,9 +29,10 @@ class PatientModel extends Model
                 treatment_where,
                 doctor_name,
                 fundation_need,
-                visitDate
+                visitDate,
+                registration_date
                 )
-            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need, :visitDate)
+            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need, :visitDate, :registration_date )
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -53,6 +54,7 @@ class PatientModel extends Model
             ':doctor_name'      => $patient->doctor_name,
             ':fundation_need'   => $patient->fundation_need,
             ':visitDate'        => $patient->visitDate,
+            ':registration_date'        => $patient->registration_date,
 
 
         ];
@@ -92,6 +94,7 @@ class PatientModel extends Model
                 patients.doctor_name as doctor_name,
                 patients.fundation_need as fundation_need,
                 patients.visitDate as visitDate,
+                patients.registration_date as registration_date,
                 patients.id_user,
                 diseases.id as disease_id,
                 diseases.name as disease_name,
@@ -274,7 +277,7 @@ class PatientModel extends Model
     }
 
 
-    public function getAmountName($search)
+    public function getAmountName($start, $finish, $search, $status)
     {
         $sql = "
             SELECT
@@ -286,38 +289,111 @@ class PatientModel extends Model
             patients
             LEFT JOIN users ON users.id = patients.id_user
                 
-            WHERE 
-                users.name LIKE CONCAT('%',?, '%')
+            WHERE
+                (patients.visitDate BETWEEN ? AND ?) 
         ";
+        if($status != 0) {
+            $sql .= "
+                AND patients.id_status = ?
+            ";
+        }
+        if($search != '') {
+            $sql .= "
+                AND users.name LIKE CONCAT('%',?, '%')
+            ";
+        }
         $query = $this->db->prepare($sql);
-        $query->bindValue(1, $search, \PDO::PARAM_STR);
+        $query->bindValue(1, $start, \PDO::PARAM_STR);
+        $query->bindValue(2, $finish, \PDO::PARAM_STR);
+        if($status != 0){
+            $query->bindValue(3, $status, \PDO::PARAM_INT);
+            if($search != '') {
+                $query->bindValue(4, $search, \PDO::PARAM_STR);
+            }
+            if($search == '') {
+                
+            }
+        }
+        if($status == 0){
+            if($search != '') {
+                $query->bindValue(3, $search, \PDO::PARAM_STR);
+                
+            }
+            if($search == '') {
+                
+            }
+        }
         $query->execute();
         return $query->fetch();
     }
 
 
 
-    public function getPatientsByName($search, int $offset = 0, int $limit = PHP_INT_MAX): array
-        {
-            $sql = "
-                SELECT 
-                    users.*,
-                    patients.* 
-                FROM
-                    patients
-                    LEFT JOIN users ON users.id = patients.id_user
-                WHERE 
-                    users.name LIKE CONCAT('%',?, '%')
-                LIMIT ? , ?
-                    ";
-
-            $query = $this->db->prepare($sql);
-            $query->bindValue(1, $search, \PDO::PARAM_STR);
-            $query->bindValue(2, $offset, \PDO::PARAM_INT);
-            $query->bindValue(3, $limit, \PDO::PARAM_INT);
+    public function getPatientsByName($start, $finish, $search, $status, $order, int $offset = 0, int $limit = PHP_INT_MAX): array
+    {
+        $sql = "
+            SELECT 
+                users.*,
+                patients.* 
+            FROM
+                patients
+                LEFT JOIN users ON users.id = patients.id_user
+            WHERE
+                (patients.visitDate BETWEEN ? AND ?) 
+        ";
+        if($status != 0) {
+            $sql .= "
+                AND patients.id_status = ?
+            ";
+        }
+        if($search != '') {
+            $sql .= "
+                AND users.name LIKE CONCAT('%',?, '%')
+            ";
+        }
+        if($order == 1) {
+            $sql .= " ORDER BY patients.registration_date ASC";
+        }
+        if($order == 2) {
+            $sql .= " ORDER BY users.name ASC";
+        }
+        if($order == 3) {
+            $sql .= " ORDER BY patients.id_status ASC";
+        }
+        $sql .= "
+            LIMIT ? , ?
+        ";
+        
+        $query = $this->db->prepare($sql);
+        $query->bindValue(1, $start, \PDO::PARAM_STR);
+        $query->bindValue(2, $finish, \PDO::PARAM_STR);
+        if($status != 0){
+            $query->bindValue(3, $status, \PDO::PARAM_INT);
+            if($search != '') {
+                $query->bindValue(4, $search, \PDO::PARAM_STR);
+                $query->bindValue(5, $offset, \PDO::PARAM_INT);
+                $query->bindValue(6, $limit, \PDO::PARAM_INT);
+            }
+            if($search == '') {
+                $query->bindValue(4, $offset, \PDO::PARAM_INT);
+                $query->bindValue(5, $limit, \PDO::PARAM_INT);
+            }
+        }
+        if($status == 0){
+            if($search != '') {
+                $query->bindValue(3, $search, \PDO::PARAM_STR);
+                $query->bindValue(4, $offset, \PDO::PARAM_INT);
+                $query->bindValue(5, $limit, \PDO::PARAM_INT);
+            }
+            if($search == '') {
+                $query->bindValue(3, $offset, \PDO::PARAM_INT);
+                $query->bindValue(4, $limit, \PDO::PARAM_INT);
+            }
+        }
+            
         $query->execute();
         return $query->fetchAll();
-        }
+    }
 
 
      public function getPatientsDownload($patients_start, $patients_finish)
@@ -363,7 +439,8 @@ class PatientModel extends Model
                 treatment_where = :treatment_where,
                 doctor_name     = :doctor_name,
                 fundation_need  = :fundation_need,
-                visitDate       = :visitDate
+                visitDate       = :visitDate,
+                registration_date = :registration_date
             WHERE
                 id = :id
         ";
@@ -388,6 +465,7 @@ class PatientModel extends Model
             ':doctor_name'      => $patient->doctor_name,
             ':fundation_need'   => $patient->fundation_need,
             ':visitDate'        => $patient->visitDate,
+            ':registration_date'        => $patient->registration_date,
 
         ];
 

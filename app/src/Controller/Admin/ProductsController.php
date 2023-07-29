@@ -452,7 +452,12 @@ class ProductsController extends Controller
         }
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                // 'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+              ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code
@@ -592,7 +597,12 @@ class ProductsController extends Controller
             }//die;
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+              ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code
@@ -726,7 +736,12 @@ class ProductsController extends Controller
             }//die;
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+              ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code

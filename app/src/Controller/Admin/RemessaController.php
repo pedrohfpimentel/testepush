@@ -349,7 +349,27 @@ class RemessaController extends Controller
         $rem->produtos_remessa = $produtos_remessa;
         //var_dump($rem);
       }
-      $html = "
+      $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
+
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
+
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
+      $html .= "
         <div style='width: 24%; float:left;'>
             <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
         </div>
@@ -360,16 +380,17 @@ class RemessaController extends Controller
         </div>
         <hr>
         <div style='width:100%; margin-top: 10px;'>
-        <table>
-            <tr>
-              <th style='width: 10%; text-align:left;'>Data</th>
-              <th style='width: 20%; text-align:left;'>Produto</th>
-              <th style='width: 5%; text-align:left;'>qtd</th>
-              <th style='width: 10%; text-align:left;'>Preço</th>
-              <th style='width: 30%; text-align:left;'>Fornecedor</th>
-              <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
+        <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                    
+          <tr style='border-style:solid; border-width:1px; border-color:gray;'>
+            <th style='width: 10%; text-align:left;'>Data</th>
+            <th style='width: 20%; text-align:left;'>Produto</th>
+            <th style='width: 5%; text-align:left;'>qtd</th>
+            <th style='width: 10%; text-align:left;'>Preço</th>
+            <th style='width: 30%; text-align:left;'>Fornecedor</th>
+            <th style='width: 30%; text-align:left;'>Tipo de Entrada</th>
 
-            </tr>
+          </tr>
       ";
 
       foreach ($remessa as $remessas) {
@@ -428,7 +449,12 @@ class RemessaController extends Controller
       $html .= "</table> </div>";
 
       try {
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf([
+          // 'orientation' => 'L',
+          'default_font_size' => 9,
+          'default_font' => 'arial',
+          'tempDir' => __DIR__ . '/custom/temp/dir/path'
+        ]);
         $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML($html);
         // Other code

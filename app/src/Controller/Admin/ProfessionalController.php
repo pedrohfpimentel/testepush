@@ -281,29 +281,52 @@ class ProfessionalController extends Controller
             //die;*/
         $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
         $professionals = $this->professionalModel->getAll();
-            $dir = getcwd();
-      $html = "
-      <div style='width: 24%; float:left;'>
-        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
-      </div>
-      <div style='width: 75%;'>
-        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
-        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Profissionais Cadastrados</h3>
-        <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-      </div>
-      <hr>
-      <div style='width:100%; margin-top: 10px;'>
-      <table>
-            <tr>
-                <th style='width: 25%; text-align:left;'>Nome</th>
-                <th style='width: 25%; text-align:left;'>Email</th>
+        $dir = getcwd();
+        $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
+
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
+
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
+
+        $html .= "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
+
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                    
+                <tr style='border-style:solid; border-width:1px; border-color:gray;'>
+                    <th style='width: 30%; text-align:left;'>Nome</th>
+                    <th style='width: 25%; text-align:left;'>Email</th>
 
 
-                <th style='width:  5%; text-align:left;'>DDD</th>
-                <th style='width: 10%; text-align:left;'>Telefone</th>
-                <th style='width: 10%; text-align:left;'>CEP</th>
-                <th style='width: 20%; text-align:left;'>Categoria</th>
-            </tr>
+                    <th style='width: 10%; text-align:left;'>DDD</th>
+                    <th style='width: 10%; text-align:left;'>Telefone</th>
+                    <th style='width: 10%; text-align:left;'>CEP</th>
+                    <th style='width: 15%; text-align:left;'>Categoria</th>
+                </tr>
         ";
         /* foreach ($professionals as $professional) {
             //var_dump($professional);
@@ -320,19 +343,24 @@ class ProfessionalController extends Controller
             $professional = $this->entityFactory->createProfessional($professional);
             $html .= "
             <tr>
-            <td style='width: 25%; text-align:left;'>$professional->name</td>
-            <td style='width: 25%; text-align:left;'>$professional->email</td>
-            <td style='width:  5%; text-align:left;'>$professional->tel_area</td>
-            <td style='width: 15%; text-align:left;'>$professional->tel_numero</td>
-            <td style='width: 10%; text-align:left;'>$professional->end_cep</td>
-            <td style='width: 20%; text-align:left;'>$professional->professional_type_name</td>
+                <td style='width: 30%; text-align:left;'>$professional->name</td>
+                <td style='width: 25%; text-align:left;'>$professional->email</td>
+                <td style='width: 10%; text-align:left;'>$professional->tel_area</td>
+                <td style='width: 10%; text-align:left;'>$professional->tel_numero</td>
+                <td style='width: 10%; text-align:left;'>$professional->end_cep</td>
+                <td style='width: 15%; text-align:left;'>$professional->professional_type_name</td>
             </tr>";
         }
         //die;
 
         $html .= "</table> </div>";
     try {
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf([
+            // 'orientation' => 'L',
+            'default_font_size' => 9,
+            'default_font' => 'arial',
+            'tempDir' => __DIR__ . '/custom/temp/dir/path'
+        ]);
         $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
         // Other code
@@ -362,10 +390,30 @@ class ProfessionalController extends Controller
         $professional = $this->professionalModel->get($id);
         $event_logs = $this->eventLogModel->getByProfessionalNamePatient((int)$id, $history_start, $history_finish,  (int)$search);
         $patients = $this->patientModel->getAll();
-        //var_dump($params);
-        //die;
+        // var_dump($params);die;
 
-        $html = "
+        $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
+
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
+
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
+
+        $html .= "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
@@ -380,9 +428,9 @@ class ProfessionalController extends Controller
             <table>
 
             <tr>
-                <th style='width: 33%; text-align:left;'>Data</th>
-                <th style='width: 33%; text-align:left;'>Tipo</th>
-                <th style='width: 33%; text-align:left;'>Descrição</th>
+                <th style='width: 10%; text-align:left;'>Data</th>
+                <th style='width: 20%; text-align:left;'>Tipo</th>
+                <th style='width: 40%; text-align:left;'>Descrição</th>
                 <th style='width: 30%; text-align:left;'>Paciente</th>
 
             </tr>
@@ -400,9 +448,9 @@ class ProfessionalController extends Controller
             $event_log->date = date("d/m/Y", strtotime($event_log->date));
             $html .="
             <tr>
-                <td style='width: 20%; text-align:left;'>$event_log->date</td>
-                <td style='width: 30%; text-align:left;'>$event_log->event_log_types_name</td>
-                <td style='width: 50%; text-align:left;'>$event_log->description</td>
+                <td style='width: 10%; text-align:left;'>$event_log->date</td>
+                <td style='width: 20%; text-align:left;'>$event_log->event_log_types_name</td>
+                <td style='width: 40%; text-align:left;'>$event_log->description</td>
                 <td style='width: 30%; text-align:left;'>$event_log->patient_name</td>
 
             </tr> ";
@@ -410,7 +458,12 @@ class ProfessionalController extends Controller
         }
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+            ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code
@@ -452,7 +505,28 @@ class ProfessionalController extends Controller
         //var_dump($attendance);
          //  die;
 
-        $html = "
+         $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
+
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
+
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
+
+        $html .= "
             <div style='width: 24%; float:left;'>
                 <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
             </div>
@@ -467,9 +541,9 @@ class ProfessionalController extends Controller
             <table>
 
             <tr>
-                <th style='width: 100px; text-align:left;'>Data / Hora</th>
+                <th style='width: 10%; text-align:left;'>Data / Hora</th>
                 <th style='width: 30%; text-align:left;'>Paciente</th>
-                <th style='width: 50%; text-align:left;'>Observações</th>
+                <th style='width: 60%; text-align:left;'>Observações</th>
 
             </tr>
         ";
@@ -494,7 +568,12 @@ class ProfessionalController extends Controller
     }
         $html .= "</table> </div>";
         try {
-            $mpdf = new \Mpdf\Mpdf();
+            $mpdf = new \Mpdf\Mpdf([
+                'orientation' => 'L',
+                'default_font_size' => 9,
+                'default_font' => 'arial',
+                'tempDir' => __DIR__ . '/custom/temp/dir/path'
+            ]);
             $mpdf->setFooter('{PAGENO}');
             $mpdf->WriteHTML($html);
             // Other code

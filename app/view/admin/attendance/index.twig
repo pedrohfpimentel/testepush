@@ -11,107 +11,113 @@
 {% block content %}
 
 <div class="main">
-  <div class="">
-    <div class="row">
-      <div class="col-xs-12 col-sm-3">
-        <a class="btn btn-success" href="{{ base_url() }}/admin/attendances/add">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Atendimento
-        </a>
-      </div>
-
-      <div class="col-sm-9 pull-right">
-        <div class="card">
-          <div class="card-header" data-background-color="purple">
-            Relatório
-          </div>
-          <div class="card-content" style="padding-top:5px;">
-            <div class="col-sm-3" style="padding-left:0px;">
-              <div class="form-group">
-                <label for="attendance_name">Data Inicial</label>
-                <input id="attendance_start" class="form-control" type="date" name="attendance_start" required>
-              </div>
-            </div>
-            <div class="col-sm-3"  style="padding-left:0px;">
-              <div class="form-group">
-                <label for="attendance_name">Data Final</label>
-                <input id="attendance_finish" class="form-control" type="date" name="attendance_finish" value="{{ today }}"  required>
-              </div>
-            </div>
-            <div class="col-sm-6"  style="padding-left:0px;">
-              <div class="form-group pull-right">
-                <a class="btn btn-default" id="attendance_download" name="attendance_download"  href="{{ base_url() }}/admin/attendances/export" target="_blank">
-                  <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
-                  Exportar Relatório
-                </a>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <a class="btn btn-success" href="{{ base_url() }}/admin/attendances/add">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo Atendimento
+      </a>
     </div>
-    <div class="card">
-      <div class="card-header" data-background-color="blue">
-        <div class="row">
-          <div class="col-sm-4">
-            <h4>Últimos Atendimentos</h4>
+
+    <div class="col-sm-6 ">
+      <div class="panel panel-default">
+        <div class="panel-heading" style="">
+          <div class="row">
+            <div class="col-sm-6">
+              Relatório
+            </div>
+            <div class="col-sm-6">
+              <a class="btn btn-default btn-sm pull-right" id="attendance_download" name="attendance_download" style="margin:0px 5px" href="{{ base_url() }}/admin/attendances/export" target="_blank">
+                <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+                Relatório
+              </a>
+            </div>
           </div>
         </div>
+        <div class="panel-body" style="padding-top:5px;">
+          <div class="col-sm-4" style="padding-left:0px;">
+            <div class="form-group">
+              <label for="attendance_name">Data Inicial</label>
+              <input id="attendance_start" class="form-control" type="date" name="attendance_start" required>
+            </div>
+          </div>
+          <div class="col-sm-4"  style="padding-left:0px;">
+            <div class="form-group">
+              <label for="attendance_name">Data Final</label>
+              <input id="attendance_finish" class="form-control" type="date" name="attendance_finish" value="{{ today }}"  required>
+            </div>
+          </div>
+          <div class="col-sm-4"  style="padding-left:0px;">
+            <div class="form-group pull-right">
+              
 
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card-content">
-        <div class="row">
-          <div class="col-xs-12">
-            <table class="table table-striped data-table" style="border-collapse:separate">
-              <thead>
+
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" >
+      <div class="row">
+        <div class="col-sm-4">
+          <p  class="panel-title">Últimos Atendimentos</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <table class="table table-striped data-table" style="border-collapse:separate">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Profissional</th>
+                <th>Paciente</th>
+                <th>Status</th>
+                <th class="th-button"></th>
+
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for attendance in attendances %}
+
                 <tr>
-                  <th>ID</th>
-                  <th>Data</th>
-                  <th>Profissional</th>
-                  <th>Paciente</th>
-                  <th>Status</th>
-                  <th class="th-button"></th>
+                  <td>{{ attendance.id }}</td>
+                  <td>{{ attendance.attendance_day }} {{ attendance.attendance_hour }} </td>
+                  <td>{{ attendance.professional_name }}</td>
+                  <td>{{ attendance.patient_name }}</td>
+                  <td>{{ attendance.name_status }}</td>
+
+                  <td style="width:80px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">
+                    Detalhes
+                  </a></td>
 
                 </tr>
-              </thead>
-
-              <tbody>
-                {% for attendance in attendances %}
-
-                  <tr>
-                    <td>{{ attendance.id }}</td>
-                    <td>{{ attendance.attendance_day }} {{ attendance.attendance_hour }} </td>
-                    <td>{{ attendance.professional_name }}</td>
-                    <td>{{ attendance.patient_name }}</td>
-                    <td>{{ attendance.name_status }}</td>
-
-                    <td style="width:80px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/attendances/{{ attendance.id }}">
-                      Detalhes
-                    </a></td>
-
-                  </tr>
-                {% else %}
-                  <div class="alert alert-danger" role="alert">Não existem Atendimentos cadastrados</div>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <ul class="pager">
-              <li{% if page == 1 %} class="disabled"{% endif %}>
-                <a{% if page > 1 %} href="{{ base_url() }}/admin/attendances?page={{ page - 1 }}"{% endif %}>Anterior</a>
-              </li>
-              <li{% if page >= amountPages %} class="disabled"{% endif %}>
-                <a{% if page < amountPages %} href="{{ base_url() }}/admin/attendances?page={{ page + 1 }}"{% endif %}>Próximo</a>
-              </li>
-            </ul>
-          </div>
+              {% else %}
+                <div class="alert alert-danger" role="alert">Não existem Atendimentos cadastrados</div>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <ul class="pager">
+            <li{% if page == 1 %} class="disabled"{% endif %}>
+              <a{% if page > 1 %} href="{{ base_url() }}/admin/attendances?page={{ page - 1 }}"{% endif %}>Anterior</a>
+            </li>
+            <li{% if page >= amountPages %} class="disabled"{% endif %}>
+              <a{% if page < amountPages %} href="{{ base_url() }}/admin/attendances?page={{ page + 1 }}"{% endif %}>Próximo</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

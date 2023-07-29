@@ -12,7 +12,7 @@
 {% block content %}
 
 
-    <div class="row">
+    {# <div class="row">
       <div class="col-xs-12 col-sm-2">
 
       </div>
@@ -51,26 +51,68 @@
         </div>
 
       </div>
+    </div> #}
+
+
+
+<div class="col-sm-6  col-sm-offset-6">
+  <div class="panel panel-default">
+    <div class="panel-heading" style="">
+      <div class="row">
+        <div class="col-sm-4">
+          Relatório
+        </div>
+        <div class="col-sm-8">
+          <a class="btn btn-default btn-sm pull-right" id="professionals_download_att" name="professionals_download_att" style="margin:0px 5px" href="{{ base_url() }}/admin/professionals/export_history_attendance?id={{ professional.id }}"  target="_blank">
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            Relatório de Atendimentos
+          </a>
+          <a class="btn btn-default btn-sm pull-right" id="professionals_download" name="professionals_download" style="margin:0px 5px"  href="{{ base_url() }}/admin/professionals/export_history?id={{ professional.id }}"  target="_blank">
+            <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
+            Relatório de Geral
+          </a>
+        </div>
+      </div>
     </div>
+    <div class="panel-body" style="padding-top:5px;">
+      <div class="col-sm-4" style="padding-left:0px;">
+        <div class="form-group">
+          <label for="professional_start">Data Inicial</label>
+          <input id="professional_start" class="form-control" type="date" name="professional_start" required>
+        </div>
+      </div>
+      <div class="col-sm-4"  style="padding-left:0px;">
+        <div class="form-group">
+          <label for="professional_finish">Data Final</label>
+          <input id="professional_finish" class="form-control" type="date" name="professional_finish" value="{{ today }}"  required>
+        </div>
+      </div>
+      <div class="col-sm-4"  style="padding-left:0px;">
+        <div class="form-group pull-right">
+          
 
+        </div>
+      </div>
+    </div>
+  </div>
 
-
+</div>
 <div class="row">
   <div class="col-sm-12">
-    <div class="card">
-  <div class="card-header" data-background-color="blue">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="">
     <div class="row">
       <div class="col-sm-7">
-        <h3>Histórico de Profissional - {{ professional.name }}</h3>
+        <p  class="panel-title">Histórico de Profissional - {{ professional.name }}</p>
       </div>
       <div class="col-sm-5">
         <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
           <label for="id_status" style="color: #ffff">Ordenar</label>
-          <select name="search" id="search" style="border-radius: 5px; color: #444">
+          <select name="search" id="search" style="border-radius: 5px; color: #444; padding: 0px 5px">
             <option value="1" {% if search == '1' %} selected {% endif %}>Cadastro - Crescente</option>
             <option value="2" {% if search == '2' %} selected {% endif %}>Cadastro - Descrescente</option>
           </select>
-            <a class="btn btn-primary" href="" id="search_btn">
+            <a class="btn btn-primary btn-sm" href="" style="margin:0px" id="search_btn">
               <i class="material-icons">search</i>
             </a>
         </div>
@@ -81,7 +123,7 @@
         </div>
     </div>
   </div>
-  <div class="card-content">
+  <div class="panel-body">
     <div class="row">
       <div class="col-md-12">
         <table class="table table-striped data-table">
@@ -106,8 +148,6 @@
         </table>
       </div>
     </div>
-  </div>
-</div>
   </div>
 </div>
 

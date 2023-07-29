@@ -198,10 +198,14 @@ class AttendanceController extends Controller
     {
         $params = $request->getQueryParams();
         $attendance_start =   $params['attendance_start'];
-        if ($attendance_start == '') {
+        if (($attendance_start == '') || ($attendance_start == NULL)) {
             $attendance_start = "2000-01-01";
         }
         $attendance_finish =  $params['attendance_finish'];
+        // var_dump($attendance_finish);die;
+        if (($attendance_finish == NULL) || ($attendance_finish == '')) {
+            $attendance_finish = date("Y-m-d",strtotime("+1 day"));
+        }
        // if ($patients_status == 0) {
         $attendances = $this->attendanceModel->getAllByDate($attendance_start, $attendance_finish, 1);
         $professionals = $this->professionalModel->getAll();
@@ -218,27 +222,48 @@ class AttendanceController extends Controller
                 }
             }
         }
-      $html = "
-      <div style='width: 24%; float:left;'>
-        <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
-      </div>
-      <div style='width: 75%;'>
-        <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
-        <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Atendimentos</h3>
-        <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
-      </div>
-      <hr>
-      <div style='width:100%; margin-top: 10px;'>
-      <table>
+        $html .= "
+            <style>
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                }
 
-            <tr>
-                <th style='width: 10%;'>Data do Atendimento</th>
-                <th style='width: 10%;'>Hora</th>
-                <th style='width: 25%;'>Paciente</th>
-                <th style='width: 25%;'>Profissional</th>
-                <th style='width: 30%;'>Observações</th>
+                th, td {
+                text-align: left;
+                padding: 5px;
+                line-height: 100%;
+                }
 
-            </tr>
+                tr:nth-child(even) {
+                background-color: #f2f2f2;
+                }
+            </style>
+        ";
+        $html .= "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Atendimentos</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+            
+            <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                    
+                <tr style='border-style:solid; border-width:1px; border-color:gray;'>
+                    <th style='width: 10%;'>Data do Atendimento</th>
+                    <th style='width: 10%;'>Hora</th>
+                    <th style='width: 25%;'>Paciente</th>
+                    <th style='width: 25%;'>Profissional</th>
+                    <th style='width: 30%;'>Observações</th>
+
+                </tr>
         ";
         //var_dump( $attendances);
          //   die;
@@ -250,11 +275,11 @@ class AttendanceController extends Controller
 
             $html .= "
             <tr>
-            <td style='width: 15%;'>$attendance->attendance_day</td>
-            <td style='width: 15%;'>$attendance->attendance_hour</td>
-            <td style='width: 20%;'>$attendance->name_patient</td>
-            <td style='width: 20%;'>$attendance->name_professional</td>
-            <td style='width: 30%;'>$attendance->description</td>
+                <td style='width: 15%;'>$attendance->attendance_day</td>
+                <td style='width: 15%;'>$attendance->attendance_hour</td>
+                <td style='width: 20%;'>$attendance->name_patient</td>
+                <td style='width: 20%;'>$attendance->name_professional</td>
+                <td style='width: 30%;'>$attendance->description</td>
             </tr>";
         }
 
@@ -262,7 +287,12 @@ class AttendanceController extends Controller
         //var_dump($html);
         //die;
     try {
-        $mpdf = new \Mpdf\Mpdf();
+        $mpdf = new \Mpdf\Mpdf([
+            // 'orientation' => 'L',
+            'default_font_size' => 9,
+            'default_font' => 'arial',
+            'tempDir' => __DIR__ . '/custom/temp/dir/path'
+        ]);
         $mpdf->WriteHTML($html);
         // Other code
         header('Content-Type: application/pdf');

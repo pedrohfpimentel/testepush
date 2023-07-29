@@ -9,31 +9,30 @@
 {% endblock %}
 {% block content %}
 
-  <div class="card">
-    <div class="card-header" data-background-color="blue">
+  <div class="panel panel-default">
+    <div class="panel-heading" style="">
       <div class="row">
         <div class="col-sm-8">
-          <h3>Permissões</h3>
+          <p class="panel-title">Permissões</p>
         </div>
         <div class="col-sm-4">
-          <p class="pull-right"><a class="btn btn-success" href="{{ base_url() }}/admin/permission/add">
+          <p class="pull-right"><a class="btn btn-success btn-sm" style="margin:0px"  href="{{ base_url() }}/admin/permission/add">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
       </a></p>
         </div>
       </div>
     </div>
-    <div class="card-content">
+    <div class="panel-body">
       <div class="row">
         <div class="col-sm-12">
           {% if permissions %}
             <table class="table table-hover data-table">
               <thead>
                 <tr>
-                  <th>Rota</th>
-                  <th>Descrição</th>
-                  <th>Cargo</th>
-                  <th class="th-button"></th>
-                  <th class="th-button"></th>
+                  <th style="width: 40%">Rota</th>
+                  <th style="width: 40%">Descrição</th>
+                  <th style="width: 10%">Cargo</th>
+                  <th style="width: 10%" class="th-button"></th>
                 </tr>
               </thead>
               <tbody>
@@ -42,7 +41,7 @@
                   <td>{{ permission.resource }}</td>
                   <td>{{ permission.description }}</td>
                   <td>{{ permission.role }}</td>
-                  <td><a class="btn btn-xs btn-default" href="{{ base_url() }}/admin/permission/edit/{{ permission.id }}">
+                  <td><a class="btn btn-xs btn-default pull-right" style="margin:0px"  href="{{ base_url() }}/admin/permission/edit/{{ permission.id }}">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Editar
                   </a></td>
                  {# <td><a class="btn btn-xs btn-danger" href="{{ base_url() }}/admin/permission/delete/{{ permission.id }}">

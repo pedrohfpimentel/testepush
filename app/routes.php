@@ -17,6 +17,7 @@ use Farol360\Ancora\Controller\Admin\RemessaSaidaController as RemessaSaidaAdmin
 use Farol360\Ancora\Controller\Admin\RoleController as RoleAdmin;
 use Farol360\Ancora\Controller\Admin\UserController as UserAdmin;
 use Farol360\Ancora\Controller\Admin\SupplierController as SupplierAdmin;
+use Farol360\Ancora\Controller\Admin\VolunteerController as VolunteerAdmin;
 
 
 
@@ -54,6 +55,7 @@ $app->group('/admin', function () {
     $this->group('/patients', function() {
         $this->get('[/]', PatientAdmin::class . ':index');
         $this->get('/export', PatientAdmin::class . ':export');
+        $this->get('/export_xlsx', PatientAdmin::class . ':export_xlsx');
         $this->get('/export_history', PatientAdmin::class . ':export_history');
         $this->get('/export_history_attendance', PatientAdmin::class . ':export_history_attendance');
         $this->map(['GET', 'POST'], '/add', PatientAdmin::class . ':add');
@@ -185,6 +187,18 @@ $app->group('/admin', function () {
         $this->get('/edit/{id:[0-9]+}', UserAdmin::class . ':edit');
         $this->post('/update', UserAdmin::class . ':update');
     });
+
+    $this->group('/voluntarios', function() {
+        $this->get('[/]', VolunteerAdmin::class . ':index');
+        $this->get('/export', VolunteerAdmin::class . ':export');
+        $this->map(['GET', 'POST'], '/add', VolunteerAdmin::class . ':add');
+        $this->get('/remove/{id:[0-9]+}', VolunteerAdmin::class . ':delete');
+        $this->get('/edit/{id:[0-9]+}', VolunteerAdmin::class . ':edit');
+        $this->map(['GET', 'POST'], '/history/{id:[0-9]+}', VolunteerAdmin::class . ':history');
+        $this->post('/update', VolunteerAdmin::class . ':update');
+        $this->map(['GET', 'POST'],'/verifyUserByEmail', VolunteerAdmin::class . ':verifyUserByEmail');
+    });
+
 });
 
 $app->map(['GET', 'POST'], '/contato', Page::class . ':contato');

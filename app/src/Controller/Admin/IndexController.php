@@ -39,12 +39,14 @@ class IndexController extends Controller
     public function index(Request $request, Response $response): Response
     {
         $amountPatients = $this->patientModel->getAmount();
+        $amountPatientsAtivos = $this->patientModel->getAmountName('2000-01-01',date("Y-m-d", strtotime("+ 1 day")),'', 1);
         $amountProfessionals = $this->professionalModel->getAmount();
         $amountProducts = $this->productModel->getAmount();
         $amountAttendances = $this->attendanceModel->getAmount();
         //var_dump($amountPatients->amount);die;
         return $this->view->render($response, 'admin/dashboard/index.twig',[
             'amountPatients' => $amountPatients->amount,
+            'amountPatientsAtivos' => $amountPatientsAtivos->amount,
             'amountProfessionals' => $amountProfessionals->amount,
             'amountProducts' => $amountProducts->amount,
             'amountAttendances' => $amountAttendances->amount 

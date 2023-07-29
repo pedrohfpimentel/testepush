@@ -17,6 +17,7 @@ use Farol360\Ancora\Model\ProfessionalType;
 use Farol360\Ancora\Model\Remessa;
 use Farol360\Ancora\Model\RemessaSaida;
 use Farol360\Ancora\Model\Supplier;
+use Farol360\Ancora\Model\Volunteer;
 
 
 // Ancora objects
@@ -106,5 +107,10 @@ class EntityFactory
     public function createUser(array $data = []): User
     {
         return new User($data);
+    }
+
+    public function createVolunteer(array $data = []): Volunteer
+    {
+        return new Volunteer($data);
     }
 }

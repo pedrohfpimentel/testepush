@@ -14,95 +14,95 @@
 {% block content %}
 <div class="row">
   <div class="col-sm-12">
-    <div class="card">
-  <div class="card-header" data-background-color="blue">
-    <div class="row">
-      <div class="col-xs-12 ">
-        <h3>Adicionar Atendimento</h3>
+    <div class="panel panel-default">
+      <div class="panel-heading" style="">
+        <div class="row">
+          <div class="col-xs-12 ">
+            <p class="panel-title">Adicionar Atendimento</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/attendances/add" method="POST">
+
+              <div class="row">
+                <div class="col-xs-12 col-sm-3">
+                  <div class="form-group">
+                    <label for="attendance_day">Data:</label>
+                    <input id="attendance_day" class="form-control" type="date" name="attendance_day" min="1900-01-01" max="2100-01-01" required>
+                    <span class="validity"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-12 col-sm-3">
+                  <div class="form-group">
+                    <label for="attendance_hour">Horário:</label>
+                    <input id="attendance_hour" class="form-control" type="time" name="attendance_hour">
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label for="selectDisease">Paciente</label>
+                    <select class="form-control" id="selectPatient" name="id_patient"required>
+                      {% for patient in patients %}
+                      <option value="{{ patient.id }}">{{ patient.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label for="selectDisease">Profissional</label>
+                    <select class="form-control" id="selectProfessional" name="id_professional" required>
+                      {% for professional in professionals %}
+                        {% if professional.status != 0 or NULL %}
+                          <option value="{{ professional.id }}"> {{ professional.user_name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="selectStatus">Situação</label>
+                    <select class="form-control" id="selectStatus" name="status">
+                    {% for status in status %}
+                    <option value="{{ status.id }}">{{ status.name }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label>Observações:</label>
+                    <textarea rows="8" class="form-control" id="description" name="description"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success">Adicionar</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="card-content">
-    <div class="row">
-      <div class="col-md-12">
-        <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/attendances/add" method="POST">
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="attendance_day">Data:</label>
-                <input id="attendance_day" class="form-control" type="date" name="attendance_day" min="1900-01-01" max="2100-01-01" required>
-                <span class="validity"></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="attendance_hour">Horário:</label>
-                <input id="attendance_hour" class="form-control" type="time" name="attendance_hour">
-              </div>
-            </div>
-          </div>
-
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div class="form-group">
-                <label for="selectDisease">Paciente</label>
-                <select class="form-control" id="selectPatient" name="id_patient"required>
-                  {% for patient in patients %}
-                  <option value="{{ patient.id }}">{{ patient.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div class="form-group">
-                <label for="selectDisease">Profissional</label>
-                <select class="form-control" id="selectProfessional" name="id_professional" required>
-                  {% for professional in professionals %}
-                    {% if professional.status != 0 or NULL %}
-                      <option value="{{ professional.id }}"> {{ professional.user_name }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="col-sm-6">
-              <div class="form-group">
-                <label for="selectStatus">Situação</label>
-                 <select class="form-control" id="selectStatus" name="status">
-                  {% for status in status %}
-                  <option value="{{ status.id }}">{{ status.name }}
-                  </option>
-                  {% endfor %}
-                </select>
-              </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="form-group">
-                <label>Observações:</label>
-                <textarea rows="8" class="form-control" id="description" name="description"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-success">Adicionar</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
   </div>
 </div>
 

@@ -1,6 +1,6 @@
 {% extends "admin/layout.twig" %}
 {% block html_title %}Entrada de Estoque - Administração - {{ parent() }}{% endblock %}
-{% set nav_active = 'products' %}
+{% set nav_active = 'remessa' %}
 {% block breadcrumbs %}
 <ol class="breadcrumb">
   <li><a href="{{ base_url() }}/admin">Início</a></li>
@@ -11,198 +11,199 @@
 {% endblock %}
 {% block content %}
   <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
-<div class="row">
-  <div class="col-sm-12">
-    <div class=" card">
-      <div class="card-header" data-background-color="blue">
-        <div class="row">
-          <div class="col-xs-12">
-            <h3>Entrada de Estoque</h3>
+    <div class="row">
+      <div class="col-sm-12">
+        
+        <div class="panel panel-default">
+          <div class="panel-heading" style="">
+            <div class="row">
+              <div class="col-xs-12">
+                <p class="panel-title">Entrada de Estoque</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-12">
+              {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
+                  <p>Tela para cadastrar entradas no estoque.</p>
+                  <input type="hidden" name="id" value="{{ products.id }}">
+                  <div class="row" >
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="name">Tipo de Entrada:</label>
+                        <div class="ui-widget">
+                          <select class="form-control" id="selectRemessaType" name="id_remessa_type">
+                            {% for remessaType in remessaTypes %}
+                                <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {#<div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                      <label for="name">Produto:</label>
+                        <div class="ui-widget" >
+                          <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
+                          <div id="campo_login"> </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>#}
+
+                  <div class="row" id="patients_select">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="name">Paciente:</label>
+                        <div class="ui-widget">
+                          <select class="form-control" id="selectPatient" name="patient_id">
+                            {% for patient in patients %}
+                                <option value="{{ patient.id }}">{{ patient.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row" id="suppliers_select">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                      <label for="name">Fornecedor:</label>
+                        <div class="ui-widget" >
+                          <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome" >
+                          <div id="campo_login_fornecedor"> </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {#<div class="row">
+                    <div class=" col-sm-2 form-group">
+                      <label for="quantity">Quantidade</label>
+                      <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
+                    </div>
+
+                    <div class=" col-sm-4 form-group">
+                      <label for="cost">Custo</label>
+
+                      <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
+
+                    </div>
+
+                    <div class=" col-sm-4 form-group">
+                      <label for="quantity">Data de Entrada</label>
+                      <input type="date" class="form-control" id="input_date" name="date" placeholder="">
+                    </div>
+                  </div>#}
+                  <div class="row">
+                    <div class=" col-sm-4 form-group">
+                      <label for="quantity">Data de Entrada</label>
+                      <input type="date" class="form-control" id="input_date" name="date" placeholder="" min="1900-01-01" max="2100-01-01" required>
+                      <span class="validity"></span>
+                    </div>
+                  </div>
+
+              {# </form>#}
+
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
-      <div class="card-content">
-        <div class="row">
-          <div class="col-md-12">
-           {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
-              <p>Tela para cadastrar entradas no estoque.</p>
-              <input type="hidden" name="id" value="{{ products.id }}">
-              <div class="row" >
-                 <div class="col-sm-12">
-                   <div class="form-group">
-                     <label for="name">Tipo de Entrada:</label>
-                     <div class="ui-widget">
-                       <select class="form-control" id="selectRemessaType" name="id_remessa_type">
-                         {% for remessaType in remessaTypes %}
-                            <option value="{{ remessaType.id }}">{{ remessaType.name }}</option>
-                         {% endfor %}
-                       </select>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-              {#<div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                  <label for="name">Produto:</label>
-                    <div class="ui-widget" >
-                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome" autofocus required >
-                      <div id="campo_login"> </div>
+      <div class="col-sm-12">
+        <div class=" card">
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+              {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
+                  <h4>Incluir Produtos</h4>
+                  <input type="hidden" name="id" value="{{ products.id }}">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                      <label for="name">Produto:</label>
+                        <div class="ui-widget" >
+                          <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome"  >
+                          <input type="hidden" name="id_product_hidden" id="id_product_hidden" value="input_id_product">
+                          <div id="campo_login"> </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-               </div>#}
-
-               <div class="row" id="patients_select">
-                 <div class="col-sm-12">
-                   <div class="form-group">
-                     <label for="name">Paciente:</label>
-                     <div class="ui-widget">
-                       <select class="form-control" id="selectPatient" name="patient_id">
-                         {% for patient in patients %}
-                            <option value="{{ patient.id }}">{{ patient.name }}</option>
-                         {% endfor %}
-                       </select>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-
-
-               <div class="row" id="suppliers_select">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                  <label for="name">Fornecedor:</label>
-                    <div class="ui-widget" >
-                      <input class="form-control" id="input_suppliers" type="text" name="suppliers" placeholder="Nome" >
-                      <div id="campo_login_fornecedor"> </div>
+                  <div class="row">
+                    <div class=" col-sm-3 form-group">
+                      <label for="quantity">Quantidade</label>
+                      <input type="number" min="0" class="form-control" id="quantity" name="quantity" placeholder="" >
+                      <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
+                    </div>
+                    <div class=" col-sm-3 form-group">
+                      <label for="cost">Custo Unitário</label>
+                      <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" />
+                      <input type="hidden" name="cost_hidden" id="cost_hidden" value="cost">
+                    </div>
+                      <div class=" col-sm-4 form-group">
+                      <label for="patrimony">Código Patrimonial (opcional)</label>
+                      <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
+                        <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
+                    </div>
+                    <div class="col-sm-12">
+                      <p id="error-adicionar-produto-remessa"></p>
+                    </div>
+                      <div class="col-sm-12">
+                        <p class="pull-right" style="padding-top: 25px;">
+                            <button type="button" class="btn btn-primary" id="add_product">Adicionar Produto</button>
+                            </a>
+                        </p>
                     </div>
                   </div>
-                </div>
-               </div>
-               {#<div class="row">
-                 <div class=" col-sm-2 form-group">
-                   <label for="quantity">Quantidade</label>
-                   <input type="number" class="form-control" id="quantity" name="quantity" placeholder="" required>
-                 </div>
-
-                 <div class=" col-sm-4 form-group">
-                   <label for="cost">Custo</label>
-
-                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" required/>
-
-                 </div>
-
-                 <div class=" col-sm-4 form-group">
-                   <label for="quantity">Data de Entrada</label>
-                   <input type="date" class="form-control" id="input_date" name="date" placeholder="">
-                 </div>
-               </div>#}
-               <div class="row">
-                <div class=" col-sm-4 form-group">
-                  <label for="quantity">Data de Entrada</label>
-                  <input type="date" class="form-control" id="input_date" name="date" placeholder="" min="1900-01-01" max="2100-01-01" required>
-                  <span class="validity"></span>
-                </div>
-               </div>
-
-           {# </form>#}
-
+              {# </form> #}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-  </div>
-  <div class="col-sm-12">
-    <div class=" card">
-      <div class="card-content">
-        <div class="row">
-          <div class="col-md-12">
-           {# <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">#}
-              <h4>Incluir Produtos</h4>
-              <input type="hidden" name="id" value="{{ products.id }}">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                  <label for="name">Produto:</label>
-                    <div class="ui-widget" >
-                      <input class="form-control" id="input_id_product" type="text" name="id_product" placeholder="Nome"  >
-                      <input type="hidden" name="id_product_hidden" id="id_product_hidden" value="input_id_product">
-                      <div id="campo_login"> </div>
-                    </div>
-                  </div>
-                </div>
-               </div>
-               <div class="row">
-                 <div class=" col-sm-3 form-group">
-                   <label for="quantity">Quantidade</label>
-                   <input type="number" min="0" class="form-control" id="quantity" name="quantity" placeholder="" >
-                   <input type="hidden" name="quantity_hidden" id="quantity_hidden" value="quantity">
-                 </div>
-                 <div class=" col-sm-3 form-group">
-                   <label for="cost">Custo Unitário</label>
-                   <input type="money" class="form-control" id="cost" name="cost" placeholder="R$ 00,00" />
-                   <input type="hidden" name="cost_hidden" id="cost_hidden" value="cost">
-                 </div>
-                  <div class=" col-sm-4 form-group">
-                   <label for="patrimony">Código Patrimonial (opcional)</label>
-                   <input type="text" class="form-control" id="patrimony" name="patrimony" placeholder="" >
-                    <input type="hidden" name="patrimony_hidden" id="patrimony_hidden" value="patrimony">
-                 </div>
-                 <div class="col-sm-12">
-                  <p id="error-adicionar-produto-remessa"></p>
-                 </div>
-                  <div class="col-sm-12">
-                    <p class="pull-right" style="padding-top: 25px;">
-                        <button type="button" class="btn btn-primary" id="add_product">Adicionar Produto</button>
-                        </a>
-                    </p>
-                </div>
-               </div>
-           {# </form> #}
+    <div class="main">
+      <div class="card">
+        <div class="card-content">
+          <div class="row">
+            <div class="col-xs-12">
+              <h4>Lista de Produtos</h4>
+              <table class="table table-striped data-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th style="width:140px;">Custo Un. (R$)</th>
+                    <th style="width:140px;">Valor Total (R$)</th>
+                    <th class="th-button" style="width:100px;"></th>
+                    
+                  </tr>
+                </thead>
+                <tbody id="corpo_tabela">
+                </tbody>
+                <tbody id="total">
+                  <td></td>
+                  <td></td>
+                  <td style="text-align:right;"><b>TOTAL:</b> R$</td>
+                  <td id="valor-total">0,00</td>
+                  <td></td>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="main">
-  <div class="card">
-    <div class="card-content">
-      <div class="row">
-        <div class="col-xs-12">
-          <h4>Lista de Produtos</h4>
-          <table class="table table-striped data-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Quantidade</th>
-                <th style="width:140px;">Custo Un. (R$)</th>
-                <th style="width:140px;">Valor Total (R$)</th>
-                <th class="th-button" style="width:100px;"></th>
-                
-              </tr>
-            </thead>
-            <tbody id="corpo_tabela">
-            </tbody>
-            <tbody id="total">
-              <td></td>
-              <td></td>
-              <td style="text-align:right;"><b>TOTAL:</b> R$</td>
-              <td id="valor-total">0,00</td>
-              <td></td>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<input type="hidden" id="remessa_id" name="remessa_id" value="{{ id_remessa }}">
-<button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
-</form>
+    <input type="hidden" id="remessa_id" name="remessa_id" value="{{ id_remessa }}">
+    <button type"submit" value="submit" class="btn btn-primary" id="button_adicionar">Adicionar</button>
+  </form>
 {% endblock %}
 {% block javascripts %}
 <script type="text/javascript">

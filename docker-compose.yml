@@ -1,0 +1,74 @@
+version: '3'
+
+networks:
+  dev:
+
+services:
+  # BEGIN Frontend web v1 services
+  web:
+    image: nginx:alpine
+    ports:
+    - 80:80
+    volumes:
+    - ./public_html/:/app/public_html
+    - ./:/app
+    - ./docker_dev/nginx/conf.d/:/etc/nginx/conf.d
+    networks:
+    - dev
+    # ---
+  php:
+    # image: php:7.3-fpm-alpine
+    build: ./docker_dev/php-fpm/
+    volumes:
+      - ./public_html/:/app/public_html
+      - ./vendor/:/app/vendor
+      - ./:/app
+    expose:
+    - 9000
+    user: "1000:1000"
+    env_file:
+      - ./.env
+    working_dir: /app
+    networks:
+    - dev
+    # ---
+  composer:
+    image: composer
+    volumes:
+        - ./:/app
+    command: install
+    networks:
+    - dev
+    # ---
+  # END front end services
+
+  db:
+    image: mariadb:10.2-bionic
+    ports:
+      - "3306:3306"
+    working_dir: /app
+    volumes:
+      - ./db/dev_volume/:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_root_pass
+      MYSQL_DATABASE: waldyr_becker
+      MYSQL_USER: waldyr
+      MYSQL_PASSWORD: waldyr
+    restart: always
+    networks:
+    - dev
+  # migrations:
+  #  build: ./db/dev_migrations/
+  #  networks:
+  #   - nginxphp
+  #  depends_on:
+  #    - db
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8001:80
+    environment:
+      PMA_HOST: db
+    restart: always
+    networks:
+    - dev

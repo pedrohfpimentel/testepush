@@ -9,15 +9,15 @@
 {% endblock %}
 {% block content %}
 
-<div class="card">
-  <div class="card-header" data-background-color="blue">
+<div class="panel panel-default">
+  <div class="panel-heading" style="">
     <div class="row">
       <div class="col-sm-8">
-        <h3>Cargos</h3>
+        <p class="panel-title">Cargos</p>
       </div>
       <div class="col-sm-4">
         <p class="pull-right">
-          <a class="btn btn-success" href="{{ base_url() }}/admin/role/add">
+          <a class="btn btn-success btn-sm" style="margin:0px" href="{{ base_url() }}/admin/role/add">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           </a>
         </p>
@@ -25,18 +25,17 @@
     </div>
   </div>
 
-  <div class="card-content">
+  <div class="panel-body">
     <div class="row">
       <div class="col-xs-12">
         {% if roles %}
           <table class="table table-striped data-table">
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Slug</th>
-              <th>Nível de acesso</th>
-              <th class="th-button"></th>
-              <th class="th-button"></th>
+              <th style="width: 40%">Nome</th>
+              <th style="width: 40%">Slug</th>
+              <th style="width: 10%">Nível de acesso</th>
+              <th style="width: 10%" class="th-button"></th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +44,7 @@
               <td>{{ role.description }}</td>
               <td>{{ role.name }}</td>
               <td>{{ role.access_level }}</td>
-              <td><a class="btn btn-xs btn-default" href="{{ base_url() }}/admin/role/edit/{{ role.id }}">
+              <td><a class="btn btn-xs btn-default pull-right" href="{{ base_url() }}/admin/role/edit/{{ role.id }}">
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Editar
               </a></td>
              {#} <td><a class="btn btn-xs btn-danger" href="{{ base_url() }}/admin/role/delete/{{ role.id }}">
