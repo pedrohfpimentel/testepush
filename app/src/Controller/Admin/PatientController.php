@@ -91,7 +91,8 @@ class PatientController extends Controller
             'start' => $start,
             'finish' => $finish,
             'order' => $order,
-            'search' => $search
+            'search' => $search,
+            'timestamp' => time(),
             ]);
     }
 
@@ -345,7 +346,7 @@ class PatientController extends Controller
                         <th style='width: 10%; text-align:left;'>Entrada</th>
                         <th style='width: 10%; text-align:left;'>Nascimento</th>
                         <th style='width: 15%; text-align:left;'>Telefone</th>
-                        <th style='width: 10%; text-align:left;'>Situacao</th>
+                        <th style='width: 10%; text-align:left;'>Situação</th>
                         <th style='width: 10%; text-align:left;'>Total de Atendimentos</th>
                     </tr>
         ";
@@ -411,28 +412,59 @@ class PatientController extends Controller
             $patients_start = "2000-01-01";
         }
         $patients_finish =  $params['patients_finish'];
+        if ($patients_finish == "") {
+            $patients_finish = date('Y-m-d');
+        }
         $search = !empty($params['search']) ? htmlspecialchars($params['search']) : '';
         $order = !empty($params['ordem']) ? $params['ordem'] : 1;
-        
+        // var_dump($patients_finish);die;
         $amountPatients = $this->patientModel->getAmountName($patients_start, $patients_finish, '', $patients_status);
         $amountAttendance = $this->attendanceModel->getAmountByDate($patients_start, $patients_finish, '');
 
-        $patients = $this->patientModel->getPatientsByName($patients_start, $patients_finish, $search, $patients_status, $order);
-        var_dump($params);die;
+        // var_dump($params);die;
         $export = new Spreadsheet();
         $export->addColumn(new TextColumn('Nome'));
-        $export->addColumn(new DateColumn('Data do cadastro'));
-        $users = $this->userModel->getAll();
-        foreach ($users as $user) {
+        $export->addColumn(new TextColumn('Data de Entrada'));
+        $export->addColumn(new TextColumn('Data de Nascimento'));
+        $export->addColumn(new TextColumn('Telefone'));
+        $export->addColumn(new TextColumn('Situação'));
+        $export->addColumn(new TextColumn('Total de Atendimentos do Paciente'));
+
+        $patients = $this->patientModel->getPatientsByName($patients_start, $patients_finish, $search, $patients_status, $order);
+        
+        foreach ($patients as $patient) {
+            $attendance = $this->attendanceModel->getAmountByPatient((int)$patient->id, $patients_start, $patients_finish);
+            // var_dump($patient->tel_area);die;
+            // if($patient->tel_area == '0') {
+            //     $patient->tel_area = "--";
+            // }
+            // if($patient->tel_numero == '0') {
+            //     $patient->tel_numero = "-----";
+            // }
             $export->addRow([
-                $user->name,
-                $user->created_at,
+                $patient->name,
+                $patient->visitDate,
+                $patient->nascimento,
+                $patient->tel_area.'-'.$patient->tel_numero,
+                $patient->status_name,
+                $attendance->amount,
             ]);
         }
+        $export->addRow([]);
+        $export->addRow([
+            'Total Geral de Atendimentos',
+            'Total de Pacientes',
+        ]);
+        $export->addRow([
+            $amountAttendance->amount,
+            $amountPatients->amount,
+        ]);
+        // var_dump($export);die;
         $writer = new OdsWriter();
         $writer->includeColumnHeaders = true;
         // TODO: Refatorar para usar PSR-7
         $export->download($writer, 'Pacientes-' . time());
+        
     }
 
     public function export_history(Request $request, Response $response) {

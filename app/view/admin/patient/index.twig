@@ -32,7 +32,7 @@
                   <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
                   Relatório PDF
                 </a>
-                <a class="btn btn-default btn-sm " id="patients_download_xlsx" name="patients_download_xlsx" style="margin:0px 5px;" href="{{ base_url() }}/admin/patients/export_xlsx" target="_blank">
+                <a class="btn btn-default btn-sm " id="patients_download_xlsx" name="patients_download_xlsx" style="margin:0px 5px;" onclick="exportXlsx()" target="_blank">
                   {# <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden"> #}
                   Relatório XLSX
                 </a>
@@ -194,8 +194,9 @@
       $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export?search=' + search +'&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem);
     });
 
-    $("#patients_download_xlsx").click(function(){
+    //$("#patients_download_xlsx").click(function(){
         // console.log('teste');
+    function exportXlsx() {
       var search = $('#search').val();
       var patients_start = $('#patients_start').val();
       var patients_finish = $('#patients_finish').val();
@@ -203,9 +204,14 @@
       var patients_status = $('#patients_status').val();
       var ordem = $('#order').val();
         
-      console.log($('#patients_download').attr('href'));
-      $("#patients_download").attr('href',   base_url_hidden +'/admin/patients/export_xlsx?search=' + search +'&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem);
-    });
+      //alert($('#patients_download').attr('href'));
+      location.href = base_url_hidden +'/admin/patients/export_xlsx?search=' + search +'&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem + '&timestamp={{ timestamp }}';
+      setTimeout(function() {
+          location.reload();
+      }, 1000);
+    }
+    
+    //});
   </script>
 
 
@@ -218,7 +224,7 @@
       var patients_status = $('#patients_status').val();
       var ordem = $('#order').val();
       console.log($('#search_btn').attr('href'));
-      $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search + '&page={{ 1 }}&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem);
+      $("#search_btn").attr('href',   '{{ base_url() }}/admin/patients?search=' + search + '&page={{ 1 }}&patients_start=' + patients_start + '&patients_finish=' + patients_finish + '&patients_status=' + patients_status + '&ordem=' + ordem + '&timestamp={{ timestamp }}' );
     });
   </script>
 

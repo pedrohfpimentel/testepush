@@ -18,8 +18,8 @@
       <div class="col-sm-4">
         <p class="pull-right">
           {% if users -%}
-            <a class="btn btn-default btn-sm" style="margin:0px" href="{{ base_url() }}/admin/user/export">
-              <span class="glyphicon glyphicon-export"  aria-hidden="true"></span>
+            <a class="btn btn-default btn-sm" style="margin:0px" href="{{ base_url() }}/admin/user/export?time={{ timestamp }}">
+              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
             </a>
           {%- endif %}
           <a class="btn btn-success btn-sm" style="margin:0px" href="{{ base_url() }}/admin/user/add">

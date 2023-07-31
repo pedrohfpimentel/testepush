@@ -334,10 +334,12 @@ class PatientModel extends Model
         $sql = "
             SELECT 
                 users.*,
-                patients.* 
+                patients.*,
+                patient_status.name as status_name
             FROM
                 patients
                 LEFT JOIN users ON users.id = patients.id_user
+                LEFT JOIN patient_status ON patients.id_status = patient_status.id
             WHERE
                 (patients.visitDate BETWEEN ? AND ?) 
         ";

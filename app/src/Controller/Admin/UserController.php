@@ -40,9 +40,11 @@ class UserController extends Controller
             $pageTitle = 'Clientes';
             $users = $this->userModel->getUsers();
         }
+        
         return $this->view->render($response, 'admin/user/index.twig', [
             'users' => $users,
             'page_title' => $pageTitle,
+            'timestamp' => time(),
         ]);
     }
     public function add(Request $request, Response $response): Response
@@ -53,10 +55,15 @@ class UserController extends Controller
                 'roles' => $roles,
             ]);
         }
-        $user = $this->entityFactory->createUser($request->getParsedBody());
+        // var_dump($request->getParsedBody());die;
+        $data = $request->getParsedBody();
+        if($data['end_numero'] ==''){
+            $data['end_numero'] = 0;
+        }
+        $user = $this->entityFactory->createUser($data);
         $this->userModel->add($user);
         $this->flash->addMessage('success', 'Usuário adicionado com sucesso.');
-        return $this->httpRedirect($request, $response, '/admin/user');
+        return $this->httpRedirect($request, $response, '/admin/user/all');
     }
     public function delete(Request $request, Response $response, array $args): Response
     {

@@ -31,7 +31,7 @@
           <div class="row">
             <div class="col-sm-6 form-group">
               <label for="inputNascimento">Data de nascimento</label>
-              <input type="date" class="form-control" id="inputNascimento" name="nascimento" value="{{ user.nascimento }}">
+              <input type="date" class="form-control" id="inputNascimento" name="nascimento" value="{{ user.nascimento }}" required>
             </div>
             <div class="col-sm-6 form-group">
               <label for="inputCpf">CPF</label>
@@ -133,4 +133,13 @@
 {% endblock %}
 {% block javascripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+
+<script src="{{ base_url() }}/js/jquery.mask.js"></script>
+
+<script type="text/javascript">
+$('#inputCpf').mask('000.000.000-00', {reverse: true});
+$('#inputCep').mask('00000-000');
+$('#inputTelArea').mask('00');
+$('#inputTelefone').mask('000000000');
+</script>
 {% endblock %}

@@ -56,11 +56,11 @@
           Relatório
         </div>
         <div class="col-sm-8">
-          <a class="btn btn-default btn-sm pull-right" id="attendance_download" name="attendance_download" style="margin:0px 5px" href="{{ base_url() }}/admin/attendances/export" target="_blank">
+          <a class="btn btn-default btn-sm pull-right" id="patients_download_att" name="patients_download_att" style="margin:0px 5px" href="{{ base_url() }}/admin/attendances/export" target="_blank">
             <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
             Relatório de Atendimentos
           </a>
-          <a class="btn btn-default btn-sm pull-right" id="attendance_download" name="attendance_download" style="margin:0px 5px" href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}" target="_blank">
+          <a class="btn btn-default btn-sm pull-right" id="patients_download" name="patients_download" style="margin:0px 5px" href="{{ base_url() }}/admin/patients/export_history?id={{ patient.patient_id }}" target="_blank">
             <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
             Relatório de Geral
           </a>
