@@ -159,7 +159,11 @@ class ProductsController extends Controller
                 $product->cost = $custo_medio;
             }
         }
-        foreach($products as $product) {
+        foreach($products as $key => $product) {
+            // var_dump($product->quantity);die;
+            if($product->quantity == 0) {
+                unset($products[$key]);
+            }
             $product->cost = number_format($product->cost, 2, ',', '.');
         }
         return $this->view->render($response, 'admin/products/index.twig',

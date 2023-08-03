@@ -9,6 +9,21 @@
    <li>{{ products.name }}</li>
 </ol>
 {% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ base_url() }}/js/jquery-ui.css">
+  <link rel="stylesheet" href="{{ base_url() }}/js/jquery-ui.theme.css">
+  <style>
+    .ui-autocomplete-loading {
+      background: white url("/default-img/loading.gif") right center no-repeat;
+      background-size: 16px;
+    }
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+      padding: 8px 6px;
+      vertical-align: middle;
+    }
+  </style>
+{% endblock %}
 {% block content %}
   <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa/add" method="POST">
     <div class="row">
@@ -272,6 +287,9 @@
         url: '{{ base_url() }}/admin/remessa/consulta_produto?id='+ id_product,
         beforeSend: function(data) {
           $("#campo_login").html('');
+        },
+        close: function( event, ui ) {
+          
         },
         success: function(data) {
           console.log('sucesso' + data);

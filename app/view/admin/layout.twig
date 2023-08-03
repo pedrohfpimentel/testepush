@@ -20,7 +20,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!--  Material Dashboard CSS    -->
-    <link href="{{ base_url() }}/css/material-dashboard.css?v=1.2.0" rel="stylesheet" />
+    {# <link href="{{ base_url() }}/css/material-dashboard.css?v=1.2.0" rel="stylesheet" /> #}
 
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="{{ base_url() }}/css/demo.css" rel="stylesheet" />
@@ -29,6 +29,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+    <link href="{{ base_url() }}/css/material-dashboard-v2.css?v=1.2.0" rel="stylesheet" />
 
     <!-- Admin custom CSS
     <link href="{{ base_url() }}/css/admin.css" rel="stylesheet" />
@@ -38,22 +39,15 @@
 
   <body>
 
-    <div class="wrapper" >
-      <div class="sidebar" style="background-color: #242d37;" data-color="blue-menu" {# data-image="{{ base_url() }}/img/sidebar-1.jpg" #}>
+    <div class="" >
+      <div class="sidebar" style="background-color: #242d37;position:fixed;" data-color="blue-menu" {# data-image="{{ base_url() }}/img/sidebar-1.jpg" #}>
         <div class="logo">
           <a href="{{ base_url() }}/admin" class="simple-text" style="color:#FFF">
             F.A.P. Gestão
           </a>
         </div>
         <div class="sidebar-wrapper">
-          <div style="color:white; background-color: #3c4858;">
-            <p style="padding: 15px 15px 10px 15px;
-              margin-bottom: 0px;
-              text-align:center;
-              border-bottom-color: #b3cbdd;
-              /* border-bottom-style: solid; */
-              border-width: 1px;">MENU PRINCIPAL</p>
-          </div>
+           
           <ul class="nav">
             <li {% if nav_active == "dashboard" %} class="active" {% endif %}>
               <a href="{{ base_url }}/admin">
@@ -65,7 +59,7 @@
             </li>
 
             <li {% if nav_active == "patients" %} class="active" {% endif %}>
-              <a href="{{ base_url }}/admin/patients">
+              <a href="{{ base_url }}/admin/patients?patients_status=1">
                 <i class="material-icons">
                   accessibility
                 </i>

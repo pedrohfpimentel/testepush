@@ -27,6 +27,20 @@
 </ol>
 {% endblock %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ base_url() }}/js/jquery-ui.css">
+  <link rel="stylesheet" href="{{ base_url() }}/js/jquery-ui.theme.css">
+  <style>
+    .ui-autocomplete-loading {
+      background: white url("/default-img/loading.gif") right center no-repeat;
+      background-size: 16px;
+    }
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+      padding: 8px 6px;
+      vertical-align: middle;
+    }
+  </style>
+{% endblock %}
 {% block content %}
   <form role="form" onSubmit="submitTabela()" data-toggle="validator" action="{{ base_url() }}/admin/remessa_saida/add" method="POST">
 <div class="row">
@@ -239,6 +253,7 @@ $('#button_adicionar').on("submit",function(){
       beforeSend: function(data) {
         $("#campo_login").html('');
       },
+      
 
       success: function(data) {
         //console.log('sucesso' + data);
