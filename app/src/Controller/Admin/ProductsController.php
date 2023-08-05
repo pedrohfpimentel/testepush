@@ -64,13 +64,13 @@ class ProductsController extends Controller
         }
         $limit = 20;
         $offset = ($page - 1) * $limit;
+        if( $offset < 0 ) $offset = 0;
         // get products list
-        $products = $this->productsModel->getAll($offset, $limit);
+        $products = $this->productsModel->getAll();
+        // var_dump($products);die;
         // remessa types
         $remessaTypes = $this->remessaTypeModel->getAll();
-        $amountProducts = $this->productsModel->getAmount();
-        $amountPages = ceil($amountProducts->amount / $limit);
-        // get quantity from remessas
+        // var_dump($products);die;
         foreach ($products as $product) {
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
@@ -160,12 +160,23 @@ class ProductsController extends Controller
             }
         }
         foreach($products as $key => $product) {
-            // var_dump($product->quantity);die;
-            if($product->quantity == 0) {
+            // var_dump($product->quantity);//die;
+            if($product->quantity <= 0) {
                 unset($products[$key]);
             }
             $product->cost = number_format($product->cost, 2, ',', '.');
         }
+        // var_dump($products);die;
+        // $amountProducts = $this->productsModel->getAmount();
+        $amountProducts = count($products);
+        // var_dump($amountProducts);die;
+        // $products = array_chunk($products, 10, true);
+        $products = array_slice($products, $offset, $limit );
+        // var_dump($products);die;
+        // var_dump($amountProducts);die;
+        $amountPages = ceil($amountProducts / $limit);
+        // get quantity from remessas
+        
         return $this->view->render($response, 'admin/products/index.twig',
         [
             'products' => $products,
@@ -421,7 +432,10 @@ class ProductsController extends Controller
                 $product->cost = $custo_medio;
             }
         }
-        foreach($products as $product) {
+        foreach($products as $key => $product) {
+            if($product->quantity <= 0) {
+                unset($products[$key]);
+            }
             $product->cost = number_format($product->cost, 2, ',', '.');
         }
         $html = "
