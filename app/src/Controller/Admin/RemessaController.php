@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Farol360\Ancora\Controller\Admin;
 
 use Farol360\Ancora\Model\ModelException;
+use Farol360\Ancora\CustomLogger;
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\EntityFactory;
@@ -244,7 +245,7 @@ class RemessaController extends Controller
             //var_dump($eventLog);
             //die;
             $return_eventLog = $this->eventLogModel->add($eventLog);
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0004.");
             }
             //die;
@@ -257,7 +258,7 @@ class RemessaController extends Controller
             $eventLog['supplier'] = $remessa->suppliers;
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $return_eventLog = $this->eventLogModel->add($eventLog);
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0005.");
             }
           } elseif  ($remessa->remessa_type == 6){
@@ -267,7 +268,7 @@ class RemessaController extends Controller
             $eventLog['description'] = 'Devolução cadastrada';
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $return_eventLog = $this->eventLogModel->add($eventLog);
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0006.");
             }
           } elseif  ($remessa->remessa_type == 7){
@@ -277,7 +278,7 @@ class RemessaController extends Controller
             $eventLog['description'] = 'Entrada tipo Correção.';
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $return_eventLog = $this->eventLogModel->add($eventLog);
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0007.");
             }
           }
@@ -348,7 +349,7 @@ class RemessaController extends Controller
 
           $eventLog = $this->entityFactory->createEventLog($eventLog);
           $return_eventLog = $this->eventLogModel->add($eventLog);
-          if ($return_eventLog->status == false) {
+          if ($return_eventLog->data == false) {
             throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0001.");
           }
         }

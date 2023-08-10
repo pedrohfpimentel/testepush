@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Farol360\Ancora\Controller\Admin;
 
+use Farol360\Ancora\Model\ModelException;
+use Farol360\Ancora\CustomLogger;
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\EntityFactory;
@@ -239,7 +241,7 @@ class RemessaSaidaController extends Controller
             //$eventLog['id_products'] = $remessa->id_product;
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $return_eventLog = $this->eventLogModel->add($eventLog);
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0002.");
             }
           } elseif ($remessa->remessa_type == 5){
@@ -251,7 +253,7 @@ class RemessaSaidaController extends Controller
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $return_eventLog = $this->eventLogModel->add($eventLog);
             // var_dump($return_eventLog);die;
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0003.");
             }
           }elseif ($remessa->remessa_type == 8){
@@ -262,7 +264,7 @@ class RemessaSaidaController extends Controller
             $eventLog['id_products'] = null;
             $eventLog = $this->entityFactory->createEventLog($eventLog);
             $return_eventLog = $this->eventLogModel->add($eventLog);
-            if ($return_eventLog->status == false) {
+            if ($return_eventLog->data == false) {
               throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0004.");
             }
           }

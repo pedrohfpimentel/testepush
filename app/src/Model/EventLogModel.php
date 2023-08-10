@@ -56,19 +56,21 @@ class EventLogModel extends Model
 
         ];
         $query = $this->db->prepare($sql);
-        $exec = $query->execute($parameters);
+        // $exec = $query->execute($parameters);
         if ($query->execute($parameters)) {
+            // $data['status'] = true;
             $data['data'] = $this->db->lastInsertId();
             $data['errorCode'] = null;
             $data['errorInfo'] = null;
             // return $this->db->lastInsertId();
         } else {
             // return null;
+            // $data['status'] = false;
             $data['data'] = false;
             $data['errorCode'] = $query->errorCode();
             $data['errorInfo'] = $query->errorInfo();
         }
-        $data['status'] = $exec;
+        // $data['status'] = $exec;
         $data['table'] = 'event_log';
         $data['function'] = 'add';
         $modelReturn = new ModelReturn($data);

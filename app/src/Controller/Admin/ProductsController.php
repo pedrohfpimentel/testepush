@@ -300,7 +300,7 @@ class ProductsController extends Controller
                         $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                         $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                         $return_eventLog = $this->eventLogModel->add($eventLog1);
-                        if ($return_eventLog->status == false) {
+                        if ($return_eventLog->data == false) {
                         throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0001.");
                         }
                     } elseif ($remessa->remessa_type == 2){
@@ -311,7 +311,7 @@ class ProductsController extends Controller
                         $eventLog1['id_products'] = $remessa->id_product;
                         $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                         $return_eventLog = $this->eventLogModel->add($eventLog1);
-                        if ($return_eventLog->status == false) {
+                        if ($return_eventLog->data == false) {
                         throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0002.");
                         }
                     } elseif ($remessa->remessa_type == 3){
@@ -321,7 +321,7 @@ class ProductsController extends Controller
                         $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
                         $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
                         $return_eventLog = $this->eventLogModel->add($eventLog1);
-                        if ($return_eventLog->status == false) {
+                        if ($return_eventLog->data == false) {
                         throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0003.");
                         }
                     }
@@ -871,9 +871,9 @@ class ProductsController extends Controller
     }
     public function update(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
+        // $data = $request->getParsedBody();
         $products = $request->getParsedBody();
-        $products['id'] = (int) $data['id'];
+        $products['id'] = (int) $products['id'];
         //$products['id_products'] = (int) $data['id_products'];
         $products['category'] = (int) $products['id_products_type'];
         $products['id_supplier'] = (int) $products['id_supplier'];
@@ -882,13 +882,16 @@ class ProductsController extends Controller
         $products['quantity'] = (int) $old_product->quantity;
         $products['cost'] = (int) $old_product->cost;
         $products = $this->entityFactory->createProducts($products);
-        $this->productsModel->update($products);
-        $eventLog['id_products']         = $products->id;
-        $eventLog['suppliers']         = $products->id_supplier;
-        $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
-        $eventLog['description'] = 'Produto ' . $products->name .' atualizado';
-        $eventLog = $this->entityFactory->createEventLog($eventLog);
-        $this->eventLogModel->add($eventLog);
+        $return_product = $this->productsModel->update($products);
+        // var_dump($return_product);die;
+        if($return_product != false){
+            $eventLog['id_products']         = $products->id;
+            $eventLog['suppliers']         = $products->id_supplier;
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_products')->id;
+            $eventLog['description'] = 'Produto ' . $products->name .' atualizado';
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $this->eventLogModel->add($eventLog);
+        }
         $this->flash->addMessage('success', 'Produto atualizado com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');
     }
