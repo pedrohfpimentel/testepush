@@ -40,7 +40,6 @@ class EventLogModel extends Model
                 :id_attendance
                 )
         ";
-        $query = $this->db->prepare($sql);
         $parameters = [
             ':event_log_type'       => $eventLog->event_log_type,
             ':date'                 => $eventLog->date,
@@ -56,11 +55,24 @@ class EventLogModel extends Model
             ':id_attendance'        => $eventLog->id_attendance
 
         ];
+        $query = $this->db->prepare($sql);
+        $exec = $query->execute($parameters);
         if ($query->execute($parameters)) {
-            return $this->db->lastInsertId();
+            $data['data'] = $this->db->lastInsertId();
+            $data['errorCode'] = null;
+            $data['errorInfo'] = null;
+            // return $this->db->lastInsertId();
         } else {
-            return null;
+            // return null;
+            $data['data'] = false;
+            $data['errorCode'] = $query->errorCode();
+            $data['errorInfo'] = $query->errorInfo();
         }
+        $data['status'] = $exec;
+        $data['table'] = 'event_log';
+        $data['function'] = 'add';
+        $modelReturn = new ModelReturn($data);
+        return $modelReturn;
     }
 
     public function delete(int $id): bool

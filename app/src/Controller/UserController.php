@@ -148,6 +148,7 @@ class UserController extends Controller
                         $return = '/users/profile';
                     }
                 }
+                // $return = str_replace('p_', '/', $return);
                 return $this->httpRedirect($request, $response, $return);
             }
         }

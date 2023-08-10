@@ -237,76 +237,104 @@ class ProductsController extends Controller
         $lista_produto = json_encode($lista_produto);
         // 3 - Recupera e trata as informações da interface para o CADASTRO DE REMESSA;
         $remessa = $request->getParsedBody();
-        if ($remessa['isRemessaInicial'] == 'true') {
-            $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
-            $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
-            //$remessa['id_product'] = (int) $idProduct;
-            $remessa['suppliers'] =  (int) $products->id_supplier;
-            //$remessa['patrimony_code'] = (int) $remessa['patrimony_code'];
-            $remessa['cost'] = NULL;
-            $remessa['quantity'] = NULL;
-            $remessa = $this->entityFactory->createRemessa($remessa);
-            // 4 - Cadastro de remessa
-            $idRemessa = $this->remessaModel->add($remessa);
-            $remessa->id = (int)$remessa->id = $idRemessa;
-            $remessa->id_remessa = (int) $idRemessa;
-           //var_dump($remessa);
-            //die;
-            $data = $request->getQueryParams();
-            $data["id_product"] = (int) $idProduct;
-            $data["id_remessa"] = (int) $idRemessa;
-            $data["patrimony_code"] = $products->patrimony;
-            $data["cost"] = (int) $products->cost;
-            $data["quantity"] = $products->quantity;
-            $data["suppliers"] = (int) $products->id_supplier;
-            $data = $this->entityFactory->createProdutoRemessa($data);
-            $data->id = $this->produtoRemessaModel->add($data);
-            if ($body['isRemessaInicial'] == 'false') {
-                $lista_produto[0]['id_product'] = $idProduct;
-                $lista_produto = json_encode($lista_produto);
-            } else {
-            }
-        }
-        // tratamento de eventlogs
-        if ( ($idProduct != null) || ($idProduct != false) ) {
-            $eventLog['product_list'] = $lista_produto;
-            // 5 - tratamento para criar event log do CADASTRO DO PRODUTO
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
-            $eventLog['suppliers'] =  $products->id_supplier;
-            $eventLog['id_products'] =  (int)$idProduct;
-            $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            // 5 - linha que adicona o EVENTO DE CADASTRO DO PRODUTO
-            $this->eventLogModel->add($eventLog);
-            // conteúdo da interface
-            $body = $request->getParsedBody();
-            if ($body['isRemessaInicial'] == 'true') {
-                $eventLog1['product_list'] = $lista_produto;
-                // 6 - tratamento de event logs
-                if ($remessa->remessa_type == 1){
-                    $eventLog1['id_remessa'] = $idRemessa;
-                    $eventLog1['suppliers'] =  $products->id_supplier;
-                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
-                    $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
-                    $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
-                    $this->eventLogModel->add($eventLog1);
-                } elseif ($remessa->remessa_type == 2){
-                    $eventLog1['id_remessa'] = $idRemessa;
-                    $eventLog1['suppliers'] =  $products->id_supplier;
-                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
-                    $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
-                    $eventLog1['id_products'] = $remessa->id_product;
-                    $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
-                    $this->eventLogModel->add($eventLog1);
-                } elseif ($remessa->remessa_type == 3){
-                    $eventLog1['id_remessa'] = $idRemessa;
-                    $eventLog1['suppliers'] =  $products->id_supplier;
-                    $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_inicial')->id;
-                    $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
-                    $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
-                    $this->eventLogModel->add($eventLog1);
+        try {
+            $this->remessaModel->beginTransaction();
+            if ($remessa['isRemessaInicial'] == 'true') {
+                $remessa['remessa_type'] = (int) $remessa['id_remessa_type'];
+                $remessa['id_remessa_type'] = (int) $remessa['id_remessa_type'];
+                //$remessa['id_product'] = (int) $idProduct;
+                $remessa['suppliers'] =  (int) $products->id_supplier;
+                //$remessa['patrimony_code'] = (int) $remessa['patrimony_code'];
+                $remessa['cost'] = NULL;
+                $remessa['quantity'] = NULL;
+                $remessa_obj = $this->entityFactory->createRemessa($remessa);
+                // 4 - Cadastro de remessa
+                $idRemessa = $this->remessaModel->add($remessa_obj);
+                if ($idRemessa == false) {
+                    throw new ModelException($idRemessa, "Erro no cadastro de Remessa. COD:0001.");
+                }
+                $remessa_obj->id = (int)$idRemessa;
+                $remessa_obj->id_remessa = (int) $idRemessa;
+                $remessa_obj->isRemessaInicial = $remessa['isRemessaInicial'];
+                //var_dump($remessa);
+                //die;
+                $data = $request->getQueryParams();
+                $data["id_product"] = (int) $idProduct;
+                $data["id_remessa"] = (int) $idRemessa;
+                $data["patrimony_code"] = $products->patrimony;
+                $data["cost"] = (int) $products->cost;
+                $data["quantity"] = $products->quantity;
+                $data["suppliers"] = (int) $products->id_supplier;
+                $data = $this->entityFactory->createProdutoRemessa($data);
+                $data->id = $this->produtoRemessaModel->add($data);
+                if ($data->id == false) {
+                    throw new ModelException($idRemessa, "Erro no cadastro de Remessa. COD:0001.");
+                }
+                // var_dump($data);die;
+                if ($remessa->isRemessaInicial == 'false') {
+                    $lista_produto[0]['id_product'] = $idProduct;
+                    $lista_produto = json_encode($lista_produto);
+                } else {
                 }
             }
+            // tratamento de eventlogs
+            if ( ($idProduct != null) || ($idProduct != false) ) {
+                $eventLog['product_list'] = $lista_produto;
+                // 5 - tratamento para criar event log do CADASTRO DO PRODUTO
+                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_products')->id;
+                $eventLog['suppliers'] =  $products->id_supplier;
+                $eventLog['id_products'] =  (int)$idProduct;
+                $eventLog['description'] = 'Produto ' . $products->name .' cadastrado';
+                $eventLog = $this->entityFactory->createEventLog($eventLog);
+                // 5 - linha que adicona o EVENTO DE CADASTRO DO PRODUTO
+                $this->eventLogModel->add($eventLog);
+                // conteúdo da interface
+                $body = $request->getParsedBody();
+                if ($body['isRemessaInicial'] == 'true') {
+                    $eventLog1['product_list'] = $lista_produto;
+                    // 6 - tratamento de event logs
+                    if ($remessa->remessa_type == 1){
+                        $eventLog1['id_remessa'] = $idRemessa;
+                        $eventLog1['suppliers'] =  $products->id_supplier;
+                        $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_doacao')->id;
+                        $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
+                        $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
+                        $return_eventLog = $this->eventLogModel->add($eventLog1);
+                        if ($return_eventLog->status == false) {
+                        throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0001.");
+                        }
+                    } elseif ($remessa->remessa_type == 2){
+                        $eventLog1['id_remessa'] = $idRemessa;
+                        $eventLog1['suppliers'] =  $products->id_supplier;
+                        $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_entrada_compra')->id;
+                        $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
+                        $eventLog1['id_products'] = $remessa->id_product;
+                        $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
+                        $return_eventLog = $this->eventLogModel->add($eventLog1);
+                        if ($return_eventLog->status == false) {
+                        throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0002.");
+                        }
+                    } elseif ($remessa->remessa_type == 3){
+                        $eventLog1['id_remessa'] = $idRemessa;
+                        $eventLog1['suppliers'] =  $products->id_supplier;
+                        $eventLog1['event_log_type']  = $this->eventLogTypeModel->getBySlug('entrada_inicial')->id;
+                        $eventLog1['description'] = 'Remessa inicial para o produto ' . $products->name .'.';
+                        $eventLog1 = $this->entityFactory->createEventLog($eventLog1);
+                        $return_eventLog = $this->eventLogModel->add($eventLog1);
+                        if ($return_eventLog->status == false) {
+                        throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0003.");
+                        }
+                    }
+                }
+            }
+            $this->remessaModel->commit();
+            $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+            // return $this->httpRedirect($request, $response, '/admin/remessa');
+        } catch (ModelException $e) {
+            $this->remessaModel->rollback();
+            CustomLogger::ModelErrorLog($e->getMessage(), $e->getdata());
+            $this->flash->addMessage('danger', $e->getMessage() . ' Se o problema persistir contate um administrador.');
+            // return $this->httpRedirect($request, $response, "/admin/remessa");
         }
         $this->flash->addMessage('success', 'Produto adicionada com sucesso.');
         return $this->httpRedirect($request, $response, '/admin/products');

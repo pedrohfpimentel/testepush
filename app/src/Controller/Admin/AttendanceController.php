@@ -110,7 +110,10 @@ class AttendanceController extends Controller
 
         if (empty($request->getParsedBody())) {
 
-            $patients       = $this->patientModel->getAll();
+            // $patients       = $this->patientModel->getAll();
+
+            $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1);
+            // var_dump($patients);die;
             $professionals  = $this->professionalModel->getAll();
             $status = $this->attendanceStatusModel->getAll();
             // var_dump($professionals);
@@ -191,7 +194,7 @@ class AttendanceController extends Controller
            // return $this->view->render($response, 'admin/attendance/view.twig', ['attendance' => $attendance, 'attendance_status' => $attendance_status, 'id_patient' => $id_patient, 'id_professional' => $id_professional,]);
 
     //}
-}
+    }
 
     //download
     public function export(Request $request, Response $response)
@@ -458,7 +461,9 @@ class AttendanceController extends Controller
     {
 
 
-        $patients       = $this->patientModel->getAll();
+        // $patients       = $this->patientModel->getAll();
+
+        $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1);
         $professionals  = $this->professionalModel->getAll();
         $status = $this->attendanceStatusModel->getAll();
 

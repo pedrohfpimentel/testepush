@@ -215,46 +215,68 @@ class RemessaSaidaController extends Controller
         return $this->httpRedirect($request, $response, '/admin/remessa_saida/add');
       }
       //var_dump($remessa);die;
-      $remessa = $this->entityFactory->createRemessa($remessa);
-      if ($remessa->id_remessa_type == 8) {
-        $remessa->patient_id = null;
-      }
-      $idRemessa = $this->remessaModel->updatePatient($remessa);
-      // aqui trabalhar eventlog
-      if ( ($idRemessa != null) || ($idRemessa != false) ) {
-        $eventLog['product_list'] = $lista_produtos;
-        $eventLog['id_remessa'] = $remessa->id;
-        $eventLog['suppliers'] =  $remessa->suppliers;
-        $eventLog['id_patient'] = $remessa->patient_id;
-        if ($remessa->remessa_type == 4){
-          $remessa_type = $this->remessaTypeModel->get(4);
-          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_doacao')->id;
-          $eventLog['description'] = 'Remessa cadastrada';
-          //$eventLog['id_products'] = $remessa->id_product;
-          $eventLog = $this->entityFactory->createEventLog($eventLog);
-          $this->eventLogModel->add($eventLog);
-        } elseif ($remessa->remessa_type == 5){
-          $remessa_type = $this->remessaTypeModel->get(5);
-          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_emprestimo')->id;
-          $eventLog['description'] = 'Remessa cadastrada';
-          //$eventLog['id_products'] = $remessa->id_product;
-          $eventLog = $this->entityFactory->createEventLog($eventLog);
-          $this->eventLogModel->add($eventLog);
-        }elseif ($remessa->remessa_type == 8){
-          $remessa_type = $this->remessaTypeModel->get(8);
-          $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
-          $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_correcao')->id;
-          $eventLog['description'] = 'Saída tipo correção.';
-          $eventLog['id_products'] = null;
-          $eventLog = $this->entityFactory->createEventLog($eventLog);
-          $this->eventLogModel->add($eventLog);
+      try {
+        $this->remessaModel->beginTransaction();
+        $remessa = $this->entityFactory->createRemessa($remessa);
+        if ($remessa->id_remessa_type == 8) {
+          $remessa->patient_id = null;
         }
+        $idRemessa = $this->remessaModel->updatePatient($remessa);
+        if ($idRemessa->status == false) {
+          throw new ModelException($idRemessa, "Erro no cadastro de Remessa. COD:0001.");
+        }
+        // aqui trabalhar eventlog
+        if ( ($idRemessa != null) || ($idRemessa != false) ) {
+          $eventLog['product_list'] = $lista_produtos;
+          $eventLog['id_remessa'] = $remessa->id;
+          $eventLog['suppliers'] =  $remessa->suppliers;
+          $eventLog['id_patient'] = $remessa->patient_id;
+          if ($remessa->remessa_type == 4){
+            $remessa_type = $this->remessaTypeModel->get(4);
+            $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_doacao')->id;
+            $eventLog['description'] = 'Remessa cadastrada';
+            //$eventLog['id_products'] = $remessa->id_product;
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $return_eventLog = $this->eventLogModel->add($eventLog);
+            if ($return_eventLog->status == false) {
+              throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0002.");
+            }
+          } elseif ($remessa->remessa_type == 5){
+            $remessa_type = $this->remessaTypeModel->get(5);
+            $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_emprestimo')->id;
+            $eventLog['description'] = 'Remessa cadastrada';
+            //$eventLog['id_products'] = $remessa->id_product;
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $return_eventLog = $this->eventLogModel->add($eventLog);
+            // var_dump($return_eventLog);die;
+            if ($return_eventLog->status == false) {
+              throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0003.");
+            }
+          }elseif ($remessa->remessa_type == 8){
+            $remessa_type = $this->remessaTypeModel->get(8);
+            $eventLog['id_remessa_type'] = (int) $eventLog['id_remessa_type'];
+            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('saida_correcao')->id;
+            $eventLog['description'] = 'Saída tipo correção.';
+            $eventLog['id_products'] = null;
+            $eventLog = $this->entityFactory->createEventLog($eventLog);
+            $return_eventLog = $this->eventLogModel->add($eventLog);
+            if ($return_eventLog->status == false) {
+              throw new ModelException($return_eventLog, "Erro no cadastro de Remessa. COD:0004.");
+            }
+          }
 
+        }
+        $this->remessaModel->commit();
+        $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/remessa_saida');
+      } catch (ModelException $e) {
+        $this->remessaModel->rollback();
+        CustomLogger::ModelErrorLog($e->getMessage(), $e->getdata());
+        $this->flash->addMessage('danger', $e->getMessage() . ' Se o problema persistir contate um administrador.');
+        return $this->httpRedirect($request, $response, "/admin/remessa");
       }
-      $this->flash->addMessage('success', 'Remessa adicionada com sucesso.');
-      return $this->httpRedirect($request, $response, '/admin/remessa_saida');
     }
 
     public function update(Request $request, Response $response)

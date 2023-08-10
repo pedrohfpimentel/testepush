@@ -365,7 +365,7 @@ class RemessaModel extends Model
 
 
 
-    public function update(Remessa $remessa): bool
+    public function update(Remessa $remessa)
     {
         $sql = "
             UPDATE
@@ -396,11 +396,16 @@ class RemessaModel extends Model
             ':date'         => $remessa->date,
             ':time'         => $remessa->time
             ];
-        return $query->execute($parameters);
+        $exec = $query->execute($parameters);
+        $data['status'] = $exec;
+        $data['table'] = 'remessa';
+        $data['function'] = 'update';
+        $modelReturn = new ModelReturn($data);
+        return $modelReturn;
     }
 
 
-    public function updatePatient(Remessa $remessa): bool
+    public function updatePatient(Remessa $remessa)
     {
         $sql = "
             UPDATE
@@ -432,7 +437,12 @@ class RemessaModel extends Model
             ':date'         => $remessa->date,
             ':time'         => $remessa->time
             ];
-        return $query->execute($parameters);
+        $exec = $query->execute($parameters);
+        $data['status'] = $exec;
+        $data['table'] = 'remessa';
+        $data['function'] = 'update_patient';
+        $modelReturn = new ModelReturn($data);
+        return $modelReturn;
     }
 
 
