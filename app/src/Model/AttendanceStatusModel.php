@@ -83,7 +83,7 @@ class AttendanceStatusModel extends Model
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
-            ':name'          => $attendance->name
+            ':name'          => $attendance_status->name
         ];
         return $query->execute($parameters);
     }

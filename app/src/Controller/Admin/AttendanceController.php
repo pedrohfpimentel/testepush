@@ -112,7 +112,7 @@ class AttendanceController extends Controller
 
             // $patients       = $this->patientModel->getAll();
 
-            $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1);
+            $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1, 2);
             // var_dump($patients);die;
             $professionals  = $this->professionalModel->getAll();
             $status = $this->attendanceStatusModel->getAll();
@@ -463,7 +463,7 @@ class AttendanceController extends Controller
 
         // $patients       = $this->patientModel->getAll();
 
-        $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1);
+        $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1, 2);
         $professionals  = $this->professionalModel->getAll();
         $status = $this->attendanceStatusModel->getAll();
 

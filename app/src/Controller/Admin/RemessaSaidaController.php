@@ -179,7 +179,9 @@ class RemessaSaidaController extends Controller
           }
         }
         
-        $patients = $this->patientModel->getAll();
+        // $patients = $this->patientModel->getAll();
+
+        $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1, 2);
         $this->remessaModel->deleteByRemessaType();
         // remessa types
         //$remessaTypes = [];
@@ -302,7 +304,7 @@ class RemessaSaidaController extends Controller
       if  (($remessa_return != null) || ($remessa_return != false)) {
         $eventLog['remessa_type'] = (int) $data['remessa_type'];
         $eventLog['id_patient'] = (int) $data['patient_id'];
-        $eventLog['id']         = (int) $attendance->id;
+        $eventLog['id']         = (int) $remessa_return;
         $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('remessa_saida_edit')->id;
         if ($eventLog['remessa_type'] == 4) {
           $eventLog['description'] = 'Saída por Doação atualizada';

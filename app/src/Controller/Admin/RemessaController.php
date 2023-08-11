@@ -173,7 +173,7 @@ class RemessaController extends Controller
         $temp['remessa_type'] = 99;
         $temp = $this->entityFactory->createRemessa($temp);
         $id_remessa = $this->remessaModel->add($temp);
-        $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1);
+        $patients = $this->patientModel->getPatientsByName("2000-01-01", date("Y-m-d", strtotime("+ 1 day")), '', 1, 2);
         return $this->view->render($response, 'admin/remessa/add.twig',
         [
           'products' => $products,
