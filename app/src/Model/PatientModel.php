@@ -290,7 +290,7 @@ class PatientModel extends Model
             LEFT JOIN users ON users.id = patients.id_user
                 
             WHERE
-                (patients.visitDate BETWEEN ? AND ?) 
+            ((patients.visitDate is NULL) OR (patients.visitDate BETWEEN ? AND ?))  
         ";
         if($status != 0) {
             $sql .= "
@@ -331,6 +331,10 @@ class PatientModel extends Model
 
     public function getPatientsByName($start, $finish, $search, $status, $order = 1, int $offset = 0, int $limit = PHP_INT_MAX): array
     {
+        // var_dump($start);
+        // var_dump($finish);
+        // var_dump($search);
+        // var_dump($status);die;
         $sql = "
             SELECT 
                 users.*,
@@ -341,7 +345,7 @@ class PatientModel extends Model
                 LEFT JOIN users ON users.id = patients.id_user
                 LEFT JOIN patient_status ON patients.id_status = patient_status.id
             WHERE
-                (patients.visitDate is NULL) OR (patients.visitDate BETWEEN ? AND ?) 
+                ((patients.visitDate is NULL) OR (patients.visitDate BETWEEN ? AND ?)) 
         ";
         if($status != 0) {
             $sql .= "

@@ -26,6 +26,8 @@
         "robmorgan/phinx": "^0.8.1",
         "erusev/parsedown": "^1.6",
         "fusonic/spreadsheet-export": "^1.0",
+        "shuchkin/simplexlsxgen": "^1.3",
+        "shuchkin/simplexls": "^0.10",
         "phpmailer/phpmailer": "^5.2",
         "mpratt/embera": "^1.9",
         "akrabat/rka-slim-session-middleware": "^2.0",

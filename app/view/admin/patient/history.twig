@@ -10,25 +10,25 @@
 </ol>
 {% endblock %}
 {% block content %}
-{# <div class="col-sm-10 pull-right">
+{# <div class="col-lg-10 pull-right">
   <div class="panel panel-default">
     <div class="panel-heading" style="">
       Relatórios
     </div>
     <div class="panel-body" style="padding-top:5px;">
-      <div class="col-sm-3" style="padding-left:0px;">
+      <div class="col-lg-3" style="padding-left:0px;">
         <div class="form-group">
           <label for="history_date">Data Inicial</label>
           <input id="history_start" class="form-control" type="date" name="history_start" required>
         </div>
       </div>
-      <div class="col-sm-3" style="padding-left:0px;">
+      <div class="col-lg-3" style="padding-left:0px;">
         <div class="form-group">
           <label for="history_date">Data Final</label>
           <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
         </div>
       </div>
-      <div class="col-sm-6" style="padding:0px;">
+      <div class="col-lg-6" style="padding:0px;">
           <p class="form-group">
             <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
             <a class="btn btn-default" id="patients_download_att" name="patients_download_att"  href="{{ base_url() }}/admin/patients/export_history_attendance"  target="_blank">
@@ -48,14 +48,14 @@
   </div>
 </div> #}
 
-<div class="col-sm-6  col-sm-offset-6">
+<div class="col-md-12 col-lg-6 col-lg-offset-6">
   <div class="panel panel-default">
     <div class="panel-heading" style="">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-lg-4">
           Relatório
         </div>
-        <div class="col-sm-8">
+        <div class="col-lg-8">
           <a class="btn btn-default btn-sm pull-right" id="patients_download_att" name="patients_download_att" style="margin:0px 5px" href="{{ base_url() }}/admin/attendances/export" target="_blank">
             <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
             Relatório de Atendimentos
@@ -68,19 +68,19 @@
       </div>
     </div>
     <div class="panel-body" style="padding-top:5px;">
-      <div class="col-sm-4" style="padding-left:0px;">
+      <div class="col-lg-4" style="padding-left:0px;">
         <div class="form-group">
           <label for="attendance_name">Data Inicial</label>
           <input id="history_start" class="form-control" type="date" name="history_start" required>
         </div>
       </div>
-      <div class="col-sm-4"  style="padding-left:0px;">
+      <div class="col-lg-4"  style="padding-left:0px;">
         <div class="form-group">
           <label for="attendance_name">Data Final</label>
           <input id="history_finish" class="form-control" type="date" name="history_finish" value="{{ today }}"  required>
         </div>
       </div>
-      <div class="col-sm-4"  style="padding-left:0px;">
+      <div class="col-lg-4"  style="padding-left:0px;">
         <div class="form-group pull-right">
           
 
@@ -91,14 +91,14 @@
 
 </div>
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12 col-lg-12">
     <div class="panel panel-default">
       <div class="panel-heading" style="">
     <div class="row">
-        <div class="col-sm-7">
+        <div class="col-md-6 col-lg-7">
         <p  class="panel-title">Histórico de Paciente - {{ patient.name }}</p>
       </div>
-      <div class="col-sm-5">
+      <div class="col-md-6 col-lg-5">
         <div class="form-group" style="margin-top:0px; margin-bottom:0px; float:right;">
           <select name="search" id="search" style="border-radius: 5px; color: #444; padding:0px 5px">
             <option value="1" {% if search == '1' %} selected {% endif %}>Cadastro - Crescente</option>

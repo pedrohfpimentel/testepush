@@ -4,11 +4,13 @@ namespace Farol360\Ancora\Controller\Admin;
 use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\Model\EntityFactory;
+use Shuchkin\SimpleXLSXGen;
 use Farol360\Ancora\User;
 use Fusonic\SpreadsheetExport\Spreadsheet;
 use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
 use Fusonic\SpreadsheetExport\ColumnTypes\NumericColumn;
 use Fusonic\SpreadsheetExport\ColumnTypes\TextColumn;
+use Fusonic\SpreadsheetExport\Writers\CsvWriter;
 use Fusonic\SpreadsheetExport\Writers\OdsWriter;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -93,25 +95,16 @@ class UserController extends Controller
     }
     public function export(Request $request, Response $response)
     {
-        $export = new Spreadsheet();
-        $export->addColumn(new TextColumn('Nome'));
-        $export->addColumn(new TextColumn('Email'));
-        $export->addColumn(new DateColumn('Data do cadastro'));
-        $export->addColumn(new TextColumn('Cargo no sistema'));
-        $export->addColumn(new DateColumn('Data de nascimento'));
-        $export->addColumn(new TextColumn('CPF'));
-        $export->addColumn(new NumericColumn('DDD'));
-        $export->addColumn(new NumericColumn('Telefone'));
-        $export->addColumn(new TextColumn('Rua'));
-        $export->addColumn(new TextColumn('Número'));
-        $export->addColumn(new TextColumn('Complemento'));
-        $export->addColumn(new TextColumn('Bairro'));
-        $export->addColumn(new TextColumn('Cidade'));
-        $export->addColumn(new TextColumn('Estado'));
-        $export->addColumn(new TextColumn('CEP'));
         $users = $this->userModel->getAll();
-        foreach ($users as $user) {
-            $export->addRow([
+        
+        // Create the headers.
+        $data = [
+            ['Nome', 'Email', 'Data do Cadastro', 'Cargo No Sistema', 'Data de Nascimento' , 'CPF', 'DDD', 'Telefone', 'Rua', 'Número', 'Complemento', 'Bairro', 'Cidade', 'Estado', 'CEP']
+        ];
+
+        foreach ($users as $key => $user) {
+            
+            $array_push = [
                 $user->name,
                 $user->email,
                 $user->created_at,
@@ -127,12 +120,13 @@ class UserController extends Controller
                 $user->end_cidade,
                 $user->end_estado,
                 $user->end_cep,
-            ]);
+            ];
+            array_push($data, $array_push);
         }
-        $writer = new OdsWriter();
-        $writer->includeColumnHeaders = true;
-        // TODO: Refatorar para usar PSR-7
-        $export->download($writer, 'Usuários-' . time());
+     
+        $xlsx = SimpleXLSXGen::fromArray( $data );
+        $xlsx->downloadAs('Usuarios-' . time() .'.xlsx');
+        
     }
     public function view(Request $request, Response $response, array $args): Response
     {

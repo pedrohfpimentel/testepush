@@ -7,10 +7,12 @@ use Farol360\Ancora\Controller;
 use Farol360\Ancora\Model;
 use Farol360\Ancora\User;
 use Farol360\Ancora\Model\EntityFactory;
+use Shuchkin\SimpleXLSXGen;
 use Fusonic\SpreadsheetExport\Spreadsheet;
 use Fusonic\SpreadsheetExport\ColumnTypes\DateColumn;
 use Fusonic\SpreadsheetExport\ColumnTypes\NumericColumn;
 use Fusonic\SpreadsheetExport\ColumnTypes\TextColumn;
+use Fusonic\SpreadsheetExport\Writers\CsvWriter;
 use Fusonic\SpreadsheetExport\Writers\OdsWriter;
 use Mpdf\Mpdf;
 use Slim\Flash\Messages as FlashMessages;
@@ -77,6 +79,7 @@ class PatientController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
         $patients = $this->patientModel->getPatientsByName($start, $finish, $search, $status, $order, $offset, $limit);
+        // var_dump($patients);die;
         $amountPatients = $this->patientModel->getAmountName($start, $finish, $search, $status);
         $patient_status = $this->patientStatusModel->getAll();
         $amountPages = ceil($amountPatients->amount / $limit);
@@ -356,11 +359,12 @@ class PatientController extends Controller
             if ($patient->nascimento != "") {
                 $patient->nascimento = date('d/m/Y', strtotime($patient->nascimento));
             }
+            $patient->data_visita = $patient->visitDate ? date('d/m/Y', strtotime($patient->visitDate)) : '-----';
 
             $html .= "
                 <tr>
                     <td style='width: 45%;'>$patient->name</td>
-                    <td style='width: 10%;'>" . date('d/m/Y', strtotime($patient->visitDate)) . "</td>
+                    <td style='width: 10%;'>$patient->data_visita</td>
                     <td style='width: 10%;'>$patient->nascimento</td>
 
                     <td style='width: 15%;'>($patient->tel_area) $patient->tel_numero</td>
@@ -421,49 +425,32 @@ class PatientController extends Controller
         $amountPatients = $this->patientModel->getAmountName($patients_start, $patients_finish, '', $patients_status);
         $amountAttendance = $this->attendanceModel->getAmountByDate($patients_start, $patients_finish, '');
 
-        // var_dump($params);die;
-        $export = new Spreadsheet();
-        $export->addColumn(new TextColumn('Nome'));
-        $export->addColumn(new TextColumn('Data de Entrada'));
-        $export->addColumn(new TextColumn('Data de Nascimento'));
-        $export->addColumn(new TextColumn('Telefone'));
-        $export->addColumn(new TextColumn('Situação'));
-        $export->addColumn(new TextColumn('Total de Atendimentos do Paciente'));
-
         $patients = $this->patientModel->getPatientsByName($patients_start, $patients_finish, $search, $patients_status, $order);
-        
-        foreach ($patients as $patient) {
+          
+        $data = [
+            ['Nome', 'Data de Entrada', 'Data de Nascimento', 'Telefone', 'Situação' , 'Total de Atendimentos do Paciente']
+        ];
+
+        foreach ($patients as $key => $patient) {
             $attendance = $this->attendanceModel->getAmountByPatient((int)$patient->id, $patients_start, $patients_finish);
             // var_dump($patient->tel_area);die;
-            // if($patient->tel_area == '0') {
-            //     $patient->tel_area = "--";
-            // }
-            // if($patient->tel_numero == '0') {
-            //     $patient->tel_numero = "-----";
-            // }
-            $export->addRow([
-                $patient->name,
-                $patient->visitDate,
-                $patient->nascimento,
-                $patient->tel_area.'-'.$patient->tel_numero,
-                $patient->status_name,
-                $attendance->amount,
-            ]);
+            // $key;
+            $array_push = [
+            $patient->name,
+            $patient->visitDate,
+            $patient->nascimento,
+            $patient->tel_area.'-'.$patient->tel_numero,
+            $patient->status_name,
+            $attendance->amount,
+            ];
+        
+            array_push($data, $array_push);
         }
-        $export->addRow([]);
-        $export->addRow([
-            'Total Geral de Atendimentos',
-            'Total de Pacientes',
-        ]);
-        $export->addRow([
-            $amountAttendance->amount,
-            $amountPatients->amount,
-        ]);
-        // var_dump($export);die;
-        $writer = new OdsWriter();
-        $writer->includeColumnHeaders = true;
-        // TODO: Refatorar para usar PSR-7
-        $export->download($writer, 'Pacientes-' . time());
+        
+        array_push($data, [],['Total Geral de Atendimentos: ' . $amountAttendance->amount ,'Total de Pacientes' .  $amountPatients->amount]);
+        
+        $xlsx = SimpleXLSXGen::fromArray( $data );
+        $xlsx->downloadAs('Pacientes-' . time() .'.xlsx');
         
     }
 

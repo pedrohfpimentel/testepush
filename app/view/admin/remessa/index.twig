@@ -12,19 +12,19 @@
 
 <div class="main">
   <div class="row">
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-md-3 col-lg-6">
       <a class="btn btn-success" href="{{ base_url() }}/admin/remessa/add">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nova Remessa
       </a>
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-9 col-lg-6">
       <div class="panel panel-default">
         <div class="panel-heading" style="">
           <div class="row">
-            <div class="col-sm-10">
+            <div class="col-md-9 col-lg-10">
               Relatório
             </div>
-            <div class="col-sm-2">
+            <div class="col-md-2 col-lg-2">
               <a class="btn btn-default btn-sm" id="remessa_download" name="remessa_download" style="margin: 0px" href="{{ base_url() }}/admin/remessa/export" target="_blank">
                 <input type="hidden" name="" value="{{ base_url() }}" id="base_url_hidden">
                 Relatório
@@ -34,19 +34,19 @@
         </div>
         <div class="panel-body" style="padding-top:5px;">
           
-          <div class="col-sm-4">
+          <div class="col-md-6 col-lg-4">
             <div class="form-group">
               <label for="remessa_date">Data Inicial</label>
               <input id="remessa_start" class="form-control" type="date" name="remessa_start" required>
             </div>
           </div>
-          <div class="col-sm-4">
+          <div class="col-md-6 col-lg-4">
             <div class="form-group">
               <label for="remessa_date">Data Final</label>
               <input id="remessa_finish" class="form-control" type="date" name="remessa_finish" value="{{ today }}"  required>
             </div>
           </div>
-          <div class="col-sm-4">
+          <div class="col-md-6 col-lg-4">
             <div class="form-group">
               <label for="id">Tipo de Remessa</label>
               <select name="remessa_type" id="remessa_type">
@@ -65,14 +65,14 @@
   <div class="panel panel-default">
     <div class="panel-heading" >
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-md-4 col-lg-4">
           <p  class="panel-title">Remessas Cadastradas</p>
         </div>
       </div>
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-12 col-lg-12">
           <table class="table table-striped data-table" style="border-collapse:separate">
             <thead>
               <tr>
@@ -133,7 +133,7 @@
       </div>
 
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-12 col-xs-12">
           <ul class="pager">
             <li{% if page == 1 %} class="disabled"{% endif %}>
               <a{% if page > 1 %} href="{{ base_url() }}/admin/remessa?page={{ page - 1 }}"{% endif %}>Anterior</a>
