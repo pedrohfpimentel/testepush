@@ -66,7 +66,7 @@ class ProductsController extends Controller
         $offset = ($page - 1) * $limit;
         if( $offset < 0 ) $offset = 0;
         // get products list
-        $products = $this->productsModel->getAll();
+        $products = $this->productsModel->getAll($offset, $limit);
         // var_dump($products);die;
         // remessa types
         $remessaTypes = $this->remessaTypeModel->getAll();
@@ -159,22 +159,25 @@ class ProductsController extends Controller
                 $product->cost = $custo_medio;
             }
         }
-        foreach($products as $key => $product) {
-            // var_dump($product->quantity);//die;
-            if($product->quantity <= 0) {
-                unset($products[$key]);
-            }
-            $product->cost = number_format($product->cost, 2, ',', '.');
-        }
+        //foreach para remover produtos zerados ou negativos
+        // foreach($products as $key => $product) {
+        //     // var_dump($product->quantity);//die;
+        //     if($product->quantity <= 0) {
+        //         unset($products[$key]);
+        //     }
+        //     $product->cost = number_format($product->cost, 2, ',', '.');
+        // }
         // var_dump($products);die;
-        // $amountProducts = $this->productsModel->getAmount();
-        $amountProducts = count($products);
+        $amountProducts = $this->productsModel->getAmount()->amount;
+        //abaixo, tem um amount de produtos caso a lista n venha a exibir produtos zerados ou negativos
+        // $amountProducts = count($products);
         // var_dump($amountProducts);die;
         // $products = array_chunk($products, 10, true);
-        $products = array_slice($products, $offset, $limit );
+        // $products = array_slice($products, $offset, $limit );
         // var_dump($products);die;
         // var_dump($amountProducts);die;
         $amountPages = ceil($amountProducts / $limit);
+        // var_dump($amountPages);die;
         // get quantity from remessas
         
         return $this->view->render($response, 'admin/products/index.twig',
