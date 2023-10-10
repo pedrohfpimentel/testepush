@@ -30,9 +30,10 @@ class PatientModel extends Model
                 doctor_name,
                 fundation_need,
                 visitDate,
-                registration_date
+                registration_date,
+                doc_ficha
                 )
-            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need, :visitDate, :registration_date )
+            VALUES (:id_user, :id_patient_type, :id_disease, :tel_area_2, :tel_numero_2, :obs_tel, :rg, :sus, :id_status, :obs, :cancer_type, :discovery_time, :discovery_how, :treatment_time, :treatment_where, :doctor_name, :fundation_need, :visitDate, :registration_date, :doc_ficha )
         ";
         $query = $this->db->prepare($sql);
         $parameters = [
@@ -55,6 +56,7 @@ class PatientModel extends Model
             ':fundation_need'   => $patient->fundation_need,
             ':visitDate'        => $patient->visitDate,
             ':registration_date'        => $patient->registration_date,
+            ':doc_ficha'        => $patient->doc_ficha,
 
 
         ];
@@ -95,6 +97,7 @@ class PatientModel extends Model
                 patients.fundation_need as fundation_need,
                 patients.visitDate as visitDate,
                 patients.registration_date as registration_date,
+                patients.doc_ficha as doc_ficha,
                 patients.id_user,
                 diseases.id as disease_id,
                 diseases.name as disease_name,
@@ -447,7 +450,8 @@ class PatientModel extends Model
                 doctor_name     = :doctor_name,
                 fundation_need  = :fundation_need,
                 visitDate       = :visitDate,
-                registration_date = :registration_date
+                registration_date = :registration_date,
+                doc_ficha = :doc_ficha
             WHERE
                 id = :id
         ";
@@ -473,6 +477,7 @@ class PatientModel extends Model
             ':fundation_need'   => $patient->fundation_need,
             ':visitDate'        => $patient->visitDate,
             ':registration_date'        => $patient->registration_date,
+            ':doc_ficha'        => $patient->doc_ficha,
 
         ];
 

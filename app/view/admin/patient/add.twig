@@ -22,7 +22,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
-            <form id="patient-form" role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/add" method="POST">
+            <form id="patient-form" role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/add" method="POST" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-sm-6">
                   <div class="form-group">
@@ -30,6 +30,24 @@
                     <input type="text" class="form-control" id="inputName" name="name" placeholder="" required>
                   </div>
                 </div>
+                <div class="col-sm-6">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" >
+                      <p class="panel-title">Anexar um Arquivo</p>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                       
+                        <div class="col-xs-12">
+                          <label for="input_doc">Tamanho max 25 MB.</label>
+                          <input type="file" id="input_doc" name="doc" >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label for="inputEmail">Email</label>
@@ -77,12 +95,6 @@
                   <label for="inputTelefone">Telefone</label>
                   <input type="number" class="form-control" id="inputTelefone" name="tel_numero" >
                 </div>
-                <div class="col-sm-6 form-group">
-                  <label for="inputObservacoes">Observações</label>
-                  <input type="text" class="form-control" id="inputObservacoes" name="obs_tel" placeholder="">
-                </div>
-              </div>
-              <div class="row">
                 <div class="col-sm-2 ">
                   <div class="form-group">
                     <label for="inputTelArea2">DDD - 2</label>
@@ -93,6 +105,14 @@
                   <label for="inputTelefone2">Telefone - 2</label>
                   <input type="text" class="form-control" id="inputTelefone" name="tel_numero_2" placeholder="">
                 </div>
+                
+              </div>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <label for="inputObservacoes">Observações</label>
+                  <input type="text" class="form-control" id="inputObservacoes" name="obs_tel" placeholder="">
+                </div>
+                
               </div>
               <hr>
               <div class="row">

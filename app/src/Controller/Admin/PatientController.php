@@ -79,6 +79,12 @@ class PatientController extends Controller
         $limit = 20;
         $offset = ($page - 1) * $limit;
         $patients = $this->patientModel->getPatientsByName($start, $finish, $search, $status, $order, $offset, $limit);
+        foreach($patients as $patient) {
+            if($patient->doc_ficha != NULL){
+                $patient->doc_ficha = json_decode($patient->doc_ficha, true);
+                // $patient->doc_ficha = str_replace('"', "", $patient->doc_ficha);
+            }
+          }
         // var_dump($patients);die;
         $amountPatients = $this->patientModel->getAmountName($start, $finish, $search, $status);
         $patient_status = $this->patientStatusModel->getAll();
@@ -225,27 +231,102 @@ class PatientController extends Controller
         $patient['visitDate'] = $data['visitDate'];
         $patient['registration_date'] = $data['registration_date'];
 
-        // var_dump($patient);die;
 
+        // try {
+        //     $this->patientsModel->beginTransaction();
+            // var_dump($patient);die;
+            $files = $request->getUploadedFiles();
+            // if has file in img_featured key
+            foreach($files as $file_index => $file) {
+            
+                if (strpos($file_index, "doc") !== false) {
+                    if (!empty( $file)) {
+                        $doc = $file;
+                        //if has no error on upload
+                        if ($doc->getError() === UPLOAD_ERR_OK) {
+                            //verify allowed extensions
+                            $filename = $doc->getClientFilename();
+                            $allowedExtensions = [
+                                'doc',
+                                'docx',
+                                'pdf',
+                                'DOC',
+                                'DOCX',
+                                'PDF'
+                            ];
+                            // if not allowed extension
+                            if (!in_array(pathinfo($filename,PATHINFO_EXTENSION), $allowedExtensions)) {
+                            //inform error msg
+                            $this->patientModel->rollback();
+                            $this->flash->addMessage('danger', "Documento em formato inválido.");
+                            //redirect to this url
+                            return $this->httpRedirect($request, $response, '/admin/patients/add');
+                            }
+                            //verify size
+                            if ($doc->getSize() > 26000000) {
+                            //inform error msg
+                            $this->patientModel->rollback();
+                            $this->flash->addMessage('danger', "Arquivo muito grande (max 25Mb).");
+                            //redirect to this url
+                            return $this->httpRedirect($request, $response, '/admin/patients/add');
+                            }
+                            // --------
+                            // if pass by all verificators..
+                            // --------
+                            // cabulous function
+                            $filename = sprintf(
+                                '%s.%s',
+                                uniqid(),
+                                pathinfo($doc->getClientFilename(), PATHINFO_EXTENSION)
+                            );
+                            // path to usr img
+                            $path = 'upload/';
+                            if (!file_exists($path)) {
+                            mkdir($path);
+                            }
+                            // move img to path
+                            $doc->moveTo($path . $filename);
+                            // var_dump($path . $filename); die;
+                            // update path in db
+                            
+                            $data['doc_ficha'] =  $path . $filename;
+                            
+                        }
+                    }
+                }
+            }
 
-        $patient = $this->entityFactory->createPatient($patient);
+            // $patient['doc_ficha'] = json_encode($data['doc_ficha']);
+            $patient['doc_ficha'] = $data['doc_ficha'];
+            $patient = $this->entityFactory->createPatient($patient);
+            ($id_patient = $this->patientModel->add($patient));
 
+            // create eventLog when add patient
+            if ( ($id_patient != null) || ($id_patient != false) )
+            {
+                $eventLog['id_patient']         = $id_patient;
+                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_patient')->id;
+                $eventLog['description'] = 'Paciente ' . $user->name .' cadastrado';
 
-        ($id_patient = $this->patientModel->add($patient));
+                $eventLog = $this->entityFactory->createEventLog($eventLog);
+                $this->eventLogModel->add($eventLog);
 
-        // create eventLog when add patient
-        if ( ($id_patient != null) || ($id_patient != false) )
-        {
-            $eventLog['id_patient']         = $id_patient;
-            $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('create_patient')->id;
-            $eventLog['description'] = 'Paciente ' . $user->name .' cadastrado';
+                $this->flash->addMessage('success', 'Paciente adicionado com sucesso.');
+                return $this->httpRedirect($request, $response, '/admin/patients');
+            }
 
-            $eventLog = $this->entityFactory->createEventLog($eventLog);
-            $this->eventLogModel->add($eventLog);
-
-            $this->flash->addMessage('success', 'Paciente adicionado com sucesso.');
+            $this->patientModel->commit();
+            $this->flash->addMessage('success', ' Cadastrado com sucesso.');
             return $this->httpRedirect($request, $response, '/admin/patients');
-        }
+        // }
+
+        
+        // catch (ModelException $e) {
+        // // if get this point, something unforeseen happened
+        // $this->patientModel->rollback();
+        // $this->flash->addMessage('danger', "Erro indefinido ao adicionar. Por favor entre em contato com a Farol 360.");
+        // return $this->httpRedirect($request, $response, '/admin/patients');
+        // }
 
 
     }
@@ -721,6 +802,7 @@ class PatientController extends Controller
 
         $data = $request->getParsedBody();
 
+        $old_patient = $this->patientModel->get((int) $data['id']);
         $patient['id'] = (int) $data['id'];
         $patient['id_user'] = (int) $data['id_user'];
         $patient['id_patient_type'] = 1;
@@ -743,7 +825,74 @@ class PatientController extends Controller
         $patient['fundation_need'] = $data['fundation_need'];
         $patient['visitDate'] = $data['visitDate'];
         $patient['registration_date'] = $data['registration_date'];
-
+        $patient['doc_ficha'] = $old_patient->doc_ficha;
+        
+        // $old_patient->doc_ficha = json_decode($old_patient->doc_ficha, true);
+        
+        if($data['doc_old'] == "1") {
+            $files = $request->getUploadedFiles();
+            // if files are empty means size == 0
+            foreach($files as $file_index => $file) {
+                if (strpos($file_index, "doc") !== false) {
+                    if (!empty( $file)) {
+                        $doc = $file;
+                        //if has no error on upload
+                        if ($doc->getError() === UPLOAD_ERR_OK) {
+                            //verify allowed extensions
+                            $filename = $doc->getClientFilename();
+                            $allowedExtensions = [
+                                'doc',
+                                'docx',
+                                'pdf',
+                                'DOC',
+                                'DOCX',
+                                'PDF'
+                            ];
+                            // if not allowed extension
+                            if (!in_array(pathinfo($filename,PATHINFO_EXTENSION), $allowedExtensions)) {
+                            //inform error msg
+                            $this->patientModel->rollback();
+                            $this->flash->addMessage('danger', "Documento em formato inválido.");
+                            //redirect to this url
+                            return $this->httpRedirect($request, $response, '/admin/patients/add');
+                            }
+                            //verify size
+                            if ($doc->getSize() > 26000000) {
+                            //inform error msg
+                            $this->patientModel->rollback();
+                            $this->flash->addMessage('danger', "Arquivo muito grande (max 25Mb).");
+                            //redirect to this url
+                            return $this->httpRedirect($request, $response, '/admin/patients/add');
+                            }
+                            // --------
+                            // if pass by all verificators..
+                            // --------
+                            // cabulous function
+                            $filename = sprintf(
+                                '%s.%s',
+                                uniqid(),
+                                pathinfo($doc->getClientFilename(), PATHINFO_EXTENSION)
+                            );
+                            // path to usr img
+                            $path = 'upload/';
+                            if (!file_exists($path)) {
+                            mkdir($path);
+                            }
+                            // move img to path
+                            $doc->moveTo($path . $filename);
+                            // var_dump($path . $filename); die;
+                            // update path in db
+                            
+                            $patient['doc_ficha'] =  $path . $filename;
+                            
+                        }
+                    }
+                }
+                
+                
+            }
+        }
+        
         $patient = $this->entityFactory->createPatient($patient);
 
         $user = $data;

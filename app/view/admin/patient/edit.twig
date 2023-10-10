@@ -23,7 +23,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-md-12">
-            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/update" method="POST">
+            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/update" method="POST" enctype="multipart/form-data">
               <input type="hidden" name="id" value="{{ patient.patient_id }}">
               <input type="hidden" name="id_user" value="{{ patient.id }}">
               <div class="row">
@@ -33,6 +33,43 @@
                     <input type="text" class="form-control" id="inputName" name="name" placeholder="" value="{{ patient.name }}" required>
                   </div>
                 </div>
+                <div class="col-sm-6">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" >
+                      <p class="panel-title">
+                        Anexar um Arquivo
+                      </p>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                       
+                        <div class="col-xs-12">
+                          {% if patient.doc_ficha != null %}
+                              
+                            <p style="margin:0px;"> O paciente já possui uma Ficha - <a href="{{ base_url() }}/{{ patient.doc_ficha }}">Ver anexo</a></p>
+                            <input class="form-check-input" type="checkbox" id="show_ficha" style="margin-top: 10px; margin-bottom: 10px">
+                            <label class="form-check-label" for="show_ficha">
+                              Substituir arquivo.
+                            </label>
+                          {% endif %}
+                          <div id="ficha" {% if patient.doc_ficha != null %} style="display: none" {% endif %}>
+
+                            <label for="input_doc" >
+
+                              <label>Tamanho max 25 MB.</label>
+                              <input type="file" id="input_doc" name="doc" {% if patient.doc_ficha != null %} disabled {% endif %}>
+                              <input type="hidden" id="input_doc_old" name="doc_old" {% if patient.doc_ficha != null %}value="0" {% else %} value="1" {% endif %}>
+                            </label>
+                          </div>
+                
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="row">
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label for="inputEmail">Email</label>
@@ -308,7 +345,7 @@
                 </div>
                 <div class="col-sm-3 form-group">
                   <label for="visitDate">Data no Comparecimento na Fundação</label>
-                  <input type="date" class="form-control" id="visitDate" name="visitDate" min="1900-01-01" max="2100-01-01" value="{{ patient.visitDate }}">
+                  <input type="date" class="form-control" id="visitDate" name="visitDate" min="1900-01-01" max="2100-01-01" value="{{ patient.visitDate }}" required>
                   <span class="validity"></span>
                 </div>
                 <div class="col-sm-3 form-group">
@@ -344,6 +381,18 @@
 
 
 <script type="text/javascript">
+{# $("#input_doc").attr('disabled', true); #}
+  $("#show_ficha").click(function() {
+    if($(this).is(":checked")) {
+        $("#ficha").show(300);
+        $("#input_doc").attr('disabled', false);
+        $('#input_doc_old').val(1);
+    } else {
+        $("#ficha").hide(200);
+        $("#input_doc").attr('disabled', true);
+        $('#input_doc_old').val(0);
+    }
+  });
 
 $('#inputCpf').mask('000.000.000-00', {reverse: true});
 $('#inputCep').mask('00000-000');
