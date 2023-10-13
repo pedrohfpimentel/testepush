@@ -435,7 +435,9 @@ class ProfessionalController extends Controller
 
             </tr>
         ";
+        $total = 0;
         foreach ($event_logs as $event_log) {
+            $total = $total+1;
             if (($event_log->id_patient != null)) {
                 $patient = $this->patientModel->get((int)$event_log->id_patient);
                 $event_log->patient_name = $patient->name;
@@ -457,6 +459,16 @@ class ProfessionalController extends Controller
 
         }
         $html .= "</table> </div>";
+        $html .="
+            <div>
+                <table>
+                    <tr>
+                    
+                        <td style='width: 30%; text-align:right; font-weight: bold; font-size: 16px'>Total: $total</td>
+
+                    </tr> 
+                </table>
+            </div>";
         try {
             $mpdf = new \Mpdf\Mpdf([
                 'orientation' => 'L',
@@ -547,9 +559,12 @@ class ProfessionalController extends Controller
 
             </tr>
         ";
+
+        $total = 0;
         foreach ($attendances as $attendance) {
             //var_dump($attendance);
             if ($attendance->id_professional == (int) $id) {
+                $total = $total+1;
               $attendance->name_patient = $this->patientModel->get((int)$attendance->id_patient)->name;
 
              if ($attendance->attendance_day != "") {
@@ -566,7 +581,18 @@ class ProfessionalController extends Controller
 
 
     }
+        
         $html .= "</table> </div>";
+        $html .="
+            <div>
+                <table>
+                    <tr>
+                    
+                        <td style='width: 30%; text-align:right; font-weight: bold; font-size: 16px'>Total: $total</td>
+
+                    </tr> 
+                </table>
+            </div>";
         try {
             $mpdf = new \Mpdf\Mpdf([
                 'orientation' => 'L',
