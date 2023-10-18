@@ -17,6 +17,8 @@ use Fusonic\SpreadsheetExport\Writers\OdsWriter;
 use Mpdf\Mpdf;
 use Slim\Flash\Messages as FlashMessages;
 use Slim\Views\Twig as View;
+use Farol360\Ancora\Model\ModelException;
+use Farol360\Ancora\CustomLogger;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -133,10 +135,11 @@ class PatientController extends Controller
 
         // limpa a mascara do input
         $cpf = preg_replace("/[^0-9]/", "", $cpf);
+        $mascara_return = $this->mascara($cpf,'###.###.###-##');
 
         // buscar usuário
-        $user = $this->patientModel->getByCpf($cpf);
-
+        $user = $this->patientModel->getByCpf($mascara_return);
+        
         // verifica se foi encontrado usuário
         if ($user !== false) {
             $data['codigo'] = 3;
@@ -194,46 +197,48 @@ class PatientController extends Controller
             $this->flash->addMessage('warning', 'O cpf já existe.');
             return $this->httpRedirect($request, $response, '/admin/patients/add');
         }
+        
 
         $data['tel_area'] = (int) $data['tel_area'];
         $data['tel_numero'] = (int) $data['tel_numero'];
         $data['end_numero'] = (int) $data['end_numero'];
         $data['password'] = '1234';
-        $user = $this->entityFactory->createUser($data);
 
-        // add new user
-        $patient['id_user'] = $this->userModel->add($user);
+        try {
+            $this->patientModel->beginTransaction();
+            $user = $this->entityFactory->createUser($data);
 
-        // set patient type manual;
-        $patient['id_patient_type'] = 1;
+            // add new user
+            $patient['id_user'] = $this->userModel->add($user);
 
-        // set disease
-        $patient['id_disease'] = (int) $data['id_disease'];
+            // set patient type manual;
+            $patient['id_patient_type'] = 1;
 
-        $patient['tel_area_2'] = (int) $data['tel_area_2'];
+            // set disease
+            $patient['id_disease'] = (int) $data['id_disease'];
 
-        $patient['tel_numero_2'] = (int) $data['tel_numero_2'];
+            $patient['tel_area_2'] = (int) $data['tel_area_2'];
 
-        $patient['obs_tel'] = $data['obs_tel'];
+            $patient['tel_numero_2'] = (int) $data['tel_numero_2'];
 
-        $patient['rg'] = $data['rg'];
+            $patient['obs_tel'] = $data['obs_tel'];
 
-        $patient['sus'] = $data['sus'];
-        $patient['id_status'] = (int) $data['id_status'];
-        $patient['obs'] = $data['obs'];
-        $patient['cancer_type'] = $data['cancer_type'];
-        $patient['discovery_time'] = $data['discovery_time'];
-        $patient['discovery_how'] = $data['discovery_how'];
-        $patient['treatment_time'] = $data['treatment_time'];
-        $patient['treatment_where'] = $data['treatment_where'];
-        $patient['doctor_name'] = $data['doctor_name'];
-        $patient['fundation_need'] = $data['fundation_need'];
-        $patient['visitDate'] = $data['visitDate'];
-        $patient['registration_date'] = $data['registration_date'];
+            $patient['rg'] = $data['rg'];
+
+            $patient['sus'] = $data['sus'];
+            $patient['id_status'] = (int) $data['id_status'];
+            $patient['obs'] = $data['obs'];
+            $patient['cancer_type'] = $data['cancer_type'];
+            $patient['discovery_time'] = $data['discovery_time'];
+            $patient['discovery_how'] = $data['discovery_how'];
+            $patient['treatment_time'] = $data['treatment_time'];
+            $patient['treatment_where'] = $data['treatment_where'];
+            $patient['doctor_name'] = $data['doctor_name'];
+            $patient['fundation_need'] = $data['fundation_need'];
+            $patient['visitDate'] = $data['visitDate'];
+            $patient['registration_date'] = $data['registration_date'];
 
 
-        // try {
-        //     $this->patientsModel->beginTransaction();
             // var_dump($patient);die;
             $files = $request->getUploadedFiles();
             // if has file in img_featured key
@@ -256,19 +261,19 @@ class PatientController extends Controller
                             ];
                             // if not allowed extension
                             if (!in_array(pathinfo($filename,PATHINFO_EXTENSION), $allowedExtensions)) {
-                            //inform error msg
-                            $this->patientModel->rollback();
-                            $this->flash->addMessage('danger', "Documento em formato inválido.");
-                            //redirect to this url
-                            return $this->httpRedirect($request, $response, '/admin/patients/add');
+                                //inform error msg
+                                // $this->flash->addMessage('danger', "Documento em formato inválido.");
+                                throw new ModelException($file, "Documento em formato inválido.");
+                                //redirect to this url
+                                // return $this->httpRedirect($request, $response, '/admin/patients/add');
                             }
                             //verify size
                             if ($doc->getSize() > 26000000) {
                             //inform error msg
-                            $this->patientModel->rollback();
-                            $this->flash->addMessage('danger', "Arquivo muito grande (max 25Mb).");
-                            //redirect to this url
-                            return $this->httpRedirect($request, $response, '/admin/patients/add');
+                                // $this->flash->addMessage('danger', "Arquivo muito grande (max 25Mb).");
+                                throw new ModelException($file, "Arquivo muito grande (max 25Mb).");
+                                //redirect to this url
+                                // return $this->httpRedirect($request, $response, '/admin/patients/add');
                             }
                             // --------
                             // if pass by all verificators..
@@ -299,8 +304,12 @@ class PatientController extends Controller
             // $patient['doc_ficha'] = json_encode($data['doc_ficha']);
             $patient['doc_ficha'] = $data['doc_ficha'];
             $patient = $this->entityFactory->createPatient($patient);
-            ($id_patient = $this->patientModel->add($patient));
+            $id_patient = $this->patientModel->add($patient);
+            
+            if($id_patient == false){
 
+                throw new ModelException('', "Erro no cadastro de paciente. COD:0002.");
+            }
             // create eventLog when add patient
             if ( ($id_patient != null) || ($id_patient != false) )
             {
@@ -311,22 +320,21 @@ class PatientController extends Controller
                 $eventLog = $this->entityFactory->createEventLog($eventLog);
                 $this->eventLogModel->add($eventLog);
 
-                $this->flash->addMessage('success', 'Paciente adicionado com sucesso.');
-                return $this->httpRedirect($request, $response, '/admin/patients');
+                // $this->flash->addMessage('success', 'Paciente adicionado com sucesso.');
+                // return $this->httpRedirect($request, $response, '/admin/patients');
             }
 
             $this->patientModel->commit();
-            $this->flash->addMessage('success', ' Cadastrado com sucesso.');
-            return $this->httpRedirect($request, $response, '/admin/patients');
-        // }
-
-        
-        // catch (ModelException $e) {
-        // // if get this point, something unforeseen happened
-        // $this->patientModel->rollback();
-        // $this->flash->addMessage('danger', "Erro indefinido ao adicionar. Por favor entre em contato com a Farol 360.");
-        // return $this->httpRedirect($request, $response, '/admin/patients');
-        // }
+            $this->flash->addMessage('success', 'Paciente cadastrado com sucesso.');
+            // return $this->httpRedirect($request, $response, '/admin/patients');
+        } catch (ModelException $e) {
+            $this->patientModel->rollback();
+            CustomLogger::ModelErrorLog($e->getMessage(), $e->getdata());
+            $this->flash->addMessage('danger', $e->getMessage() . ' Se o problema persistir contate um administrador.');
+            // return $this->httpRedirect($request, $response, "/admin/remessa");
+        }
+        // $this->flash->addMessage('success', 'Paciente adicionado com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/patients');
 
 
     }
@@ -935,5 +943,20 @@ class PatientController extends Controller
         }
 
 
+    }
+
+    function mascara($valor, $formato) {
+        $retorno = '';
+        $posicao_valor = 0;
+        for($i = 0; $i<=strlen($formato)-1; $i++) {
+            if($formato[$i] == '#') {
+                if(isset($valor[$posicao_valor])) {
+                    $retorno .= $valor[$posicao_valor++];
+                }
+            } else {
+                $retorno .= $formato[$i];
+            }
+        }
+        return $retorno;
     }
 }
