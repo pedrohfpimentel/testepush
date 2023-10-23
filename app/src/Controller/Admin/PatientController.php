@@ -159,7 +159,11 @@ class PatientController extends Controller
         if (empty($request->getParsedBody())) {
             $diseases = $this->diseaseModel->getAll();
             $patient_status = $this->patientStatusModel->getAll();
-            return $this->view->render($response, 'admin/patient/add.twig', ['diseases' => $diseases, 'patient_status' => $patient_status]);
+            return $this->view->render($response, 'admin/patient/add.twig', 
+            [
+                'diseases' => $diseases,
+                'patient_status' => $patient_status
+            ]);
         }
 
         //var_dump($request->getParsedBody());
@@ -257,7 +261,13 @@ class PatientController extends Controller
                                 'pdf',
                                 'DOC',
                                 'DOCX',
-                                'PDF'
+                                'PDF',
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'JPG',
+                                'JPEG',
+                                'PNG'
                             ];
                             // if not allowed extension
                             if (!in_array(pathinfo($filename,PATHINFO_EXTENSION), $allowedExtensions)) {
@@ -854,7 +864,13 @@ class PatientController extends Controller
                                 'pdf',
                                 'DOC',
                                 'DOCX',
-                                'PDF'
+                                'PDF',
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'JPG',
+                                'JPEG',
+                                'PNG'
                             ];
                             // if not allowed extension
                             if (!in_array(pathinfo($filename,PATHINFO_EXTENSION), $allowedExtensions)) {
@@ -896,18 +912,16 @@ class PatientController extends Controller
                         }
                     }
                 }
-                
-                
+                    
             }
         }
         
         $patient = $this->entityFactory->createPatient($patient);
-
+        
         $user = $data;
         $user['id'] = $data['id_user'];
 
         $user = $this->entityFactory->createUser($user);
-
 
         $patient_return = $this->patientModel->update($patient);
         $user_return = $this->userModel->update($user);
