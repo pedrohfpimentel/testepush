@@ -184,23 +184,27 @@ class PatientController extends Controller
         }
 
         // verify cpf null or empty
-        if (!isset($data['cpf']) || $data['cpf'] == '') {
-            $this->flash->addMessage('warning', 'O cpf deve ser informado.');
-            return $this->httpRedirect($request, $response, '/admin/patients/add');
-        }
+        // if (!isset($data['cpf']) || $data['cpf'] == '') {
+        //     $this->flash->addMessage('warning', 'O cpf deve ser informado.');
+        //     return $this->httpRedirect($request, $response, '/admin/patients/add');
+        // }
 
-        // verify cpf valido
-        if (!User::validaCPF($data['cpf'])) {
-            $this->flash->addMessage('warning', 'O cpf é inválido.');
-            return $this->httpRedirect($request, $response, '/admin/patients/add');
-        }
+        if($data['cpf'] != "") {
+            // verify cpf valido
+            if (!User::validaCPF($data['cpf'])) {
+                $this->flash->addMessage('warning', 'O cpf é inválido.');
+                return $this->httpRedirect($request, $response, '/admin/patients/add');
+            }
+            $user = $this->patientModel->getByCpf($data['cpf']);
 
-        $user = $this->patientModel->getByCpf($data['cpf']);
-
-        if ($user !== false ) {
-            $this->flash->addMessage('warning', 'O cpf já existe.');
-            return $this->httpRedirect($request, $response, '/admin/patients/add');
+            if ($user !== false ) {
+                $this->flash->addMessage('warning', 'O cpf já existe.');
+                return $this->httpRedirect($request, $response, '/admin/patients/add');
+            }
+            
         }
+        
+        
         
 
         $data['tel_area'] = (int) $data['tel_area'];

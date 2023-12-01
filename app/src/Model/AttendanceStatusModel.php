@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Farol360\Ancora\Model;
 
 use Farol360\Ancora\Model;
-use Farol360\Ancora\Model\AttendanceStatusModel;
+use Farol360\Ancora\Model\AttendanceStatus;
 
 class AttendanceStatusModel extends Model
 {

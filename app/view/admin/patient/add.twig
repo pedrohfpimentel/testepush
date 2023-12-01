@@ -352,60 +352,61 @@ $('#inputCep').mask('00000-000');
   // requisito 2: cpf único
   $("#inputCpf").focusout(function(){
     var cpf = $('#inputCpf').val();
+    if(cpf != ''){
+      $.ajax(
+        {
+          url: "{{ base_url() }}/admin/patients/validate_cpf?cpf="+cpf,
 
-    $.ajax(
-      {
-        url: "{{ base_url() }}/admin/patients/validate_cpf?cpf="+cpf,
+          beforeSend: function() {
+            $('#inputCpf-group').removeClass('has-success');
+            $('#inputCpf-group').removeClass('has-error');
+            $('#inputCpf').attr('ok', '');
+            $('#inputCpf-feedback').html('');
+          },
 
-        beforeSend: function() {
-          $('#inputCpf-group').removeClass('has-success');
-          $('#inputCpf-group').removeClass('has-error');
-          $('#inputCpf').attr('ok', '');
-          $('#inputCpf-feedback').html('');
-        },
+          success: function(data) {
 
-        success: function(data) {
+            if (data.codigo == 1) {
+              $('#inputCpf-group').addClass('has-error');
+              $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
 
-          if (data.codigo == 1) {
-            $('#inputCpf-group').addClass('has-error');
-            $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
+            }
 
+            if (data.codigo == 2) {
+              $('#inputCpf-group').addClass('has-error');
+              $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
+
+            }
+
+            if (data.codigo == 3) {
+              $('#inputCpf-group').addClass('has-error');
+              $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
+            }
+
+            if (data.codigo == 4) {
+              $('#inputCpf-group').addClass('has-success');
+              $('#inputCpf-feedback').html('<p style="color:green; position:absolute;">' + data.mensagem + '</p>');
+              $('#inputCpf').attr('ok', 'ok');
+            }
+
+          },
+
+          error: function(data) {
+            console.log("erro:" + data);
           }
-
-          if (data.codigo == 2) {
-            $('#inputCpf-group').addClass('has-error');
-            $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
-
-          }
-
-          if (data.codigo == 3) {
-            $('#inputCpf-group').addClass('has-error');
-            $('#inputCpf-feedback').html('<p style="color:red; position:absolute;">' + data.mensagem + '</p>');
-          }
-
-          if (data.codigo == 4) {
-            $('#inputCpf-group').addClass('has-success');
-            $('#inputCpf-feedback').html('<p style="color:green; position:absolute;">' + data.mensagem + '</p>');
-            $('#inputCpf').attr('ok', 'ok');
-          }
-
-        },
-
-        error: function(data) {
-          console.log("erro:" + data);
         }
+      );
     }
-    );
 
   });
 
   // validação do formulário
   $('#patient-form').on('submit', function(){
 
-    if ($('#inputCpf').attr('ok') != 'ok') {
-      $('#inputCpf').focus();
-      return false;
-    }
+    //if ($('#inputCpf').attr('ok') != 'ok') {
+      //$('#inputCpf').focus();
+      //return false;
+    //}
   });
 
 </script>
