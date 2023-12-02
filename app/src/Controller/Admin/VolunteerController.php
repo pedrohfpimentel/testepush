@@ -140,25 +140,27 @@ class VolunteerController extends Controller
         $data = $request->getParsedBody();
         // var_dump($data);die;
         $data['name'] = $data['name'];
-        $data['email'] = $data['email'];
+        $data['email'] = $data['email'] ? $data['email'] : null;
         $data['cpf'] =  $data['cpf'];
-        $data['tel_area'] = $data['tel_area'];
-        $data['tel_numero'] = $data['tel_numero'];
+        $data['tel_area'] = $data['tel_area'] ? $data['tel_area'] : null;
+        $data['tel_numero'] = $data['tel_numero'] ? $data['tel_numero'] : null;
         $data['end_cep'] =  $data['end_cep'];
         $data['end_rua'] = $data['end_rua'];
-        $data['end_numero'] =  $data['end_numero'];
+        $data['end_numero'] =  (int)$data['end_numero'] ? (int)$data['end_numero'] : null;
         $data['end_complemento'] = $data['end_complemento'];
         $data['end_bairro'] = $data['end_bairro'];
         $data['end_cidade'] = $data['end_cidade'];
         $data['end_estado'] = $data['end_estado'];
         $data['obs'] = $data['obs'];
         $data['status'] = $data['status'];
-        
-        if ($this->volunteerModel->getByEmail($data['email']) != false) {
-            $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
-            return $this->httpRedirect($request, $response, '/admin/voluntarios/add');
+        $data['nascimento'] = $data['nascimento'] ? $data['nascimento'] : date('Y-m-d');
+        if($data['email']) {
+            if ($this->volunteerModel->getByEmail($data['email']) != false) {
+                // var_dump($data['email']);die;
+                $this->flash->addMessage('success', 'O email já existe. por favor cadastre um email único.');
+                return $this->httpRedirect($request, $response, '/admin/voluntarios/add');
+            }
         }
-        
         $volunteer = $this->entityFactory->createVolunteer($data);
         $id_volunteer = $this->volunteerModel->add($volunteer);
 
@@ -470,14 +472,14 @@ class VolunteerController extends Controller
         $data = $request->getParsedBody();
         $volunteer['id'] = (int) $data['id'];
         $volunteer['name'] = $data['name'];
-        $volunteer['email'] = $data['email'];
-        $volunteer['nascimento'] = $data['nascimento'];
+        $volunteer['email'] = $data['email'] ? $data['email'] : null;
+        $volunteer['nascimento'] = $data['nascimento'] ? $data['nascimento'] : date('Y-m-d');
         $volunteer['cpf'] =  $data['cpf'];
-        $volunteer['tel_area'] = $data['tel_area'];
-        $volunteer['tel_numero'] = $data['tel_numero'];
+        $volunteer['tel_area'] = $data['tel_area'] ? $data['tel_area'] : null;
+        $volunteer['tel_numero'] = $data['tel_numero'] ? $data['tel_numero'] : null;
         $volunteer['end_cep'] =  $data['end_cep'];
         $volunteer['end_rua'] = $data['end_rua'];
-        $volunteer['end_numero'] =  $data['end_numero'];
+        $volunteer['end_numero'] =  (int)$data['end_numero'] ? (int)$data['end_numero'] : null;
         $volunteer['end_complemento'] = $data['end_complemento'];
         $volunteer['end_bairro'] = $data['end_bairro'];
         $volunteer['end_cidade'] = $data['end_cidade'];
