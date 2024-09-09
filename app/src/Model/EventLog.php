@@ -23,7 +23,7 @@ class EventLog
     {
         $this->id                  = $data['id'] ?? null;
         $this->event_log_type      = $data['event_log_type'] ?? null;
-        $this->date                = $data['date'] ?? null;
+        $this->date                = $data['date'] ?? date("Y-m-d H:i:s");
         $this->time                = $data['time'] ?? null;
         $this->description         = $data['description'] ?? null;
         $this->quantity            = $data['quantity'] ?? null;
