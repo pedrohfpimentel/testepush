@@ -71,7 +71,7 @@ class ProfessionalModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [':email' => $email];
         $query->execute($parameters);
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professional::class);
         return $query->fetch();
     }
 
@@ -99,7 +99,7 @@ class ProfessionalModel extends Model
         $query->bindValue(1, $offset, \PDO::PARAM_INT);
         $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professional::class);
         return $query->fetchAll();
     }
 
@@ -132,7 +132,7 @@ class ProfessionalModel extends Model
         $query->bindValue(1, $offset, \PDO::PARAM_INT);
         $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professional::class);
         return $query->fetchAll();
     }
 
@@ -226,7 +226,7 @@ class ProfessionalModel extends Model
         $query->bindValue(1, $offset, \PDO::PARAM_INT);
         $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professional::class);
         return $query->fetchAll();
     }
 
@@ -290,7 +290,7 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
         $query->bindValue(2, $offset, \PDO::PARAM_INT);
         $query->bindValue(3, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professional::class);
         return $query->fetchAll();
 
 
@@ -329,7 +329,7 @@ public function getAllByDateAtt(string $start, string $finish, int $offset = 0, 
         $query->bindValue(2, $offset, \PDO::PARAM_INT);
         $query->bindValue(3, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professionals::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Professional::class);
         return $query->fetchAll();
 
 
