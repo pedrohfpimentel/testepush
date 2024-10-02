@@ -131,7 +131,7 @@ class VolunteerModel extends Model
         $query->bindValue(1, $offset, \PDO::PARAM_INT);
         $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteers::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteer::class);
         return $query->fetchAll();
     }
 
@@ -239,7 +239,7 @@ class VolunteerModel extends Model
         $query->bindValue(2, $offset, \PDO::PARAM_INT);
         $query->bindValue(3, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteers::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteer::class);
         return $query->fetchAll();
     }
 
@@ -268,7 +268,7 @@ class VolunteerModel extends Model
         $query->bindValue(2, $offset, \PDO::PARAM_INT);
         $query->bindValue(3, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteers::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteer::class);
         return $query->fetchAll();
 
     }
