@@ -110,7 +110,7 @@ class VolunteerModel extends Model
         $query = $this->db->prepare($sql);
         $parameters = [':email' => $email];
         $query->execute($parameters);
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteers::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteer::class);
         return $query->fetch();
     }
 
@@ -157,7 +157,7 @@ class VolunteerModel extends Model
         $query->bindValue(1, $offset, \PDO::PARAM_INT);
         $query->bindValue(2, $limit, \PDO::PARAM_INT);
         $query->execute();
-        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteers::class);
+        $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteer::class);
         return $query->fetchAll();
     }
 
