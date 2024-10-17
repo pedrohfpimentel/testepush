@@ -215,8 +215,8 @@ class AttendanceController extends Controller
         $patients = $this->patientModel->getAll();
         foreach ($attendances as $attendance) {
             foreach($professionals as $professional) {
-                if ($professional['id'] == $attendance->id_professional) {
-                    $attendance->name_professional = $professional['name'];
+                if ($professional->id == $attendance->id_professional) {
+                    $attendance->name_professional = $professional->name;
                 }
             }
             foreach ($patients as $patient) {
