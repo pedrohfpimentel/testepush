@@ -374,13 +374,14 @@ class ProductsController extends Controller
     public function export(Request $request, Response $response)
     {
         $products = $this->productsModel->getAll();
+        $quantidade = 0;
         // get quantity from remessas
         foreach ($products as $product) {
             //buscando todos os produto_remessa por id do product
             $produtos_remessa = $this->produtoRemessaModel->getAllByProduct((int) $product->id);
             //var_dump($produtos_remessa);
             //armazena quantidade temporaria
-            $quantidade = 0;
+            
             $contador_remessa = 0;
             $contador_custo = 0;
             $soma_custo = 0;
@@ -499,6 +500,16 @@ class ProductsController extends Controller
                 <td style='text-align:left;'>R$ $product->cost</td>
             </tr>";
         }
+
+         $html .= "
+            <tr>
+                <td style='text-align:left;'></td>
+                <td style='text-align:left;'></td>
+                <td style='text-align:left;'>Total</td>
+                <td style='text-align:left;'>$quantidade</td>
+                <td style='text-align:left;'></td>
+            </tr>";
+        
         $html .= "</table> </div>";
         try {
             $mpdf = new \Mpdf\Mpdf([
