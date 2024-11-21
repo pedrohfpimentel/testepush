@@ -340,7 +340,7 @@ class ProfessionalController extends Controller
             //die;*/
         foreach ($professionals as $professional) {
             //var_dump( $professional);
-            $professional = $this->entityFactory->createProfessional($professional);
+            // $professional = $this->entityFactory->createProfessional($professional);
             $html .= "
             <tr>
                 <td style='width: 30%; text-align:left;'>$professional->name</td>
