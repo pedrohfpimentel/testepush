@@ -534,6 +534,7 @@ class ProductsController extends Controller
         $id = (int)$request->getQueryParams()['id'];
         $params = $request->getQueryParams();
         $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+        $cod_patrimonio = !empty($params['cod_patrimonio']) ? htmlspecialchars($params['cod_patrimonio']) : '';
         $history_start =   $params['history_start'];
         if ($history_start == "") {
           $history_start = "2000-01-01";
@@ -551,7 +552,7 @@ class ProductsController extends Controller
         //var_dump($event_logs);die;
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct((int)$id);
         $contador_quantidade_total = 0;
-        $event_logs = $this->eventLogModel->getByProducts2((int)$id, $history_start, $history_finish, (int)$search);
+        $event_logs = $this->eventLogModel->getByProducts2((int)$id, $history_start, $history_finish, (int)$search, $cod_patrimonio);
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
         $html = "
             <div style='width: 24%; float:left;'>
@@ -572,6 +573,7 @@ class ProductsController extends Controller
                     <th style='text-align:right;'>qtd</th>
                     <th style='text-align:left;'>Custo</th>
                     <th style='text-align:left;'>Fornecedor/Paciente</th>
+                    <th style='text-align:left;'>Código Patrimonial</th>
                 </tr>
             ";
             foreach ($event_logs as $event_log) {
@@ -652,6 +654,12 @@ class ProductsController extends Controller
                             $html .= "<td style='text-align:left;'> - - - -
                             </td>";
                         }
+                        if($event_log->patrimony_code != null) {
+                            $html .="<td style='text-align:left;'>$event_log->patrimony_code
+                            </td>";
+                        } else {
+                            $html .="<td style='text-align:left;'> - - - - </td>";
+                        }
                     $html .= "
                     </tr> ";
                 }
@@ -680,6 +688,7 @@ class ProductsController extends Controller
         $id = (int)$request->getQueryParams()['id'];
         $params = $request->getQueryParams();
         $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+        $cod_patrimonio = !empty($params['cod_patrimonio']) ? htmlspecialchars($params['cod_patrimonio']) : '';
         $history_start =   $params['history_start'];
         if ($history_start == "") {
           $history_start = "2000-01-01";
@@ -694,10 +703,9 @@ class ProductsController extends Controller
         $patients = $this->patientModel->getAll();
         // retorna todos os eventlogs que tenham produc_id
         //$event_logs = $this->eventLogModel->getByProducts((int)$id, (int)$search);
-        //var_dump($event_logs);die;
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct((int)$id);
         $contador_quantidade_total = 0;
-        $event_logs = $this->eventLogModel->getByProducts2((int)$id, $history_start, $history_finish, (int)$search);
+        $event_logs = $this->eventLogModel->getByProducts2((int)$id, $history_start, $history_finish, (int)$search, $cod_patrimonio);
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
         $html = "
             <div style='width: 24%; float:left;'>
@@ -718,6 +726,7 @@ class ProductsController extends Controller
                     <th style='text-align:right;'>qtd</th>
                     <th style='text-align:left;'>Custo</th>
                     <th style='text-align:left;'>Fornecedor/Paciente</th>
+                    <th style='text-align:left;'>Código Patrimonial</th>
                 </tr>
             ";
             foreach ($event_logs as $event_log) {//var_dump($event_log);
@@ -790,6 +799,12 @@ class ProductsController extends Controller
                         $html .="<td style='text-align:left;'>$event_log->suppliers_name
                         </td>";
                     }
+                    if($event_log->patrimony_code != null) {
+                        $html .="<td style='text-align:left;'>$event_log->patrimony_code
+                        </td>";
+                    } else {
+                        $html .="<td style='text-align:left;'> - - - - </td>";
+                    }
                 }
 
                 $html .= "
@@ -820,17 +835,18 @@ class ProductsController extends Controller
         $params = $request->getQueryParams();
 
         $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
+        $cod_patrimonio = !empty($params['cod_patrimonio']) ? htmlspecialchars($params['cod_patrimonio']) : '';
         $id = intval($args['id']);
         $products = $this->productsModel->get($id);
         $suppliers = $this->supplierModel->getAll();
         $patients = $this->patientModel->getAll();
         // retorna todos os eventlogs que tenham produc_id
-        $event_logs = $this->eventLogModel->getByProducts((int)$id, (int)$search);
+        $event_logs = $this->eventLogModel->getByProducts((int)$id, (int)$search, $cod_patrimonio);
         $remessa_produtos = $this->produtoRemessaModel->getAllByProduct($id);
         //var_dump($remessa_produtos);die;
         $contador_quantidade_total = 0;//var_dump($event_logs);die;
         $remessa_atual = "";
-        foreach ($event_logs as $event_log) {
+        foreach ($event_logs as $key =>$event_log) {
             $remessa_atual = $this->remessaModel->get((int)$event_log->id_remessa);
             //var_dump($remessa_atual);die;
             if ($remessa_atual != null) {
@@ -854,10 +870,11 @@ class ProductsController extends Controller
             $event_log->patient_name = $this->patientModel->get((int) $event_log->id_patient)->name;
             }//var_dump($event_log);die;
             foreach($remessa_produtos as $remessa_produto) {
+                
                 //
                 //var_dump($remessa_atual);
                 if ($event_log->id_remessa == $remessa_produto->id_remessa) {
-
+                    $event_logs[$key]->patrimony_code = $remessa_produto->patrimony_code;
                     $event_log->cost = (($remessa_produto->cost != 'undefined') && ($remessa_produto->cost != '')) ? $remessa_produto->cost : null;
                     $type = $remessa_produto->remessa_type;
                     if (($type == '1') || ($type == '2') || ($type == '3') || ($type == '6') || ($type == '7')) {
@@ -877,11 +894,13 @@ class ProductsController extends Controller
                 $event_log->quantity = '---';
             }
         }
+        
         return $this->view->render($response, 'admin/products/history.twig', [
             'products' => $products,
             'event_logs' => $event_logs,
             'remessa_atual' =>$remessa_atual,
-            'search' => $search
+            'search' => $search,
+            'cod_patrimonio' => $cod_patrimonio
         ]);
     }
     public function update(Request $request, Response $response): Response

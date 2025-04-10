@@ -220,8 +220,8 @@ class EventLogModel extends Model
 
 
 
-    public function getByProducts(int $id, int $search)
-    {
+    public function getByProducts(int $id, int $search, $cod_patrimonio = '')
+    {//var_dump($cod_patrimonio);die;
         $sql = "
             SELECT
                 event_logs.id as id,
@@ -241,7 +241,8 @@ class EventLogModel extends Model
                 event_log_types.slug as event_log_types_slug,
                 event_log_types.name as event_log_types_name,
                 event_log_types.description as event_log_types_description,
-                remessa.date as remessa_date
+                remessa.date as remessa_date,
+                produto_remessa.patrimony_code as patrimony_code
               #  products.id as products_id
               #  products.id_user as products_id_user,
               #  users.name as users_name
@@ -251,12 +252,16 @@ class EventLogModel extends Model
                 event_logs
                 LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN remessa ON event_logs.id_remessa = remessa.id
+                LEFT JOIN produto_remessa ON produto_remessa.id_remessa = remessa.id
                # LEFT JOIN products ON products.id = event_logs.products
                # LEFT JOIN users ON products.id = users.id
             WHERE
-                id_products = :id
+                ( id_products = :id
                 OR
-                event_logs.product_list LIKE CONCAT('%', :id2, '%') ";
+                event_logs.product_list LIKE CONCAT('%', :id2, '%'))  ";
+            if($cod_patrimonio != ''){
+                $sql .=" AND produto_remessa.patrimony_code = :cod_patrimonio ";
+            }
             if ($search == 1) {
                 $sql .="ORDER BY
                 CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, event_logs.date ASC";
@@ -276,13 +281,18 @@ class EventLogModel extends Model
 
 
         $query = $this->db->prepare($sql);
-        $parameters = [':id' => $id, ':id2' => '"'.$id.'"'];
+        if($cod_patrimonio != ''){
+        $parameters = [':id' => $id, ':id2' => '"'.$id.'"', ':cod_patrimonio' => $cod_patrimonio];
+        } else {
+            $parameters = [':id' => $id, ':id2' => '"'.$id.'"'];
+
+        }
         $query->execute($parameters);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
         return $query->fetchAll();
     }
 
-    public function getByProducts2(int $id, string $start, string $finish, int $search)
+    public function getByProducts2(int $id, string $start, string $finish, int $search, $cod_patrimonio = '')
     {
         $sql = "
             SELECT
@@ -304,7 +314,8 @@ class EventLogModel extends Model
                 event_log_types.name as event_log_types_name,
                 event_log_types.description as event_log_types_description,
                 remessa.date as remessa_date,
-                remessa.remessa_type as remessa_type
+                remessa.remessa_type as remessa_type,
+                produto_remessa.patrimony_code as patrimony_code
               #  products.id as products_id
               #  products.id_user as products_id_user,
               #  users.name as users_name
@@ -314,12 +325,16 @@ class EventLogModel extends Model
                 event_logs
                 LEFT JOIN event_log_types ON event_logs.event_log_type = event_log_types.id
                 LEFT JOIN remessa ON event_logs.id_remessa = remessa.id
+                LEFT JOIN produto_remessa ON produto_remessa.id_remessa = remessa.id
                # LEFT JOIN products ON products.id = event_logs.products
                # LEFT JOIN users ON products.id = users.id
             WHERE
-                id_products = :id
+                (id_products = :id
                 OR
-                event_logs.product_list LIKE CONCAT('%', :id2, '%') AND (event_logs.date BETWEEN :start AND :finish) ";
+                event_logs.product_list LIKE CONCAT('%', :id2, '%') AND (event_logs.date BETWEEN :start AND :finish)) ";
+            if($cod_patrimonio != ''){
+                $sql .=" AND produto_remessa.patrimony_code = :cod_patrimonio ";
+            }
             if ($search == 1) {
                 $sql .="ORDER BY
                 CASE WHEN remessa.date IS NULL THEN 1 ELSE 0 END, event_logs.date ASC";
@@ -339,7 +354,11 @@ class EventLogModel extends Model
 
 
         $query = $this->db->prepare($sql);
-        $parameters = [':id' => $id, ':id2' => '"'.$id.'"', ':start' => $start, ':finish' => $finish];
+        if($cod_patrimonio != ''){
+            $parameters = [':id' => $id, ':id2' => '"'.$id.'"', ':start' => $start, ':finish' => $finish, ':cod_patrimonio' => $cod_patrimonio];
+        } else {
+            $parameters = [':id' => $id, ':id2' => '"'.$id.'"', ':start' => $start, ':finish' => $finish];
+        }
         $query->execute($parameters);
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, EventLog::class);
         return $query->fetchAll();
