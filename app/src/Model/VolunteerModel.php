@@ -136,45 +136,81 @@ class VolunteerModel extends Model
     }
 
 
-    public function getAllIndex(int $offset = 0, int $limit = PHP_INT_MAX): array
+    public function getAllIndex(int $search = 1, $search_name = '', int $offset = 0, int $limit = PHP_INT_MAX): array
     {
         $sql = "
             SELECT
                 volunteers.*
-
             FROM
                 volunteers
+            WHERE 1=1 ";
 
-            WHERE
-                volunteers.status IS NULL OR volunteers.status = 1
-
+        if ($search == 1) {
+            $sql .= " AND (volunteers.status IS NULL OR volunteers.status = ?) ";
+        } elseif ($search == 2) {
+            $sql .= " AND volunteers.status = ? ";
+        }
+        
+        if ($search_name != '') {
+            $sql .= " AND volunteers.name LIKE CONCAT('%', ?, '%') ";
+        }
+        
+        $sql .= "
             ORDER BY
                 volunteers.name ASC
-                LIMIT ? , ?
+            LIMIT ?, ?";
 
-        ";
         $query = $this->db->prepare($sql);
-        $query->bindValue(1, $offset, \PDO::PARAM_INT);
-        $query->bindValue(2, $limit, \PDO::PARAM_INT);
+        $paramIndex = 1;
+        if ($search == 1 || $search == 2) {
+            $query->bindValue($paramIndex++, $search, \PDO::PARAM_INT);
+        }
+        if ($search_name != '') {
+            $query->bindValue($paramIndex++, $search_name, \PDO::PARAM_STR);
+        }
+
+        $query->bindValue($paramIndex++, $offset, \PDO::PARAM_INT);
+        $query->bindValue($paramIndex, $limit, \PDO::PARAM_INT);
+
         $query->execute();
         $query->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, Volunteer::class);
         return $query->fetchAll();
     }
 
 
-       public function getAmount()
+
+    public function getAmount($search = 1, $search_name = '')
     {
         $sql = "
             SELECT
                 COUNT(id) AS amount
             FROM
-            volunteers
+                volunteers
+            WHERE 1=1 ";
+        if ($search == 1) {
+            $sql .= " AND (volunteers.status IS NULL OR volunteers.status = ?) ";
+        } elseif ($search == 2) {
+            $sql .= " AND volunteers.status = ? ";
+        }
 
-        ";
+        if ($search_name != '') {
+            $sql .= " AND volunteers.name LIKE CONCAT('%', ?, '%') ";
+        }
+
         $query = $this->db->prepare($sql);
+
+        $paramIndex = 1;
+        if ($search == 1 || $search == 2) {
+            $query->bindValue($paramIndex++, $search, \PDO::PARAM_INT);
+        }
+        if ($search_name != '') {
+            $query->bindValue($paramIndex, $search_name, \PDO::PARAM_STR);
+        }
+
         $query->execute();
         return $query->fetch();
     }
+
 
 
 

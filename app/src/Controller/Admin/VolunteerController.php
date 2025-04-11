@@ -50,83 +50,29 @@ class VolunteerController extends Controller
 
         if (!empty($params['page'])) {
             $page = intval($params['page']);
-
-            if (!empty($params['search'])) {
-            $search = (int)$params['search'];
-
-
-            if ($search  == 3) {
-                $limit = 20;
-                $offset = ($page - 1) * $limit;
-
-
-                $volunteers = $this->volunteerModel->getAll($offset, $limit);
-
-                $amountVolunteers = $this->volunteerModel->getAmount();
-                $amountPages = ceil($amountVolunteers->amount / $limit);
-
-                return $this->view->render($response, 'admin/volunteer/index.twig', [
-                    'volunteers' => $volunteers,
-                    'page' => $page,
-                    'amountPages' => $amountPages,
-                    'search' => $search
-                    ]);
-            }
-
-            if ($search  == 1) {
-                $limit = 20;
-                $offset = ($page - 1) * $limit;
-
-
-                $volunteers = $this->volunteerModel->getAllByStatus2($search, $offset, $limit);
-                
-
-                $amountVolunteers = $this->volunteerModel->getAmountStatus($search);
-                $amountPages = ceil($amountVolunteers->amount / $limit);
-                //var_dump($volunteers);die;
-                return $this->view->render($response, 'admin/volunteer/index.twig', [
-                    'volunteers' => $volunteers,
-                    'page' => $page,
-                    'amountPages' => $amountPages,
-                    'search' => $search
-                    ]);
-
-            }
-
-            if ($search  == 2) {
-                $limit = 20;
-                $offset = ($page - 1) * $limit;
-
-
-                $volunteers = $this->volunteerModel->getAllByStatus($search, $offset, $limit);
-
-                $amountVolunteers = $this->volunteerModel->getAmountStatus($search);
-                $amountPages = ceil($amountVolunteers->amount / $limit);
-
-                return $this->view->render($response, 'admin/volunteer/index.twig', [
-                    'volunteers' => $volunteers,
-                    'page' => $page,
-                    'amountPages' => $amountPages,
-                    'search' => $search
-                    ]);
-                }
-            }
         } else {
             $page = 1;
         }
+        if (!empty($params['search'])) {
+            $search = (int)$params['search'];
+        } else {
+            $search = 1;
+
+        }
+        $search_name =  $params['search_name'] ? $params['search_name'] : '';
+
         $limit = 20;
         $offset = ($page - 1) * $limit;
-
-
-        $volunteers = $this->volunteerModel->getAllIndex($offset, $limit);
-
+        $volunteers = $this->volunteerModel->getAllIndex((int)$search, $search_name, $offset, $limit);
         // var_dump($volunteers);die;
-        $amountVolunteers = $this->volunteerModel->getAmountStatus1();
+        $amountVolunteers = $this->volunteerModel->getAmount((int)$search, $search_name);
         $amountPages = ceil($amountVolunteers->amount / $limit);
 
         return $this->view->render($response, 'admin/volunteer/index.twig', [
             'volunteers' => $volunteers,
             'page' => $page,
+            'search' => $search,
+            'search_name' => $search_name,
             'amountPages' => $amountPages
             ]);
     }
@@ -235,9 +181,21 @@ class VolunteerController extends Controller
     //download
     public function export(Request $request, Response $response)
      {
-        
-        $search = isset($request->getQueryParams()['search']) ? $request->getQueryParams()['search'] : 0;
-        $volunteers = $this->volunteerModel->getAll();
+        $params = $request->getQueryParams();
+
+        if (!empty($params['page'])) {
+            $page = intval($params['page']);
+        } else {
+            $page = 1;
+        }
+        if (!empty($params['search'])) {
+            $search = (int)$params['search'];
+        } else {
+            $search = 0;
+
+        }
+        $search_name =  $params['search_name'] ? $params['search_name'] : '';
+        $volunteers = $this->volunteerModel->getAllIndex((int)$search, $search_name);
             $dir = getcwd();
       $html = "
       <div style='width: 24%; float:left;'>
@@ -252,13 +210,8 @@ class VolunteerController extends Controller
       <div style='width:100%; margin-top: 10px;'>
       <table>
             <tr>
-                <th style='width: 25%; text-align:left;'>Nome</th>
-                <th style='width: 25%; text-align:left;'>Email</th>
-
-
-                <th style='width:  5%; text-align:left;'>DDD</th>
-                <th style='width: 10%; text-align:left;'>Telefone</th>
-                <th style='width: 10%; text-align:left;'>CEP</th>
+                <th style='width: 75%; text-align:left;'>Nome</th>
+                <th style='width: 25%; text-align:left;'>Telefone</th>
             </tr>
         ";
         /* foreach ($volunteers as $volunteer) {
@@ -273,15 +226,16 @@ class VolunteerController extends Controller
             //die;*/
         foreach ($volunteers as $volunteer) {
             //var_dump( $volunteer);
-            $volunteer = $this->entityFactory->createVolunteer($volunteer);
+            //$volunteer = $this->entityFactory->createVolunteer($volunteer);
             $html .= "
             <tr>
-            <td style='width: 25%; text-align:left;'>$volunteer->name</td>
-            <td style='width: 25%; text-align:left;'>$volunteer->email</td>
-            <td style='width:  5%; text-align:left;'>$volunteer->tel_area</td>
-            <td style='width: 15%; text-align:left;'>$volunteer->tel_numero</td>
-            <td style='width: 10%; text-align:left;'>$volunteer->end_cep</td>
-            </tr>";
+            <td style='width: 75%; text-align:left;'>$volunteer->name</td>";
+            if($volunteer->tel_numero != null) {
+                $html .= "<td style='width:  25%; text-align:left;'>($volunteer->tel_area) $volunteer->tel_numero</td>";
+            } else {
+                $html .= "<td style='width:  25%; text-align:left;'>(--) ---------</td>";
+            }
+            $html .= "</tr>";
         }
         //die;
 
