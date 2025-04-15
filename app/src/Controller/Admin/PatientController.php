@@ -387,6 +387,264 @@ class PatientController extends Controller
         return $this->view->render($response, 'admin/patient/edit.twig', ['patient' => $patient, 'diseases' => $diseases, 'patient_status' => $patient_status]);
     }
 
+    public function export_ficha(Request $request, Response $response, array $args)
+    {
+
+        $patient = $this->patientModel->get((int)$args['id']);
+        //var_dump($patient);die;
+        $html .= "
+            <style>
+
+                table {
+                border-collapse: collapse;
+                border-spacing: 0;
+                width: 100%;
+                border: 1px solid #ddd;
+                padding: 0px;
+                }
+
+                tr {
+                border-collapse: collapse;
+                }
+
+                th, td, {
+                border-collapse: collapse;
+                text-align: left;
+                line-height: 1.2;
+                border: 1px solid #cdd0d4;
+                padding: 2px;
+                text-align: center;
+                }
+            </style>
+        ";
+
+        $html .= "
+            <div style='width: 24%; float:left;'>
+                <img src='logo.png' style='width: 120px; float:left; padding-right: 15px;'>
+            </div>
+            <div style='width: 75%;'>
+                <p style=' '>Fundação Waldyr Becker de Apoio ao Paciente com Câncer.</p>
+                <h3 style='margin-top: 2px; margin-bottom: 2px;'>Relatório de Pacientes Cadastrados</h3>
+                <p> <strong>Data relatório:</strong>  " . date("d/m/Y") . " </p>
+
+            </div>
+            <hr>
+            <div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Nome</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>E-mail</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->name</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->email</td>
+                    </tr>
+                    
+                </table> 
+            </div>  
+        ";
+
+        $html .= "
+           
+            <div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; padding:5px 0px; background-color: #f5f5f5'>Data de Nascimento</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; padding:5px 0px; background-color: #f5f5f5'>CPF</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; padding:5px 0px; background-color: #f5f5f5'>RG</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; padding:5px 0px; background-color: #f5f5f5'>Cartão SUS</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; height: 30px; padding: 0px'>$patient->nascimento</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; height: 30px; padding: 0px'>$patient->cpf</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; height: 30px; padding: 0px'>$patient->rg</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; height: 30px; padding: 0px'>$patient->sus</td>
+                    </tr>
+                    
+                </table> 
+            </div>  
+        ";
+
+        
+        
+    $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 30%; padding:5px 0px; background-color: #f5f5f5'>Rua</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; padding:5px 0px; background-color: #f5f5f5'>Nº</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; padding:5px 0px; background-color: #f5f5f5'>Bairro</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; padding:5px 0px; background-color: #f5f5f5'>Cidade</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; padding:5px 0px; background-color: #f5f5f5'>Estado</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 30%; height: 30px; padding: 0px'>$patient->end_rua</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>$patient->end_numero</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; height: 30px; padding: 0px'>$patient->end_bairro</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; height: 30px; padding: 0px'>$patient->end_cidade</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>$patient->end_estado</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; padding:5px 0px; background-color: #f5f5f5'>CEP</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 90%; padding:5px 0px; background-color: #f5f5f5;' colspan=4>Complemento</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>$patient->end_cep</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 90%; height: 30px; padding: 0px 10 px' colspan=4>$patient->end_complemento</td>
+                    </tr>
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; padding:5px 0px; background-color: #f5f5f5'>DDD</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 15%; padding:5px 0px; background-color: #f5f5f5'>Telefone</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; padding:5px 0px; background-color: #f5f5f5'>DDD 2</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 15%; padding:5px 0px; background-color: #f5f5f5'>Telefone 2</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Observações Tel</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>$patient->tel_area</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 15%; height: 30px; padding: 0px'>$patient->tel_numero</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>$patient->tel_area_2</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 15%; height: 30px; padding: 0px'>$patient->tel_numero_2</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->obs_tel</td>
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 25%; padding:5px 0px; background-color: #f5f5f5'>Situação</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 75%; padding:5px 0px; background-color: #f5f5f5'>CID</td>
+                    </tr>
+                    <tr>";
+                    if($patient->id_status == 1){
+                        $html .= "
+                            <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>Ativo</td>
+                        ";
+                    }
+                    
+                    elseif($patient->id_status == 2){
+                        $html .= "
+                            <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>Óbito</td>
+                        ";
+                    }
+                    
+                    elseif($patient->id_status == 3){
+                        $html .= "
+                            <td  style='border: 1px solid #cdd0d4; text-align: center; width: 10%; height: 30px; padding: 0px'>Afastado</td>
+                        ";
+                    }
+                    $html .= "
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 40%; height: 30px; padding: 0px'>$patient->disease_cid_version - $patient->disease_cid_code - $patient->disease_name</td>
+                        
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 100%; padding:5px 0px; background-color: #f5f5f5'>Observações</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 100%; height: 30px; padding: 0px'>$patient->obs</td>
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Tipo de Câncer</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Há Quanto Tempo Descobriu?</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->cancer_type</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->discovery_time</td>
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Como Descobriu?</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Quando começou o tratamento?</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->discovery_how</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->treatment_time</td>
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Onde se trata?</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; padding:5px 0px; background-color: #f5f5f5'>Qual o médico?</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->treatment_where</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 50%; height: 30px; padding: 0px'>$patient->doctor_name</td>
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+            $html .= "<div style='width:100%; margin-top: 10px;'>
+                <table style='width:100%; border-style:solid; border-width:1px; border-color:gray; border-collapse: collapse; '>
+                
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 60%; padding:5px 0px; background-color: #f5f5f5'>Qual apoio necessita da funcação?</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; padding:5px 0px; background-color: #f5f5f5'>Data no Comparecimento na Fundação</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; padding:5px 0px; background-color: #f5f5f5'>Data de cadastro</td>
+                    </tr>
+                    <tr>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 60%; height: 30px; padding: 0px'>$patient->fundation_need</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; height: 30px; padding: 0px'>$patient->visitDate</td>
+                        <td  style='border: 1px solid #cdd0d4; text-align: center; width: 20%; height: 30px; padding: 0px'>$patient->registration_date</td>
+                    </tr>
+                    
+                </table> 
+            </div>  ";
+
+    try {
+        $mpdf = new \Mpdf\Mpdf([
+            'orientation' => 'P',
+            'default_font_size' => 9,
+            'default_font' => 'arial',
+            'tempDir' => __DIR__ . '/custom/temp/dir/path'
+        ]);
+        $mpdf->setFooter('{PAGENO}');
+        $mpdf->WriteHTML($html);
+        // Other code
+        header('Content-Type: application/pdf');
+        $mpdf->Output( );
+    } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+    }
+        die;
+    }
+
 
     //download
     public function export(Request $request, Response $response)
