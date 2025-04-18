@@ -8,6 +8,7 @@ use Farol360\Ancora\Model\Attendance;
 use Farol360\Ancora\Model\Disease;
 use Farol360\Ancora\Model\EventLog;
 use Farol360\Ancora\Model\Patient;
+use Farol360\Ancora\Model\PatientFile;
 use Farol360\Ancora\Model\PatientType;
 use Farol360\Ancora\Model\Products;
 use Farol360\Ancora\Model\ProdutoRemessa;
@@ -47,6 +48,11 @@ class EntityFactory
     public function createPatient(array $data = []): Patient
     {
         return new Patient($data);
+    }
+
+    public function createPatientFile(array $data = []): PatientFile
+    {
+        return new PatientFile($data);
     }
 
     public function createPatientType(array $data = []): PatientType

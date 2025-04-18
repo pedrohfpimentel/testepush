@@ -121,14 +121,13 @@
           <table class="table table-striped data-table" style="border-collapse:separate">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>CID Versão</th>
-                <th>CID COD</th>
-                <th>Cidade</th>
-                <th class="th-button"></th>
-                <th class="th-button"></th>
-                <th class="th-button"></th>
+                <th  style="width:20%;">Nome</th>
+                <th  style="width:20%;">Email</th>
+                <th  style="width:10%;">CID Versão</th>
+                <th  style="width:10%;">CID COD</th>
+                <th  style="width:20%;">Cidade</th>
+                <th  style="width:10%;">Status</th>
+                <th  style="width:10%;"></th>
               </tr>
             </thead>
             <tbody>
@@ -140,7 +139,7 @@
                   <td>{{ patient.disease_cid_code }}</td>
                   <td>{{ patient.end_cidade }}</td>
                   <td>{{ patient.status }}</td>
-                  <td style="width:100px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/patients/history/{{ patient.id }}">
+                  {#<td style="width:100px"><a class="btn btn-sm btn-info" style="margin:0px;" href="{{ base_url() }}/admin/patients/history/{{ patient.id }}">
                     Histórico
                   </a></td>
                   <td style="width:50px"><a class="btn btn-sm btn-default" style="margin:0px; padding: 5px 15px" href="{{ base_url() }}/admin/patients/edit/{{ patient.id }}">
@@ -148,10 +147,40 @@
                   </a></td>
                   <td style="width:50px"><a class="btn btn-sm btn-default" style="margin:0px; padding: 5px 15px" href="{{ base_url() }}/admin/patients/export/{{ patient.id }}">
                     <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                  </a></td>
-                 {# <td style="width:100px"><a class="btn btn-danger" href="{{ base_url() }}/admin/patients/remove/{{ patient.id }}">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  </a></td>
-                </tr>#}
+                  </a></td>#}
+                 
+                  <td style="">
+                    <div class="dropdown" >
+                      <a href="#" class="btn dropdown-toggle btn-sm" data-toggle="dropdown" style="width:100%; margin:0px">
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu pull-right" style="margin:0px">
+                        
+                        <li>
+                          <a style="" href="{{ base_url() }}/admin/patients/history/{{ patient.id }}" target="blank">
+                            Histórico
+                          </a>
+                        </li>
+                        <li>
+                          <a style="" href="{{ base_url() }}/admin/patients/edit/{{ patient.id }}" target="blank">
+                            Editar
+                          </a>
+                        </li>
+                        <li>
+                          <a style="" href="{{ base_url() }}/admin/patients/export/{{ patient.id }}" target="blank">
+                            Exportar Ficha
+                          </a>
+                        </li>
+                        <li>
+                          <a style="" href="{{ base_url() }}/admin/patients/docs/{{ patient.id }}" target="blank">
+                            Arquivos
+                          </a>
+                        </li>
+                        
+                      </ul>
+                    </div>
+                    
+                  </td>
               {% else %}
                 <div class="alert alert-danger" role="alert">Não existem pacientes cadastrados</div>
               {% endfor %}

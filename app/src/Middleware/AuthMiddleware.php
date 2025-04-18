@@ -48,7 +48,7 @@ class AuthMiddleware
 
         //remove first '/', replace others '/' for '_'
         //and replace '_\d+' for '_:id'
-        $route = "p_" .
+        /*$route = "p_" .
         preg_replace(
             "/(_\d+)/im",
             "_:id",
@@ -61,7 +61,21 @@ class AuthMiddleware
                 1,
                 strlen($route)
             )
-        );
+        );*/
+        $segments = explode('/', trim($route, '/'));
+
+        foreach ($segments as &$seg) {
+            if (is_numeric($seg)) {
+                static $idCount = 0;
+                $idAliases = [':id', ':id_doc'];
+                $seg = $idAliases[$idCount] ?? ':id_extra';
+                $idCount++;
+            } elseif (preg_match('/^\!\!\w+$/', $seg)) {
+                $seg = ':token';
+            }
+        }
+        $route = 'p_' . implode('_', $segments);
+
 
         //replace token for :token
         $route = preg_replace("/(!!\w+)/im", ":token", $route);

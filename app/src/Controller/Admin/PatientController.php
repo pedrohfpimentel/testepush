@@ -28,6 +28,7 @@ class PatientController extends Controller
 {
     protected $attendanceModel;
     protected $patientModel;
+    protected $patientFileModel;
     protected $diseaseModel;
     protected $patientStatusModel;
     protected $professionalModel;
@@ -43,6 +44,7 @@ class PatientController extends Controller
         FlashMessages $flash,
         Model $attendanceModel,
         Model $patientModel,
+        Model $patientFileModel,
         Model $diseaseModel,
         Model $patientStatusModel,
         Model $professionalModel,
@@ -57,6 +59,7 @@ class PatientController extends Controller
         parent::__construct($view, $flash);
         $this->attendanceModel      = $attendanceModel;
         $this->patientModel         = $patientModel;
+        $this->patientFileModel     = $patientFileModel;
         $this->diseaseModel         = $diseaseModel;
         $this->patientStatusModel   = $patientStatusModel;
         $this->professionalModel    = $professionalModel;
@@ -1203,6 +1206,201 @@ class PatientController extends Controller
             return $this->httpRedirect($request, $response, '/admin/patients');
         }
 
+
+    }
+
+    public function docs_index(Request $request, Response $response, array $args): Response
+    {
+        $patient = $this->patientModel->get((int)$args['id']);
+        $files = $this->patientFileModel->getAllByPatient((int)$args['id']);
+        
+        if (!empty($patient->doc_ficha)) {
+            array_unshift($files, [
+                'id' => 0,
+                'name' => 'doc_ficha',
+                'url_file' => $patient->doc_ficha
+            ]);
+        }
+
+        return $this->view->render($response, 'admin/patient_file/index.twig', [
+            'files' => $files,
+            'patient_id' => $args['id']
+            ]);
+    }
+
+    public function docs_add(Request $request, Response $response): Response
+    {
+        // get the body and parse it to an array
+        $data = $request->getParsedBody();
+
+        try {
+            $this->patientFileModel->beginTransaction();
+            
+            // var_dump($patient);die;
+            $files = $request->getUploadedFiles();
+            // if has file in img_featured key
+            foreach($files as $file_index => $file) {
+            
+                if (strpos($file_index, "doc") !== false) {
+                    if (!empty( $file)) {
+                        $doc = $file;
+                        //if has no error on upload
+                        if ($doc->getError() === UPLOAD_ERR_OK) {
+                            //verify allowed extensions
+                            $filename = $doc->getClientFilename();
+                            $allowedExtensions = [
+                                'doc',
+                                'docx',
+                                'pdf',
+                                'DOC',
+                                'DOCX',
+                                'PDF',
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'JPG',
+                                'JPEG',
+                                'PNG'
+                            ];
+                            // if not allowed extension
+                            if (!in_array(pathinfo($filename,PATHINFO_EXTENSION), $allowedExtensions)) {
+                                //inform error msg
+                                // $this->flash->addMessage('danger', "Documento em formato inválido.");
+                                throw new ModelException($file, "Documento em formato inválido.");
+                                //redirect to this url
+                                // return $this->httpRedirect($request, $response, '/admin/patients/add');
+                            }
+                            //verify size
+                            if ($doc->getSize() > 26000000) {
+                            //inform error msg
+                                // $this->flash->addMessage('danger', "Arquivo muito grande (max 25Mb).");
+                                throw new ModelException($file, "Arquivo muito grande (max 25Mb).");
+                                //redirect to this url
+                                // return $this->httpRedirect($request, $response, '/admin/patients/add');
+                            }
+                            // --------
+                            // if pass by all verificators..
+                            // --------
+                            // cabulous function
+                            $filename = sprintf(
+                                '%s.%s',
+                                uniqid(),
+                                pathinfo($doc->getClientFilename(), PATHINFO_EXTENSION)
+                            );
+                            // path to usr img
+                            $path = 'upload/';
+                            if (!file_exists($path)) {
+                            mkdir($path);
+                            }
+                            // move img to path
+                            $doc->moveTo($path . $filename);
+                            // var_dump($path . $filename); die;
+                            // update path in db
+                            
+                            $data['doc_ficha'] =  $path . $filename;
+                            
+                        }
+                    }
+                }
+            }
+
+            // $patient['doc_ficha'] = json_encode($data['doc_ficha']);
+            $patient_file['url_file'] = $data['doc_ficha'];
+            $patient_file['id_patient'] = $data['patient_id'];
+            $patient_file['name'] = $data['name'];
+            $patient_file_obj = $this->entityFactory->createPatientFile($patient_file);
+            $id_patient_file = $this->patientFileModel->add($patient_file_obj);
+            
+            if($id_patient_file == false){
+
+                throw new ModelException('', "Erro no cadastro de paciente. COD:0002.");
+            }
+            // create eventLog when add patient
+            if ( ($id_patient != null) || ($id_patient != false) )
+            {
+                $eventLog['id_patient_file']         = $id_patient_file;
+                $eventLog['event_log_type']  = $this->eventLogTypeModel->getBySlug('edit_patient')->id;
+                $eventLog['description'] = 'Arquivo ' . $patient_file_obj->name .' cadastrado';
+
+                $eventLog = $this->entityFactory->createEventLog($eventLog);
+                $this->eventLogModel->add($eventLog);
+            }
+
+            $this->patientModel->commit();
+            $this->flash->addMessage('success', 'Arquivo cadastrado com sucesso.');
+            // return $this->httpRedirect($request, $response, '/admin/patients');
+        } catch (ModelException $e) {
+            $this->patientModel->rollback();
+            CustomLogger::ModelErrorLog($e->getMessage(), $e->getdata());
+            $this->flash->addMessage('danger', $e->getMessage() . ' Se o problema persistir contate um administrador.');
+            // return $this->httpRedirect($request, $response, "/admin/remessa");
+        }
+        // $this->flash->addMessage('success', 'Paciente adicionado com sucesso.');
+        return $this->httpRedirect($request, $response, "/admin/patients/docs/".$data['patient_id']);
+
+
+    }
+
+    public function docs_remove(Request $request, Response $response, array $args): Response
+    {
+        $id_patient = intval($args['id']);
+        $id_file = intval($args['id_doc']);
+        $file = $this->patientFileModel->get($id_file);
+        $patient = $this->patientModel->get((int)$id_patient);
+        if($id_file === 0) {
+            if (isset($patient->doc_ficha)) {
+                unlink($patient->doc_ficha);
+                $this->patientModel->deleteDoc((int) $patient->patient_id);
+            } else {
+                $this->flash->addMessage('danger', 'Erro ao remover arquivo, tente novamente.');
+                return $this->httpRedirect($request, $response, '/admin/patients/docs/'.$id_patient);
+            }
+        } else {
+            if (isset($file)) {
+                unlink($file->url_file);
+                $this->patientFileModel->delete((int) $file->id);
+            } else {
+                $this->flash->addMessage('danger', 'Erro ao remover arquivo, tente novamente.');
+                return $this->httpRedirect($request, $response, '/admin/patients/docs/'.$id_patient);
+            }
+        }
+
+        $this->flash->addMessage('success', 'Arquivo removido com sucesso.');
+        return $this->httpRedirect($request, $response, '/admin/patients/docs/'.$id_patient);
+    }
+
+    public function docs_export(Request $request, Response $response, array $args): Response
+    {
+        $id_patient = intval($args['id']);
+        $id_file = intval($args['id_doc']);
+        $patient = $this->patientModel->get((int)$args['id']);
+        if($id_file === 0) {
+            if (isset($patient->doc_ficha)) {
+                $mime = mime_content_type($patient->doc_ficha);
+                header('Content-Type: ' . $mime);
+                header('Content-Disposition: inline; filename="' . basename($patient->doc_ficha) . '"');
+                header('Content-Length: ' . filesize($patient->doc_ficha));
+                readfile($patient->doc_ficha);
+                exit;
+            } else {
+                $this->flash->addMessage('danger', 'Erro ao remover arquivo, tente novamente.');
+                return $this->httpRedirect($request, $response, '/admin/patients/docs/'.$id_patient);
+            }
+        }
+
+        $file = $this->patientFileModel->get($id_file);
+
+        if (isset($file)) {
+            $mime = mime_content_type($file->url_file);
+            header('Content-Type: ' . $mime);
+            header('Content-Disposition: inline; filename="' . basename($file->url_file) . '"');
+            header('Content-Length: ' . filesize($file->url_file));
+            readfile($file->url_file);
+            exit;
+        } else {
+            $this->flash->addMessage('danger', 'Erro ao remover arquivo, tente novamente.');
+            return $this->httpRedirect($request, $response, '/admin/patients/docs/'.$id_patient);
+        }
 
     }
 

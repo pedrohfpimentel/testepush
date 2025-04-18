@@ -75,6 +75,14 @@ class PatientModel extends Model
         return $query->execute($parameters);
     }
 
+    public function deleteDoc(int $id): bool
+    {
+       $sql = "UPDATE patients SET doc_ficha = NULL WHERE id = :id";
+        $query = $this->db->prepare($sql);
+        $parameters = [':id' => $id];
+        return $query->execute($parameters);
+    }
+
     public function get(int $id)
     {
         $sql = "

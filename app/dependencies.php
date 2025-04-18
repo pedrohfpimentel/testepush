@@ -168,6 +168,7 @@ $container['Farol360\Ancora\Controller\Admin\PatientController'] = function ($c)
         $c['flash'],
         new Farol360\Ancora\Model\AttendanceModel($c['db']),
         new Farol360\Ancora\Model\PatientModel($c['db']),
+        new Farol360\Ancora\Model\PatientFileModel($c['db']),
         new Farol360\Ancora\Model\DiseaseModel($c['db']),
         new Farol360\Ancora\Model\PatientStatusModel($c['db']),
         new Farol360\Ancora\Model\ProfessionalModel($c['db']),

@@ -1,0 +1,135 @@
+{% extends "admin/layout.twig" %}
+{% block html_title %}Administração - {{ parent() }}{% endblock %}
+{% set nav_active = 'patients' %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+  <li class="active">Início</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+
+<div class="main">
+  <div class="col-xs-6">
+    <div class="panel panel-default">
+      <div class="panel-heading" >
+        <div class="row">
+          <div class="col-sm-7">
+            <p  class="panel-title">Arquivos Cadastrados</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <table class="table table-striped data-table" style="border-collapse:separate">
+              <thead>
+                <tr>
+                  <th  style="width:75%;">Nome</th>
+                  <th  style="width:25%;">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for file in files %}
+                  <tr>
+                    <td>{{ file.name }}</td>
+                    <td style="width:70px">
+                      <a class="btn btn-sm btn-default" style="margin:0px;" href="{{ base_url() }}/admin/patients/docs/{{ patient_id }}/export/{{ file.id }}" target="_blank">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                      </a>
+                      <a id="remover-btn-{{ file.id }}" class="btn btn-sm btn-danger">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                      </a>
+                      <div id="remover-modal-{{ file.id }}" style="display:none; z-index:999; width: 100px; position:fixed; background-color:white; border-radius: 4px; border-style: solid; border-color:#999; border-width: 1px; margin-top:3px;">
+                      
+                        <center>
+                          <p style="padding:0px; margin-top: 5px; margin-bottom: 0px;"> Confirmar ? </p>
+                          <a class="btn btn-sm btn-danger" style="margin:4px;" href="{{ base_url() }}/admin/patients/docs/{{ patient_id }}/remove/{{ file.id }}">Sim</a>
+                        </center>
+                      </div>
+
+                      <script>
+                        $('#remover-btn-{{ file.id }}').click(function() {
+                          $('#remover-modal-{{ file.id }}').toggle();
+                        });
+                      </script>
+                    </td>
+
+                    
+                {% else %}
+                  <div class="alert alert-danger" role="alert">Não existem arquivos registrados</div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="">
+        <div class="row">
+          <div class="col-xs-12">
+            <p class="panel-title">Adicionar Arquivo</p>
+            
+          </div>
+        </div>
+      </div>      
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <form role="form" data-toggle="validator" action="{{ base_url() }}/admin/patients/docs/{{patient_id}}/add" method="POST"  enctype="multipart/form-data">
+              <input type="hidden" id="patient_id" name="patient_id" value="{{patient_id}}" >
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <h4>Dados cadastrais do produto:</h4>
+                      
+                      <div class="form-group">
+                        <label for="name">Nome:</label>
+                        <input class="form-control" id="name" type="text" name="name" placeholder="Nome" autofocus required>
+                      </div>
+
+                      <div class="panel panel-default">
+                        <div class="panel-heading" >
+                          <p class="panel-title">Anexar um Arquivo</p>
+                        </div>
+                        <div class="panel-body">
+                          <div class="row">
+                          
+                            <div class="col-xs-12">
+                              <label for="input_doc">Tamanho max 25 MB.</label>
+                              <input type="file" id="input_doc" name="doc" >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+                </div>
+                
+                
+              </div>
+              
+              <button type="submit" class="btn btn-success">Adicionar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+
+{% endblock %}

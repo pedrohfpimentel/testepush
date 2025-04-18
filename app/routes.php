@@ -63,6 +63,10 @@ $app->group('/admin', function () {
         $this->get('/edit/{id:[0-9]+}', PatientAdmin::class . ':edit');
         $this->get('/export/{id:[0-9]+}', PatientAdmin::class . ':export_ficha');
         $this->map(['GET', 'POST'], '/history/{id:[0-9]+}', PatientAdmin::class . ':history');
+        $this->get('/docs/{id:[0-9]+}', PatientAdmin::class . ':docs_index');
+        $this->post('/docs/{id:[0-9]+}/add', PatientAdmin::class . ':docs_add');
+        $this->get('/docs/{id:[0-9]+}/remove/{id_doc:[0-9]+}', PatientAdmin::class . ':docs_remove');
+        $this->get('/docs/{id:[0-9]+}/export/{id_doc:[0-9]+}', PatientAdmin::class . ':docs_export');
         $this->post('/update', PatientAdmin::class . ':update');
         $this->map(['GET', 'POST'],'/verifyUserByEmail', PatientAdmin::class . ':verifyUserByEmail
             ');
